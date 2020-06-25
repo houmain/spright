@@ -4,6 +4,7 @@
 #include <charconv>
 #include <fstream>
 #include <algorithm>
+#include <sstream>
 
 namespace {
   std::ostream* g_autocomplete_output;

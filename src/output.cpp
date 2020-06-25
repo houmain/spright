@@ -65,7 +65,7 @@ void output_definition(const Settings& settings, const std::vector<Sprite>& spri
 
   if (!settings.template_file.empty()) {
     auto env = inja::Environment();
-    env.render_to(file, env.parse_template(settings.template_file), json);
+    env.render_to(file, env.parse_template(settings.template_file.u8string()), json);
   }
   else {
     file << json.dump(2);

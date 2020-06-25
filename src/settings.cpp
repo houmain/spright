@@ -71,6 +71,6 @@ void print_help_message(const char* argv0) {
     "This program comes with absolutely no warranty.\n"
     "See the GNU General Public License, version 3 for details.\n"
     "\n", version, program.c_str(),
-    defaults.output_file.c_str(),
-    defaults.sheet_file.c_str());
+    defaults.output_file.u8string().c_str(),
+    defaults.sheet_file.u8string().c_str());
 }
