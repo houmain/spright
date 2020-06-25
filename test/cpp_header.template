@@ -1,0 +1,18 @@
+
+// automatically generated with spright
+// https://github.com/houmaster/spright
+
+namespace sprites {
+
+struct Sprite {
+  int x, y, w, h;
+  float pivot_x, pivot_y;
+};
+
+{% for sprite in sprites %}const Sprite {{ sprite.id }}{ {{ sprite.trimmedRect.x }}, {{ sprite.trimmedRect.y }}, {{ sprite.trimmedRect.w }}, {{ sprite.trimmedRect.h }}, {{ sprite.trimmedPivot.x }}, {{ sprite.trimmedPivot.y }} };
+{% endfor %}
+{% for tag in tags %}const Sprite* const {{ tag.id }}[] {
+{% for spriteId in tag.spriteIds %}  &{{ spriteId }},
+{% endfor %}};
+
+{% endfor %}} // namespace
