@@ -103,7 +103,8 @@ namespace {
     }
 
     auto sprite = Sprite{ };
-    sprite.id = state.sprite;
+    sprite.id = (!state.sprite.empty() ? state.sprite :
+      "sprite_" + std::to_string(g_sprites.size()));
     sprite.source = get_sheet(state.sheet);
     sprite.source_rect = state.rect;
     sprite.pivot = state.pivot;

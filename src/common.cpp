@@ -1,6 +1,7 @@
 
 #include "common.h"
 #include <cstring>
+#include <charconv>
 #include <algorithm>
 
 bool is_space(char c) {
@@ -13,6 +14,10 @@ bool is_punct(char c) {
 
 char to_lower(char c) {
   return static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+}
+
+bool is_digit(char c) {
+  return std::isdigit(static_cast<unsigned char>(c));
 }
 
 bool starts_with(std::string_view str, std::string_view with) {
@@ -71,4 +76,17 @@ void split_arguments(LStringView str, std::vector<std::string_view>* result) {
       str = str.substr(i);
     }
   }
+}
+
+std::pair<std::string_view, int> split_name_number(LStringView str) {
+  auto value = 0;
+  if (const auto it = std::find_if(begin(str), end(str), is_digit); it != end(str)) {
+    const auto [number_end, ec] = std::from_chars(it, end(str), value);
+    if (ec == std::errc{ } && number_end == end(str))
+      return {
+        str.substr(0, static_cast<std::string_view::size_type>(std::distance(begin(str), it))),
+        value
+      };
+  }
+  return { str, 0 };
 }

@@ -44,3 +44,10 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 if(WIN32 AND NOT MSVC)
   target_link_options(${PROJECT_NAME} BEFORE PUBLIC -municode)
 endif()
+
+if(NOT WIN32)
+  install(TARGETS ${PROJECT_NAME} DESTINATION "bin")
+else(NOT WIN32)
+  install(TARGETS ${PROJECT_NAME} DESTINATION .)
+endif(NOT WIN32)
+

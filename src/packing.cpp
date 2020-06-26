@@ -28,7 +28,7 @@ void pack_sprite_sheet(const Settings& settings, std::vector<Sprite>& sprites) {
     }
 
   // sort sprites by margin
-  std::sort(begin(sprites), end(sprites),
+  std::stable_sort(begin(sprites), end(sprites),
     [](const auto& a, const auto& b) { return a.margin > b.margin; });
 
   auto rects = std::vector<stbrp_rect>();
@@ -126,6 +126,12 @@ void pack_sprite_sheet(const Settings& settings, std::vector<Sprite>& sprites) {
       draw_rect(target, pivot_point, RGBA{ { 255, 0, 0, 255 } });
     }
   }
+
+  // sort sprites by id
+  std::sort(begin(sprites), end(sprites),
+    [&](const auto& a, const auto& b) {
+      return split_name_number(a.id) < split_name_number(b.id);
+    });
 
   save_image(target, settings.sheet_file.u8string());
 }

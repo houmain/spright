@@ -56,3 +56,4 @@ std::string_view rtrim(LStringView str);
 std::string_view trim(LStringView str);
 std::string_view unquote(LStringView str);
 void split_arguments(LStringView str, std::vector<std::string_view>* result);
+std::pair<std::string_view, int> split_name_number(LStringView str);

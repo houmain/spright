@@ -27,14 +27,12 @@ void output_definition(const Settings& settings, const std::vector<Sprite>& spri
     return;
 
   auto json = nlohmann::json{ };
-  auto json_sprites = nlohmann::json::array();
+  auto& json_sprites = json["sprites"];
   auto tags = std::map<std::string, std::vector<std::string>>();
 
   for (const auto& sprite : sprites) {
-    auto json_sprite = nlohmann::json::object();
-    const auto id = (!sprite.id.empty() ? sprite.id :
-      "sprite_" + std::to_string(json_sprites.size()));
-    json_sprite["id"] = id;
+    auto& json_sprite = json_sprites.emplace_back();
+    json_sprite["id"] = sprite.id;
     json_sprite["rect"] = json_rect(sprite.rect);
     json_sprite["trimmedRect"] = json_rect(sprite.trimmed_rect);
     json_sprite["source"] = sprite.source->filename();
@@ -45,19 +43,15 @@ void output_definition(const Settings& settings, const std::vector<Sprite>& spri
     json_sprite["margin"] = sprite.margin;
     json_sprite["tags"] = sprite.tags;
     for (const auto& tag : sprite.tags)
-      tags[tag].push_back(id);
-    json_sprites.push_back(std::move(json_sprite));
+      tags[tag].push_back(sprite.id);
   }
-  json["sprites"] = std::move(json_sprites);
 
-  auto json_tags = nlohmann::json::array();
+  auto& json_tags = json["tags"];
   for (const auto& [id, sprite_ids] : tags) {
-    auto json_tag = nlohmann::json::object();
+    auto& json_tag = json_tags.emplace_back();
     json_tag["id"] = id;
     json_tag["spriteIds"] = sprite_ids;
-    json_tags.push_back(std::move(json_tag));
   }
-  json["tags"] = std::move(json_tags);
 
   auto file = std::ofstream();
   file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
