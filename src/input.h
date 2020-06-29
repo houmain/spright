@@ -3,6 +3,7 @@
 #include "image.h"
 #include "settings.h"
 #include <memory>
+#include <map>
 
 using ImagePtr = std::shared_ptr<const Image>;
 
@@ -25,7 +26,7 @@ struct Sprite {
   PointF trimmed_pivot_point{ };
   int margin{ };
   Trim trim{ };
-  std::vector<std::string> tags;
+  std::map<std::string, std::string> tags;
 };
 
 std::vector<Sprite> parse_definition(const Settings& settings);

@@ -28,7 +28,10 @@ void output_definition(const Settings& settings, const std::vector<Sprite>& spri
 
   auto json = nlohmann::json{ };
   auto& json_sprites = json["sprites"];
-  auto tags = std::map<std::string, std::vector<std::string>>();
+
+  using TagKey = std::pair<std::string, std::string>;
+  using SpriteIndex = size_t;
+  auto tags = std::map<TagKey, std::vector<SpriteIndex>>();
 
   for (const auto& sprite : sprites) {
     auto& json_sprite = json_sprites.emplace_back();
@@ -42,15 +45,19 @@ void output_definition(const Settings& settings, const std::vector<Sprite>& spri
     json_sprite["trimmedPivot"] = json_point(sprite.trimmed_pivot_point);
     json_sprite["margin"] = sprite.margin;
     json_sprite["tags"] = sprite.tags;
-    for (const auto& tag : sprite.tags)
-      tags[tag].push_back(sprite.id);
+    for (const auto& tag_key : sprite.tags)
+      tags[tag_key].push_back(json_sprites.size() - 1);
   }
 
   auto& json_tags = json["tags"];
-  for (const auto& [id, sprite_ids] : tags) {
+  for (const auto& [tag_key, sprite_indices] : tags) {
     auto& json_tag = json_tags.emplace_back();
-    json_tag["id"] = id;
-    json_tag["spriteIds"] = sprite_ids;
+    json_tag["id"] = tag_key.first;
+    if (!tag_key.second.empty())
+      json_tag["value"] = tag_key.second;
+    auto& json_tag_sprites = json_tag["sprites"];
+    for (auto index : sprite_indices)
+      json_tag_sprites.push_back(json_sprites[index]);
   }
 
   auto file = std::ofstream();
@@ -59,6 +66,8 @@ void output_definition(const Settings& settings, const std::vector<Sprite>& spri
 
   if (!settings.template_file.empty()) {
     auto env = inja::Environment();
+    env.set_trim_blocks(true);
+    env.set_lstrip_blocks(true);
     env.render_to(file, env.parse_template(settings.template_file.u8string()), json);
   }
   else {

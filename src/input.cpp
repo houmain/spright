@@ -1,6 +1,5 @@
 
 #include "input.h"
-#include <map>
 #include <charconv>
 #include <fstream>
 #include <algorithm>
@@ -35,7 +34,7 @@ namespace {
 
     std::string sheet;
     RGBA colorkey{ };
-    std::vector<std::string> tags;
+    std::map<std::string, std::string> tags;
     std::string sprite;
     Size grid{ };
     Pivot pivot{ PivotX::center, PivotY::middle };
@@ -254,13 +253,10 @@ namespace {
         break;
 
       case Definition::tag: {
-        const auto tag = std::string(check_string());
-        auto it = std::find(begin(state.tags), end(state.tags), tag);
-        if (it == end(state.tags))
-          state.tags.push_back(tag);
+        auto& tag = state.tags[std::string(check_string())];
+        tag = (arguments_left() ? check_string() : "");
         break;
       }
-
       case Definition::grid:
         state.grid = check_size();
         break;
