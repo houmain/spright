@@ -229,9 +229,6 @@ namespace {
     const auto check_size = [&]() {
       return Size{ check_int(), check_int() };
     };
-    const auto check_point = [&]() {
-      return Point{ check_int(), check_int() };
-    };
     const auto check_rect = [&]() {
       return Rect{ check_int(), check_int(), check_int(), check_int() };
     };
@@ -263,9 +260,8 @@ namespace {
 
       case Definition::offset:
         check(!empty(state.grid), "offset is only valid in grid");
-        g_current_offset = check_point();
-        g_current_offset.x *= state.grid.x;
-        g_current_offset.y *= state.grid.y;
+        g_current_offset.x = static_cast<int>(check_float() * static_cast<float>(state.grid.x));
+        g_current_offset.y = static_cast<int>(check_float() * static_cast<float>(state.grid.y));
         break;
 
       case Definition::skip:
