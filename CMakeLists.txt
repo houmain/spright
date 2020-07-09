@@ -15,6 +15,7 @@ set(SOURCES
 
 set(SOURCES ${SOURCES}
     libs/stb/stb_impl.c
+    libs/miniz/miniz.c
 )
 
 set(INCLUDES ${INCLUDES}

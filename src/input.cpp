@@ -161,7 +161,7 @@ namespace {
           skipped = 0;
         }
 
-        os << state.indent << "sprite \n";
+        os << state.indent << "sprite\n";
 
         sprite_ends(state);
       }
