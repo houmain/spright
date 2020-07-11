@@ -14,6 +14,7 @@ namespace {
 
   enum class Definition {
     none,
+    path,
     sheet,
     colorkey,
     grid,
@@ -32,6 +33,7 @@ namespace {
     int level;
     std::string indent;
 
+    std::string path;
     std::string sheet;
     RGBA colorkey{ };
     std::map<std::string, std::string> tags;
@@ -46,6 +48,7 @@ namespace {
 
   Definition get_definition(std::string_view command) {
     static const auto s_map = std::map<std::string, Definition, std::less<>>{
+      { "path", Definition::path },
       { "sheet", Definition::sheet },
       { "colorkey", Definition::colorkey },
       { "tag", Definition::tag },
@@ -73,11 +76,15 @@ namespace {
       error(std::string(message));
   }
 
-  ImagePtr get_sheet(const std::string& filename) {
+  ImagePtr get_sheet(const std::string& path, const std::string& filename) {
     static auto s_sheets = std::map<std::string, ImagePtr>();
-    auto& sheet = s_sheets[filename];
+
+    const auto full_path = std::filesystem::canonical(
+      std::filesystem::u8path(path) / std::filesystem::u8path(filename)).u8string();
+
+    auto& sheet = s_sheets[full_path];
     if (!sheet) {
-      auto image = Image(filename);
+      auto image = Image(full_path);
 
       if (is_opaque(image)) {
         const auto color_key = guess_color_key(image);
@@ -104,7 +111,7 @@ namespace {
     auto sprite = Sprite{ };
     sprite.id = (!state.sprite.empty() ? state.sprite :
       "sprite_" + std::to_string(g_sprites.size()));
-    sprite.source = get_sheet(state.sheet);
+    sprite.source = get_sheet(state.path, state.sheet);
     sprite.source_rect = state.rect;
     sprite.pivot = state.pivot;
     sprite.pivot_point = state.pivot_point;
@@ -124,7 +131,7 @@ namespace {
     const auto floor = [](int v, int q) { return (v / q) * q; };
     const auto ceil = [](int v, int q) { return ((v + q - 1) / q) * q; };
 
-    const auto& sheet = *get_sheet(state.sheet);
+    const auto& sheet = *get_sheet(state.path, state.sheet);
     const auto bounds = get_used_bounds(sheet);
     const auto grid = state.grid;
     const auto x0 = floor(bounds.x, grid.x) / grid.x;
@@ -169,7 +176,7 @@ namespace {
   }
 
   void autocomplete_unaligned_sprites(State& state, std::ostream& os) {
-    const auto& sheet = *get_sheet(state.sheet);
+    const auto& sheet = *get_sheet(state.path, state.sheet);
     for (const auto& rect : find_islands(sheet)) {
       os << state.indent << "sprite \n";
       os << state.indent << "  rect "
@@ -244,6 +251,10 @@ namespace {
     };
 
     switch (definition) {
+      case Definition::path: {
+        state.path = std::string(check_string());
+        break;
+      }
       case Definition::sheet:
         state.sheet = check_string();
         g_current_offset = { };
