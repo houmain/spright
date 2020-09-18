@@ -133,5 +133,5 @@ void pack_sprite_sheet(const Settings& settings, std::vector<Sprite>& sprites) {
       return split_name_number(a.id) < split_name_number(b.id);
     });
 
-  save_image(target, settings.sheet_file.u8string());
+  save_image(target, settings.sheet_file);
 }

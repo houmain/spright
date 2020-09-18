@@ -68,7 +68,7 @@ void output_definition(const Settings& settings, const std::vector<Sprite>& spri
     auto env = inja::Environment();
     env.set_trim_blocks(true);
     env.set_lstrip_blocks(true);
-    env.render_to(file, env.parse_template(settings.template_file.u8string()), json);
+    env.render_to(file, env.parse_template(path_to_utf8(settings.template_file)), json);
   }
   else {
     file << json.dump(2);

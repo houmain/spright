@@ -1,7 +1,6 @@
 
 #include "settings.h"
 #include "common.h"
-#include <regex>
 
 bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
   for (auto i = 1; i < argc; i++) {

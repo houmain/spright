@@ -33,8 +33,8 @@ namespace {
     int level;
     std::string indent;
 
-    std::string path;
-    std::string sheet;
+    std::filesystem::path path;
+    std::filesystem::path sheet;
     RGBA colorkey{ };
     std::map<std::string, std::string> tags;
     std::string sprite;
@@ -76,11 +76,10 @@ namespace {
       error(std::string(message));
   }
 
-  ImagePtr get_sheet(const std::string& path, const std::string& filename) {
-    static auto s_sheets = std::map<std::string, ImagePtr>();
+  ImagePtr get_sheet(const std::filesystem::path& path, const std::filesystem::path& filename) {
+    static auto s_sheets = std::map<std::filesystem::path, ImagePtr>();
 
-    const auto full_path = std::filesystem::canonical(
-      std::filesystem::u8path(path) / std::filesystem::u8path(filename)).u8string();
+    const auto full_path = std::filesystem::canonical(path / filename);
 
     auto& sheet = s_sheets[full_path];
     if (!sheet) {
@@ -191,7 +190,7 @@ namespace {
   void sheet_ends(State& state) {
     if (g_autocomplete_output && !g_sprites_in_current_sheet) {
       auto& os = *g_autocomplete_output;
-      if (state.sheet.find('%') != std::string::npos) {
+      if (state.sheet.u32string().find('%') != std::string::npos) {
         autocomplete_separate_sprites(state, os);
       }
       else if (!empty(state.grid)) {
@@ -215,6 +214,9 @@ namespace {
     const auto check_string = [&]() {
       check(arguments_left(), "invalid argument count");
       return arguments[argument_index++];
+    };
+    const auto check_path = [&]() {
+      return std::filesystem::path(check_string());
     };
     const auto is_number_following = [&]() {
       if (!arguments_left())
@@ -252,11 +254,11 @@ namespace {
 
     switch (definition) {
       case Definition::path: {
-        state.path = std::string(check_string());
+        state.path = check_path();
         break;
       }
       case Definition::sheet:
-        state.sheet = check_string();
+        state.sheet = check_path();
         g_current_offset = { };
         break;
 
@@ -344,7 +346,7 @@ namespace {
 std::vector<Sprite> parse_definition(const Settings& settings) {
   auto input = std::fstream(settings.input_file, std::ios::in);
   if (!input.good())
-    error("opening file '" + settings.input_file.u8string() + "' failed");
+    error("opening file '" + path_to_utf8(settings.input_file) + "' failed");
 
   auto detected_indetation = std::string();
   auto scope_stack = std::vector<State>();
@@ -428,7 +430,7 @@ std::vector<Sprite> parse_definition(const Settings& settings) {
       input.close();
       input = std::fstream(settings.input_file, std::ios::out);
       if (!input.good())
-        error("opening file '" + settings.input_file.u8string() + "' failed");
+        error("opening file '" + path_to_utf8(settings.input_file) + "' failed");
       input << output;
     }
   }

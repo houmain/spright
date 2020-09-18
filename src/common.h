@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <filesystem>
 #include <cctype>
 
 struct Size {
@@ -46,6 +47,8 @@ union RGBA {
 inline bool operator==(const RGBA& a, const RGBA& b) { return (a.rgba == b.rgba); }
 inline bool operator!=(const RGBA& a, const RGBA& b) { return (a.rgba != b.rgba); }
 
+std::filesystem::path utf8_to_path(std::string_view utf8_string);
+std::string path_to_utf8(const std::filesystem::path& path);
 bool is_space(char c);
 bool is_punct(char c);
 char to_lower(char c);

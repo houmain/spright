@@ -83,17 +83,17 @@ Image::Image(int width, int height, const RGBA& background)
   std::fill(m_data, m_data + (m_width * m_height), background);
 }
 
-Image::Image(std::string filename)
+Image::Image(std::filesystem::path filename)
   : m_filename(std::move(filename)) {
 
-  if (auto file = std::fopen(m_filename.c_str(), "rb")) {
+  if (auto file = std::fopen(path_to_utf8(m_filename).c_str(), "rb")) {
     auto channels = 0;
     m_data = reinterpret_cast<RGBA*>(stbi_load_from_file(
         file, &m_width, &m_height, &channels, 4));
     std::fclose(file);
   }
   if (!m_data)
-    throw std::runtime_error("loading file '" + m_filename + "' failed");
+    throw std::runtime_error("loading file '" + path_to_utf8(m_filename) + "' failed");
 }
 
 Image::Image(Image&& rhs)
@@ -122,10 +122,10 @@ Image Image::clone() const {
   return clone;
 }
 
-void save_image(const Image& image, const std::string& filename) {
-  if (!stbi_write_png(filename.c_str(), image.width(), image.height(), 4,
+void save_image(const Image& image, const std::filesystem::path& filename) {
+  if (!stbi_write_png(path_to_utf8(filename).c_str(), image.width(), image.height(), 4,
       image.rgba(), image.width() * 4))
-    throw std::runtime_error("writing file '" + filename + "' failed");
+    throw std::runtime_error("writing file '" + path_to_utf8(filename) + "' failed");
 }
 
 void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy) {

@@ -1,18 +1,19 @@
 #pragma once
 
 #include "common.h"
+#include <filesystem>
 
 class Image {
 public:
   Image() = default;
-  explicit Image(std::string filename);
+  explicit Image(std::filesystem::path filename);
   Image(int width, int height, const RGBA& background = { });
   Image(Image&& rhs);
   Image& operator=(Image&& rhs);
   ~Image();
   Image clone() const;
 
-  const std::string& filename() const { return m_filename; }
+  const std::filesystem::path& filename() const { return m_filename; }
   int width() const { return m_width; }
   int height() const { return m_height; }
   Rect bounds() const { return { 0, 0, m_width, m_height }; }
@@ -22,13 +23,13 @@ public:
   const RGBA& rgba_at(const Point& p) const { return m_data[p.y * m_width + p.x]; }
 
 private:
-  std::string m_filename;
+  std::filesystem::path m_filename;
   RGBA* m_data{ };
   int m_width{ };
   int m_height{ };
 };
 
-void save_image(const Image& image, const std::string& filename);
+void save_image(const Image& image, const std::filesystem::path& path);
 void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy);
 void draw_rect(Image& image, const Rect& rect, const RGBA& color);
 bool is_opaque(const Image& image, const Rect& rect = { });
