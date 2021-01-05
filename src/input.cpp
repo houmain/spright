@@ -7,8 +7,9 @@
 #include <cstring>
 
 namespace {
+  const auto default_indentation = "  ";
   std::ostream* g_autocomplete_output;
-  int g_line_number = 1;
+  int g_line_number;
   std::vector<Sprite> g_sprites;
   int g_sprites_in_current_sheet;
   Point g_current_offset;
@@ -70,7 +71,9 @@ namespace {
   }
 
   [[noreturn]] void error(std::string message) {
-    throw std::runtime_error(message + " in line " + std::to_string(g_line_number));
+    if (g_line_number)
+      message += " in line " + std::to_string(g_line_number);
+    throw std::runtime_error(message);
   }
 
   void check(bool condition, std::string_view message) {
@@ -400,11 +403,12 @@ namespace {
 } // namespace
 
 std::vector<Sprite> parse_definition(const Settings& settings) {
+  g_line_number = 0;
   auto input = std::fstream(settings.input_file, std::ios::in);
   if (!input.good())
     error("opening file '" + path_to_utf8(settings.input_file) + "' failed");
 
-  auto detected_indetation = std::string();
+  auto detected_indetation = std::string(default_indentation);
   auto scope_stack = std::vector<State>();
   scope_stack.emplace_back();
   scope_stack.back().level = -1;
@@ -435,7 +439,7 @@ std::vector<Sprite> parse_definition(const Settings& settings) {
 
   auto buffer = std::string();
   auto arguments = std::vector<std::string_view>();
-  for (; !input.eof(); ++g_line_number) {
+  for (g_line_number = 1; !input.eof(); ++g_line_number) {
     std::getline(input, buffer);
 
     auto line = ltrim(buffer);
