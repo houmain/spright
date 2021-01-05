@@ -4,7 +4,7 @@
 #include <vector>
 
 struct Settings {
-  std::filesystem::path input_file;
+  std::filesystem::path input_file{ "spright.conf" };
   std::filesystem::path output_file{ "spright.txt" };
   std::filesystem::path sheet_file{ "spright.png" };
   std::filesystem::path template_file;

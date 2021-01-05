@@ -1,6 +1,6 @@
 
 // automatically generated with spright
-// https://github.com/houmaster/spright
+// https://github.com/houmain/spright
 
 namespace sprites {
 

@@ -58,7 +58,7 @@ void print_help_message(const char* argv0) {
     "spright %s(c) 2020 by Albert Kalchmair\n"
     "\n"
     "Usage: %s [-options]\n"
-    "  -i, --input <file>     input sheet description (required).\n"
+    "  -i, --input <file>     input sheet description (default: %s).\n"
     "  -o, --output <file>    output sheet description (default: %s).\n"
     "  -s, --sheet <file>     output sheet image (default: %s).\n"
     "  -t, --template <file>  output sheet description template.\n"
@@ -70,6 +70,7 @@ void print_help_message(const char* argv0) {
     "This program comes with absolutely no warranty.\n"
     "See the GNU General Public License, version 3 for details.\n"
     "\n", version, program.c_str(),
+    defaults.input_file.u8string().c_str(),
     defaults.output_file.u8string().c_str(),
     defaults.sheet_file.u8string().c_str());
 }

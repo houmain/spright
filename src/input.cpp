@@ -4,6 +4,7 @@
 #include <fstream>
 #include <algorithm>
 #include <sstream>
+#include <cstring>
 
 namespace {
   std::ostream* g_autocomplete_output;
@@ -11,6 +12,7 @@ namespace {
   std::vector<Sprite> g_sprites;
   int g_sprites_in_current_sheet;
   Point g_current_offset;
+  int g_current_sequence_index{ -1 };
 
   enum class Definition {
     none,
@@ -76,10 +78,28 @@ namespace {
       error(std::string(message));
   }
 
-  ImagePtr get_sheet(const std::filesystem::path& path, const std::filesystem::path& filename) {
-    static auto s_sheets = std::map<std::filesystem::path, ImagePtr>();
+  bool is_sheet_sequence(const std::filesystem::path& path) {
+    return (std::strchr(path.c_str(), '%') &&
+            path.u32string().find('%') != std::string::npos);
+  }
 
-    const auto full_path = std::filesystem::canonical(path / filename);
+  std::filesystem::path get_sheet_filename(const State& state) {
+    if (g_current_sequence_index < 0)
+      return state.path / state.sheet;
+
+    const auto format = path_to_utf8(state.sheet);
+    auto sheet = std::string();
+    sheet.resize(format.size() + 5);
+    const auto length = std::snprintf(sheet.data(), sheet.size(),
+      reinterpret_cast<const char*>(format.c_str()), g_current_sequence_index);
+    if (length <= 0)
+      return { };
+    sheet.resize(static_cast<size_t>(length));
+    return state.path / sheet;
+  }
+
+  ImagePtr get_sheet(const std::filesystem::path& full_path) {
+    static auto s_sheets = std::map<std::filesystem::path, ImagePtr>();
 
     auto& sheet = s_sheets[full_path];
     if (!sheet) {
@@ -110,8 +130,9 @@ namespace {
     auto sprite = Sprite{ };
     sprite.id = (!state.sprite.empty() ? state.sprite :
       "sprite_" + std::to_string(g_sprites.size()));
-    sprite.source = get_sheet(state.path, state.sheet);
-    sprite.source_rect = state.rect;
+    sprite.source = get_sheet(get_sheet_filename(state));
+    sprite.source_rect = (!empty(state.rect) ?
+      state.rect : sprite.source->bounds());
     sprite.pivot = state.pivot;
     sprite.pivot_point = state.pivot_point;
     sprite.margin = state.margin;
@@ -119,18 +140,31 @@ namespace {
     sprite.tags = state.tags;
     g_sprites.push_back(std::move(sprite));
 
+    if (g_current_sequence_index >= 0)
+      ++g_current_sequence_index;
     ++g_sprites_in_current_sheet;
   }
 
-  void autocomplete_separate_sprites(State& state, std::ostream& os) {
-    // TODO:
+  void autocomplete_sequence_sprites(State& state, std::ostream& os) {
+    for (;;) {
+      const auto filename = get_sheet_filename(state);
+      auto error = std::error_code{ };
+      if (!std::filesystem::exists(filename, error))
+        break;
+
+      const auto& sheet = *get_sheet(filename);
+      state.rect = sheet.bounds();
+
+      os << state.indent << "sprite\n";
+      sprite_ends(state);
+    }
   }
 
   void autocomplete_grid_sprites(State& state, std::ostream& os) {
     const auto floor = [](int v, int q) { return (v / q) * q; };
     const auto ceil = [](int v, int q) { return ((v + q - 1) / q) * q; };
 
-    const auto& sheet = *get_sheet(state.path, state.sheet);
+    const auto& sheet = *get_sheet(get_sheet_filename(state));
     const auto bounds = get_used_bounds(sheet);
     const auto grid = state.grid;
     const auto x0 = floor(bounds.x, grid.x) / grid.x;
@@ -175,7 +209,7 @@ namespace {
   }
 
   void autocomplete_unaligned_sprites(State& state, std::ostream& os) {
-    const auto& sheet = *get_sheet(state.path, state.sheet);
+    const auto& sheet = *get_sheet(get_sheet_filename(state));
     for (const auto& rect : find_islands(sheet)) {
       os << state.indent << "sprite \n";
       os << state.indent << "  rect "
@@ -190,8 +224,8 @@ namespace {
   void sheet_ends(State& state) {
     if (g_autocomplete_output && !g_sprites_in_current_sheet) {
       auto& os = *g_autocomplete_output;
-      if (state.sheet.u32string().find('%') != std::string::npos) {
-        autocomplete_separate_sprites(state, os);
+      if (is_sheet_sequence(state.sheet)) {
+        autocomplete_sequence_sprites(state, os);
       }
       else if (!empty(state.grid)) {
         autocomplete_grid_sprites(state, os);
@@ -260,6 +294,13 @@ namespace {
       case Definition::sheet:
         state.sheet = check_path();
         g_current_offset = { };
+        g_current_sequence_index = -1;
+        if (is_sheet_sequence(state.sheet)) {
+          g_current_sequence_index = 0;
+          if (!std::filesystem::exists(get_sheet_filename(state)))
+            g_current_sequence_index = 1;
+        }
+
         break;
 
       case Definition::tag: {
