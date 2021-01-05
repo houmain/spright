@@ -98,7 +98,7 @@ namespace {
     return state.path / sheet;
   }
 
-  ImagePtr get_sheet(const std::filesystem::path& full_path) {
+  ImagePtr get_sheet(const std::filesystem::path& full_path, RGBA colorkey) {
     static auto s_sheets = std::map<std::filesystem::path, ImagePtr>();
 
     auto& sheet = s_sheets[full_path];
@@ -106,8 +106,9 @@ namespace {
       auto image = Image(full_path);
 
       if (is_opaque(image)) {
-        const auto color_key = guess_color_key(image);
-        replace_color(image, color_key, RGBA{ });
+        if (!colorkey.a)
+          colorkey = guess_colorkey(image);
+        replace_color(image, colorkey, RGBA{ });
       }
 
       sheet = std::make_shared<Image>(std::move(image));
@@ -130,7 +131,7 @@ namespace {
     auto sprite = Sprite{ };
     sprite.id = (!state.sprite.empty() ? state.sprite :
       "sprite_" + std::to_string(g_sprites.size()));
-    sprite.source = get_sheet(get_sheet_filename(state));
+    sprite.source = get_sheet(get_sheet_filename(state), state.colorkey);
     sprite.source_rect = (!empty(state.rect) ?
       state.rect : sprite.source->bounds());
     sprite.pivot = state.pivot;
@@ -152,7 +153,7 @@ namespace {
       if (!std::filesystem::exists(filename, error))
         break;
 
-      const auto& sheet = *get_sheet(filename);
+      const auto& sheet = *get_sheet(filename, state.colorkey);
       state.rect = sheet.bounds();
 
       os << state.indent << "sprite\n";
@@ -164,7 +165,7 @@ namespace {
     const auto floor = [](int v, int q) { return (v / q) * q; };
     const auto ceil = [](int v, int q) { return ((v + q - 1) / q) * q; };
 
-    const auto& sheet = *get_sheet(get_sheet_filename(state));
+    const auto& sheet = *get_sheet(get_sheet_filename(state), state.colorkey);
     const auto bounds = get_used_bounds(sheet);
     const auto grid = state.grid;
     const auto x0 = floor(bounds.x, grid.x) / grid.x;
@@ -209,7 +210,7 @@ namespace {
   }
 
   void autocomplete_unaligned_sprites(State& state, std::ostream& os) {
-    const auto& sheet = *get_sheet(get_sheet_filename(state));
+    const auto& sheet = *get_sheet(get_sheet_filename(state), state.colorkey);
     for (const auto& rect : find_islands(sheet)) {
       os << state.indent << "sprite \n";
       os << state.indent << "  rect "
@@ -285,6 +286,17 @@ namespace {
       }
       error("invalid enum value " + std::string(string));
     };
+    const auto check_color = [&]() {
+      std::stringstream ss;
+      ss << std::hex << check_string();
+      check(ss.peek() == '#', "color in HTML notation expected");
+      ss.seekg(1);
+      auto color = RGBA{ };
+      ss >> color.rgba;
+      if (!color.a)
+        color.a = 255;
+      return color;
+    };
 
     switch (definition) {
       case Definition::path: {
@@ -300,7 +312,10 @@ namespace {
           if (!std::filesystem::exists(get_sheet_filename(state)))
             g_current_sequence_index = 1;
         }
+        break;
 
+      case Definition::colorkey:
+        state.colorkey = check_color();
         break;
 
       case Definition::tag: {

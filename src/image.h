@@ -35,6 +35,6 @@ void draw_rect(Image& image, const Rect& rect, const RGBA& color);
 bool is_opaque(const Image& image, const Rect& rect = { });
 bool is_fully_transparent(const Image& image, const Rect& rect = { });
 Rect get_used_bounds(const Image& image, const Rect& rect = { });
-RGBA guess_color_key(const Image& image);
+RGBA guess_colorkey(const Image& image);
 void replace_color(Image& image, RGBA original, RGBA color);
 std::vector<Rect> find_islands(const Image& image, const Rect& rect = { });

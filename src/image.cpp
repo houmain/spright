@@ -204,7 +204,7 @@ Rect get_used_bounds(const Image& image, const Rect& rect) {
   return { min_x, min_y, max_x - min_x + 1, max_y - min_y + 1 };
 }
 
-RGBA guess_color_key(const Image& image) {  
+RGBA guess_colorkey(const Image& image) {
   // find a corner within larger same-color area using flood fill
   const auto limit = std::max(image.height(), image.height());
 
