@@ -1,0 +1,69 @@
+#pragma once
+
+#include "input.h"
+
+enum class Definition {
+  none,
+  path,
+  sheet,
+  colorkey,
+  grid,
+  offset,
+  sprite,
+  rect,
+  skip,
+  pivot,
+  tag,
+  margin,
+  trim,
+};
+
+struct State {
+  Definition definition{ };
+  int level;
+  std::string indent;
+
+  std::filesystem::path path;
+  std::filesystem::path sheet;
+  RGBA colorkey{ };
+  std::map<std::string, std::string> tags;
+  std::string sprite;
+  Size grid{ };
+  Pivot pivot{ PivotX::center, PivotY::middle };
+  PointF pivot_point{ };
+  Rect rect{ };
+  int margin{ };
+  Trim trim{ };
+};
+
+class InputParser {
+public:
+  explicit InputParser(const Settings& settings);
+  void parse();
+  const std::vector<Sprite>& sprites() const & { return m_sprites; }
+  std::vector<Sprite> sprites() && { return m_sprites; }
+
+private:
+  [[noreturn]] void error(std::string message);
+  void check(bool condition, std::string_view message);
+  std::filesystem::path get_sheet_filename(const State& state) const;
+  ImagePtr get_sheet(const std::filesystem::path& full_path, RGBA colorkey) const;
+  void sprite_ends(State& state);
+  void autocomplete_sequence_sprites(State& state, std::ostream& os);
+  void autocomplete_grid_sprites(State& state, std::ostream& os);
+  void autocomplete_unaligned_sprites(State& state, std::ostream& os);
+  void sheet_ends(State& state);
+  void apply_definition(State& state,
+      Definition definition,
+      std::vector<std::string_view>& arguments);
+  bool has_implicit_scope(Definition definition);
+  void scope_ends(State& state);
+
+  const Settings& m_settings;
+  std::ostream* m_autocomplete_output;
+  int m_line_number{ };
+  std::vector<Sprite> m_sprites;
+  int m_sprites_in_current_sheet;
+  Point m_current_offset;
+  int m_current_sequence_index{ -1 };
+};

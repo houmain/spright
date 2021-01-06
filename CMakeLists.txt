@@ -9,6 +9,7 @@ set(SOURCES
     src/settings.cpp
     src/image.cpp
     src/input.cpp
+    src/InputParser.cpp
     src/packing.cpp
     src/output.cpp
     src/main.cpp
