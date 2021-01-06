@@ -4,6 +4,6 @@
 
 std::vector<Sprite> parse_definition(const Settings& settings) {
   auto parser = InputParser(settings);
-  parser.parse();
+  parser.parse_autocomplete();
   return std::move(parser).sprites();
 }

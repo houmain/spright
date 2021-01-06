@@ -60,10 +60,9 @@ std::filesystem::path InputParser::get_sheet_filename(const State& state) const 
   return state.path / sheet;
 }
 
-ImagePtr InputParser::get_sheet(const std::filesystem::path& full_path, RGBA colorkey) const {
-  static auto s_sheets = std::map<std::filesystem::path, ImagePtr>();
-
-  auto& sheet = s_sheets[full_path];
+ImagePtr InputParser::get_sheet(const std::filesystem::path& full_path, RGBA colorkey) {
+  auto error_code = std::error_code{ };
+  auto& sheet = m_sheets[std::filesystem::canonical(full_path, error_code)];
   if (!sheet) {
     auto image = Image(full_path);
 
@@ -108,7 +107,8 @@ void InputParser::sprite_ends(State& state) {
   ++m_sprites_in_current_sheet;
 }
 
-void InputParser::autocomplete_sequence_sprites(State& state, std::ostream& os) {
+void InputParser::autocomplete_sequence_sprites(State& state) {
+  auto& os = m_autocomplete_output;
   for (;;) {
     const auto filename = get_sheet_filename(state);
     auto error = std::error_code{ };
@@ -123,7 +123,8 @@ void InputParser::autocomplete_sequence_sprites(State& state, std::ostream& os) 
   }
 }
 
-void InputParser::autocomplete_grid_sprites(State& state, std::ostream& os) {
+void InputParser::autocomplete_grid_sprites(State& state) {
+  auto& os = m_autocomplete_output;
   const auto floor = [](int v, int q) { return (v / q) * q; };
   const auto ceil = [](int v, int q) { return ((v + q - 1) / q) * q; };
 
@@ -171,7 +172,8 @@ void InputParser::autocomplete_grid_sprites(State& state, std::ostream& os) {
   }
 }
 
-void InputParser::autocomplete_unaligned_sprites(State& state, std::ostream& os) {
+void InputParser::autocomplete_unaligned_sprites(State& state) {
+  auto& os = m_autocomplete_output;
   const auto& sheet = *get_sheet(get_sheet_filename(state), state.colorkey);
   for (const auto& rect : find_islands(sheet)) {
     os << state.indent << "sprite \n";
@@ -185,16 +187,15 @@ void InputParser::autocomplete_unaligned_sprites(State& state, std::ostream& os)
 }
 
 void InputParser::sheet_ends(State& state) {
-  if (m_autocomplete_output && !m_sprites_in_current_sheet) {
-    auto& os = *m_autocomplete_output;
+  if (m_settings.autocomplete && !m_sprites_in_current_sheet) {
     if (is_sheet_sequence(state.sheet)) {
-      autocomplete_sequence_sprites(state, os);
+      autocomplete_sequence_sprites(state);
     }
     else if (!empty(state.grid)) {
-      autocomplete_grid_sprites(state, os);
+      autocomplete_grid_sprites(state);
     }
     else {
-      autocomplete_unaligned_sprites(state, os);
+      autocomplete_unaligned_sprites(state);
     }
   }
   m_sprites_in_current_sheet = { };
@@ -364,23 +365,14 @@ InputParser::InputParser(const Settings& settings)
   : m_settings(settings) {
 }
 
-void InputParser::parse() {
-  m_line_number = 0;
-  auto input = std::fstream(m_settings.input_file, std::ios::in);
-  if (!input.good())
-    error("opening file '" + path_to_utf8(m_settings.input_file) + "' failed");
-
+void InputParser::parse(std::istream& input) {
   const auto default_indentation = "  ";
   auto detected_indetation = std::string(default_indentation);
   auto scope_stack = std::vector<State>();
   scope_stack.emplace_back();
   scope_stack.back().level = -1;
 
-  auto autocomplete_output = std::stringstream();
   auto autocomplete_space = std::stringstream();
-  if (m_settings.autocomplete)
-    m_autocomplete_output = &autocomplete_output;
-
   const auto pop_scope_stack = [&](int level) {
     for (auto last = scope_stack.rbegin(); ; ++last) {
       if (has_implicit_scope(last->definition) && level <= last->level) {
@@ -409,7 +401,7 @@ void InputParser::parse() {
     if (line.empty() || starts_with(line, "#")) {
       if (m_settings.autocomplete) {
         if (input.eof())
-          autocomplete_output << autocomplete_space.str();
+          m_autocomplete_output << autocomplete_space.str();
         else
           autocomplete_space << buffer << '\n';
       }
@@ -439,15 +431,23 @@ void InputParser::parse() {
 
     if (m_settings.autocomplete) {
       const auto space = autocomplete_space.str();
-      autocomplete_output << space << buffer << '\n';
+      m_autocomplete_output << space << buffer << '\n';
       autocomplete_space = { };
     }
   }
-
   pop_scope_stack(-1);
+  m_line_number = 0;
+}
+
+void InputParser::parse_autocomplete() {
+  auto input = std::fstream(m_settings.input_file, std::ios::in);
+  if (!input.good())
+    error("opening file '" + path_to_utf8(m_settings.input_file) + "' failed");
+
+  parse(input);
 
   if (m_settings.autocomplete) {
-    const auto output = autocomplete_output.str();
+    const auto output = m_autocomplete_output.str();
     if (static_cast<int>(output.size()) != input.tellg()) {
       input.close();
       input = std::fstream(m_settings.input_file, std::ios::out);
