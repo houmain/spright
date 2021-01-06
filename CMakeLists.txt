@@ -13,6 +13,7 @@ set(SOURCES
     src/packing.cpp
     src/output.cpp
     src/main.cpp
+    src/test.cpp
 )
 
 set(SOURCES ${SOURCES}
