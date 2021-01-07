@@ -9,6 +9,7 @@
 namespace {
   Definition get_definition(std::string_view command) {
     static const auto s_map = std::map<std::string, Definition, std::less<>>{
+      { "begin", Definition::begin },
       { "path", Definition::path },
       { "sheet", Definition::sheet },
       { "colorkey", Definition::colorkey },
@@ -262,6 +263,8 @@ void InputParser::apply_definition(State& state,
   };
 
   switch (definition) {
+    case Definition::begin:
+      break;
     case Definition::path: {
       state.path = check_path();
       break;

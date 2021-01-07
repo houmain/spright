@@ -4,6 +4,7 @@
 
 enum class Definition {
   none,
+  begin,
   path,
   sheet,
   colorkey,

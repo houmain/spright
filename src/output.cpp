@@ -23,7 +23,7 @@ namespace {
 } // namespace
 
 void output_definition(const Settings& settings, const std::vector<Sprite>& sprites) {
-  if (settings.output_file.empty() || sprites.empty())
+  if (settings.output_file.empty())
     return;
 
   auto json = nlohmann::json{ };
