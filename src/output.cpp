@@ -28,6 +28,7 @@ void output_definition(const Settings& settings, const std::vector<Sprite>& spri
 
   auto json = nlohmann::json{ };
   auto& json_sprites = json["sprites"];
+  json_sprites = nlohmann::json::array();
 
   using TagKey = std::pair<std::string, std::string>;
   using SpriteIndex = size_t;
@@ -50,6 +51,7 @@ void output_definition(const Settings& settings, const std::vector<Sprite>& spri
   }
 
   auto& json_tags = json["tags"];
+  json_tags = nlohmann::json::array();
   for (const auto& [tag_key, sprite_indices] : tags) {
     auto& json_tag = json_tags.emplace_back();
     json_tag["id"] = tag_key.first;

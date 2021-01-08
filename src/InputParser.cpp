@@ -33,6 +33,16 @@ namespace {
     return (std::strchr(path.c_str(), '%') &&
             path.u32string().find('%') != std::string::npos);
   }
+
+  int index_of(std::string_view string, std::initializer_list<const char*> strings) {
+    auto i = 0;
+    for (auto s : strings) {
+      if (string == s)
+        return i;
+      ++i;
+    }
+    return -1;
+  }
 } // namespace
 
 [[noreturn]] void InputParser::error(std::string message) {
@@ -178,9 +188,10 @@ void InputParser::autocomplete_unaligned_sprites(State& state) {
   const auto& sheet = *get_sheet(get_sheet_filename(state), state.colorkey);
   for (const auto& rect : find_islands(sheet)) {
     os << state.indent << "sprite \n";
-    os << state.indent << "  rect "
-      << rect.x << " " << rect.y << " "
-      << rect.w << " " << rect.h << "\n";
+    if (rect != sheet.bounds())
+      os << state.indent << "  rect "
+        << rect.x << " " << rect.y << " "
+        << rect.w << " " << rect.h << "\n";
 
     state.rect = rect;
     sprite_ends(state);
@@ -239,16 +250,6 @@ void InputParser::apply_definition(State& state,
   };
   const auto check_rect = [&]() {
     return Rect{ check_int(), check_int(), check_int(), check_int() };
-  };
-  const auto check_enum = [&](auto e, std::initializer_list<const char*> strings) {
-    const auto string = check_string();
-    auto i = 0;
-    for (auto s : strings) {
-      if (string == s)
-        return decltype(e){ i };
-      ++i;
-    }
-    error("invalid enum value " + std::string(string));
   };
   const auto check_color = [&]() {
     std::stringstream ss;
@@ -314,16 +315,22 @@ void InputParser::apply_definition(State& state,
       break;
 
     case Definition::pivot:
-      state.pivot = { PivotX::custom, PivotY::custom };
-      if (is_number_following())
+      if (is_number_following()) {
+        state.pivot = { PivotX::custom, PivotY::custom };
         state.pivot_point.x = check_float();
-      else
-        state.pivot.x = check_enum(PivotX{ }, { "left", "center", "right" });
-
-      if (is_number_following())
         state.pivot_point.y = check_float();
-      else
-        state.pivot.y = check_enum(PivotY{ }, { "top", "middle", "bottom" });
+      }
+      else {
+        for (auto i = 0; i < 2; ++i) {
+          const auto string = check_string();
+          if (const auto index = index_of(string, { "left", "center", "right" }); index >= 0)
+            state.pivot.x = static_cast<PivotX>(index);
+          else if (const auto index = index_of(string, { "top", "middle", "bottom" }); index >= 0)
+            state.pivot.y = static_cast<PivotY>(index);
+          else
+            error("invalid pivot value '" + std::string(string) + "'");
+        }
+      }
       break;
 
     case Definition::margin:
@@ -331,8 +338,16 @@ void InputParser::apply_definition(State& state,
       break;
 
     case Definition::trim:
-      state.trim = (!arguments_left() ? Trim::trim :
-        check_enum(Trim{ }, { "none", "trim", "crop" }));
+      if (!arguments_left()) {
+        state.trim = Trim::trim;
+      }
+      else {
+        const auto string = check_string();
+        if (const auto index = index_of(string, { "none", "trim", "crop" }); index >= 0)
+          state.trim = static_cast<Trim>(index);
+        else
+          error("invalid trim value '" + std::string(string) + "'");
+      }
       break;
 
     case Definition::none: break;
