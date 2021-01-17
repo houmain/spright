@@ -29,11 +29,6 @@ namespace {
     return it->second;
   }
 
-  bool is_sheet_sequence(const std::filesystem::path& path) {
-    return (std::strchr(path.c_str(), '%') &&
-            path.u32string().find('%') != std::string::npos);
-  }
-
   int index_of(std::string_view string, std::initializer_list<const char*> strings) {
     auto i = 0;
     for (auto s : strings) {
@@ -56,21 +51,6 @@ void InputParser::check(bool condition, std::string_view message) {
     error(std::string(message));
 }
 
-std::filesystem::path InputParser::get_sheet_filename(const State& state) const {
-  if (m_current_sequence_index < 0)
-    return state.path / state.sheet;
-
-  const auto format = path_to_utf8(state.sheet);
-  auto sheet = std::string();
-  sheet.resize(format.size() + 5);
-  const auto length = std::snprintf(sheet.data(), sheet.size(),
-    reinterpret_cast<const char*>(format.c_str()), m_current_sequence_index);
-  if (length <= 0)
-    return { };
-  sheet.resize(static_cast<size_t>(length));
-  return state.path / sheet;
-}
-
 ImagePtr InputParser::get_sheet(const std::filesystem::path& full_path, RGBA colorkey) {
   auto error_code = std::error_code{ };
   auto& sheet = m_sheets[std::filesystem::canonical(full_path, error_code)];
@@ -88,6 +68,11 @@ ImagePtr InputParser::get_sheet(const std::filesystem::path& full_path, RGBA col
   return sheet;
 }
 
+ImagePtr InputParser::get_sheet(const State& state) {
+  const auto full_path = state.path / state.sheet.get_nth_filename(m_current_sequence_index);
+  return get_sheet(full_path, state.colorkey);
+}
+
 void InputParser::sprite_ends(State& state) {
   check(!state.sheet.empty(), "sprite not on sheet");
 
@@ -103,7 +88,7 @@ void InputParser::sprite_ends(State& state) {
   auto sprite = Sprite{ };
   sprite.id = (!state.sprite.empty() ? state.sprite :
     "sprite_" + std::to_string(m_sprites.size()));
-  sprite.source = get_sheet(get_sheet_filename(state), state.colorkey);
+  sprite.source = get_sheet(state);
   sprite.source_rect = (!empty(state.rect) ?
     state.rect : sprite.source->bounds());
   sprite.pivot = state.pivot;
@@ -113,20 +98,25 @@ void InputParser::sprite_ends(State& state) {
   sprite.tags = state.tags;
   m_sprites.push_back(std::move(sprite));
 
-  if (m_current_sequence_index >= 0)
+  if (state.sheet.is_sequence())
     ++m_current_sequence_index;
   ++m_sprites_in_current_sheet;
 }
 
 void InputParser::autocomplete_sequence_sprites(State& state) {
-  auto& os = m_autocomplete_output;
-  for (;;) {
-    const auto filename = get_sheet_filename(state);
-    auto error = std::error_code{ };
-    if (!std::filesystem::exists(filename, error))
-      break;
 
-    const auto& sheet = *get_sheet(filename, state.colorkey);
+  auto error = std::error_code{ };
+  if (state.sheet.is_infinite_sequence())
+    for (auto i = 0; ; ++i)
+      if (!std::filesystem::exists(state.path / state.sheet.get_nth_filename(i), error)) {
+        state.sheet.set_count(i);
+        break;
+      }
+
+  auto& os = m_autocomplete_output;
+  for (auto i = 0; i < state.sheet.count(); ++i) {
+    const auto full_path = state.path / state.sheet.get_nth_filename(i);
+    const auto& sheet = *get_sheet(full_path, state.colorkey);
     state.rect = sheet.bounds();
 
     os << state.indent << "sprite\n";
@@ -139,7 +129,7 @@ void InputParser::autocomplete_grid_sprites(State& state) {
   const auto floor = [](int v, int q) { return (v / q) * q; };
   const auto ceil = [](int v, int q) { return ((v + q - 1) / q) * q; };
 
-  const auto& sheet = *get_sheet(get_sheet_filename(state), state.colorkey);
+  const auto& sheet = *get_sheet(state);
   const auto bounds = get_used_bounds(sheet);
   const auto grid = state.grid;
   const auto x0 = floor(bounds.x, grid.x) / grid.x;
@@ -185,7 +175,7 @@ void InputParser::autocomplete_grid_sprites(State& state) {
 
 void InputParser::autocomplete_unaligned_sprites(State& state) {
   auto& os = m_autocomplete_output;
-  const auto& sheet = *get_sheet(get_sheet_filename(state), state.colorkey);
+  const auto& sheet = *get_sheet(state);
   for (const auto& rect : find_islands(sheet)) {
     os << state.indent << "sprite \n";
     if (rect != sheet.bounds())
@@ -200,7 +190,7 @@ void InputParser::autocomplete_unaligned_sprites(State& state) {
 
 void InputParser::sheet_ends(State& state) {
   if (m_settings.autocomplete && !m_sprites_in_current_sheet) {
-    if (is_sheet_sequence(state.sheet)) {
+    if (state.sheet.is_sequence()) {
       autocomplete_sequence_sprites(state);
     }
     else if (!empty(state.grid)) {
@@ -271,14 +261,9 @@ void InputParser::apply_definition(State& state,
       break;
     }
     case Definition::sheet:
-      state.sheet = check_path();
+      state.sheet = path_to_utf8(check_path());
       m_current_offset = { };
-      m_current_sequence_index = -1;
-      if (is_sheet_sequence(state.sheet)) {
-        m_current_sequence_index = 0;
-        if (!std::filesystem::exists(get_sheet_filename(state)))
-          m_current_sequence_index = 1;
-      }
+      m_current_sequence_index = 0;
       break;
 
     case Definition::colorkey:

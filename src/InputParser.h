@@ -1,6 +1,7 @@
 #pragma once
 
 #include "input.h"
+#include "FilenameSequence.h"
 
 enum class Definition {
   none,
@@ -25,7 +26,7 @@ struct State {
   std::string indent;
 
   std::filesystem::path path;
-  std::filesystem::path sheet;
+  FilenameSequence sheet;
   RGBA colorkey{ };
   std::map<std::string, std::string> tags;
   std::string sprite;
@@ -48,7 +49,7 @@ public:
 private:
   [[noreturn]] void error(std::string message);
   void check(bool condition, std::string_view message);
-  std::filesystem::path get_sheet_filename(const State& state) const;
+  ImagePtr get_sheet(const State& state);
   ImagePtr get_sheet(const std::filesystem::path& full_path, RGBA colorkey);
   void sprite_ends(State& state);
   void autocomplete_sequence_sprites(State& state);
@@ -68,5 +69,5 @@ private:
   std::vector<Sprite> m_sprites;
   int m_sprites_in_current_sheet{ };
   Point m_current_offset{ };
-  int m_current_sequence_index{ -1 };
+  int m_current_sequence_index{ };
 };
