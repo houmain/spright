@@ -20,11 +20,6 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
         return false;
       settings.output_file = std::filesystem::u8path(unquote(argv[i]));
     }
-    else if (argument == "-s" || argument == "--sheet") {
-      if (++i >= argc)
-        return false;
-      settings.sheet_file = std::filesystem::u8path(unquote(argv[i]));
-    }
     else if (argument == "-a" || argument == "--autocomplete") {
       settings.autocomplete = true;
     }
@@ -55,13 +50,12 @@ void print_help_message(const char* argv0) {
 
   const auto defaults = Settings{ };
   printf(
-    "spright %s(c) 2021 by Albert Kalchmair\n"
+    "spright %s(c) 2020-2021 by Albert Kalchmair\n"
     "\n"
     "Usage: %s [-options]\n"
-    "  -i, --input <file>     input sheet description (default: %s).\n"
-    "  -o, --output <file>    output sheet description (default: %s).\n"
-    "  -s, --sheet <file>     output sheet image (default: %s).\n"
-    "  -t, --template <file>  output sheet description template.\n"
+    "  -i, --input <file>     input description (default: %s).\n"
+    "  -o, --output <file>    output description (default: %s).\n"
+    "  -t, --template <file>  output description template.\n"
     "  -a, --autocomplete     autocomplete input sheet description.\n"
     "  -d, --debug            draw rectangles and pivot points on sprites.\n"
     "  -h, --help             print this help.\n"
@@ -71,6 +65,5 @@ void print_help_message(const char* argv0) {
     "See the GNU General Public License, version 3 for details.\n"
     "\n", version, program.c_str(),
     defaults.input_file.string().c_str(),
-    defaults.output_file.string().c_str(),
-    defaults.sheet_file.string().c_str());
+    defaults.output_file.string().c_str());
 }

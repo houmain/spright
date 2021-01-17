@@ -6,6 +6,7 @@
 #include <map>
 
 using ImagePtr = std::shared_ptr<const Image>;
+using TexturePtr = std::shared_ptr<const struct Texture>;
 
 enum class PivotX { left, center, right, custom };
 enum class PivotY { top, middle, bottom, custom };
@@ -13,8 +14,19 @@ struct Pivot { PivotX x; PivotY y; };
 
 enum class Trim { none, trim, crop };
 
+struct Texture {
+  std::string filename;
+  int width{ };
+  int height{ };
+  bool square{ };
+  bool power_of_two{ };
+  int padding{ };
+  RGBA colorkey;
+};
+
 struct Sprite {
   std::string id;
+  TexturePtr texture;
   ImagePtr source;
   Rect source_rect{ };
   Rect trimmed_source_rect{ };

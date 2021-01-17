@@ -39,4 +39,5 @@ my_stbi_zlib_compress( unsigned char *data, int data_len,
 
 
 #define STB_RECT_PACK_IMPLEMENTATION
+//#define STBRP_LARGE_RECTS
 #include "stb_rect_pack.h"

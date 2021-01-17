@@ -6,6 +6,14 @@
 enum class Definition {
   none,
   begin,
+
+  texture,
+  width,
+  height,
+  square,
+  power_of_two,
+  padding,
+
   path,
   sheet,
   colorkey,
@@ -24,6 +32,13 @@ struct State {
   Definition definition{ };
   int level;
   std::string indent;
+
+  std::filesystem::path texture;
+  int width{ };
+  int height{};
+  bool square{ };
+  bool power_of_two{ };
+  int padding{ };
 
   std::filesystem::path path;
   FilenameSequence sheet;
@@ -49,12 +64,14 @@ public:
 private:
   [[noreturn]] void error(std::string message);
   void check(bool condition, std::string_view message);
+  TexturePtr get_texture(const State& state);
   ImagePtr get_sheet(const State& state);
   ImagePtr get_sheet(const std::filesystem::path& full_path, RGBA colorkey);
   void sprite_ends(State& state);
   void autocomplete_sequence_sprites(State& state);
   void autocomplete_grid_sprites(State& state);
   void autocomplete_unaligned_sprites(State& state);
+  void texture_ends(State& state);
   void sheet_ends(State& state);
   void apply_definition(State& state,
       Definition definition,
@@ -63,9 +80,10 @@ private:
   void scope_ends(State& state);
 
   const Settings& m_settings;
-  std::map<std::filesystem::path, ImagePtr> m_sheets;
   std::stringstream m_autocomplete_output;
   int m_line_number{ };
+  std::map<std::filesystem::path, TexturePtr> m_textures;
+  std::map<std::filesystem::path, ImagePtr> m_sheets;
   std::vector<Sprite> m_sprites;
   int m_sprites_in_current_sheet{ };
   Point m_current_offset{ };

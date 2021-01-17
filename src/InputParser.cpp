@@ -9,6 +9,12 @@
 namespace {
   Definition get_definition(std::string_view command) {
     static const auto s_map = std::map<std::string, Definition, std::less<>>{
+      { "texture", Definition::texture },
+      { "width", Definition::width },
+      { "height", Definition::height },
+      { "square", Definition::square },
+      { "poweroftwo", Definition::power_of_two },
+      { "padding", Definition::padding },
       { "begin", Definition::begin },
       { "path", Definition::path },
       { "sheet", Definition::sheet },
@@ -51,9 +57,24 @@ void InputParser::check(bool condition, std::string_view message) {
     error(std::string(message));
 }
 
+TexturePtr InputParser::get_texture(const State& state) {
+  auto& texture = m_textures[std::filesystem::weakly_canonical(state.texture)];
+  if (!texture) {
+    texture = std::make_shared<Texture>(Texture{
+      .filename = state.texture,
+      .width = state.width,
+      .height = state.height,
+      .square = state.square,
+      .power_of_two = state.power_of_two,
+      .padding = state.padding,
+      .colorkey = state.colorkey,
+    });
+  }
+  return texture;
+}
+
 ImagePtr InputParser::get_sheet(const std::filesystem::path& full_path, RGBA colorkey) {
-  auto error_code = std::error_code{ };
-  auto& sheet = m_sheets[std::filesystem::canonical(full_path, error_code)];
+  auto& sheet = m_sheets[std::filesystem::weakly_canonical(full_path)];
   if (!sheet) {
     auto image = Image(full_path);
 
@@ -88,6 +109,7 @@ void InputParser::sprite_ends(State& state) {
   auto sprite = Sprite{ };
   sprite.id = (!state.sprite.empty() ? state.sprite :
     "sprite_" + std::to_string(m_sprites.size()));
+  sprite.texture = get_texture(state);
   sprite.source = get_sheet(state);
   sprite.source_rect = (!empty(state.rect) ?
     state.rect : sprite.source->bounds());
@@ -104,7 +126,6 @@ void InputParser::sprite_ends(State& state) {
 }
 
 void InputParser::autocomplete_sequence_sprites(State& state) {
-
   auto error = std::error_code{ };
   if (state.sheet.is_infinite_sequence())
     for (auto i = 0; ; ++i)
@@ -188,6 +209,10 @@ void InputParser::autocomplete_unaligned_sprites(State& state) {
   }
 }
 
+void InputParser::texture_ends(State& state) {
+  get_texture(state);
+}
+
 void InputParser::sheet_ends(State& state) {
   if (m_settings.autocomplete && !m_sprites_in_current_sheet) {
     if (state.sheet.is_sequence()) {
@@ -232,6 +257,12 @@ void InputParser::apply_definition(State& state,
     check(ec == std::errc(), "invalid number");
     return result;
   };
+  const auto check_bool = [&]() {
+    const auto str = check_string();
+    if (str == "true") return true;
+    if (str == "false") return false;
+    error("invalid boolean value '" + std::string(str) + "'");
+  };
   const auto check_float = [&]() {
     return std::stof(std::string(check_string()));
   };
@@ -255,11 +286,37 @@ void InputParser::apply_definition(State& state,
 
   switch (definition) {
     case Definition::begin:
+      // just for opening scopes, useful for additive definitions (e.g. tags)
       break;
-    case Definition::path: {
+
+    case Definition::texture:
+      state.texture = check_path();
+      break;
+
+    case Definition::width:
+      state.width = check_int();
+      break;
+
+    case Definition::height:
+      state.height = check_int();
+      break;
+
+    case Definition::square:
+      state.square = check_bool();
+      break;
+
+    case Definition::power_of_two:
+      state.power_of_two = check_bool();
+      break;
+
+    case Definition::padding:
+      state.padding = check_int();
+      break;
+
+    case Definition::path:
       state.path = check_path();
       break;
-    }
+
     case Definition::sheet:
       state.sheet = path_to_utf8(check_path());
       m_current_offset = { };
@@ -342,17 +399,14 @@ void InputParser::apply_definition(State& state,
 }
 
 bool InputParser::has_implicit_scope(Definition definition) {
-  switch (definition) {
-    case Definition::sheet:
-    case Definition::sprite:
-      return true;
-    default:
-      return false;
-  }
+  return (definition == Definition::sprite);
 }
 
 void InputParser::scope_ends(State& state) {
   switch (state.definition) {
+    case Definition::texture:
+      texture_ends(state);
+      break;
     case Definition::sheet:
       sheet_ends(state);
       break;
