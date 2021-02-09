@@ -19,6 +19,8 @@ set(SOURCES
 set(SOURCES ${SOURCES}
     libs/stb/stb_impl.c
     libs/miniz/miniz.c
+    libs/texpack/packer.cpp
+    libs/texpack/rbp/MaxRects.cpp
 )
 
 set(INCLUDES ${INCLUDES}

@@ -20,7 +20,7 @@ int main(int argc, const char* argv[]) try {
   }
 
   auto sprites = parse_definition(settings);
-  pack_sprite_sheet(settings, sprites);
+  pack_sprites(settings, sprites);
   output_definition(settings, sprites);
 }
 catch (const std::exception& ex) {

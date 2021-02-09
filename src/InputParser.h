@@ -10,8 +10,10 @@ enum class Definition {
   texture,
   width,
   height,
-  square,
+  max_width,
+  max_height,
   power_of_two,
+  allow_rotate,
   padding,
 
   path,
@@ -36,8 +38,10 @@ struct State {
   std::filesystem::path texture;
   int width{ };
   int height{};
-  bool square{ };
+  int max_width{ };
+  int max_height{};
   bool power_of_two{ };
+  bool allow_rotate{ };
   int padding{ };
 
   std::filesystem::path path;

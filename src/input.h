@@ -18,8 +18,10 @@ struct Texture {
   std::string filename;
   int width{ };
   int height{ };
-  bool square{ };
+  int max_width{ };
+  int max_height{ };
   bool power_of_two{ };
+  bool allow_rotate{ };
   int padding{ };
   RGBA colorkey;
 };
@@ -39,6 +41,8 @@ struct Sprite {
   int margin{ };
   Trim trim{ };
   std::map<std::string, std::string> tags;
+  bool rotated{ };
+  int texture_index{ };
 };
 
 std::vector<Sprite> parse_definition(const Settings& settings);

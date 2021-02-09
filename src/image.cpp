@@ -136,7 +136,19 @@ void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx
     std::memcpy(
       dest.rgba() + ((dy + y) * dest.width() + dx),
       source.rgba() + ((sy + y) * source.width() + sx),
-      static_cast<size_t>(w * 4));
+      static_cast<size_t>(w) * sizeof(RGBA));
+}
+
+void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy) {
+  const auto [sx, sy, w, h] = source_rect;
+  check_rect(source, source_rect);
+  check_rect(dest, { dx, dy, h, w });
+  for (auto y = 0; y < h; ++y)
+    for (auto x = 0; x < w; ++x)
+      std::memcpy(
+        dest.rgba() + ((dy + x) * dest.width() + (dx + h-1 - y)),
+        source.rgba() + ((sy + y) * source.width() + sx + x),
+        sizeof(RGBA));
 }
 
 void draw_rect(Image& image, const Rect& rect, const RGBA& color) {

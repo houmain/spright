@@ -31,6 +31,7 @@ private:
 
 void save_image(const Image& image, const std::filesystem::path& path);
 void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy);
+void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy);
 void draw_rect(Image& image, const Rect& rect, const RGBA& color);
 bool is_opaque(const Image& image, const Rect& rect = { });
 bool is_fully_transparent(const Image& image, const Rect& rect = { });

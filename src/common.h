@@ -62,3 +62,30 @@ std::string_view trim(LStringView str);
 std::string_view unquote(LStringView str);
 void split_arguments(LStringView str, std::vector<std::string_view>* result);
 std::pair<std::string_view, int> split_name_number(LStringView str);
+
+constexpr int ceil_to_pot(int value) {
+  for (auto pot = 1; ; pot <<= 1)
+    if (pot >= value)
+      return pot;
+}
+static_assert(ceil_to_pot(0) == 1);
+static_assert(ceil_to_pot(1) == 1);
+static_assert(ceil_to_pot(2) == 2);
+static_assert(ceil_to_pot(3) == 4);
+static_assert(ceil_to_pot(4) == 4);
+static_assert(ceil_to_pot(5) == 8);
+
+constexpr int floor_to_pot(int value) {
+  for (auto pot = 1; ; pot <<= 1)
+    if (pot > value)
+      return (pot >> 1);
+}
+static_assert(floor_to_pot(0) == 0);
+static_assert(floor_to_pot(1) == 1);
+static_assert(floor_to_pot(2) == 2);
+static_assert(floor_to_pot(3) == 2);
+static_assert(floor_to_pot(4) == 4);
+static_assert(floor_to_pot(5) == 4);
+static_assert(floor_to_pot(6) == 4);
+static_assert(floor_to_pot(7) == 4);
+static_assert(floor_to_pot(8) == 8);

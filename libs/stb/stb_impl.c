@@ -38,6 +38,6 @@ my_stbi_zlib_compress( unsigned char *data, int data_len,
 #include "stb_image_write.h"
 
 
-#define STB_RECT_PACK_IMPLEMENTATION
+//#define STB_RECT_PACK_IMPLEMENTATION
 //#define STBRP_LARGE_RECTS
-#include "stb_rect_pack.h"
+//#include "stb_rect_pack.h"

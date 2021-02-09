@@ -12,8 +12,10 @@ namespace {
       { "texture", Definition::texture },
       { "width", Definition::width },
       { "height", Definition::height },
-      { "square", Definition::square },
-      { "poweroftwo", Definition::power_of_two },
+      { "max-width", Definition::max_width },
+      { "max-height", Definition::max_height },
+      { "power-of-two", Definition::power_of_two },
+      { "allow-rotate", Definition::allow_rotate },
       { "padding", Definition::padding },
       { "begin", Definition::begin },
       { "path", Definition::path },
@@ -64,8 +66,10 @@ TexturePtr InputParser::get_texture(const State& state) {
       .filename = state.texture,
       .width = state.width,
       .height = state.height,
-      .square = state.square,
+      .max_width = state.max_width,
+      .max_height = state.max_height,
       .power_of_two = state.power_of_two,
+      .allow_rotate = state.allow_rotate,
       .padding = state.padding,
       .colorkey = state.colorkey,
     });
@@ -301,12 +305,20 @@ void InputParser::apply_definition(State& state,
       state.height = check_int();
       break;
 
-    case Definition::square:
-      state.square = check_bool();
+    case Definition::max_width:
+      state.max_width = check_int();
+      break;
+
+    case Definition::max_height:
+      state.max_height = check_int();
       break;
 
     case Definition::power_of_two:
       state.power_of_two = check_bool();
+      break;
+
+    case Definition::allow_rotate:
+      state.allow_rotate = check_bool();
       break;
 
     case Definition::padding:
@@ -467,7 +479,8 @@ void InputParser::parse(std::istream& input) {
 
     split_arguments(line, &arguments);
     const auto definition = get_definition(arguments[0]);
-    check(definition != Definition::none, "invalid definition");
+    if (definition == Definition::none)
+      error("invalid definition '" + std::string(arguments[0]) + "'");
     arguments.erase(arguments.begin());
 
     const auto level = static_cast<int>(buffer.size() - line.size());

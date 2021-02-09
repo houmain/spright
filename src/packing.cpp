@@ -1,67 +1,54 @@
 
 #include "packing.h"
-#include "stb/stb_rect_pack.h"
 #include "image.h"
+#include "FilenameSequence.h"
+#include "texpack/packer.h"
 #include <cmath>
 #include <algorithm>
 #include <span>
 
 namespace {
-  void pack_sprite_texture(const Settings& settings, std::span<Sprite> sprites) {
-    const auto& texture = *sprites.front().texture;
+  int get_max_size(int size, int max_size, bool power_of_two) {
+    if (power_of_two && size)
+      size = ceil_to_pot(size);
 
-    auto width = (texture.width ? texture.width : 1024);
-    auto height = (texture.height ? texture.height : 65535);
-    auto context = stbrp_context{ };
-    auto nodes = std::vector<stbrp_node>(static_cast<size_t>(width));
-    stbrp_init_target(&context, width, height, nodes.data(), static_cast<int>(nodes.size()));
+    if (power_of_two && max_size)
+      max_size = floor_to_pot(max_size);
 
-    // sort sprites by margin
-    std::stable_sort(begin(sprites), end(sprites),
-      [](const auto& a, const auto& b) { return (a.margin < b.margin); });
+    if (size > 0 && max_size > 0)
+      return std::min(size, max_size);
+    if (size > 0)
+      return size;
+    if (max_size > 0)
+      return max_size;
+    return std::numeric_limits<int>::max();
+  }
 
-    auto rects = std::vector<stbrp_rect>();
-    rects.reserve(sprites.size());
-    auto offset = size_t{ };
-    for (auto i = 0u; i < sprites.size(); ++i) {
-      const auto& sprite = sprites[i];
-      rects.push_back({
-        static_cast<int>(i),
-        static_cast<unsigned short>(sprite.trimmed_source_rect.w + sprite.margin),
-        static_cast<unsigned short>(sprite.trimmed_source_rect.h + sprite.margin),
-        0, 0, 0
-      });
+  std::pair<int, int> get_max_texture_size(const Texture& texture) {
+    return std::make_pair(
+      get_max_size(texture.width, texture.max_width, texture.power_of_two),
+      get_max_size(texture.height, texture.max_height, texture.power_of_two));
+  }
 
-      // pack sprites with different margins separately
-      if (i == sprites.size() - 1 || sprites[i + 1].margin != sprite.margin) {
-        if (!stbrp_pack_rects(&context, rects.data() + offset,
-            static_cast<int>(rects.size() - offset)))
-          throw std::runtime_error("packing sheet failed");
-        offset = rects.size();
+  bool fits_in_texture(const Sprite& sprite, int max_width, int max_height, bool allow_rotate) {
+    const auto sw = sprite.trimmed_source_rect.w + sprite.margin;
+    const auto sh = sprite.trimmed_source_rect.h + sprite.margin;
+    return ((sw <= max_width && sh <= max_height) ||
+            (allow_rotate && sw <= max_height && sh <= max_width));
+  }
+
+  void prepare_sprites(std::span<Sprite> sprites) {
+    // trim rects
+    for (auto& sprite : sprites)
+      if (sprite.trim != Trim::none) {
+        sprite.trimmed_source_rect = get_used_bounds(*sprite.source, sprite.source_rect);
       }
-    }
+      else {
+        sprite.trimmed_source_rect = sprite.source_rect;
+      }
+  }
 
-    // calculate texture height
-    if (!texture.height) {
-      height = 0;
-      for (const auto& rect : rects)
-        height = std::max(height, rect.y + rect.h);
-    }
-
-    // copy from sources to target sheet
-    auto target = Image(width, height);
-    for (const auto& rect : rects) {
-      auto& sprite = sprites[static_cast<size_t>(rect.id)];
-      sprite.trimmed_rect = {
-        rect.x,
-        rect.y,
-        rect.w - sprite.margin,
-        rect.h - sprite.margin
-      };
-      copy_rect(*sprite.source, sprite.trimmed_source_rect,
-        target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
-    }
-
+  void complete_sprite_info(std::span<Sprite> sprites) {
     // calculate rects and pivot points
     for (auto& sprite : sprites) {
       auto& rect = sprite.rect;
@@ -100,53 +87,155 @@ namespace {
       sprite.trimmed_pivot_point.y =
         pivot_point.y + static_cast<float>(sprite.rect.y - sprite.trimmed_rect.y);
     }
+  }
 
-    if (settings.debug) {
-      for (const auto& rect : rects) {
-        auto& sprite = sprites[static_cast<size_t>(rect.id)];
-        draw_rect(target, sprite.rect, RGBA{ { 255, 0, 255, 128 } });
-
-        const auto pivot_point = Rect{
-          sprite.rect.x + static_cast<int>(sprite.pivot_point.x - 0.25f),
-          sprite.rect.y + static_cast<int>(sprite.pivot_point.y - 0.25f),
-          (sprite.pivot_point.x == std::floor(sprite.pivot_point.x) ? 2 : 1),
-          (sprite.pivot_point.y == std::floor(sprite.pivot_point.y) ? 2 : 1),
-        };
-        draw_rect(target, pivot_point, RGBA{ { 255, 0, 0, 255 } });
-      }
-    }
-
-    // sort sprites by id
+  void sort_sprites(std::span<Sprite> sprites) {
     std::sort(begin(sprites), end(sprites),
       [&](const auto& a, const auto& b) {
         return split_name_number(a.id) < split_name_number(b.id);
       });
+  }
 
-    save_image(target, (texture.filename.empty() ?
-        settings.default_texture_file : utf8_to_path(texture.filename)));
+  void write_output(const Settings& settings,
+      const std::string& filename, int width, int height,
+      const std::span<Sprite> sprites) {
+
+    // copy from sources to target sheet
+    auto target = Image(width, height);
+    for (const auto& sprite : sprites)
+      if (sprite.rotated) {
+        copy_rect_rotated_cw(*sprite.source, sprite.trimmed_source_rect,
+          target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
+      }
+      else {
+        copy_rect(*sprite.source, sprite.trimmed_source_rect,
+          target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
+      }
+
+    // draw debug info
+    if (settings.debug) {
+      for (const auto& sprite : sprites) {
+        auto rect = sprite.rect;
+        auto pivot_point = sprite.pivot_point;
+        if (sprite.rotated) {
+          std::swap(rect.w, rect.h);
+          std::swap(pivot_point.x, pivot_point.y);
+          pivot_point.x = (static_cast<float>(rect.w-1) - pivot_point.x);
+        }
+
+        draw_rect(target, rect, RGBA{ { 255, 0, 255, 128 } });
+        draw_rect(target, Rect{
+            rect.x + static_cast<int>(pivot_point.x - 0.25f),
+            rect.y + static_cast<int>(pivot_point.y - 0.25f),
+            (pivot_point.x == std::floor(pivot_point.x) ? 2 : 1),
+            (pivot_point.y == std::floor(pivot_point.y) ? 2 : 1),
+          }, RGBA{ { 255, 0, 0, 255 } });
+      }
+    }
+
+    save_image(target, utf8_to_path(filename));
+  }
+
+  void pack_sprite_texture(const Settings& settings,
+      const Texture& texture, std::span<Sprite> sprites) {
+    if (sprites.empty())
+      return;
+
+    const auto [pack_width, pack_height] = get_max_texture_size(texture);
+    const auto max_sprite_width = pack_width - texture.padding * 2;
+    const auto max_sprite_height = pack_height - texture.padding * 2;
+    for (const auto& sprite : sprites)
+      if (!fits_in_texture(sprite, max_sprite_width, max_sprite_height, texture.allow_rotate))
+        throw std::runtime_error("sprite '" + sprite.id + "' can not fit in sheet");
+
+    // pack rects
+    auto pkr_sprites = std::vector<pkr::Sprite>();
+    auto sprite_index = 0;
+    for (const auto& sprite : sprites)
+      pkr_sprites.push_back({
+        sprite_index++,
+        0, 0,
+        sprite.trimmed_source_rect.w + sprite.margin,
+        sprite.trimmed_source_rect.h + sprite.margin,
+        false
+      });
+
+    const auto pack_max_size = (pack_width > texture.width || pack_height > texture.height);
+    auto pkr_sheets = pkr::pack(
+      pkr::Params{
+        texture.power_of_two,
+        texture.allow_rotate,
+        texture.padding,
+        pack_width,
+        pack_height,
+        pack_max_size,
+      },
+      pkr_sprites);
+
+    const auto filenames = FilenameSequence(texture.filename);
+    pkr_sheets.resize(std::min(static_cast<size_t>(filenames.count()), pkr_sheets.size()));
+
+    // update sprite rects
+    auto texture_index = 0;
+    for (const auto& pkr_sheet : pkr_sheets) {
+      for (const auto& pkr_sprite : pkr_sheet.sprites) {
+        auto& sprite = sprites[static_cast<size_t>(pkr_sprite.id)];
+        sprite.rotated = pkr_sprite.rotated;
+        sprite.texture_index = texture_index;
+        sprite.trimmed_rect = {
+          pkr_sprite.x,
+          pkr_sprite.y,
+          pkr_sprite.width - sprite.margin,
+          pkr_sprite.height - sprite.margin
+        };
+      }
+      ++texture_index;
+    }
+
+    complete_sprite_info(sprites);
+
+    // sort sprites by sheet index
+    if (pkr_sheets.size() > 1)
+      std::sort(begin(sprites), end(sprites),
+        [](const Sprite& a, const Sprite& b) { return a.texture_index < b.texture_index; });
+
+    // write output texture
+    auto texture_begin = sprites.begin();
+    const auto end = sprites.end();
+    for (auto it = texture_begin;; ++it)
+      if (it == end || it->texture_index != texture_begin->texture_index) {
+        const auto sheet_index = texture_begin->texture_index;
+        const auto& pkr_sheet = pkr_sheets[static_cast<size_t>(sheet_index)];        
+
+        write_output(settings, filenames.get_nth_filename(sheet_index),
+          std::max(texture.width, pkr_sheet.width + texture.padding),
+          std::max(texture.height, pkr_sheet.height + texture.padding),
+          { texture_begin, it });
+
+        texture_begin = it;
+        if (it == end)
+          break;
+      }
+  }
+
+  void pack_sprites_by_texture(const Settings& settings, std::span<Sprite> sprites) {
+    // sort sprites by texture
+    std::stable_sort(begin(sprites), end(sprites),
+      [](const Sprite& a, const Sprite& b) { return a.texture->filename < b.texture->filename; });
+
+    auto begin = sprites.begin();
+    for (auto it = sprites.begin(); begin != sprites.end(); ++it) {
+      if (it == sprites.end() ||
+          it->texture->filename != begin->texture->filename) {
+        pack_sprite_texture(settings, *begin->texture, { begin, it });
+        begin = it;
+      }
+    }
   }
 } // namespace
 
-void pack_sprite_sheet(const Settings& settings, std::vector<Sprite>& sprites) {
-  // trim rects
-  for (auto& sprite : sprites)
-    if (sprite.trim != Trim::none) {
-      sprite.trimmed_source_rect = get_used_bounds(*sprite.source, sprite.source_rect);
-    }
-    else {
-      sprite.trimmed_source_rect = sprite.source_rect;
-    }
-
-  // sort sprites by texture
-  std::stable_sort(begin(sprites), end(sprites),
-    [](const auto& a, const auto& b) { return a.texture->filename < b.texture->filename; });
-
-  // pack sprites per texture
-  auto begin = sprites.begin();
-  for (auto it = sprites.begin(); begin != sprites.end(); ++it) {
-    if (it == sprites.end() || it->texture->filename != begin->texture->filename) {
-      pack_sprite_texture(settings, { begin, it });
-      begin = it;
-    }
-  }
+void pack_sprites(const Settings& settings, std::vector<Sprite>& sprites) {
+  prepare_sprites(sprites);
+  pack_sprites_by_texture(settings, sprites);
+  sort_sprites(sprites);
 }
