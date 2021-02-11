@@ -26,7 +26,6 @@ enum class Definition {
   skip,
   pivot,
   tag,
-  margin,
   trim,
 };
 
@@ -53,7 +52,6 @@ struct State {
   Pivot pivot{ PivotX::center, PivotY::middle };
   PointF pivot_point{ };
   Rect rect{ };
-  int margin{ };
   Trim trim{ };
 };
 

@@ -38,7 +38,6 @@ struct Sprite {
   bool integral_pivot_point{ };
   PointF pivot_point{ };
   PointF trimmed_pivot_point{ };
-  int margin{ };
   Trim trim{ };
   std::map<std::string, std::string> tags;
   bool rotated{ };

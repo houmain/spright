@@ -31,8 +31,8 @@ namespace {
   }
 
   bool fits_in_texture(const Sprite& sprite, int max_width, int max_height, bool allow_rotate) {
-    const auto sw = sprite.trimmed_source_rect.w + sprite.margin;
-    const auto sh = sprite.trimmed_source_rect.h + sprite.margin;
+    const auto sw = sprite.trimmed_source_rect.w;
+    const auto sh = sprite.trimmed_source_rect.h;
     return ((sw <= max_width && sh <= max_height) ||
             (allow_rotate && sw <= max_height && sh <= max_width));
   }
@@ -102,10 +102,8 @@ namespace {
       return;
 
     const auto [pack_width, pack_height] = get_max_texture_size(texture);
-    const auto max_sprite_width = pack_width - texture.padding * 2;
-    const auto max_sprite_height = pack_height - texture.padding * 2;
     for (const auto& sprite : sprites)
-      if (!fits_in_texture(sprite, max_sprite_width, max_sprite_height, texture.allow_rotate))
+      if (!fits_in_texture(sprite, pack_width, pack_height, texture.allow_rotate))
         throw std::runtime_error("sprite '" + sprite.id + "' can not fit in sheet");
 
     // pack rects
@@ -115,8 +113,8 @@ namespace {
       pkr_sprites.push_back({
         sprite_index++,
         0, 0,
-        sprite.trimmed_source_rect.w + sprite.margin,
-        sprite.trimmed_source_rect.h + sprite.margin,
+        sprite.trimmed_source_rect.w,
+        sprite.trimmed_source_rect.h,
         false
       });
 
@@ -145,8 +143,8 @@ namespace {
         sprite.trimmed_rect = {
           pkr_sprite.x,
           pkr_sprite.y,
-          pkr_sprite.width - sprite.margin,
-          pkr_sprite.height - sprite.margin
+          pkr_sprite.width,
+          pkr_sprite.height
         };
       }
       ++texture_index;
@@ -169,8 +167,8 @@ namespace {
 
         packed_textures.push_back({
           filenames.get_nth_filename(sheet_index),
-          std::max(texture.width, pkr_sheet.width + texture.padding),
-          std::max(texture.height, pkr_sheet.height + texture.padding),
+          std::max(texture.width, pkr_sheet.width),
+          std::max(texture.height, pkr_sheet.height),
           { texture_begin, it }
         });
 

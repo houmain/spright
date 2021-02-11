@@ -29,7 +29,6 @@ namespace {
       { "skip", Definition::skip },
       { "rect", Definition::rect },
       { "pivot", Definition::pivot },
-      { "margin", Definition::margin },
       { "trim", Definition::trim },
 
       // aliases
@@ -124,7 +123,6 @@ void InputParser::sprite_ends(State& state) {
     state.rect : sprite.source->bounds());
   sprite.pivot = state.pivot;
   sprite.pivot_point = state.pivot_point;
-  sprite.margin = state.margin;
   sprite.trim = state.trim;
   sprite.tags = state.tags;
   m_sprites.push_back(std::move(sprite));
@@ -392,10 +390,6 @@ void InputParser::apply_definition(State& state,
       }
       break;
 
-    case Definition::margin:
-      state.margin = check_int();
-      break;
-
     case Definition::trim:
       if (!arguments_left()) {
         state.trim = Trim::trim;
@@ -416,7 +410,8 @@ void InputParser::apply_definition(State& state,
 }
 
 bool InputParser::has_implicit_scope(Definition definition) {
-  return (definition == Definition::sheet ||
+  return (definition == Definition::texture ||
+          definition == Definition::sheet ||
           definition == Definition::sprite);
 }
 

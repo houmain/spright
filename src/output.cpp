@@ -44,7 +44,6 @@ void output_definition(const Settings& settings, const std::vector<Sprite>& spri
     json_sprite["trimmedSourceRect"] = json_rect(sprite.trimmed_source_rect);
     json_sprite["pivot"] = json_point(sprite.pivot_point);
     json_sprite["trimmedPivot"] = json_point(sprite.trimmed_pivot_point);
-    json_sprite["margin"] = sprite.margin;
     json_sprite["tags"] = sprite.tags;
     for (const auto& tag_key : sprite.tags)
       tags[tag_key].push_back(json_sprites.size() - 1);

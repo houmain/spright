@@ -65,6 +65,32 @@ namespace {
     eq(sprites[4].trim, Trim::none);
   }
 
+  void test_texture_settings() {
+    auto input = std::stringstream(R"(
+      texture "tex1"
+        padding 1
+      texture "tex2"
+        padding 2
+      padding 3
+      sheet "test/Items.png"
+        grid 16 16
+        sprite
+        sprite
+          texture "tex1"
+        sprite
+          texture "tex2"
+        sprite
+    )");
+    auto parser = InputParser(Settings{ .autocomplete = true });
+    parser.parse(input);
+    const auto& sprites = parser.sprites();
+    eq(sprites.size(), 4);
+    eq(sprites[0].texture->padding, 3);
+    eq(sprites[1].texture->padding, 1);
+    eq(sprites[2].texture->padding, 2);
+    eq(sprites[0].texture, sprites[3].texture);
+  }
+
   void test_grid_autocompletion() {
     auto input = std::stringstream(R"(
       sheet "test/Items.png"
@@ -134,6 +160,7 @@ void test() {
     return;
 
   test_input_scopes();
+  test_texture_settings();
   test_grid_autocompletion();
   test_unaligned_autocompletion();
   test_packing();
