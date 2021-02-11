@@ -457,7 +457,15 @@ void InputParser::parse(std::istream& input) {
         scope_ends(state);
       }
       else if (level >= last->level) {
-        scope_stack.erase(last.base(), scope_stack.end());
+        const auto top = last.base();
+
+        // keep texture set on same level
+        if (top != scope_stack.end() &&
+            top != scope_stack.begin() &&
+            top->definition == Definition::texture)
+          std::prev(top)->texture = top->texture;
+
+        scope_stack.erase(top, scope_stack.end());
         return;
       }
     }

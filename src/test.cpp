@@ -22,7 +22,7 @@ namespace {
     return true;
   }
 
-  void test_input_scopes() {
+  void test_tag_scopes() {
     auto input = std::stringstream(R"(
       sheet "test/Items.png"
         grid 16 16
@@ -74,13 +74,17 @@ namespace {
     eq(sprites[4].trim, Trim::none);
   }
 
-  void test_texture_settings() {
+  void test_texture_scopes() {
     auto input = std::stringstream(R"(
+      width 256
       texture "tex1"
         padding 1
       texture "tex2"
         padding 2
-      padding 3
+      width 128
+      texture "tex3"
+        padding 3
+      width 64
       sheet "test/Items.png"
         grid 16 16
         sprite
@@ -98,6 +102,9 @@ namespace {
     eq(sprites[1].texture->padding, 1);
     eq(sprites[2].texture->padding, 2);
     eq(sprites[0].texture, sprites[3].texture);
+    eq(sprites[0].texture->width, 128);
+    eq(sprites[1].texture->width, 256);
+    eq(sprites[2].texture->width, 256);
   }
 
   void test_grid_autocompletion() {
@@ -268,8 +275,8 @@ void test() {
   if (!std::filesystem::exists("test/Items.png", error))
     return;
 
-  test_input_scopes();
-  test_texture_settings();
+  test_tag_scopes();
+  test_texture_scopes();
   test_grid_autocompletion();
   test_unaligned_autocompletion();
   test_packing();
