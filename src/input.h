@@ -2,6 +2,7 @@
 
 #include "image.h"
 #include "settings.h"
+#include "FilenameSequence.h"
 #include <memory>
 #include <map>
 
@@ -15,7 +16,7 @@ struct Pivot { PivotX x; PivotY y; };
 enum class Trim { none, trim, crop };
 
 struct Texture {
-  std::string filename;
+  FilenameSequence filename;
   int width{ };
   int height{ };
   int max_width{ };

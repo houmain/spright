@@ -98,7 +98,7 @@ namespace {
     for (const auto& sprite : sprites)
       if (!fits_in_texture(sprite, pack_width - texture.padding,
            pack_height - texture.padding, texture.allow_rotate))
-        throw std::runtime_error("sprite '" + sprite.id + "' can not fit in sheet");
+        throw std::runtime_error("sprite '" + sprite.id + "' can not fit in texture");
 
     // pack rects
     auto pkr_sprites = std::vector<pkr::Sprite>();
@@ -124,8 +124,9 @@ namespace {
       },
       pkr_sprites);
 
-    const auto filenames = FilenameSequence(texture.filename);
-    pkr_sheets.resize(std::min(static_cast<size_t>(filenames.count()), pkr_sheets.size()));
+    if (std::cmp_greater(pkr_sheets.size(), texture.filename.count()))
+      throw std::runtime_error("not all sprites fit on texture '" +
+        texture.filename.filename() + "'");
 
     // update sprite rects
     auto texture_index = 0;
@@ -174,7 +175,7 @@ namespace {
         }
 
         packed_textures.push_back({
-          filenames.get_nth_filename(sheet_index),
+          texture.filename.get_nth_filename(sheet_index),
           width,
           height,
           sheet_sprites

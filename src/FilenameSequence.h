@@ -1,5 +1,7 @@
+#pragma once
 
 #include <string>
+#include <limits>
 #include <cassert>
 
 // format: '{'FIRST['-'[LAST]]'}'
@@ -22,18 +24,24 @@ public:
   std::string base() const { return { begin(m_filename), begin(m_filename) + m_format_offset }; }
   std::string extension() const { return { begin(m_filename) + m_format_offset + static_cast<std::string::difference_type>(m_format_size), end(m_filename) }; }
   bool is_sequence() const { return (m_format_size != 0u); }
-  bool is_infinite_sequence() const { return (is_sequence() && m_count < 0); }
+  bool is_infinite_sequence() const { return (m_count == infinite); }
   bool empty() const { return m_filename.empty(); }
   int first() const { return m_first; }
   int count() const { return m_count; }
   void set_count(int count) { m_count = count; }
 
+  friend bool operator<(const FilenameSequence& a, const FilenameSequence& b) {
+    return a.m_filename < b.m_filename;
+  }
+  friend bool operator!=(const FilenameSequence& a, const FilenameSequence& b) {
+    return a.m_filename != b.m_filename;
+  }
+
   std::string get_nth_filename(int index) const {
     if (!is_sequence())
       return m_filename;
 
-    assert(index >= 0);
-    assert(m_count < 0 || index < m_count);
+    assert(index >= 0 && index < m_count);
     return std::string(m_filename).replace(
       static_cast<std::string::size_type>(m_format_offset),
       m_format_size, to_digit_string(m_first + index));
@@ -41,6 +49,8 @@ public:
 
 
 private:
+  static const auto infinite = std::numeric_limits<int>::max();
+
   template<typename InputIt>
   bool skip_space(InputIt& it, InputIt end) {
     auto skipped = false;
@@ -107,7 +117,7 @@ private:
         if (auto last = read_int(it, end))
           m_count = std::max(last - m_first + 1, 0);
         else
-          m_count = -1;
+          m_count = infinite;
       }
 
       skip_space(it, end);

@@ -67,7 +67,8 @@ TexturePtr InputParser::get_texture(const State& state) {
   auto& texture = m_textures[std::filesystem::weakly_canonical(state.texture)];
   if (!texture) {
     texture = std::make_shared<Texture>(Texture{
-      .filename = (state.texture.empty() ? default_texture_name : state.texture),
+      .filename = FilenameSequence(state.texture.empty() ?
+        default_texture_name : state.texture),
       .width = state.width,
       .height = state.height,
       .max_width = state.max_width,
@@ -257,11 +258,11 @@ void InputParser::apply_definition(State& state,
     const auto str = arguments[argument_index];
     return (std::from_chars(str.data(), str.data() + str.size(), result).ec == std::errc());
   };
-  const auto check_int = [&]() {
+  const auto check_uint = [&]() {
     auto result = 0;
     auto str = check_string();
     const auto [p, ec] = std::from_chars(str.data(), str.data() + str.size(), result);
-    check(ec == std::errc(), "invalid number");
+    check(ec == std::errc() && result >= 0, "invalid number");
     return result;
   };
   const auto check_bool = [&]() {
@@ -274,10 +275,10 @@ void InputParser::apply_definition(State& state,
     return std::stof(std::string(check_string()));
   };
   const auto check_size = [&]() {
-    return Size{ check_int(), check_int() };
+    return Size{ check_uint(), check_uint() };
   };
   const auto check_rect = [&]() {
-    return Rect{ check_int(), check_int(), check_int(), check_int() };
+    return Rect{ check_uint(), check_uint(), check_uint(), check_uint() };
   };
   const auto check_color = [&]() {
     std::stringstream ss;
@@ -301,19 +302,19 @@ void InputParser::apply_definition(State& state,
       break;
 
     case Definition::width:
-      state.width = check_int();
+      state.width = check_uint();
       break;
 
     case Definition::height:
-      state.height = check_int();
+      state.height = check_uint();
       break;
 
     case Definition::max_width:
-      state.max_width = check_int();
+      state.max_width = check_uint();
       break;
 
     case Definition::max_height:
-      state.max_height = check_int();
+      state.max_height = check_uint();
       break;
 
     case Definition::power_of_two:
@@ -325,7 +326,7 @@ void InputParser::apply_definition(State& state,
       break;
 
     case Definition::padding:
-      state.padding = check_int();
+      state.padding = check_uint();
       break;
 
     case Definition::path:
@@ -359,7 +360,7 @@ void InputParser::apply_definition(State& state,
 
     case Definition::skip:
       check(!empty(state.grid), "skip is only valid in grid");
-      m_current_offset.x += (arguments_left() ? check_int() : 1) * state.grid.x;
+      m_current_offset.x += (arguments_left() ? check_uint() : 1) * state.grid.x;
       break;
 
     case Definition::sprite:
