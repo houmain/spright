@@ -96,48 +96,8 @@ namespace {
       });
   }
 
-  void write_output(const Settings& settings,
-      const std::string& filename, int width, int height,
-      const std::span<Sprite> sprites) {
-
-    // copy from sources to target sheet
-    auto target = Image(width, height);
-    for (const auto& sprite : sprites)
-      if (sprite.rotated) {
-        copy_rect_rotated_cw(*sprite.source, sprite.trimmed_source_rect,
-          target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
-      }
-      else {
-        copy_rect(*sprite.source, sprite.trimmed_source_rect,
-          target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
-      }
-
-    // draw debug info
-    if (settings.debug) {
-      for (const auto& sprite : sprites) {
-        auto rect = sprite.rect;
-        auto pivot_point = sprite.pivot_point;
-        if (sprite.rotated) {
-          std::swap(rect.w, rect.h);
-          std::swap(pivot_point.x, pivot_point.y);
-          pivot_point.x = (static_cast<float>(rect.w-1) - pivot_point.x);
-        }
-
-        draw_rect(target, rect, RGBA{ { 255, 0, 255, 128 } });
-        draw_rect(target, Rect{
-            rect.x + static_cast<int>(pivot_point.x - 0.25f),
-            rect.y + static_cast<int>(pivot_point.y - 0.25f),
-            (pivot_point.x == std::floor(pivot_point.x) ? 2 : 1),
-            (pivot_point.y == std::floor(pivot_point.y) ? 2 : 1),
-          }, RGBA{ { 255, 0, 0, 255 } });
-      }
-    }
-
-    save_image(target, utf8_to_path(filename));
-  }
-
-  void pack_sprite_texture(const Settings& settings,
-      const Texture& texture, std::span<Sprite> sprites) {
+  void pack_sprite_texture(const Texture& texture,
+      std::span<Sprite> sprites, std::vector<PackedTexture>& packed_textures) {
     if (sprites.empty())
       return;
 
@@ -199,7 +159,7 @@ namespace {
       std::sort(begin(sprites), end(sprites),
         [](const Sprite& a, const Sprite& b) { return a.texture_index < b.texture_index; });
 
-    // write output texture
+    // add to output textures
     auto texture_begin = sprites.begin();
     const auto end = sprites.end();
     for (auto it = texture_begin;; ++it)
@@ -207,10 +167,12 @@ namespace {
         const auto sheet_index = texture_begin->texture_index;
         const auto& pkr_sheet = pkr_sheets[static_cast<size_t>(sheet_index)];        
 
-        write_output(settings, filenames.get_nth_filename(sheet_index),
+        packed_textures.push_back({
+          filenames.get_nth_filename(sheet_index),
           std::max(texture.width, pkr_sheet.width + texture.padding),
           std::max(texture.height, pkr_sheet.height + texture.padding),
-          { texture_begin, it });
+          { texture_begin, it }
+        });
 
         texture_begin = it;
         if (it == end)
@@ -218,7 +180,7 @@ namespace {
       }
   }
 
-  void pack_sprites_by_texture(const Settings& settings, std::span<Sprite> sprites) {
+  void pack_sprites_by_texture(std::span<Sprite> sprites, std::vector<PackedTexture>& packed_textures) {
     // sort sprites by texture
     std::stable_sort(begin(sprites), end(sprites),
       [](const Sprite& a, const Sprite& b) { return a.texture->filename < b.texture->filename; });
@@ -227,15 +189,17 @@ namespace {
     for (auto it = sprites.begin(); begin != sprites.end(); ++it) {
       if (it == sprites.end() ||
           it->texture->filename != begin->texture->filename) {
-        pack_sprite_texture(settings, *begin->texture, { begin, it });
+        pack_sprite_texture(*begin->texture, { begin, it }, packed_textures);
         begin = it;
       }
     }
   }
 } // namespace
 
-void pack_sprites(const Settings& settings, std::vector<Sprite>& sprites) {
+std::vector<PackedTexture> pack_sprites(std::vector<Sprite>& sprites) {
+  auto packed_textures = std::vector<PackedTexture>();
   prepare_sprites(sprites);
-  pack_sprites_by_texture(settings, sprites);
+  pack_sprites_by_texture(sprites, packed_textures);
   sort_sprites(sprites);
+  return packed_textures;
 }

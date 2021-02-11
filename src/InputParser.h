@@ -60,10 +60,10 @@ struct State {
 class InputParser {
 public:
   explicit InputParser(const Settings& settings);
-  void parse_autocomplete();
   void parse(std::istream& input);
   const std::vector<Sprite>& sprites() const & { return m_sprites; }
-  std::vector<Sprite> sprites() && { return m_sprites; }
+  std::vector<Sprite> sprites() && { return std::move(m_sprites); }
+  std::string autocomplete_output() const { return m_autocomplete_output.str(); }
 
 private:
   [[noreturn]] void error(std::string message);

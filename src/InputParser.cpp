@@ -1,12 +1,13 @@
 
 #include "InputParser.h"
 #include <charconv>
-#include <fstream>
 #include <algorithm>
 #include <sstream>
 #include <cstring>
 
 namespace {
+  const auto default_texture_name = "spright-{0-}.png";
+
   Definition get_definition(std::string_view command) {
     static const auto s_map = std::map<std::string, Definition, std::less<>>{
       { "texture", Definition::texture },
@@ -30,6 +31,10 @@ namespace {
       { "pivot", Definition::pivot },
       { "margin", Definition::margin },
       { "trim", Definition::trim },
+
+      // aliases
+      { "in", Definition::sheet },
+      { "out", Definition::texture },
     };
     const auto it = s_map.find(command);
     if (it == s_map.end())
@@ -63,7 +68,7 @@ TexturePtr InputParser::get_texture(const State& state) {
   auto& texture = m_textures[std::filesystem::weakly_canonical(state.texture)];
   if (!texture) {
     texture = std::make_shared<Texture>(Texture{
-      .filename = state.texture,
+      .filename = (state.texture.empty() ? default_texture_name : state.texture),
       .width = state.width,
       .height = state.height,
       .max_width = state.max_width,
@@ -411,7 +416,8 @@ void InputParser::apply_definition(State& state,
 }
 
 bool InputParser::has_implicit_scope(Definition definition) {
-  return (definition == Definition::sprite);
+  return (definition == Definition::sheet ||
+          definition == Definition::sprite);
 }
 
 void InputParser::scope_ends(State& state) {
@@ -507,23 +513,4 @@ void InputParser::parse(std::istream& input) {
   }
   pop_scope_stack(-1);
   m_line_number = 0;
-}
-
-void InputParser::parse_autocomplete() {
-  auto input = std::fstream(m_settings.input_file, std::ios::in);
-  if (!input.good())
-    error("opening file '" + path_to_utf8(m_settings.input_file) + "' failed");
-
-  parse(input);
-
-  if (m_settings.autocomplete) {
-    const auto output = m_autocomplete_output.str();
-    if (static_cast<int>(output.size()) != input.tellg()) {
-      input.close();
-      input = std::fstream(m_settings.input_file, std::ios::out);
-      if (!input.good())
-        error("opening file '" + path_to_utf8(m_settings.input_file) + "' failed");
-      input << output;
-    }
-  }
 }

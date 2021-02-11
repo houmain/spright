@@ -76,3 +76,40 @@ void output_definition(const Settings& settings, const std::vector<Sprite>& spri
     file << json.dump(2);
   }
 }
+
+void output_texture(const Settings& settings, const PackedTexture& texture) {
+  // copy from sources to target sheet
+  auto target = Image(texture.width, texture.height);
+  for (const auto& sprite : texture.sprites)
+    if (sprite.rotated) {
+      copy_rect_rotated_cw(*sprite.source, sprite.trimmed_source_rect,
+        target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
+    }
+    else {
+      copy_rect(*sprite.source, sprite.trimmed_source_rect,
+        target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
+    }
+
+  // draw debug info
+  if (settings.debug) {
+    for (const auto& sprite : texture.sprites) {
+      auto rect = sprite.rect;
+      auto pivot_point = sprite.pivot_point;
+      if (sprite.rotated) {
+        std::swap(rect.w, rect.h);
+        std::swap(pivot_point.x, pivot_point.y);
+        pivot_point.x = (static_cast<float>(rect.w-1) - pivot_point.x);
+      }
+
+      draw_rect(target, rect, RGBA{ { 255, 0, 255, 128 } });
+      draw_rect(target, Rect{
+          rect.x + static_cast<int>(pivot_point.x - 0.25f),
+          rect.y + static_cast<int>(pivot_point.y - 0.25f),
+          (pivot_point.x == std::floor(pivot_point.x) ? 2 : 1),
+          (pivot_point.y == std::floor(pivot_point.y) ? 2 : 1),
+        }, RGBA{ { 255, 0, 0, 255 } });
+    }
+  }
+
+  save_image(target, utf8_to_path(texture.filename));
+}

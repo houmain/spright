@@ -16,6 +16,15 @@ set(SOURCES
     src/test.cpp
 )
 
+if(NOT MSVC)
+    set_source_files_properties(${SOURCES}
+       PROPERTIES COMPILE_FLAGS  "-Wall -Wextra -Wsign-conversion -Wconversion -Wno-missing-field-initializers")
+    link_libraries(stdc++fs)
+else()
+    add_compile_options(/GR- /W1)
+    set(MSVC_SHARED_RUNTIME OFF)
+endif()
+
 set(SOURCES ${SOURCES}
     libs/stb/stb_impl.c
     libs/miniz/miniz.c
@@ -26,15 +35,6 @@ set(SOURCES ${SOURCES}
 set(INCLUDES ${INCLUDES}
     libs
 )
-
-if(NOT MSVC)
-    set_source_files_properties(${SOURCES}
-       PROPERTIES COMPILE_FLAGS  "-Wall -Wextra -Wsign-conversion -Wconversion")
-    link_libraries(stdc++fs)
-else()
-    add_compile_options(/GR- /W1)
-    set(MSVC_SHARED_RUNTIME OFF)
-endif()
 
 file(GLOB_RECURSE HEADERS include *.h *.hpp *.inc)
 

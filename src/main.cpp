@@ -11,8 +11,7 @@ int main(int argc, const char* argv[]) try {
   test();
 #endif
 
-  auto settings = Settings{
-  };
+  auto settings = Settings{ };
   if (!interpret_commandline(settings, argc, argv) ||
       settings.input_file.empty()) {
     print_help_message(argv[0]);
@@ -20,7 +19,9 @@ int main(int argc, const char* argv[]) try {
   }
 
   auto sprites = parse_definition(settings);
-  pack_sprites(settings, sprites);
+  const auto textures = pack_sprites(sprites);
+  for (const auto& texture : textures)
+    output_texture(settings, texture);
   output_definition(settings, sprites);
 }
 catch (const std::exception& ex) {
