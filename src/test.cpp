@@ -13,6 +13,15 @@ namespace {
       std::raise(SIGINT);
   }
 
+  template<typename F, typename... Args>
+  bool throws(F&& func, Args&&... args) try {
+    func(std::forward<Args>(args)...);
+    return false;
+  }
+  catch (...) {
+    return true;
+  }
+
   void test_input_scopes() {
     auto input = std::stringstream(R"(
       sheet "test/Items.png"
@@ -159,7 +168,7 @@ namespace {
       sheet "test/Items.png"
     )");
     eq(textures.size(), 1);
-    eq(textures[0].width, 124);
+    eq(textures[0].width, 64);
     eq(textures[0].height, 128);
 
     textures = pack(R"(
@@ -191,8 +200,8 @@ namespace {
       sheet "test/Items.png"
     )");
     eq(textures.size(), 1);
-    eq(textures[0].width, 61);
-    eq(textures[0].height, 63);
+    eq(textures[0].width, 68);
+    eq(textures[0].height, 64);
 
     textures = pack(R"(
       padding 1
@@ -200,7 +209,7 @@ namespace {
       sheet "test/Items.png"
     )");
     eq(textures.size(), 1);
-    eq(textures[0].width, 64);
+    eq(textures[0].width, 128);
     eq(textures[0].height, 64);
 
     textures = pack(R"(
@@ -231,6 +240,26 @@ namespace {
     eq(textures[2].height, 32);
     eq(textures[3].width, 32);
     eq(textures[3].height, 16);
+
+    textures = pack("");
+    eq(textures.size(), 0);
+
+    textures = pack("padding 1");
+    eq(textures.size(), 0);
+
+    textures = pack(R"(
+      max-width 16
+      max-height 16
+      sheet "test/Items.png"
+    )");
+    eq(textures.size(), 14);
+
+    eq(throws(pack, R"(
+      padding 1
+      max-width 16
+      max-height 16
+      sheet "test/Items.png"
+    )"), true);
   }
 } // namespace
 

@@ -89,13 +89,6 @@ namespace {
     }
   }
 
-  void sort_sprites(std::span<Sprite> sprites) {
-    std::sort(begin(sprites), end(sprites),
-      [&](const auto& a, const auto& b) {
-        return split_name_number(a.id) < split_name_number(b.id);
-      });
-  }
-
   void pack_sprite_texture(const Texture& texture,
       std::span<Sprite> sprites, std::vector<PackedTexture>& packed_textures) {
     if (sprites.empty())
@@ -103,7 +96,8 @@ namespace {
 
     const auto [pack_width, pack_height] = get_max_texture_size(texture);
     for (const auto& sprite : sprites)
-      if (!fits_in_texture(sprite, pack_width, pack_height, texture.allow_rotate))
+      if (!fits_in_texture(sprite, pack_width - texture.padding,
+           pack_height - texture.padding, texture.allow_rotate))
         throw std::runtime_error("sprite '" + sprite.id + "' can not fit in sheet");
 
     // pack rects
@@ -113,12 +107,12 @@ namespace {
       pkr_sprites.push_back({
         sprite_index++,
         0, 0,
-        sprite.trimmed_source_rect.w,
-        sprite.trimmed_source_rect.h,
+        sprite.trimmed_source_rect.w + texture.padding,
+        sprite.trimmed_source_rect.h + texture.padding,
         false
       });
 
-    const auto pack_max_size = (pack_width > texture.width && pack_height > texture.height);
+    const auto pack_max_size = (pack_width > texture.width);
     auto pkr_sheets = pkr::pack(
       pkr::Params{
         texture.power_of_two,
@@ -143,8 +137,8 @@ namespace {
         sprite.trimmed_rect = {
           pkr_sprite.x,
           pkr_sprite.y,
-          pkr_sprite.width,
-          pkr_sprite.height
+          pkr_sprite.width - texture.padding,
+          pkr_sprite.height - texture.padding
         };
       }
       ++texture_index;
@@ -169,8 +163,10 @@ namespace {
         auto width = texture.width;
         auto height = texture.height;
         for (const auto& sprite : sheet_sprites) {
-          width = std::max(width, sprite.trimmed_rect.x + sprite.trimmed_rect.w);
-          height = std::max(height, sprite.trimmed_rect.y + sprite.trimmed_rect.h);
+          width = std::max(width, sprite.trimmed_rect.x + texture.padding +
+            (sprite.rotated ? sprite.trimmed_rect.h : sprite.trimmed_rect.w));
+          height = std::max(height, sprite.trimmed_rect.y + texture.padding +
+            (sprite.rotated ? sprite.trimmed_rect.w : sprite.trimmed_rect.h));
         }
         if (texture.power_of_two) {
           width = ceil_to_pot(width);
@@ -210,6 +206,5 @@ std::vector<PackedTexture> pack_sprites(std::vector<Sprite>& sprites) {
   auto packed_textures = std::vector<PackedTexture>();
   prepare_sprites(sprites);
   pack_sprites_by_texture(sprites, packed_textures);
-  sort_sprites(sprites);
   return packed_textures;
 }

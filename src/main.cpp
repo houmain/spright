@@ -22,6 +22,11 @@ int main(int argc, const char* argv[]) try {
   const auto textures = pack_sprites(sprites);
   for (const auto& texture : textures)
     output_texture(settings, texture);
+
+  std::sort(begin(sprites), end(sprites),
+    [&](const auto& a, const auto& b) {
+      return split_name_number(a.id) < split_name_number(b.id);
+    });
   output_definition(settings, sprites);
 }
 catch (const std::exception& ex) {
