@@ -136,6 +136,49 @@ namespace {
     eq(textures[0].height, 59);
 
     textures = pack(R"(
+      max-width 128
+      max-height 128
+      sheet "test/Items.png"
+    )");
+    eq(textures.size(), 1);
+    eq(textures[0].width, 64);
+    eq(textures[0].height, 61);
+
+    textures = pack(R"(
+      width 128
+      max-height 128
+      sheet "test/Items.png"
+    )");
+    eq(textures.size(), 1);
+    eq(textures[0].width, 128);
+    eq(textures[0].height, 37);
+
+    textures = pack(R"(
+      max-width 128
+      height 128
+      sheet "test/Items.png"
+    )");
+    eq(textures.size(), 1);
+    eq(textures[0].width, 124);
+    eq(textures[0].height, 128);
+
+    textures = pack(R"(
+      max-width 40
+      sheet "test/Items.png"
+    )");
+    eq(textures.size(), 1);
+    eq(textures[0].width, 40);
+    eq(textures[0].height, 86);
+
+    textures = pack(R"(
+      max-height 40
+      sheet "test/Items.png"
+    )");
+    eq(textures.size(), 1);
+    eq(textures[0].width, 88);
+    eq(textures[0].height, 40);
+
+    textures = pack(R"(
       power-of-two true
       sheet "test/Items.png"
     )");
@@ -148,9 +191,46 @@ namespace {
       sheet "test/Items.png"
     )");
     eq(textures.size(), 1);
-    eq(textures[0].width, 62);
+    eq(textures[0].width, 61);
+    eq(textures[0].height, 63);
+
+    textures = pack(R"(
+      padding 1
+      power-of-two true
+      sheet "test/Items.png"
+    )");
+    eq(textures.size(), 1);
+    eq(textures[0].width, 64);
     eq(textures[0].height, 64);
 
+    textures = pack(R"(
+      max-width 40
+      max-height 40
+      sheet "test/Items.png"
+    )");
+    eq(textures.size(), 3);
+    eq(textures[0].width, 40);
+    eq(textures[0].height, 40);
+    eq(textures[1].width, 32);
+    eq(textures[1].height, 40);
+    eq(textures[2].width, 20);
+    eq(textures[2].height, 30);
+
+    textures = pack(R"(
+      max-width 40
+      max-height 40
+      power-of-two true
+      sheet "test/Items.png"
+    )");
+    eq(textures.size(), 4);
+    eq(textures[0].width, 32);
+    eq(textures[0].height, 32);
+    eq(textures[1].width, 32);
+    eq(textures[1].height, 32);
+    eq(textures[2].width, 32);
+    eq(textures[2].height, 32);
+    eq(textures[3].width, 32);
+    eq(textures[3].height, 16);
   }
 } // namespace
 

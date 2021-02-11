@@ -118,7 +118,7 @@ namespace {
         false
       });
 
-    const auto pack_max_size = (pack_width > texture.width || pack_height > texture.height);
+    const auto pack_max_size = (pack_width > texture.width && pack_height > texture.height);
     auto pkr_sheets = pkr::pack(
       pkr::Params{
         texture.power_of_two,
@@ -163,13 +163,25 @@ namespace {
     for (auto it = texture_begin;; ++it)
       if (it == end || it->texture_index != texture_begin->texture_index) {
         const auto sheet_index = texture_begin->texture_index;
-        const auto& pkr_sheet = pkr_sheets[static_cast<size_t>(sheet_index)];        
+        const auto sheet_sprites = std::span(texture_begin, it);
+
+        // calculate texture dimensions
+        auto width = texture.width;
+        auto height = texture.height;
+        for (const auto& sprite : sheet_sprites) {
+          width = std::max(width, sprite.trimmed_rect.x + sprite.trimmed_rect.w);
+          height = std::max(height, sprite.trimmed_rect.y + sprite.trimmed_rect.h);
+        }
+        if (texture.power_of_two) {
+          width = ceil_to_pot(width);
+          height = ceil_to_pot(height);
+        }
 
         packed_textures.push_back({
           filenames.get_nth_filename(sheet_index),
-          std::max(texture.width, pkr_sheet.width),
-          std::max(texture.height, pkr_sheet.height),
-          { texture_begin, it }
+          width,
+          height,
+          sheet_sprites
         });
 
         texture_begin = it;
