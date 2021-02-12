@@ -186,6 +186,22 @@ bool is_fully_transparent(const Image& image, const Rect& rect) {
   return all_of(image, rect, [](const RGBA& rgba) { return (rgba.a == 0); });
 }
 
+bool is_identical(const Image& image_a, const Rect& rect_a, const Image& image_b, const Rect& rect_b) {
+  check_rect(image_a, rect_a);
+  check_rect(image_b, rect_b);
+  if (rect_a.w != rect_b.w || rect_a.h != rect_b.h)
+    return false;
+
+  for (auto y = 0; y < rect_a.h; ++y)
+    if (std::memcmp(
+        image_a.rgba() + (rect_a.y + y) * image_a.width() + rect_a.x,
+        image_b.rgba() + (rect_b.y + y) * image_b.width() + rect_b.x,
+        static_cast<size_t>(rect_a.w) * sizeof(RGBA)))
+      return false;
+
+  return true;
+}
+
 Rect get_used_bounds(const Image& image, const Rect& rect) {
   if (empty(rect))
     return get_used_bounds(image, image.bounds());

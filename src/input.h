@@ -24,6 +24,7 @@ struct Texture {
   bool power_of_two{ };
   bool allow_rotate{ };
   int padding{ };
+  bool deduplicate{ };
   RGBA colorkey;
 };
 

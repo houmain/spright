@@ -15,6 +15,7 @@ enum class Definition {
   power_of_two,
   allow_rotate,
   padding,
+  deduplicate,
 
   path,
   sheet,
@@ -43,6 +44,7 @@ struct State {
   bool power_of_two{ };
   bool allow_rotate{ };
   int padding{ };
+  bool deduplicate{ };
 
   std::filesystem::path path;
   FilenameSequence sheet;

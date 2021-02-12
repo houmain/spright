@@ -18,6 +18,7 @@ namespace {
       { "power-of-two", Definition::power_of_two },
       { "allow-rotate", Definition::allow_rotate },
       { "padding", Definition::padding },
+      { "deduplicate", Definition::deduplicate },
       { "begin", Definition::begin },
       { "path", Definition::path },
       { "sheet", Definition::sheet },
@@ -77,6 +78,7 @@ TexturePtr InputParser::get_texture(const State& state) {
       .power_of_two = state.power_of_two,
       .allow_rotate = state.allow_rotate,
       .padding = state.padding,
+      .deduplicate = state.deduplicate,
       .colorkey = state.colorkey,
     });
   }
@@ -329,6 +331,10 @@ void InputParser::apply_definition(State& state,
 
     case Definition::padding:
       state.padding = check_uint();
+      break;
+
+    case Definition::deduplicate:
+      state.deduplicate = check_bool();
       break;
 
     case Definition::path:

@@ -35,6 +35,7 @@ void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& d
 void draw_rect(Image& image, const Rect& rect, const RGBA& color);
 bool is_opaque(const Image& image, const Rect& rect = { });
 bool is_fully_transparent(const Image& image, const Rect& rect = { });
+bool is_identical(const Image& image_a, const Rect& rect_a, const Image& image_b, const Rect& rect_b);
 Rect get_used_bounds(const Image& image, const Rect& rect = { });
 RGBA guess_colorkey(const Image& image);
 void replace_color(Image& image, RGBA original, RGBA color);

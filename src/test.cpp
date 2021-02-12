@@ -152,6 +152,23 @@ namespace {
     eq(textures[0].height, 59);
 
     textures = pack(R"(
+      deduplicate true
+      sheet "test/Items.png"
+    )");
+    eq(textures.size(), 1);
+    eq(textures[0].width, 63);
+    eq(textures[0].height, 54);
+
+    textures = pack(R"(
+      allow-rotate true
+      deduplicate true
+      sheet "test/Items.png"
+    )");
+    eq(textures.size(), 1);
+    eq(textures[0].width, 55);
+    eq(textures[0].height, 64);
+
+    textures = pack(R"(
       max-width 128
       max-height 128
       sheet "test/Items.png"
