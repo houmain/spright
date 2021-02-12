@@ -2,6 +2,7 @@
 #include "output.h"
 #include "inja/inja.hpp"
 #include <fstream>
+
 namespace {
   nlohmann::json json_point(const PointF& point) {
     auto json_point = nlohmann::json::object();
@@ -48,6 +49,7 @@ void output_definition(const Settings& settings,
     json_sprite["pivot"] = json_point(sprite.pivot_point);
     json_sprite["trimmedPivot"] = json_point(sprite.trimmed_pivot_point);
     json_sprite["texture"] = filename;
+    json_sprite["rotated"] = sprite.rotated;
     json_sprite["tags"] = sprite.tags;
     for (const auto& tag_key : sprite.tags)
       tags[tag_key].push_back(index);
@@ -84,8 +86,8 @@ void output_definition(const Settings& settings,
 
   if (!settings.template_file.empty()) {
     auto env = inja::Environment();
-    env.set_trim_blocks(true);
-    env.set_lstrip_blocks(true);
+    env.set_trim_blocks(false);
+    env.set_lstrip_blocks(false);
     env.render_to(file, env.parse_template(path_to_utf8(settings.template_file)), json);
   }
   else {
