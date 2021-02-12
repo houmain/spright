@@ -27,6 +27,7 @@ namespace {
       { "offset", Definition::offset },
       { "sprite", Definition::sprite },
       { "skip", Definition::skip },
+      { "span", Definition::span },
       { "rect", Definition::rect },
       { "pivot", Definition::pivot },
       { "trim", Definition::trim },
@@ -110,9 +111,10 @@ void InputParser::sprite_ends(State& state) {
   if (empty(state.rect) && !empty(state.grid)) {
     state.rect = {
       m_current_offset.x, m_current_offset.y,
-      state.grid.x, state.grid.y
+      state.grid.x * state.span.x,
+      state.grid.y * state.span.y
     };
-    m_current_offset.x += state.grid.x;
+    m_current_offset.x += state.grid.x * state.span.x;
   }
 
   auto sprite = Sprite{ };
@@ -361,6 +363,11 @@ void InputParser::apply_definition(State& state,
     case Definition::skip:
       check(!empty(state.grid), "skip is only valid in grid");
       m_current_offset.x += (arguments_left() ? check_uint() : 1) * state.grid.x;
+      break;
+
+    case Definition::span:
+      state.span = check_size();
+      check(state.span.x > 0 && state.span.y > 0, "invalid span");
       break;
 
     case Definition::sprite:

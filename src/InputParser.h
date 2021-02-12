@@ -24,6 +24,7 @@ enum class Definition {
   sprite,
   rect,
   skip,
+  span,
   pivot,
   tag,
   trim,
@@ -49,6 +50,7 @@ struct State {
   std::map<std::string, std::string> tags;
   std::string sprite;
   Size grid{ };
+  Size span{ 1, 1 };
   Pivot pivot{ PivotX::center, PivotY::middle };
   PointF pivot_point{ };
   Rect rect{ };
