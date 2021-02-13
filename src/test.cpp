@@ -224,8 +224,8 @@ namespace {
       sheet "test/Items.png"
     )");
     eq(textures.size(), 1);
-    eq(textures[0].width, 126);
-    eq(textures[0].height, 44);
+    eq(textures[0].width, 73);
+    eq(textures[0].height, 61);
 
     textures = pack(R"(
       padding 1

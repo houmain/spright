@@ -122,8 +122,8 @@ namespace {
         pkr_sprites.push_back({
           static_cast<int>(i),
           0, 0,
-          sprite.trimmed_source_rect.w + texture.shape_padding * 2,
-          sprite.trimmed_source_rect.h + texture.shape_padding * 2,
+          sprite.trimmed_source_rect.w + texture.shape_padding,
+          sprite.trimmed_source_rect.h + texture.shape_padding,
           false
         });
     }
@@ -154,8 +154,8 @@ namespace {
         sprite.trimmed_rect = {
           pkr_sprite.x - texture.border_padding,
           pkr_sprite.y - texture.border_padding,
-          pkr_sprite.width - texture.shape_padding * 2,
-          pkr_sprite.height - texture.shape_padding * 2
+          pkr_sprite.width - texture.shape_padding,
+          pkr_sprite.height - texture.shape_padding
         };
       }
       ++texture_index;
