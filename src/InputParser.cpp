@@ -331,11 +331,11 @@ void InputParser::apply_definition(State& state,
       break;
 
     case Definition::power_of_two:
-      state.power_of_two = check_bool();
+      state.power_of_two = (arguments_left() ? check_bool() : true);
       break;
 
     case Definition::allow_rotate:
-      state.allow_rotate = check_bool();
+      state.allow_rotate = (arguments_left() ? check_bool() : true);
       break;
 
     case Definition::padding:
@@ -345,7 +345,7 @@ void InputParser::apply_definition(State& state,
       break;
 
     case Definition::deduplicate:
-      state.deduplicate = check_bool();
+      state.deduplicate = (arguments_left() ? check_bool() : true);
       break;
 
     case Definition::path:
