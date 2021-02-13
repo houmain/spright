@@ -16,6 +16,7 @@ enum class Definition {
   allow_rotate,
   padding,
   deduplicate,
+  alpha,
 
   path,
   sheet,
@@ -49,6 +50,8 @@ struct State {
   int border_padding{ };
   int shape_padding{ };
   bool deduplicate{ };
+  Alpha alpha{ };
+  RGBA alpha_colorkey{ };
 
   std::filesystem::path path;
   FilenameSequence sheet;

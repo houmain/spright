@@ -41,3 +41,7 @@ Rect get_used_bounds(const Image& image, const Rect& rect = { }, int threshold =
 RGBA guess_colorkey(const Image& image);
 void replace_color(Image& image, RGBA original, RGBA color);
 std::vector<Rect> find_islands(const Image& image, const Rect& rect = { });
+void clear_alpha(Image& image);
+void make_opaque(Image& image, RGBA background);
+void premultiply_alpha(Image& image);
+void bleed_alpha(Image& image);

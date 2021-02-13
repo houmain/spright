@@ -125,6 +125,27 @@ void output_texture(const Settings& settings, const PackedTexture& texture) {
     }
   }
 
+  switch (texture.alpha) {
+    case Alpha::keep:
+      break;
+
+    case Alpha::clear:
+      clear_alpha(target);
+      break;
+
+    case Alpha::bleed:
+      bleed_alpha(target);
+      break;
+
+    case Alpha::premultiply:
+      premultiply_alpha(target);
+      break;
+
+    case Alpha::colorkey:
+      make_opaque(target, texture.colorkey);
+      break;
+  }
+
   // draw debug info
   if (settings.debug) {
     for (const auto& sprite : texture.sprites) {
@@ -135,14 +156,16 @@ void output_texture(const Settings& settings, const PackedTexture& texture) {
         std::swap(pivot_point.x, pivot_point.y);
         pivot_point.x = (static_cast<float>(rect.w-1) - pivot_point.x);
       }
-
+      const auto pivot_rect = Rect{
+        rect.x + static_cast<int>(pivot_point.x - 0.25f),
+        rect.y + static_cast<int>(pivot_point.y - 0.25f),
+        (pivot_point.x == std::floor(pivot_point.x) ? 2 : 1),
+        (pivot_point.y == std::floor(pivot_point.y) ? 2 : 1),
+      };
       draw_rect(target, rect, RGBA{ { 255, 0, 255, 128 } });
-      draw_rect(target, Rect{
-          rect.x + static_cast<int>(pivot_point.x - 0.25f),
-          rect.y + static_cast<int>(pivot_point.y - 0.25f),
-          (pivot_point.x == std::floor(pivot_point.x) ? 2 : 1),
-          (pivot_point.y == std::floor(pivot_point.y) ? 2 : 1),
-        }, RGBA{ { 255, 0, 0, 255 } });
+      draw_rect(target, expand(rect, -1), RGBA{ { 255, 255, 0, 128 } });
+      draw_rect(target, pivot_rect, RGBA{ { 255, 0, 0, 255 } });
+      draw_rect(target, expand(pivot_rect, 1), RGBA{ { 255, 255, 0, 128 } });
     }
   }
 

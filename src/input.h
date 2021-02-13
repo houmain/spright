@@ -15,6 +15,8 @@ struct Pivot { PivotX x; PivotY y; };
 
 enum class Trim { none, trim, crop };
 
+enum class Alpha { keep, clear, bleed, premultiply, colorkey };
+
 struct Texture {
   FilenameSequence filename;
   int width{ };
@@ -26,6 +28,8 @@ struct Texture {
   int border_padding{ };
   int shape_padding{ };
   bool deduplicate{ };
+  Alpha alpha{ };
+  RGBA colorkey{ };
 };
 
 struct Sprite {

@@ -2,6 +2,7 @@
 #include "image.h"
 #include "stb/stb_image.h"
 #include "stb/stb_image_write.h"
+#include "texpack/bleeding.h"
 #include <algorithm>
 #include <stdexcept>
 #include <cstring>
@@ -311,3 +312,40 @@ std::vector<Rect> find_islands(const Image& image, const Rect& rect) {
       }
   return islands;
 }
+
+void clear_alpha(Image& image) {
+  std::for_each(image.rgba(), image.rgba() + image.width() * image.height(),
+    [](RGBA& rgba) {
+      if (rgba.a == 0)
+        rgba = RGBA{ };
+    });
+}
+
+void make_opaque(Image& image, RGBA background) {
+  std::for_each(image.rgba(), image.rgba() + image.width() * image.height(),
+    [&](RGBA& rgba) {
+      if (rgba.a == 0)
+        rgba = background;
+      else
+        rgba.a = 255;
+    });
+}
+
+void premultiply_alpha(Image& image) {
+  const auto multiply = [](int channel, int alpha) {
+    return static_cast<uint8_t>(channel * alpha / 256);
+  };
+  const auto size = image.width() * image.height();
+  auto rgba = image.rgba();
+  for (auto i = 0; i < size; ++i, ++rgba) {
+    rgba->r = multiply(rgba->r, rgba->a);
+    rgba->g = multiply(rgba->g, rgba->a);
+    rgba->b = multiply(rgba->b, rgba->a);
+  }
+}
+
+void bleed_alpha(Image& image) {
+  bleed_apply(reinterpret_cast<uint8_t*>(image.rgba()),
+    image.width(), image.height());
+}
+

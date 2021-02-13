@@ -205,7 +205,9 @@ namespace {
           texture.filename.get_nth_filename(sheet_index),
           width,
           height,
-          sheet_sprites
+          sheet_sprites,
+          texture.alpha,
+          texture.colorkey,
         });
 
         texture_begin = it;

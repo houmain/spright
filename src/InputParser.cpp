@@ -19,6 +19,7 @@ namespace {
       { "allow-rotate", Definition::allow_rotate },
       { "padding", Definition::padding },
       { "deduplicate", Definition::deduplicate },
+      { "alpha", Definition::alpha },
       { "begin", Definition::begin },
       { "path", Definition::path },
       { "sheet", Definition::sheet },
@@ -83,6 +84,8 @@ TexturePtr InputParser::get_texture(const State& state) {
       .border_padding = state.border_padding,
       .shape_padding = state.shape_padding,
       .deduplicate = state.deduplicate,
+      .alpha = state.alpha,
+      .colorkey = state.alpha_colorkey,
     });
   }
   return texture;
@@ -350,6 +353,18 @@ void InputParser::apply_definition(State& state,
     case Definition::deduplicate:
       state.deduplicate = (arguments_left() ? check_bool() : true);
       break;
+
+    case Definition::alpha: {
+      const auto string = check_string();
+      if (const auto index = index_of(string, { "keep", "clear", "bleed", "premultiply", "colorkey" }); index >= 0)
+        state.alpha = static_cast<Alpha>(index);
+      else
+        error("invalid alpha value '" + std::string(string) + "'");
+
+      if (state.alpha == Alpha::colorkey)
+        state.alpha_colorkey = check_color();
+      break;
+    }
 
     case Definition::path:
       state.path = check_path();
