@@ -42,6 +42,7 @@ struct Sprite {
   PointF trimmed_pivot_point{ };
   Trim trim{ };
   int trim_margin{ };
+  int trim_threshold{ };
   int extrude{ };
   std::map<std::string, std::string> tags;
   bool rotated{ };

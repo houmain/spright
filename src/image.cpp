@@ -203,11 +203,11 @@ bool is_opaque(const Image& image, const Rect& rect) {
   return all_of(image, rect, [](const RGBA& rgba) { return (rgba.a == 255); });
 }
 
-bool is_fully_transparent(const Image& image, const Rect& rect) {
+bool is_fully_transparent(const Image& image, const Rect& rect, int threshold) {
   if (empty(rect))
-    return is_fully_transparent(image, image.bounds());
+    return is_fully_transparent(image, image.bounds(), threshold);
 
-  return all_of(image, rect, [](const RGBA& rgba) { return (rgba.a == 0); });
+  return all_of(image, rect, [&](const RGBA& rgba) { return (rgba.a < threshold); });
 }
 
 bool is_identical(const Image& image_a, const Rect& rect_a, const Image& image_b, const Rect& rect_b) {
@@ -226,31 +226,31 @@ bool is_identical(const Image& image_a, const Rect& rect_a, const Image& image_b
   return true;
 }
 
-Rect get_used_bounds(const Image& image, const Rect& rect) {
+Rect get_used_bounds(const Image& image, const Rect& rect, int threshold) {
   if (empty(rect))
-    return get_used_bounds(image, image.bounds());
+    return get_used_bounds(image, image.bounds(), threshold);
 
   const auto x1 = rect.x + rect.w - 1;
   const auto y1 = rect.y + rect.h - 1;
 
   auto min_y = rect.y;
   for (; min_y < y1; ++min_y)
-    if (!is_fully_transparent(image, { rect.x, min_y, rect.w, 1 }))
+    if (!is_fully_transparent(image, { rect.x, min_y, rect.w, 1 }, threshold))
       break;
 
   auto max_y = y1;
   for (; max_y > min_y; --max_y)
-    if (!is_fully_transparent(image, { rect.x, max_y, rect.w, 1 }))
+    if (!is_fully_transparent(image, { rect.x, max_y, rect.w, 1 }, threshold))
       break;
 
   auto min_x = rect.x;
   for (; min_x < x1; ++min_x)
-    if (!is_fully_transparent(image, { min_x, min_y, 1, max_y - min_y }))
+    if (!is_fully_transparent(image, { min_x, min_y, 1, max_y - min_y }, threshold))
       break;
 
   auto max_x = x1;
   for (; max_x > min_x; --max_x)
-    if (!is_fully_transparent(image, { max_x, min_y, 1, max_y - min_y }))
+    if (!is_fully_transparent(image, { max_x, min_y, 1, max_y - min_y }, threshold))
       break;
 
   return { min_x, min_y, max_x - min_x + 1, max_y - min_y + 1 };

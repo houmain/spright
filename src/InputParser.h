@@ -29,6 +29,7 @@ enum class Definition {
   pivot,
   tag,
   trim,
+  trim_threshold,
   trim_margin,
   extrude,
 };
@@ -60,6 +61,7 @@ struct State {
   PointF pivot_point{ };
   Rect rect{ };
   Trim trim{ };
+  int trim_threshold{ };
   int trim_margin{ };
   int extrude{ };
 };
