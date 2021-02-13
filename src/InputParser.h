@@ -29,6 +29,7 @@ enum class Definition {
   pivot,
   tag,
   trim,
+  trim_margin,
 };
 
 struct State {
@@ -58,6 +59,7 @@ struct State {
   PointF pivot_point{ };
   Rect rect{ };
   Trim trim{ };
+  int trim_margin{ };
 };
 
 class InputParser {

@@ -42,6 +42,10 @@ namespace {
     for (auto& sprite : sprites)
       if (sprite.trim != Trim::none) {
         sprite.trimmed_source_rect = get_used_bounds(*sprite.source, sprite.source_rect);
+
+        if (sprite.trim_margin)
+          sprite.trimmed_source_rect = intersect(expand(
+            sprite.trimmed_source_rect, sprite.trim_margin), sprite.source_rect);
       }
       else {
         sprite.trimmed_source_rect = sprite.source_rect;

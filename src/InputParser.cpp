@@ -32,6 +32,7 @@ namespace {
       { "rect", Definition::rect },
       { "pivot", Definition::pivot },
       { "trim", Definition::trim },
+      { "trim-margin", Definition::trim_margin },
 
       // aliases
       { "in", Definition::sheet },
@@ -130,6 +131,7 @@ void InputParser::sprite_ends(State& state) {
   sprite.pivot = state.pivot;
   sprite.pivot_point = state.pivot_point;
   sprite.trim = state.trim;
+  sprite.trim_margin = state.trim_margin;
   sprite.tags = state.tags;
   m_sprites.push_back(std::move(sprite));
 
@@ -418,6 +420,10 @@ void InputParser::apply_definition(State& state,
         else
           error("invalid trim value '" + std::string(string) + "'");
       }
+      break;
+
+    case Definition::trim_margin:
+      state.trim_margin = check_uint();
       break;
 
     case Definition::none: break;

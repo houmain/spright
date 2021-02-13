@@ -4,6 +4,18 @@
 #include <charconv>
 #include <algorithm>
 
+Rect expand(const Rect& rect, int value) {
+  return { rect.x - value, rect.y - value, rect.w + value * 2, rect.h + value * 2 };
+}
+
+Rect intersect(const Rect& a, const Rect& b) {
+  const auto x0 = std::max(a.x, b.x);
+  const auto y0 = std::max(a.y, b.y);
+  const auto x1 = std::min(a.x + a.w, b.x + b.w);
+  const auto y1 = std::min(a.y + a.h, b.y + b.h);
+  return { x0, y0, x1 - x0, y1 - y0 };
+}
+
 std::filesystem::path utf8_to_path(std::string_view utf8_string) {
   static_assert(sizeof(char) == sizeof(char8_t));
 #if defined(__cpp_char8_t)
