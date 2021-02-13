@@ -77,7 +77,8 @@ TexturePtr InputParser::get_texture(const State& state) {
       .max_height = state.max_height,
       .power_of_two = state.power_of_two,
       .allow_rotate = state.allow_rotate,
-      .padding = state.padding,
+      .border_padding = state.border_padding,
+      .shape_padding = state.shape_padding,
       .deduplicate = state.deduplicate,
       .colorkey = state.colorkey,
     });
@@ -330,7 +331,9 @@ void InputParser::apply_definition(State& state,
       break;
 
     case Definition::padding:
-      state.padding = check_uint();
+      state.border_padding = state.shape_padding = check_uint();
+      if (arguments_left())
+        state.border_padding = check_uint();
       break;
 
     case Definition::deduplicate:

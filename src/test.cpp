@@ -98,9 +98,9 @@ namespace {
     parser.parse(input);
     const auto& sprites = parser.sprites();
     eq(sprites.size(), 4);
-    eq(sprites[0].texture->padding, 3);
-    eq(sprites[1].texture->padding, 1);
-    eq(sprites[2].texture->padding, 2);
+    eq(sprites[0].texture->border_padding, 3);
+    eq(sprites[1].texture->border_padding, 1);
+    eq(sprites[2].texture->border_padding, 2);
     eq(sprites[0].texture, sprites[3].texture);
     eq(sprites[0].texture->width, 128);
     eq(sprites[1].texture->width, 256);
@@ -224,8 +224,8 @@ namespace {
       sheet "test/Items.png"
     )");
     eq(textures.size(), 1);
-    eq(textures[0].width, 68);
-    eq(textures[0].height, 64);
+    eq(textures[0].width, 126);
+    eq(textures[0].height, 44);
 
     textures = pack(R"(
       padding 1

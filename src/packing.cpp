@@ -96,8 +96,8 @@ namespace {
 
     const auto [pack_width, pack_height] = get_max_texture_size(texture);
     for (const auto& sprite : sprites)
-      if (!fits_in_texture(sprite, pack_width - texture.padding,
-           pack_height - texture.padding, texture.allow_rotate))
+      if (!fits_in_texture(sprite, pack_width - texture.border_padding * 2,
+           pack_height - texture.border_padding * 2, texture.allow_rotate))
         throw std::runtime_error("sprite '" + sprite.id + "' can not fit in texture");
 
     // pack rects
@@ -113,12 +113,13 @@ namespace {
             is_duplicate = true;
           }
 
+      const auto& sprite = sprites[i];
       if (!is_duplicate)
         pkr_sprites.push_back({
           static_cast<int>(i),
           0, 0,
-          sprites[i].trimmed_source_rect.w + texture.padding,
-          sprites[i].trimmed_source_rect.h + texture.padding,
+          sprite.trimmed_source_rect.w + texture.shape_padding * 2,
+          sprite.trimmed_source_rect.h + texture.shape_padding * 2,
           false
         });
     }
@@ -128,7 +129,7 @@ namespace {
       pkr::Params{
         texture.power_of_two,
         texture.allow_rotate,
-        texture.padding,
+        texture.border_padding * 2,
         pack_width,
         pack_height,
         pack_max_size,
@@ -147,10 +148,10 @@ namespace {
         sprite.rotated = pkr_sprite.rotated;
         sprite.texture_index = texture_index;
         sprite.trimmed_rect = {
-          pkr_sprite.x,
-          pkr_sprite.y,
-          pkr_sprite.width - texture.padding,
-          pkr_sprite.height - texture.padding
+          pkr_sprite.x - texture.border_padding,
+          pkr_sprite.y - texture.border_padding,
+          pkr_sprite.width - texture.shape_padding * 2,
+          pkr_sprite.height - texture.shape_padding * 2
         };
       }
       ++texture_index;
@@ -181,9 +182,9 @@ namespace {
         auto width = texture.width;
         auto height = texture.height;
         for (const auto& sprite : sheet_sprites) {
-          width = std::max(width, sprite.trimmed_rect.x + texture.padding +
+          width = std::max(width, sprite.trimmed_rect.x + texture.border_padding +
             (sprite.rotated ? sprite.trimmed_rect.h : sprite.trimmed_rect.w));
-          height = std::max(height, sprite.trimmed_rect.y + texture.padding +
+          height = std::max(height, sprite.trimmed_rect.y + texture.border_padding +
             (sprite.rotated ? sprite.trimmed_rect.w : sprite.trimmed_rect.h));
         }
         if (texture.power_of_two) {

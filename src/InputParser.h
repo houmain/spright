@@ -43,7 +43,8 @@ struct State {
   int max_height{};
   bool power_of_two{ };
   bool allow_rotate{ };
-  int padding{ };
+  int border_padding{ };
+  int shape_padding{ };
   bool deduplicate{ };
 
   std::filesystem::path path;
