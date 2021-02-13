@@ -140,7 +140,7 @@ void InputParser::sprite_ends(State& state) {
   ++m_sprites_in_current_sheet;
 }
 
-void InputParser::autocomplete_sequence_sprites(State& state) {
+void InputParser::deduce_sequence_sprites(State& state) {
   auto error = std::error_code{ };
   if (state.sheet.is_infinite_sequence())
     for (auto i = 0; ; ++i)
@@ -149,19 +149,20 @@ void InputParser::autocomplete_sequence_sprites(State& state) {
         break;
       }
 
-  auto& os = m_autocomplete_output;
   for (auto i = 0; i < state.sheet.count(); ++i) {
     const auto full_path = state.path / state.sheet.get_nth_filename(i);
     const auto& sheet = *get_sheet(full_path, state.colorkey);
     state.rect = sheet.bounds();
 
-    os << state.indent << "sprite\n";
+    if (m_settings.autocomplete) {
+      auto& os = m_autocomplete_output;
+      os << state.indent << "sprite\n";
+    }
     sprite_ends(state);
   }
 }
 
-void InputParser::autocomplete_grid_sprites(State& state) {
-  auto& os = m_autocomplete_output;
+void InputParser::deduce_grid_sprites(State& state) {
   const auto floor = [](int v, int q) { return (v / q) * q; };
   const auto ceil = [](int v, int q) { return ((v + q - 1) / q) * q; };
 
@@ -189,36 +190,41 @@ void InputParser::autocomplete_grid_sprites(State& state) {
         ++skipped;
         continue;
       }
-      if (!std::exchange(output_offset, true)) {
-        if (x0 || y)
-          os << state.indent << "offset " << x0 << " " << y << "\n";
-      }
 
-      if (skipped > 0) {
-        os << state.indent << "skip";
-        if (skipped > 1)
-          os << " " << skipped;
-        os << "\n";
-        skipped = 0;
-      }
+      if (m_settings.autocomplete) {
+        auto& os = m_autocomplete_output;
+        if (!std::exchange(output_offset, true)) {
+          if (x0 || y)
+            os << state.indent << "offset " << x0 << " " << y << "\n";
+        }
 
-      os << state.indent << "sprite\n";
+        if (skipped > 0) {
+          os << state.indent << "skip";
+          if (skipped > 1)
+            os << " " << skipped;
+          os << "\n";
+          skipped = 0;
+        }
+
+        os << state.indent << "sprite\n";
+      }
 
       sprite_ends(state);
     }
   }
 }
 
-void InputParser::autocomplete_unaligned_sprites(State& state) {
-  auto& os = m_autocomplete_output;
+void InputParser::deduce_unaligned_sprites(State& state) {
   const auto& sheet = *get_sheet(state);
   for (const auto& rect : find_islands(sheet)) {
-    os << state.indent << "sprite \n";
-    if (rect != sheet.bounds())
-      os << state.indent << "  rect "
-        << rect.x << " " << rect.y << " "
-        << rect.w << " " << rect.h << "\n";
-
+    if (m_settings.autocomplete) {
+      auto& os = m_autocomplete_output;
+      os << state.indent << "sprite \n";
+      if (rect != sheet.bounds())
+        os << state.indent << "  rect "
+          << rect.x << " " << rect.y << " "
+          << rect.w << " " << rect.h << "\n";
+    }
     state.rect = rect;
     sprite_ends(state);
   }
@@ -229,15 +235,15 @@ void InputParser::texture_ends(State& state) {
 }
 
 void InputParser::sheet_ends(State& state) {
-  if (m_settings.autocomplete && !m_sprites_in_current_sheet) {
+  if (!m_sprites_in_current_sheet) {
     if (state.sheet.is_sequence()) {
-      autocomplete_sequence_sprites(state);
+      deduce_sequence_sprites(state);
     }
     else if (!empty(state.grid)) {
-      autocomplete_grid_sprites(state);
+      deduce_grid_sprites(state);
     }
     else {
-      autocomplete_unaligned_sprites(state);
+      deduce_unaligned_sprites(state);
     }
   }
   m_sprites_in_current_sheet = { };

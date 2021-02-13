@@ -77,9 +77,9 @@ private:
   ImagePtr get_sheet(const State& state);
   ImagePtr get_sheet(const std::filesystem::path& full_path, RGBA colorkey);
   void sprite_ends(State& state);
-  void autocomplete_sequence_sprites(State& state);
-  void autocomplete_grid_sprites(State& state);
-  void autocomplete_unaligned_sprites(State& state);
+  void deduce_sequence_sprites(State& state);
+  void deduce_grid_sprites(State& state);
+  void deduce_unaligned_sprites(State& state);
   void texture_ends(State& state);
   void sheet_ends(State& state);
   void apply_definition(State& state,
