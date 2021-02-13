@@ -26,7 +26,6 @@ struct Texture {
   int border_padding{ };
   int shape_padding{ };
   bool deduplicate{ };
-  RGBA colorkey;
 };
 
 struct Sprite {
@@ -43,6 +42,7 @@ struct Sprite {
   PointF trimmed_pivot_point{ };
   Trim trim{ };
   int trim_margin{ };
+  int extrude{ };
   std::map<std::string, std::string> tags;
   bool rotated{ };
   int texture_index{ };

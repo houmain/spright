@@ -100,8 +100,10 @@ namespace {
 
     const auto [pack_width, pack_height] = get_max_texture_size(texture);
     for (const auto& sprite : sprites)
-      if (!fits_in_texture(sprite, pack_width - texture.border_padding * 2,
-           pack_height - texture.border_padding * 2, texture.allow_rotate))
+      if (!fits_in_texture(sprite,
+              pack_width - texture.border_padding * 2,
+              pack_height - texture.border_padding * 2,
+              texture.allow_rotate))
         throw std::runtime_error("sprite '" + sprite.id + "' can not fit in texture");
 
     // pack rects
@@ -122,8 +124,8 @@ namespace {
         pkr_sprites.push_back({
           static_cast<int>(i),
           0, 0,
-          sprite.trimmed_source_rect.w + texture.shape_padding,
-          sprite.trimmed_source_rect.h + texture.shape_padding,
+          sprite.trimmed_source_rect.w + texture.shape_padding + sprite.extrude * 2,
+          sprite.trimmed_source_rect.h + texture.shape_padding + sprite.extrude * 2,
           false
         });
     }
@@ -152,10 +154,10 @@ namespace {
         sprite.rotated = pkr_sprite.rotated;
         sprite.texture_index = texture_index;
         sprite.trimmed_rect = {
-          pkr_sprite.x - texture.border_padding,
-          pkr_sprite.y - texture.border_padding,
-          pkr_sprite.width - texture.shape_padding,
-          pkr_sprite.height - texture.shape_padding
+          pkr_sprite.x + sprite.extrude - texture.border_padding,
+          pkr_sprite.y + sprite.extrude - texture.border_padding,
+          pkr_sprite.width - sprite.extrude * 2 - texture.shape_padding,
+          pkr_sprite.height - sprite.extrude * 2 - texture.shape_padding
         };
       }
       ++texture_index;
@@ -186,10 +188,12 @@ namespace {
         auto width = texture.width;
         auto height = texture.height;
         for (const auto& sprite : sheet_sprites) {
-          width = std::max(width, sprite.trimmed_rect.x + texture.border_padding +
-            (sprite.rotated ? sprite.trimmed_rect.h : sprite.trimmed_rect.w));
-          height = std::max(height, sprite.trimmed_rect.y + texture.border_padding +
-            (sprite.rotated ? sprite.trimmed_rect.w : sprite.trimmed_rect.h));
+          width = std::max(width, sprite.trimmed_rect.x +
+            (sprite.rotated ? sprite.trimmed_rect.h : sprite.trimmed_rect.w) +
+            sprite.extrude + texture.border_padding);
+          height = std::max(height, sprite.trimmed_rect.y +
+            (sprite.rotated ? sprite.trimmed_rect.w : sprite.trimmed_rect.h) +
+            sprite.extrude + texture.border_padding);
         }
         if (texture.power_of_two) {
           width = ceil_to_pot(width);

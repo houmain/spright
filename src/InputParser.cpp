@@ -33,6 +33,7 @@ namespace {
       { "pivot", Definition::pivot },
       { "trim", Definition::trim },
       { "trim-margin", Definition::trim_margin },
+      { "extrude", Definition::extrude },
 
       // aliases
       { "in", Definition::sheet },
@@ -81,7 +82,6 @@ TexturePtr InputParser::get_texture(const State& state) {
       .border_padding = state.border_padding,
       .shape_padding = state.shape_padding,
       .deduplicate = state.deduplicate,
-      .colorkey = state.colorkey,
     });
   }
   return texture;
@@ -132,6 +132,7 @@ void InputParser::sprite_ends(State& state) {
   sprite.pivot_point = state.pivot_point;
   sprite.trim = state.trim;
   sprite.trim_margin = state.trim_margin;
+  sprite.extrude = state.extrude;
   sprite.tags = state.tags;
   m_sprites.push_back(std::move(sprite));
 
@@ -430,6 +431,10 @@ void InputParser::apply_definition(State& state,
 
     case Definition::trim_margin:
       state.trim_margin = check_uint();
+      break;
+
+    case Definition::extrude:
+      state.extrude = check_uint();
       break;
 
     case Definition::none: break;

@@ -151,6 +151,30 @@ void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& d
         sizeof(RGBA));
 }
 
+void extrude_rect(Image& image, const Rect& rect, bool left, bool top, bool right, bool bottom) {
+  check_rect(image, rect);
+  if (rect.w <= 2 || rect.h <= 2)
+    return;
+  const auto x0 = rect.x;
+  const auto y0 = rect.y;
+  const auto x1 = rect.x + rect.w - 1;
+  const auto y1 = rect.y + rect.h - 1;
+  if (top)
+    std::memcpy(&image.rgba_at({ x0 + 1, y0 }),
+                &image.rgba_at({ x0 + 1, y0 + 1 }),
+                static_cast<size_t>(rect.w - 2) * sizeof(RGBA));
+  if (bottom)
+    std::memcpy(&image.rgba_at({ x0 + 1, y1 }),
+                &image.rgba_at({ x0 + 1, y1 - 1 }),
+                static_cast<size_t>(rect.w - 2) * sizeof(RGBA));
+  if (left)
+    for (auto y = y0; y <= y1; ++y)
+      image.rgba_at({ x0, y }) = image.rgba_at({ x0 + 1, y });
+  if (right)
+    for (auto y = y0; y <= y1; ++y)
+      image.rgba_at({ x1, y }) = image.rgba_at({ x1 - 1, y });
+}
+
 void draw_rect(Image& image, const Rect& rect, const RGBA& color) {
   const auto blend = [&](int x, int y) {
     if (x >= 0 && x < image.width() && y >= 0 && y < image.height()) {

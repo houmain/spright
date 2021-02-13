@@ -30,6 +30,7 @@ enum class Definition {
   tag,
   trim,
   trim_margin,
+  extrude,
 };
 
 struct State {
@@ -60,6 +61,7 @@ struct State {
   Rect rect{ };
   Trim trim{ };
   int trim_margin{ };
+  int extrude{ };
 };
 
 class InputParser {

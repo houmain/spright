@@ -98,7 +98,7 @@ void output_definition(const Settings& settings,
 void output_texture(const Settings& settings, const PackedTexture& texture) {
   // copy from sources to target sheet
   auto target = Image(texture.width, texture.height);
-  for (const auto& sprite : texture.sprites)
+  for (const auto& sprite : texture.sprites) {
     if (sprite.rotated) {
       copy_rect_rotated_cw(*sprite.source, sprite.trimmed_source_rect,
         target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
@@ -107,6 +107,23 @@ void output_texture(const Settings& settings, const PackedTexture& texture) {
       copy_rect(*sprite.source, sprite.trimmed_source_rect,
         target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
     }
+
+    if (sprite.extrude) {
+      const auto left = (sprite.source_rect.x0() == sprite.trimmed_source_rect.x0());
+      const auto top = (sprite.source_rect.y0() == sprite.trimmed_source_rect.y0());
+      const auto right = (sprite.source_rect.x1() == sprite.trimmed_source_rect.x1());
+      const auto bottom = (sprite.source_rect.y1() == sprite.trimmed_source_rect.y1());
+      if (left || top || right || bottom) {
+        auto rect = sprite.trimmed_rect;
+        if (sprite.rotated)
+          std::swap(rect.w, rect.h);
+        for (auto i = 0; i < sprite.extrude; i++) {
+          rect = expand(rect, 1);
+          extrude_rect(target, rect, left, top, right, bottom);
+        }
+      }
+    }
+  }
 
   // draw debug info
   if (settings.debug) {

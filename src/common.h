@@ -25,6 +25,11 @@ struct Rect {
   int y;
   int w;
   int h;
+
+  int x0() const { return x; }
+  int y0() const { return y; }
+  int x1() const { return x + w; }
+  int y1() const { return y + h; }
 };
 
 inline bool empty(const Size& size) { return (size.x == 0 && size.y == 0); }
