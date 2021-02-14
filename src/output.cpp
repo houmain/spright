@@ -43,6 +43,7 @@ void output_definition(const Settings& settings,
     json_sprite["id"] = sprite.id;
     json_sprite["rect"] = json_rect(sprite.rect);
     json_sprite["trimmedRect"] = json_rect(sprite.trimmed_rect);
+    json_sprite["path"] = sprite.source->path();
     json_sprite["source"] = sprite.source->filename();
     json_sprite["sourceRect"] = json_rect(sprite.source_rect);
     json_sprite["trimmedSourceRect"] = json_rect(sprite.trimmed_source_rect);
@@ -72,6 +73,7 @@ void output_definition(const Settings& settings,
   json_textures = nlohmann::json::array();
   for (const auto& texture : textures) {
     auto& json_texture = json_textures.emplace_back();
+    json_texture["path"] = texture.path;
     json_texture["filename"] = texture.filename;
     json_texture["width"] = texture.width;
     json_texture["height"] = texture.height;
@@ -172,7 +174,7 @@ void output_texture(const Settings& settings, const PackedTexture& texture) {
     }
   }
 
-  const auto path = utf8_to_path(texture.filename);
+  const auto path = texture.path / texture.filename;
   auto error = std::error_code{ };
   std::filesystem::create_directories(path.parent_path(), error);
   save_image(target, path);

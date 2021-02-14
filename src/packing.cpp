@@ -219,6 +219,7 @@ namespace {
         }
 
         packed_textures.push_back({
+          texture.path,
           texture.filename.get_nth_filename(sheet_index),
           width,
           height,

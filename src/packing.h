@@ -4,7 +4,8 @@
 #include <span>
 
 struct PackedTexture {
-  std::string filename;
+  std::filesystem::path path;
+  std::filesystem::path filename;
   int width;
   int height;
   std::span<Sprite> sprites;

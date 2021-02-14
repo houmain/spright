@@ -85,7 +85,9 @@ private:
   void check(bool condition, std::string_view message);
   TexturePtr get_texture(const State& state);
   ImagePtr get_sheet(const State& state);
-  ImagePtr get_sheet(const std::filesystem::path& full_path, RGBA colorkey);
+  ImagePtr get_sheet(const State& state, int index);
+  ImagePtr get_sheet(const std::filesystem::path& path,
+    const std::filesystem::path& filename, RGBA colorkey);
   void sprite_ends(State& state);
   void deduce_sequence_sprites(State& state);
   void deduce_grid_sprites(State& state);

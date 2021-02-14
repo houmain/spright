@@ -84,10 +84,11 @@ Image::Image(int width, int height, const RGBA& background)
   std::fill(m_data, m_data + (m_width * m_height), background);
 }
 
-Image::Image(std::filesystem::path filename)
-  : m_filename(std::move(filename)) {
+Image::Image(std::filesystem::path path, std::filesystem::path filename)
+  : m_path(std::move(path)),
+    m_filename(std::move(filename)) {
 
-  if (auto file = std::fopen(path_to_utf8(m_filename).c_str(), "rb")) {
+  if (auto file = std::fopen(path_to_utf8(path / m_filename).c_str(), "rb")) {
     auto channels = 0;
     m_data = reinterpret_cast<RGBA*>(stbi_load_from_file(
         file, &m_width, &m_height, &channels, 4));

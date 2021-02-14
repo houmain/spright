@@ -74,8 +74,8 @@ TexturePtr InputParser::get_texture(const State& state) {
   auto& texture = m_textures[std::filesystem::weakly_canonical(state.texture)];
   if (!texture) {
     texture = std::make_shared<Texture>(Texture{
-      .filename = FilenameSequence(state.path /
-        (state.texture.empty() ? default_texture_name : state.texture)),
+      .path = state.path,
+      .filename = FilenameSequence(state.texture.empty() ? default_texture_name : state.texture),
       .width = state.width,
       .height = state.height,
       .max_width = state.max_width,
@@ -92,10 +92,11 @@ TexturePtr InputParser::get_texture(const State& state) {
   return texture;
 }
 
-ImagePtr InputParser::get_sheet(const std::filesystem::path& full_path, RGBA colorkey) {
-  auto& sheet = m_sheets[std::filesystem::weakly_canonical(full_path)];
+ImagePtr InputParser::get_sheet(const std::filesystem::path& path,
+    const std::filesystem::path& filename, RGBA colorkey) {
+  auto& sheet = m_sheets[std::filesystem::weakly_canonical(path / filename)];
   if (!sheet) {
-    auto image = Image(full_path);
+    auto image = Image(path, filename);
 
     if (is_opaque(image)) {
       if (!colorkey.a)
@@ -108,9 +109,14 @@ ImagePtr InputParser::get_sheet(const std::filesystem::path& full_path, RGBA col
   return sheet;
 }
 
+ImagePtr InputParser::get_sheet(const State& state, int index) {
+  return get_sheet(state.path,
+    state.sheet.get_nth_filename(index),
+    state.colorkey);
+}
+
 ImagePtr InputParser::get_sheet(const State& state) {
-  const auto full_path = state.path / state.sheet.get_nth_filename(m_current_sequence_index);
-  return get_sheet(full_path, state.colorkey);
+  return get_sheet(state, m_current_sequence_index);
 }
 
 void InputParser::sprite_ends(State& state) {
@@ -158,8 +164,7 @@ void InputParser::deduce_sequence_sprites(State& state) {
       }
 
   for (auto i = 0; i < state.sheet.count(); ++i) {
-    const auto full_path = state.path / state.sheet.get_nth_filename(i);
-    const auto& sheet = *get_sheet(full_path, state.colorkey);
+    const auto& sheet = *get_sheet(state, i);
     state.rect = sheet.bounds();
 
     if (m_settings.autocomplete) {

@@ -6,13 +6,14 @@
 class Image {
 public:
   Image() = default;
-  explicit Image(std::filesystem::path filename);
+  Image(std::filesystem::path path, std::filesystem::path filename);
   Image(int width, int height, const RGBA& background = { });
   Image(Image&& rhs);
   Image& operator=(Image&& rhs);
   ~Image();
   Image clone() const;
 
+  const std::filesystem::path& path() const { return m_path; }
   const std::filesystem::path& filename() const { return m_filename; }
   int width() const { return m_width; }
   int height() const { return m_height; }
@@ -23,6 +24,7 @@ public:
   const RGBA& rgba_at(const Point& p) const { return m_data[p.y * m_width + p.x]; }
 
 private:
+  std::filesystem::path m_path;
   std::filesystem::path m_filename;
   RGBA* m_data{ };
   int m_width{ };
