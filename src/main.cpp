@@ -12,8 +12,7 @@ int main(int argc, const char* argv[]) try {
 #endif
 
   auto settings = Settings{ };
-  if (!interpret_commandline(settings, argc, argv) ||
-      settings.input_file.empty()) {
+  if (!interpret_commandline(settings, argc, argv)) {
     print_help_message(argv[0]);
     return 1;
   }

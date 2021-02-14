@@ -1,6 +1,7 @@
 
 #include "settings.h"
 #include "common.h"
+#include <algorithm>
 
 bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
   for (auto i = 1; i < argc; i++) {
@@ -8,7 +9,15 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
     if (argument == "-i" || argument == "--input") {
       if (++i >= argc)
         return false;
-      settings.input_file = std::filesystem::u8path(unquote(argv[i]));
+      settings.input_files.push_back(std::filesystem::u8path(unquote(argv[i])));
+    }
+    else if (argument == "--") {
+      auto ss = std::stringstream();
+      std::copy(&argv[i + 1], &argv[i + argc],
+        std::ostream_iterator<const char*>(ss, " "));
+      settings.input = ss.str();
+      std::replace(begin(settings.input), end(settings.input), ',', '\n');
+      break;
     }
     else if (argument == "-t" || argument == "--template") {
       if (++i >= argc)
@@ -30,6 +39,13 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
       return false;
     }
   }
+
+  if (settings.input_files.empty() && settings.input.empty())
+    settings.input_files.emplace_back(settings.default_input_file);
+
+  if (settings.output_file.empty())
+    settings.output_file = settings.default_output_file;
+
   return true;
 }
 
@@ -53,17 +69,19 @@ void print_help_message(const char* argv0) {
     "spright %s(c) 2020-2021 by Albert Kalchmair\n"
     "\n"
     "Usage: %s [-options]\n"
-    "  -i, --input <file>     input description (default: %s).\n"
-    "  -o, --output <file>    output description (default: %s).\n"
-    "  -t, --template <file>  output description template.\n"
+    "  -i, --input <file>     input definition file (default: %s).\n"
+    "  -- <args>              interpret remaining arguments as comma separated\n"
+    "                         list of input definitions.\n"
+    "  -o, --output <file>    output description file (default: %s).\n"
+    "  -t, --template <file>  description template file.\n"
     "  -a, --autocomplete     autocomplete input sheet description.\n"
-    "  -d, --debug            draw rectangles and pivot points on sprites.\n"
+    "  -d, --debug            draw sprite boundaries and pivot points on output.\n"
     "  -h, --help             print this help.\n"
     "\n"
     "All Rights Reserved.\n"
     "This program comes with absolutely no warranty.\n"
     "See the GNU General Public License, version 3 for details.\n"
     "\n", version, program.c_str(),
-    defaults.input_file.string().c_str(),
-    defaults.output_file.string().c_str());
+    defaults.default_input_file,
+    defaults.default_output_file);
 }

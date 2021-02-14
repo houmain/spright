@@ -463,7 +463,8 @@ void InputParser::apply_definition(State& state,
       break;
 
     case Definition::common_divisor:
-      state.common_divisor = check_size();
+      state.common_divisor.x = check_uint();
+      state.common_divisor.y = (arguments_left() ? check_uint() : state.common_divisor.x);
       check(state.common_divisor.x >= 1 && state.common_divisor.y >= 1, "invalid divisor");
       break;
 
@@ -500,6 +501,11 @@ InputParser::InputParser(const Settings& settings)
 }
 
 void InputParser::parse(std::istream& input) {
+  m_autocomplete_output = { };
+  m_sprites_in_current_sheet = { };
+  m_current_offset = { };
+  m_current_sequence_index = { };
+
   const auto default_indentation = "  ";
   auto detected_indetation = std::string(default_indentation);
   auto scope_stack = std::vector<State>();
