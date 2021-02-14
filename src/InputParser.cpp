@@ -26,6 +26,8 @@ namespace {
       { "colorkey", Definition::colorkey },
       { "tag", Definition::tag },
       { "grid", Definition::grid },
+      { "grid-offset", Definition::grid_offset },
+      { "grid-spacing", Definition::grid_spacing },
       { "offset", Definition::offset },
       { "sprite", Definition::sprite },
       { "skip", Definition::skip },
@@ -176,26 +178,26 @@ void InputParser::deduce_sequence_sprites(State& state) {
 }
 
 void InputParser::deduce_grid_sprites(State& state) {
-  const auto floor = [](int v, int q) { return (v / q) * q; };
-  const auto ceil = [](int v, int q) { return ((v + q - 1) / q) * q; };
-
   const auto& sheet = *get_sheet(state);
   const auto bounds = get_used_bounds(sheet);
-  const auto grid = state.grid;
+
+  auto grid = state.grid;
+  grid.x += state.grid_spacing.x;
+  grid.y += state.grid_spacing.y;
+
   const auto x0 = floor(bounds.x, grid.x) / grid.x;
   const auto y0 = floor(bounds.y, grid.y) / grid.y;
-  const auto x1 = ceil(bounds.x + bounds.w, grid.x) / grid.x;
-  const auto y1 = ceil(bounds.y + bounds.h, grid.y) / grid.y;
+  const auto x1 = std::min(ceil(bounds.x1(), grid.x), sheet.width()) / grid.x;
+  const auto y1 = std::min(ceil(bounds.y1(), grid.y), sheet.height()) / grid.y;
 
-  state.rect = { };
   for (auto y = y0; y < y1; ++y) {
     auto output_offset = false;
     auto skipped = 0;
     for (auto x = x0; x < x1; ++x) {
-      m_current_offset.x = x * state.grid.x;
-      m_current_offset.y = y * state.grid.y;
+
       state.rect = {
-        m_current_offset.x, m_current_offset.y,
+        state.grid_offset.x + x * grid.x,
+        state.grid_offset.y + y * grid.y,
         state.grid.x, state.grid.y
       };
 
@@ -291,7 +293,9 @@ void InputParser::apply_definition(State& state,
     check(ec == std::errc() && result >= 0, "invalid number");
     return result;
   };
-  const auto check_bool = [&]() {
+  const auto check_bool = [&](bool default_to_true) {
+    if (default_to_true && !arguments_left())
+      return true;
     const auto str = check_string();
     if (str == "true") return true;
     if (str == "false") return false;
@@ -300,8 +304,9 @@ void InputParser::apply_definition(State& state,
   const auto check_float = [&]() {
     return std::stof(std::string(check_string()));
   };
-  const auto check_size = [&]() {
-    return Size{ check_uint(), check_uint() };
+  const auto check_size = [&](bool default_to_square) {
+    const auto x = check_uint();
+    return Size{ x, (arguments_left() || !default_to_square ? check_uint() : x) };
   };
   const auto check_rect = [&]() {
     return Rect{ check_uint(), check_uint(), check_uint(), check_uint() };
@@ -344,11 +349,11 @@ void InputParser::apply_definition(State& state,
       break;
 
     case Definition::power_of_two:
-      state.power_of_two = (arguments_left() ? check_bool() : true);
+      state.power_of_two = check_bool(true);
       break;
 
     case Definition::allow_rotate:
-      state.allow_rotate = (arguments_left() ? check_bool() : true);
+      state.allow_rotate = check_bool(true);
       break;
 
     case Definition::padding:
@@ -359,7 +364,7 @@ void InputParser::apply_definition(State& state,
       break;
 
     case Definition::deduplicate:
-      state.deduplicate = (arguments_left() ? check_bool() : true);
+      state.deduplicate = check_bool(true);
       break;
 
     case Definition::alpha: {
@@ -394,7 +399,15 @@ void InputParser::apply_definition(State& state,
       break;
     }
     case Definition::grid:
-      state.grid = check_size();
+      state.grid = check_size(true);
+      break;
+
+    case Definition::grid_offset:
+      state.grid_offset = check_size(true);
+      break;
+
+    case Definition::grid_spacing:
+      state.grid_spacing = check_size(true);
       break;
 
     case Definition::offset:
@@ -409,7 +422,7 @@ void InputParser::apply_definition(State& state,
       break;
 
     case Definition::span:
-      state.span = check_size();
+      state.span = check_size(false);
       check(state.span.x > 0 && state.span.y > 0, "invalid span");
       break;
 
@@ -468,8 +481,7 @@ void InputParser::apply_definition(State& state,
       break;
 
     case Definition::common_divisor:
-      state.common_divisor.x = check_uint();
-      state.common_divisor.y = (arguments_left() ? check_uint() : state.common_divisor.x);
+      state.common_divisor = check_size(true);
       check(state.common_divisor.x >= 1 && state.common_divisor.y >= 1, "invalid divisor");
       break;
 

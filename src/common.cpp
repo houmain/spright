@@ -121,10 +121,3 @@ std::pair<std::string_view, int> split_name_number(LStringView str) {
   }
   return { str, 0 };
 }
-
-int distance_to_next_multiple(int value, int divisor) {
-  auto remainder = value % divisor;
-  if (remainder == 0)
-    return 0;
-  return divisor - remainder;
-}

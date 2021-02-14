@@ -52,6 +52,8 @@ namespace {
         sprite.trimmed_source_rect = sprite.source_rect;
       }
 
+      const auto distance_to_next_multiple =
+        [](int value, int divisor) { return ceil(value, divisor) - value; };
       sprite.common_divisor_margin = {
         distance_to_next_multiple(sprite.trimmed_source_rect.w, sprite.common_divisor.x),
         distance_to_next_multiple(sprite.trimmed_source_rect.h, sprite.common_divisor.y),
@@ -114,12 +116,12 @@ namespace {
     if (sprites.empty())
       return;
 
+    // TODO: shape padding makes rects bigger during packing, but it should not for single row/column
     const auto [pack_width, pack_height] = get_max_texture_size(texture);
+    const auto max_width = pack_width - texture.border_padding * 2 - texture.shape_padding;
+    const auto max_height = pack_height - texture.border_padding * 2 - texture.shape_padding;
     for (const auto& sprite : sprites)
-      if (!fits_in_texture(sprite,
-              pack_width - texture.border_padding * 2,
-              pack_height - texture.border_padding * 2,
-              texture.allow_rotate))
+      if (!fits_in_texture(sprite, max_width, max_height, texture.allow_rotate))
         throw std::runtime_error("sprite '" + sprite.id + "' can not fit in texture");
 
     // pack rects

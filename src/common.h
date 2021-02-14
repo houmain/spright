@@ -70,7 +70,9 @@ std::string_view trim(LStringView str);
 std::string_view unquote(LStringView str);
 void split_arguments(LStringView str, std::vector<std::string_view>* result);
 std::pair<std::string_view, int> split_name_number(LStringView str);
-int distance_to_next_multiple(int value, int divisor);
+
+inline int floor(int v, int q) { return (v / q) * q; };
+inline int ceil(int v, int q) { return ((v + q - 1) / q) * q; };
 
 constexpr int ceil_to_pot(int value) {
   for (auto pot = 1; ; pot <<= 1)
