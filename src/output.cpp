@@ -172,5 +172,8 @@ void output_texture(const Settings& settings, const PackedTexture& texture) {
     }
   }
 
-  save_image(target, utf8_to_path(texture.filename));
+  const auto path = utf8_to_path(texture.filename);
+  auto error = std::error_code{ };
+  std::filesystem::create_directories(path.parent_path(), error);
+  save_image(target, path);
 }
