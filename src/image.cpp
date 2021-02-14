@@ -310,6 +310,18 @@ std::vector<Rect> find_islands(const Image& image, const Rect& rect) {
           });
         islands.push_back({ min_x, min_y, max_x - min_x + 1, max_y - min_y + 1 });
       }
+
+  // fuzzy sort from top to bottom, left to right
+  const auto center_considerably_less = [](const Rect& a, const Rect& b) {
+    const auto row_tolerance = std::min(a.h, b.h) / 4;
+    const auto ca = a.center();
+    const auto cb = b.center();
+    if (ca.y < cb.y - row_tolerance) return true;
+    if (cb.y < ca.y - row_tolerance) return false;
+    return std::tie(ca.x, ca.y) < std::tie(cb.x, cb.y);
+  };
+  std::sort(begin(islands), end(islands), center_considerably_less);
+
   return islands;
 }
 

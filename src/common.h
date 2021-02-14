@@ -30,6 +30,7 @@ struct Rect {
   int y0() const { return y; }
   int x1() const { return x + w; }
   int y1() const { return y + h; }
+  Point center() const { return { x + w / 2, y + h / 2 }; }
 };
 
 inline bool empty(const Size& size) { return (size.x == 0 && size.y == 0); }
