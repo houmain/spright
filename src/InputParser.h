@@ -6,6 +6,7 @@
 enum class Definition {
   none,
   begin,
+  path,
 
   texture,
   width,
@@ -18,21 +19,22 @@ enum class Definition {
   deduplicate,
   alpha,
 
-  path,
   sheet,
   colorkey,
   grid,
   offset,
-  sprite,
-  rect,
   skip,
   span,
+
+  sprite,
+  rect,
   pivot,
   tag,
   trim,
   trim_threshold,
   trim_margin,
   extrude,
+  common_divisor,
 };
 
 struct State {
@@ -64,9 +66,10 @@ struct State {
   PointF pivot_point{ };
   Rect rect{ };
   Trim trim{ };
-  int trim_threshold{ };
+  int trim_threshold{ 1 };
   int trim_margin{ };
   int extrude{ };
+  Size common_divisor{ 1, 1 };
 };
 
 class InputParser {

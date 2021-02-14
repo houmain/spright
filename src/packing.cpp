@@ -31,15 +31,15 @@ namespace {
   }
 
   bool fits_in_texture(const Sprite& sprite, int max_width, int max_height, bool allow_rotate) {
-    const auto sw = sprite.trimmed_source_rect.w;
-    const auto sh = sprite.trimmed_source_rect.h;
+    const auto sw = sprite.trimmed_source_rect.w + sprite.common_divisor_margin.x + sprite.extrude * 2;
+    const auto sh = sprite.trimmed_source_rect.h + sprite.common_divisor_margin.y + sprite.extrude * 2;
     return ((sw <= max_width && sh <= max_height) ||
             (allow_rotate && sw <= max_height && sh <= max_width));
   }
 
   void prepare_sprites(std::span<Sprite> sprites) {
     // trim rects
-    for (auto& sprite : sprites)
+    for (auto& sprite : sprites) {
       if (sprite.trim != Trim::none) {
         sprite.trimmed_source_rect =
           get_used_bounds(*sprite.source, sprite.source_rect, sprite.trim_threshold);
@@ -51,6 +51,16 @@ namespace {
       else {
         sprite.trimmed_source_rect = sprite.source_rect;
       }
+
+      sprite.common_divisor_margin = {
+        distance_to_next_multiple(sprite.trimmed_source_rect.w, sprite.common_divisor.x),
+        distance_to_next_multiple(sprite.trimmed_source_rect.h, sprite.common_divisor.y),
+      };
+      sprite.common_divisor_offset = {
+        sprite.common_divisor_margin.x / 2,
+        sprite.common_divisor_margin.y / 2
+      };
+    }
   }
 
   void complete_sprite_info(std::span<Sprite> sprites) {
@@ -70,6 +80,11 @@ namespace {
           sprite.source_rect.h,
         };
       }
+
+      sprite.rect.x -= sprite.common_divisor_offset.x;
+      sprite.rect.y -= sprite.common_divisor_offset.y;
+      sprite.rect.w += sprite.common_divisor_margin.x;
+      sprite.rect.h += sprite.common_divisor_margin.y;
 
       switch (sprite.pivot.x) {
         case PivotX::left: pivot_point.x = 0; break;
@@ -125,8 +140,8 @@ namespace {
         pkr_sprites.push_back({
           static_cast<int>(i),
           0, 0,
-          sprite.trimmed_source_rect.w + texture.shape_padding + sprite.extrude * 2,
-          sprite.trimmed_source_rect.h + texture.shape_padding + sprite.extrude * 2,
+          sprite.trimmed_source_rect.w + sprite.common_divisor_margin.x + texture.shape_padding + sprite.extrude * 2,
+          sprite.trimmed_source_rect.h + sprite.common_divisor_margin.y + texture.shape_padding + sprite.extrude * 2,
           false
         });
     }
@@ -155,10 +170,10 @@ namespace {
         sprite.rotated = pkr_sprite.rotated;
         sprite.texture_index = texture_index;
         sprite.trimmed_rect = {
-          pkr_sprite.x + sprite.extrude - texture.border_padding,
-          pkr_sprite.y + sprite.extrude - texture.border_padding,
-          pkr_sprite.width - sprite.extrude * 2 - texture.shape_padding,
-          pkr_sprite.height - sprite.extrude * 2 - texture.shape_padding
+          pkr_sprite.x + sprite.common_divisor_offset.x + sprite.extrude - texture.border_padding,
+          pkr_sprite.y + sprite.common_divisor_offset.y + sprite.extrude - texture.border_padding,
+          pkr_sprite.width - sprite.common_divisor_margin.x - sprite.extrude * 2 - texture.shape_padding,
+          pkr_sprite.height - sprite.common_divisor_margin.y - sprite.extrude * 2 - texture.shape_padding
         };
       }
       ++texture_index;
@@ -191,10 +206,12 @@ namespace {
         for (const auto& sprite : sheet_sprites) {
           width = std::max(width, sprite.trimmed_rect.x +
             (sprite.rotated ? sprite.trimmed_rect.h : sprite.trimmed_rect.w) +
-            sprite.extrude + texture.border_padding);
+            sprite.extrude + texture.border_padding +
+            sprite.common_divisor_margin.x - sprite.common_divisor_offset.x);
           height = std::max(height, sprite.trimmed_rect.y +
             (sprite.rotated ? sprite.trimmed_rect.w : sprite.trimmed_rect.h) +
-            sprite.extrude + texture.border_padding);
+            sprite.extrude + texture.border_padding +
+            sprite.common_divisor_margin.y - sprite.common_divisor_offset.y);
         }
         if (texture.power_of_two) {
           width = ceil_to_pot(width);

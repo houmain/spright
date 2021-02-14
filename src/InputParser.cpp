@@ -36,6 +36,7 @@ namespace {
       { "trim-threshold", Definition::trim_threshold },
       { "trim-margin", Definition::trim_margin },
       { "extrude", Definition::extrude },
+      { "common-divisor", Definition::common_divisor },
 
       // aliases
       { "in", Definition::sheet },
@@ -138,6 +139,7 @@ void InputParser::sprite_ends(State& state) {
   sprite.trim_margin = state.trim_margin;
   sprite.trim_threshold = state.trim_threshold;
   sprite.extrude = state.extrude;
+  sprite.common_divisor = state.common_divisor;
   sprite.tags = state.tags;
   m_sprites.push_back(std::move(sprite));
 
@@ -345,9 +347,10 @@ void InputParser::apply_definition(State& state,
       break;
 
     case Definition::padding:
-      state.border_padding = state.shape_padding = check_uint();
-      if (arguments_left())
-        state.border_padding = check_uint();
+      state.shape_padding =
+        (arguments_left() ? check_uint() : 1);
+      state.border_padding =
+        (arguments_left() ? check_uint() : state.shape_padding);
       break;
 
     case Definition::deduplicate:
@@ -456,7 +459,12 @@ void InputParser::apply_definition(State& state,
       break;
 
     case Definition::extrude:
-      state.extrude = check_uint();
+      state.extrude = (arguments_left() ? check_uint() : 1);
+      break;
+
+    case Definition::common_divisor:
+      state.common_divisor = check_size();
+      check(state.common_divisor.x >= 1 && state.common_divisor.y >= 1, "invalid divisor");
       break;
 
     case Definition::none: break;

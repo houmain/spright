@@ -51,6 +51,9 @@ struct Sprite {
   std::map<std::string, std::string> tags;
   bool rotated{ };
   int texture_index{ };
+  Size common_divisor{ };
+  Point common_divisor_offset{ };
+  Size common_divisor_margin{ };
 };
 
 std::vector<Sprite> parse_definition(const Settings& settings);

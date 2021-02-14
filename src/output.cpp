@@ -150,9 +150,11 @@ void output_texture(const Settings& settings, const PackedTexture& texture) {
   if (settings.debug) {
     for (const auto& sprite : texture.sprites) {
       auto rect = sprite.rect;
+      auto trimmed_rect = sprite.trimmed_rect;
       auto pivot_point = sprite.pivot_point;
       if (sprite.rotated) {
         std::swap(rect.w, rect.h);
+        std::swap(trimmed_rect.w, trimmed_rect.h);
         std::swap(pivot_point.x, pivot_point.y);
         pivot_point.x = (static_cast<float>(rect.w-1) - pivot_point.x);
       }
@@ -163,9 +165,10 @@ void output_texture(const Settings& settings, const PackedTexture& texture) {
         (pivot_point.y == std::floor(pivot_point.y) ? 2 : 1),
       };
       draw_rect(target, rect, RGBA{ { 255, 0, 255, 128 } });
-      draw_rect(target, expand(rect, -1), RGBA{ { 255, 255, 0, 128 } });
+      draw_rect(target, trimmed_rect, RGBA{ { 255, 255, 0, 196 } });
       draw_rect(target, pivot_rect, RGBA{ { 255, 0, 0, 255 } });
-      draw_rect(target, expand(pivot_rect, 1), RGBA{ { 255, 255, 0, 128 } });
+      // draw_rect(target, expand(rect, -1), RGBA{ { 255, 255, 0, 128 } });
+      // draw_rect(target, expand(pivot_rect, 1), RGBA{ { 255, 255, 0, 128 } });
     }
   }
 
