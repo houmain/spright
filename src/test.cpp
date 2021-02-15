@@ -224,8 +224,8 @@ namespace {
       sheet "test/Items.png"
     )");
     eq(textures.size(), 1);
-    eq(textures[0].width, 73);
-    eq(textures[0].height, 61);
+    eq(textures[0].width, 72);
+    eq(textures[0].height, 60);
 
     textures = pack(R"(
       padding 1
@@ -284,6 +284,25 @@ namespace {
       max-height 16
       sheet "test/Items.png"
     )"), true);
+
+    textures = pack(R"(
+      max-height 16
+      common-divisor 16
+      sheet "test/Items.png"
+    )");
+    eq(textures.size(), 1);
+    eq(textures[0].width, 496);
+    eq(textures[0].height, 16);
+
+    textures = pack(R"(
+      max-height 30
+      common-divisor 24
+      extrude 1
+      sheet "test/Items.png"
+    )");
+    eq(textures.size(), 1);
+    eq(textures[0].width, 806);
+    eq(textures[0].height, 26);
   }
 } // namespace
 

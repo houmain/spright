@@ -30,11 +30,35 @@ namespace {
       get_max_size(texture.height, texture.max_height, texture.power_of_two));
   }
 
+  Size get_sprite_size(const Sprite& sprite) {
+    return {
+      sprite.trimmed_source_rect.w + sprite.common_divisor_margin.x + sprite.extrude * 2,
+      sprite.trimmed_source_rect.h + sprite.common_divisor_margin.y + sprite.extrude * 2
+    };
+  }
+
+  Size get_sprite_indent(const Sprite& sprite) {
+    return {
+      sprite.common_divisor_offset.x + sprite.extrude,
+      sprite.common_divisor_offset.y + sprite.extrude,
+    };
+  }
+
+  Point get_sprite_right_bottom(const Sprite& sprite) {
+    const auto w = (sprite.rotated ? sprite.trimmed_rect.h : sprite.trimmed_rect.w);
+    const auto h = (sprite.rotated ? sprite.trimmed_rect.w : sprite.trimmed_rect.h);
+    return {
+      sprite.trimmed_rect.x + w +
+        sprite.common_divisor_margin.x - sprite.common_divisor_offset.x + sprite.extrude,
+      sprite.trimmed_rect.y + h +
+        sprite.common_divisor_margin.y - sprite.common_divisor_offset.y + sprite.extrude
+    };
+  }
+
   bool fits_in_texture(const Sprite& sprite, int max_width, int max_height, bool allow_rotate) {
-    const auto sw = sprite.trimmed_source_rect.w + sprite.common_divisor_margin.x + sprite.extrude * 2;
-    const auto sh = sprite.trimmed_source_rect.h + sprite.common_divisor_margin.y + sprite.extrude * 2;
-    return ((sw <= max_width && sh <= max_height) ||
-            (allow_rotate && sw <= max_height && sh <= max_width));
+    const auto size = get_sprite_size(sprite);
+    return ((size.x <= max_width && size.y <= max_height) ||
+            (allow_rotate && size.x <= max_height && size.y <= max_width));
   }
 
   void prepare_sprites(std::span<Sprite> sprites) {
@@ -116,10 +140,9 @@ namespace {
     if (sprites.empty())
       return;
 
-    // TODO: shape padding makes rects bigger during packing, but it should not for single row/column
     const auto [pack_width, pack_height] = get_max_texture_size(texture);
-    const auto max_width = pack_width - texture.border_padding * 2 - texture.shape_padding;
-    const auto max_height = pack_height - texture.border_padding * 2 - texture.shape_padding;
+    const auto max_width = pack_width - texture.border_padding * 2;
+    const auto max_height = pack_height - texture.border_padding * 2;
     for (const auto& sprite : sprites)
       if (!fits_in_texture(sprite, max_width, max_height, texture.allow_rotate))
         throw std::runtime_error("sprite '" + sprite.id + "' can not fit in texture");
@@ -137,15 +160,16 @@ namespace {
             is_duplicate = true;
           }
 
-      const auto& sprite = sprites[i];
-      if (!is_duplicate)
-        pkr_sprites.push_back({
-          static_cast<int>(i),
-          0, 0,
-          sprite.trimmed_source_rect.w + sprite.common_divisor_margin.x + texture.shape_padding + sprite.extrude * 2,
-          sprite.trimmed_source_rect.h + sprite.common_divisor_margin.y + texture.shape_padding + sprite.extrude * 2,
-          false
-        });
+      if (!is_duplicate) {
+        // only expand by shape padding when sprite does not fill single row/column
+        auto size = get_sprite_size(sprites[i]);
+        if (size.x < max_width)
+          size.x += texture.shape_padding;
+        if (size.y < max_height)
+          size.y += texture.shape_padding;
+
+        pkr_sprites.push_back({ static_cast<int>(i), 0, 0, size.x, size.y, false });
+      }
     }
 
     const auto pack_max_size = (pack_width > texture.width);
@@ -169,14 +193,20 @@ namespace {
     for (const auto& pkr_sheet : pkr_sheets) {
       for (const auto& pkr_sprite : pkr_sheet.sprites) {
         auto& sprite = sprites[static_cast<size_t>(pkr_sprite.id)];
+        const auto indent = get_sprite_indent(sprite);
         sprite.rotated = pkr_sprite.rotated;
         sprite.texture_index = texture_index;
         sprite.trimmed_rect = {
-          pkr_sprite.x + sprite.common_divisor_offset.x + sprite.extrude - texture.border_padding,
-          pkr_sprite.y + sprite.common_divisor_offset.y + sprite.extrude - texture.border_padding,
-          pkr_sprite.width - sprite.common_divisor_margin.x - sprite.extrude * 2 - texture.shape_padding,
-          pkr_sprite.height - sprite.common_divisor_margin.y - sprite.extrude * 2 - texture.shape_padding
+          pkr_sprite.x + indent.x - texture.border_padding,
+          pkr_sprite.y + indent.y - texture.border_padding,
+          sprite.trimmed_source_rect.w,
+          sprite.trimmed_source_rect.h
         };
+        const auto size = get_sprite_size(sprite);
+        if (size.x < max_width)
+          sprite.trimmed_rect.w -= texture.shape_padding;
+        if (size.y < max_height)
+          sprite.trimmed_rect.h -= texture.shape_padding;
       }
       ++texture_index;
     }
@@ -191,7 +221,7 @@ namespace {
 
     // sort sprites by sheet index
     if (pkr_sheets.size() > 1)
-      std::sort(begin(sprites), end(sprites),
+      std::stable_sort(begin(sprites), end(sprites),
         [](const Sprite& a, const Sprite& b) { return a.texture_index < b.texture_index; });
 
     // add to output textures
@@ -206,14 +236,9 @@ namespace {
         auto width = texture.width;
         auto height = texture.height;
         for (const auto& sprite : sheet_sprites) {
-          width = std::max(width, sprite.trimmed_rect.x +
-            (sprite.rotated ? sprite.trimmed_rect.h : sprite.trimmed_rect.w) +
-            sprite.extrude + texture.border_padding +
-            sprite.common_divisor_margin.x - sprite.common_divisor_offset.x);
-          height = std::max(height, sprite.trimmed_rect.y +
-            (sprite.rotated ? sprite.trimmed_rect.w : sprite.trimmed_rect.h) +
-            sprite.extrude + texture.border_padding +
-            sprite.common_divisor_margin.y - sprite.common_divisor_offset.y);
+          const auto [x1, y1] = get_sprite_right_bottom(sprite);
+          width = std::max(width, x1 + texture.border_padding);
+          height = std::max(height, y1 + texture.border_padding);
         }
         if (texture.power_of_two) {
           width = ceil_to_pot(width);
