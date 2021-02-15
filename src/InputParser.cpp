@@ -77,7 +77,8 @@ TexturePtr InputParser::get_texture(const State& state) {
   if (!texture) {
     texture = std::make_shared<Texture>(Texture{
       .path = state.path,
-      .filename = FilenameSequence(state.texture.empty() ? default_texture_name : state.texture),
+      .filename = FilenameSequence(
+        path_to_utf8(state.texture.empty() ? default_texture_name : state.texture)),
       .width = state.width,
       .height = state.height,
       .max_width = state.max_width,

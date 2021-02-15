@@ -2,6 +2,7 @@
 
 #include "input.h"
 #include "FilenameSequence.h"
+#include <sstream>
 
 enum class Definition {
   none,

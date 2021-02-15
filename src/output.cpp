@@ -34,27 +34,29 @@ void output_definition(const Settings& settings,
   using TagKey = std::pair<std::string, std::string>;
   using SpriteIndex = size_t;
   auto tags = std::map<TagKey, std::vector<SpriteIndex>>();
-  auto texture_sprites = std::map<std::string, std::vector<SpriteIndex>>();
+  auto texture_sprites = std::map<std::filesystem::path, std::vector<SpriteIndex>>();
 
   for (const auto& sprite : sprites) {
     auto& json_sprite = json_sprites.emplace_back();
     const auto index = json_sprites.size() - 1;
-    const auto filename = sprite.texture->filename.get_nth_filename(sprite.texture_index);
+    const auto texture_filename = utf8_to_path(
+      sprite.texture->filename.get_nth_filename(sprite.texture_index));
     json_sprite["id"] = sprite.id;
     json_sprite["rect"] = json_rect(sprite.rect);
     json_sprite["trimmedRect"] = json_rect(sprite.trimmed_rect);
-    json_sprite["path"] = sprite.source->path();
-    json_sprite["source"] = sprite.source->filename();
+    json_sprite["sourceFilename"] = path_to_utf8(sprite.source->filename());
+    json_sprite["sourcePath"] = path_to_utf8(sprite.source->path());
     json_sprite["sourceRect"] = json_rect(sprite.source_rect);
     json_sprite["trimmedSourceRect"] = json_rect(sprite.trimmed_source_rect);
     json_sprite["pivot"] = json_point(sprite.pivot_point);
     json_sprite["trimmedPivot"] = json_point(sprite.trimmed_pivot_point);
-    json_sprite["texture"] = filename;
+    json_sprite["textureFilename"] = path_to_utf8(texture_filename);
+    json_sprite["texturePath"] = path_to_utf8(sprite.texture->path);
     json_sprite["rotated"] = sprite.rotated;
     json_sprite["tags"] = sprite.tags;
     for (const auto& tag_key : sprite.tags)
       tags[tag_key].push_back(index);
-    texture_sprites[filename].push_back(index);
+    texture_sprites[sprite.texture->path / texture_filename].push_back(index);
   }
 
   auto& json_tags = json["tags"];
@@ -73,12 +75,12 @@ void output_definition(const Settings& settings,
   json_textures = nlohmann::json::array();
   for (const auto& texture : textures) {
     auto& json_texture = json_textures.emplace_back();
-    json_texture["path"] = texture.path;
-    json_texture["filename"] = texture.filename;
+    json_texture["path"] = path_to_utf8(texture.path);
+    json_texture["filename"] = path_to_utf8(texture.filename);
     json_texture["width"] = texture.width;
     json_texture["height"] = texture.height;
     auto& json_texture_sprites = json_texture["sprites"];
-    for (auto index : texture_sprites[texture.filename])
+    for (auto index : texture_sprites[texture.path / texture.filename])
       json_texture_sprites.push_back(json_sprites[index]);
   }
 

@@ -12,7 +12,7 @@
 			"frames": [
 {% for sprite in texture.sprites %}
 				{
-					"filename": "{{ sprite.source }}",
+					"filename": "{{ sprite.sourceFilename }}",
 					"rotated": {{ sprite.rotated }},
 					"trimmed": {% if sprite.rect.w == sprite.trimmedRect.w and sprite.rect.h == sprite.trimmedRect.h %}false{% else %}true{% endif %},
 					"sourceSize": {
