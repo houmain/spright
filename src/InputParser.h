@@ -7,7 +7,6 @@
 enum class Definition {
   none,
   begin,
-  path,
 
   texture,
   width,
@@ -20,6 +19,7 @@ enum class Definition {
   deduplicate,
   alpha,
 
+  path,
   sheet,
   colorkey,
   grid,

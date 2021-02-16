@@ -76,9 +76,7 @@ TexturePtr InputParser::get_texture(const State& state) {
   auto& texture = m_textures[std::filesystem::weakly_canonical(state.texture)];
   if (!texture) {
     texture = std::make_shared<Texture>(Texture{
-      .path = state.path,
-      .filename = FilenameSequence(
-        path_to_utf8(state.texture.empty() ? default_texture_name : state.texture)),
+      .filename = FilenameSequence(path_to_utf8(state.texture)),
       .width = state.width,
       .height = state.height,
       .max_width = state.max_width,
@@ -529,6 +527,7 @@ void InputParser::parse(std::istream& input) {
   auto scope_stack = std::vector<State>();
   scope_stack.emplace_back();
   scope_stack.back().level = -1;
+  scope_stack.back().texture = default_texture_name;
 
   auto autocomplete_space = std::stringstream();
   const auto pop_scope_stack = [&](int level) {

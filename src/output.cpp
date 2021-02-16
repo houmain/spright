@@ -45,12 +45,11 @@ namespace {
       json_sprite["pivot"] = json_point(sprite.pivot_point);
       json_sprite["trimmedPivot"] = json_point(sprite.trimmed_pivot_point);
       json_sprite["textureFilename"] = path_to_utf8(texture_filename);
-      json_sprite["texturePath"] = path_to_utf8(sprite.texture->path);
       json_sprite["rotated"] = sprite.rotated;
       json_sprite["tags"] = sprite.tags;
       for (const auto& tag_key : sprite.tags)
         tags[tag_key].push_back(index);
-      texture_sprites[sprite.texture->path / texture_filename].push_back(index);
+      texture_sprites[texture_filename].push_back(index);
     }
 
     auto& json_tags = json["tags"];
@@ -69,12 +68,11 @@ namespace {
     json_textures = nlohmann::json::array();
     for (const auto& texture : textures) {
       auto& json_texture = json_textures.emplace_back();
-      json_texture["path"] = path_to_utf8(texture.path);
       json_texture["filename"] = path_to_utf8(texture.filename);
       json_texture["width"] = texture.width;
       json_texture["height"] = texture.height;
       auto& json_texture_sprites = json_texture["sprites"];
-      for (auto index : texture_sprites[texture.path / texture.filename])
+      for (auto index : texture_sprites[texture.filename])
         json_texture_sprites.push_back(json_sprites[index]);
     }
     return json;
@@ -184,8 +182,7 @@ void output_texture(const Settings& settings, const PackedTexture& texture) {
     }
   }
 
-  const auto path = texture.path / texture.filename;
   auto error = std::error_code{ };
-  std::filesystem::create_directories(path.parent_path(), error);
-  save_image(target, path);
+  std::filesystem::create_directories(texture.filename.parent_path(), error);
+  save_image(target, texture.filename);
 }

@@ -18,7 +18,6 @@ enum class Trim { none, trim, crop };
 enum class Alpha { keep, clear, bleed, premultiply, colorkey };
 
 struct Texture {
-  std::filesystem::path path;
   FilenameSequence filename;
   int width{ };
   int height{ };
