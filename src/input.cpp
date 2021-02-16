@@ -3,6 +3,7 @@
 #include "InputParser.h"
 #include <fstream>
 #include <sstream>
+#include <iostream>
 #include <variant>
 
 std::vector<Sprite> parse_definition(const Settings& settings) {
@@ -13,14 +14,20 @@ std::vector<Sprite> parse_definition(const Settings& settings) {
     parser.parse(input);
   }
 
-  for (auto input_file : settings.input_files) {
+  for (const auto& input_file : settings.input_files) {
+
+    if (input_file == "cin") {
+      parser.parse(std::cin);
+      continue;;
+    }
+
     auto input = std::fstream(input_file, std::ios::in);
     if (!input.good())
       throw std::runtime_error("opening file '" + path_to_utf8(input_file) + "' failed");
 
     parser.parse(input);
 
-    if (settings.autocomplete && input.good()) {
+    if (settings.autocomplete) {
       const auto output = parser.autocomplete_output();
       if (static_cast<int>(output.size()) != input.tellg()) {
         input.close();

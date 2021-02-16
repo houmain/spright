@@ -112,8 +112,10 @@ void split_arguments(LStringView str, std::vector<std::string_view>* result) {
 std::pair<std::string_view, int> split_name_number(LStringView str) {
   auto value = 0;
   if (const auto it = std::find_if(begin(str), end(str), is_digit); it != end(str)) {
-    const auto [number_end, ec] = std::from_chars(&*it, &*end(str), value);
-    if (ec == std::errc{ } && number_end == &*end(str))
+    const auto sbegin = &*it;
+    const auto send = sbegin + std::distance(it, end(str));
+    const auto [number_end, ec] = std::from_chars(sbegin, send, value);
+    if (ec == std::errc{ } && number_end == send)
       return {
         str.substr(0, static_cast<std::string_view::size_type>(std::distance(begin(str), it))),
         value

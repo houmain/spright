@@ -17,7 +17,7 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
       std::copy(&argv[i + 1], &argv[i + argc],
         std::ostream_iterator<const char*>(ss, " "));
       settings.input = ss.str();
-      std::replace(begin(settings.input), end(settings.input), ',', '\n');
+      std::replace(begin(settings.input), end(settings.input), ';', '\n');
       break;
     }
     else if (argument == "-t" || argument == "--template") {

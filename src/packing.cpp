@@ -137,9 +137,6 @@ namespace {
 
   void pack_sprite_texture(const Texture& texture,
       std::span<Sprite> sprites, std::vector<PackedTexture>& packed_textures) {
-    if (sprites.empty())
-      return;
-
     const auto [pack_width, pack_height] = get_max_texture_size(texture);
     const auto max_width = pack_width - texture.border_padding * 2;
     const auto max_height = pack_height - texture.border_padding * 2;
@@ -202,11 +199,6 @@ namespace {
           sprite.trimmed_source_rect.w,
           sprite.trimmed_source_rect.h
         };
-        const auto size = get_sprite_size(sprite);
-        if (size.x < max_width)
-          sprite.trimmed_rect.w -= texture.shape_padding;
-        if (size.y < max_height)
-          sprite.trimmed_rect.h -= texture.shape_padding;
       }
       ++texture_index;
     }
@@ -262,18 +254,21 @@ namespace {
   }
 
   void pack_sprites_by_texture(std::span<Sprite> sprites, std::vector<PackedTexture>& packed_textures) {
+    if (sprites.empty())
+      return;
+
     // sort sprites by texture
     std::stable_sort(begin(sprites), end(sprites),
       [](const Sprite& a, const Sprite& b) { return a.texture->filename < b.texture->filename; });
 
-    auto begin = sprites.begin();
-    for (auto it = sprites.begin(); begin != sprites.end(); ++it) {
+    for (auto begin = sprites.begin(), it = begin; ; ++it)
       if (it == sprites.end() ||
           it->texture->filename != begin->texture->filename) {
         pack_sprite_texture(*begin->texture, { begin, it }, packed_textures);
+        if (it == sprites.end())
+          break;
         begin = it;
       }
-    }
   }
 } // namespace
 

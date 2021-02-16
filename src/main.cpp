@@ -26,7 +26,7 @@ int main(int argc, const char* argv[]) try {
     [&](const auto& a, const auto& b) {
       return split_name_number(a.id) < split_name_number(b.id);
     });
-  output_definition(settings, sprites, textures);
+  output_description(settings, sprites, textures);
 }
 catch (const std::exception& ex) {
   std::cerr << ex.what() << std::endl;
