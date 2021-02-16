@@ -278,7 +278,7 @@ void InputParser::apply_definition(State& state,
     return arguments[argument_index++];
   };
   const auto check_path = [&]() {
-    return std::filesystem::path(check_string());
+    return utf8_to_path(check_string());
   };
   const auto is_number_following = [&]() {
     if (!arguments_left())

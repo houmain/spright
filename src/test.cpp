@@ -128,6 +128,17 @@ namespace {
     eq(sprites.size(), 31);
   }
 
+  void test_path() noexcept {
+    auto input = std::stringstream(R"(
+      path "test"
+        sheet "Items.png"
+
+      sheet "Items.png"
+    )");
+    auto parser = InputParser(Settings{ });
+    parser.parse(input);
+  }
+
   void test_packing() noexcept {
     const auto pack = [](const char* definition) {
       auto input = std::stringstream(definition);
@@ -343,6 +354,7 @@ void test() {
 
   test_tag_scopes();
   test_texture_scopes();
+  test_path();
   test_grid_autocompletion();
   test_unaligned_autocompletion();
   test_packing();

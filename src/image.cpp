@@ -77,10 +77,13 @@ namespace {
 } // namespace
 
 Image::Image(int width, int height, const RGBA& background)
-  : m_data(static_cast<RGBA*>(std::malloc(static_cast<size_t>(width * height * 4)))),
-    m_width(width),
+  : m_width(width),
     m_height(height) {
 
+  if (!width || !height)
+    throw std::runtime_error("invalid image size");
+
+  m_data = static_cast<RGBA*>(std::malloc(static_cast<size_t>(m_width * m_height * 4)));
   std::fill(m_data, m_data + (m_width * m_height), background);
 }
 
@@ -88,14 +91,15 @@ Image::Image(std::filesystem::path path, std::filesystem::path filename)
   : m_path(std::move(path)),
     m_filename(std::move(filename)) {
 
-  if (auto file = std::fopen(path_to_utf8(path / m_filename).c_str(), "rb")) {
+  const auto full_path = path_to_utf8(m_path / m_filename);
+  if (auto file = std::fopen(full_path.c_str(), "rb")) {
     auto channels = 0;
     m_data = reinterpret_cast<RGBA*>(stbi_load_from_file(
         file, &m_width, &m_height, &channels, 4));
     std::fclose(file);
   }
   if (!m_data)
-    throw std::runtime_error("loading file '" + path_to_utf8(m_filename) + "' failed");
+    throw std::runtime_error("loading file '" + full_path + "' failed");
 }
 
 Image::Image(Image&& rhs)
