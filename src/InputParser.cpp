@@ -16,6 +16,8 @@ namespace {
       { "max-width", Definition::max_width },
       { "max-height", Definition::max_height },
       { "power-of-two", Definition::power_of_two },
+      { "square", Definition::square },
+      { "align-width", Definition::align_width },
       { "allow-rotate", Definition::allow_rotate },
       { "padding", Definition::padding },
       { "deduplicate", Definition::deduplicate },
@@ -82,6 +84,8 @@ TexturePtr InputParser::get_texture(const State& state) {
       .max_width = state.max_width,
       .max_height = state.max_height,
       .power_of_two = state.power_of_two,
+      .square = state.square,
+      .align_width = state.align_width,
       .allow_rotate = state.allow_rotate,
       .border_padding = state.border_padding,
       .shape_padding = state.shape_padding,
@@ -349,6 +353,14 @@ void InputParser::apply_definition(State& state,
 
     case Definition::power_of_two:
       state.power_of_two = check_bool(true);
+      break;
+
+    case Definition::square:
+      state.square = check_bool(true);
+      break;
+
+    case Definition::align_width:
+      state.align_width = check_uint();
       break;
 
     case Definition::allow_rotate:

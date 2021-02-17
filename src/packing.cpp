@@ -1,9 +1,10 @@
 
 #include "packing.h"
+#include "pack.h"
 #include "image.h"
 #include "FilenameSequence.h"
-#include "texpack/packer.h"
 #include <cmath>
+#include <array>
 #include <algorithm>
 #include <span>
 
@@ -24,10 +25,11 @@ namespace {
     return std::numeric_limits<int>::max();
   }
 
-  std::pair<int, int> get_max_texture_size(const Texture& texture) {
-    return std::make_pair(
+  std::pair<int, int> get_texture_max_size(const Texture& texture) {
+    return {
       get_max_size(texture.width, texture.max_width, texture.power_of_two),
-      get_max_size(texture.height, texture.max_height, texture.power_of_two));
+      get_max_size(texture.height, texture.max_height, texture.power_of_two)
+    };
   }
 
   Size get_sprite_size(const Sprite& sprite) {
@@ -41,17 +43,6 @@ namespace {
     return {
       sprite.common_divisor_offset.x + sprite.extrude,
       sprite.common_divisor_offset.y + sprite.extrude,
-    };
-  }
-
-  Point get_sprite_right_bottom(const Sprite& sprite) {
-    const auto w = (sprite.rotated ? sprite.trimmed_rect.h : sprite.trimmed_rect.w);
-    const auto h = (sprite.rotated ? sprite.trimmed_rect.w : sprite.trimmed_rect.h);
-    return {
-      sprite.trimmed_rect.x + w +
-        sprite.common_divisor_margin.x - sprite.common_divisor_offset.x + sprite.extrude,
-      sprite.trimmed_rect.y + h +
-        sprite.common_divisor_margin.y - sprite.common_divisor_offset.y + sprite.extrude
     };
   }
 
@@ -137,15 +128,16 @@ namespace {
 
   void pack_sprite_texture(const Texture& texture,
       std::span<Sprite> sprites, std::vector<PackedTexture>& packed_textures) {
-    const auto [pack_width, pack_height] = get_max_texture_size(texture);
-    const auto max_width = pack_width - texture.border_padding * 2;
-    const auto max_height = pack_height - texture.border_padding * 2;
+    const auto [max_texture_width, max_texture_height] = get_texture_max_size(texture);
+    const auto max_width = max_texture_width - texture.border_padding * 2;
+    const auto max_height = max_texture_height - texture.border_padding * 2;
     for (const auto& sprite : sprites)
       if (!fits_in_texture(sprite, max_width, max_height, texture.allow_rotate))
         throw std::runtime_error("sprite '" + sprite.id + "' can not fit in texture");
 
     // pack rects
-    auto pkr_sprites = std::vector<pkr::Sprite>();
+    auto pack_sizes = std::vector<PackSize>();
+    pack_sizes.reserve(sprites.size());
     auto duplicates = std::vector<std::pair<size_t, size_t>>();
     for (auto i = size_t{ }; i < sprites.size(); ++i) {
       auto is_duplicate = false;
@@ -158,44 +150,44 @@ namespace {
           }
 
       if (!is_duplicate) {
-        // only expand by shape padding when sprite does not fill single row/column
         auto size = get_sprite_size(sprites[i]);
-        if (size.x < max_width)
-          size.x += texture.shape_padding;
-        if (size.y < max_height)
-          size.y += texture.shape_padding;
+        size.x += texture.shape_padding;
+        size.y += texture.shape_padding;
 
-        pkr_sprites.push_back({ static_cast<int>(i), 0, 0, size.x, size.y, false });
+        pack_sizes.push_back({ static_cast<int>(i), size.x, size.y });
       }
     }
 
-    const auto pack_max_size = (pack_width > texture.width);
-    auto pkr_sheets = pkr::pack(
-      pkr::Params{
-        texture.power_of_two,
-        texture.allow_rotate,
-        texture.border_padding * 2,
-        pack_width,
-        pack_height,
-        pack_max_size,
+    auto pack_sheets = pack(
+      PackSettings{
+        .power_of_two = texture.power_of_two,
+        .square = texture.square,
+        .allow_rotate = texture.allow_rotate,
+        .align_width = texture.align_width,
+        .border_padding = texture.border_padding,
+        .over_allocate = texture.shape_padding,
+        .min_width = texture.width,
+        .min_height = texture.height,
+        .max_width = max_texture_width,
+        .max_height = max_texture_height,
       },
-      pkr_sprites);
+      pack_sizes);
 
-    if (std::cmp_greater(pkr_sheets.size(), texture.filename.count()))
+    if (std::cmp_greater(pack_sheets.size(), texture.filename.count()))
       throw std::runtime_error("not all sprites fit on texture '" +
         texture.filename.filename() + "'");
 
     // update sprite rects
     auto texture_index = 0;
-    for (const auto& pkr_sheet : pkr_sheets) {
-      for (const auto& pkr_sprite : pkr_sheet.sprites) {
-        auto& sprite = sprites[static_cast<size_t>(pkr_sprite.id)];
+    for (const auto& pack_sheet : pack_sheets) {
+      for (const auto& pack_rect : pack_sheet.rects) {
+        auto& sprite = sprites[static_cast<size_t>(pack_rect.id)];
         const auto indent = get_sprite_indent(sprite);
-        sprite.rotated = pkr_sprite.rotated;
+        sprite.rotated = pack_rect.rotated;;
         sprite.texture_index = texture_index;
         sprite.trimmed_rect = {
-          pkr_sprite.x + indent.x - texture.border_padding,
-          pkr_sprite.y + indent.y - texture.border_padding,
+          pack_rect.x + indent.x,
+          pack_rect.y + indent.y,
           sprite.trimmed_source_rect.w,
           sprite.trimmed_source_rect.h
         };
@@ -212,7 +204,7 @@ namespace {
     complete_sprite_info(sprites);
 
     // sort sprites by sheet index
-    if (pkr_sheets.size() > 1)
+    if (pack_sheets.size() > 1)
       std::stable_sort(begin(sprites), end(sprites),
         [](const Sprite& a, const Sprite& b) { return a.texture_index < b.texture_index; });
 
@@ -223,24 +215,11 @@ namespace {
       if (it == end || it->texture_index != texture_begin->texture_index) {
         const auto sheet_index = texture_begin->texture_index;
         const auto sheet_sprites = std::span(texture_begin, it);
-
-        // calculate texture dimensions
-        auto width = texture.width;
-        auto height = texture.height;
-        for (const auto& sprite : sheet_sprites) {
-          const auto [x1, y1] = get_sprite_right_bottom(sprite);
-          width = std::max(width, x1 + texture.border_padding);
-          height = std::max(height, y1 + texture.border_padding);
-        }
-        if (texture.power_of_two) {
-          width = ceil_to_pot(width);
-          height = ceil_to_pot(height);
-        }
-
+        const auto& pack_sheet = pack_sheets[static_cast<size_t>(sheet_index)];
         packed_textures.push_back({
           texture.filename.get_nth_filename(sheet_index),
-          width,
-          height,
+          pack_sheet.width,
+          pack_sheet.height,
           sheet_sprites,
           texture.alpha,
           texture.colorkey,

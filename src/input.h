@@ -24,6 +24,8 @@ struct Texture {
   int max_width{ };
   int max_height{ };
   bool power_of_two{ };
+  bool square{ };
+  int align_width{ };
   bool allow_rotate{ };
   int border_padding{ };
   int shape_padding{ };

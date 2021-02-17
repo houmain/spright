@@ -21,6 +21,7 @@ set(SOURCES
     src/input.cpp
     src/InputParser.cpp
     src/packing.cpp
+    src/pack.cpp
     src/output.cpp
     src/main.cpp
     src/test.cpp
@@ -38,9 +39,9 @@ endif()
 set(SOURCES ${SOURCES}
     libs/stb/stb_impl.c
     libs/miniz/miniz.c
-    libs/texpack/packer.cpp
     libs/texpack/bleeding.cpp
-    libs/texpack/rbp/MaxRects.cpp
+    libs/rbp/MaxRectsBinPack.cpp
+    libs/rbp/Rect.cpp
 )
 
 set(INCLUDES ${INCLUDES}
