@@ -19,6 +19,15 @@ namespace {
     return eq(a <= b, true);
   }
 
+  template<typename T>
+  void le_size(const T& texture, int w, int h) {
+    if (texture.width * texture.height < w * h) {
+      // here one can set a breakpoint to tighten the size constraints
+      [[maybe_unused]] int improved = 0;
+    }
+    le(texture.width * texture.height, w * h);
+  }
+
   template<typename F, typename... Args>
   bool throws(F&& func, Args&&... args) noexcept try {
     func(std::forward<Args>(args)...);
@@ -153,37 +162,34 @@ namespace {
       auto sprites = std::move(parser).sprites();
       return pack_sprites(sprites);
     };
-    const auto le_size = [](const PackedTexture& texture, int w, int h) {
-      le(texture.width * texture.height, w * h);
-    };
     auto textures = pack(R"(
       sheet "test/Items.png"
     )");
     eq(textures.size(), 1);
     le_size(textures[0], 58, 59);
-    
+
     textures = pack(R"(
       allow-rotate true
       sheet "test/Items.png"
     )");
     eq(textures.size(), 1);
     le_size(textures[0], 58, 59);
-    
+
     textures = pack(R"(
       deduplicate true
       sheet "test/Items.png"
     )");
     eq(textures.size(), 1);
-    le_size(textures[0], 55, 60);
-    
+    le_size(textures[0], 55, 58);
+
     textures = pack(R"(
       allow-rotate true
       deduplicate true
       sheet "test/Items.png"
     )");
     eq(textures.size(), 1);
-    le_size(textures[0], 55, 58);
-    
+    le_size(textures[0], 56, 57);
+
     textures = pack(R"(
       max-width 128
       max-height 128
@@ -193,7 +199,7 @@ namespace {
     le(textures[0].width, 128);
     le(textures[0].height, 128);
     le_size(textures[0], 58, 59);
-    
+
     textures = pack(R"(
       width 128
       max-height 128
@@ -203,7 +209,7 @@ namespace {
     eq(textures[0].width, 128);
     le(textures[0].height, 128);
     le_size(textures[0], 128, 37);
-    
+
     textures = pack(R"(
       max-width 128
       height 128
@@ -212,7 +218,7 @@ namespace {
     eq(textures.size(), 1);
     le(textures[0].width, 128);
     eq(textures[0].height, 128);
-    le_size(textures[0], 39, 128);
+    le_size(textures[0], 34, 128);
     
     textures = pack(R"(
       max-width 40
@@ -220,15 +226,15 @@ namespace {
     )");
     eq(textures.size(), 1);
     le(textures[0].width, 40);
-    le_size(textures[0], 40, 86);
+    le_size(textures[0], 40, 85);
     
     textures = pack(R"(
       max-height 40
       sheet "test/Items.png"
     )");
-    //eq(textures.size(), 1);
-    //le(textures[0].height, 40);
-    //le_size(textures[0], 88, 40);
+    eq(textures.size(), 1);
+    le(textures[0].height, 40);
+    le_size(textures[0], 86, 40);
     
     textures = pack(R"(
       power-of-two true
@@ -243,7 +249,7 @@ namespace {
       sheet "test/Items.png"
     )");
     eq(textures.size(), 1);
-    le_size(textures[0], 65, 67);
+    le_size(textures[0], 65, 65);
     
     textures = pack(R"(
       padding 1
@@ -253,6 +259,20 @@ namespace {
     eq(textures.size(), 1);
     eq(textures[0].width, 64);
     eq(textures[0].height, 128);
+
+    textures = pack(R"(
+      allow-rotate
+      deduplicate
+      max-width 30
+      square
+      power-of-two
+      sheet "test/Items.png"
+    )");
+    eq(textures.size(), 13);
+    le(textures[0].width, 30);
+    eq(textures[0].width, textures[0].height);
+    eq(ceil_to_pot(textures[12].width), textures[12].width);
+    eq(textures[12].width, textures[12].height);
     
     textures = pack(R"(
       max-width 40
@@ -262,8 +282,19 @@ namespace {
     eq(textures.size(), 3);
     le_size(textures[0], 40, 40);
     le_size(textures[1], 40, 40);
-    le_size(textures[2], 40, 40);
+    le_size(textures[2], 30, 16);
     
+    textures = pack(R"(
+      max-width 40
+      max-height 40
+      square
+      sheet "test/Items.png"
+    )");
+    eq(textures.size(), 3);
+    le_size(textures[0], 40, 40);
+    le_size(textures[1], 40, 40);
+    eq(textures[2].width, textures[2].height);
+
     textures = pack(R"(
       max-width 40
       max-height 40
@@ -288,6 +319,8 @@ namespace {
       sheet "test/Items.png"
     )");
     eq(textures.size(), 14);
+    le(textures[0].width, 16);
+    le(textures[0].height, 16);
     
     eq(throws(pack, R"(
       padding 1
@@ -302,8 +335,8 @@ namespace {
       sheet "test/Items.png"
     )");
     eq(textures.size(), 1);
-    eq(textures[0].width, 496);
-    eq(textures[0].height, 16);
+    le(textures[0].height, 16);
+    le_size(textures[0], 496, 16);
 
     textures = pack(R"(
       padding 0 1
@@ -311,9 +344,9 @@ namespace {
       max-height 20
       sheet "test/Items.png"
     )");
-    //eq(textures.size(), 1);
-    //eq(textures[0].width, 498);
-    //eq(textures[0].height, 18);
+    eq(textures.size(), 1);
+    le(textures[0].height, 20);
+    le_size(textures[0], 498, 18);
 
     textures = pack(R"(
       padding 1
@@ -321,9 +354,9 @@ namespace {
       max-height 30
       sheet "test/Items.png"
     )");
-    //eq(textures.size(), 1);
-    //eq(textures[0].width, 528);
-    //eq(textures[0].height, 18);
+    eq(textures.size(), 1);
+    le(textures[0].height, 30);
+    le_size(textures[0], 528, 18);
 
     textures = pack(R"(
       padding 1 0
@@ -331,9 +364,9 @@ namespace {
       max-height 20
       sheet "test/Items.png"
     )");
-    //eq(textures.size(), 1);
-    //eq(textures[0].width, 526);
-    //eq(textures[0].height, 16);
+    eq(textures.size(), 1);
+    le(textures[0].height, 20);
+    le_size(textures[0], 526, 16);
 
     textures = pack(R"(
       max-height 30
@@ -341,9 +374,9 @@ namespace {
       extrude 1
       sheet "test/Items.png"
     )");
-    //eq(textures.size(), 1);
-    //eq(textures[0].width, 806);
-    //eq(textures[0].height, 26);
+    eq(textures.size(), 1);
+    le(textures[0].height, 30);
+    le_size(textures[0], 806, 26);
   }
 } // namespace
 

@@ -1,7 +1,15 @@
 #pragma once
 
 #include <vector>
-#include <optional>
+
+enum class PackMethod {
+  undefined,
+  rbp_MaxRects_BestShortSideFit,
+  rbp_MaxRects_BestLongSideFit,
+  rbp_MaxRects_BestAreaFit,
+  rbp_MaxRects_BottomLeftRule,
+  rbp_MaxRects_ContactPointRule
+};
 
 struct PackSize {
   int id;
@@ -9,21 +17,22 @@ struct PackSize {
   int height;
 };
 
-struct PackRects {
+struct PackRect {
   int id;
   int x;
   int y;
   bool rotated;
 };
 
-struct PackResult {
+struct PackSheet {
   int width;
   int height;
-  std::vector<PackRects> rects;
+  std::vector<PackRect> rects;
 };
 
 struct PackSettings {
-  std::optional<int> max_rects_method;
+  PackMethod method;
+  int max_sheets;
   bool power_of_two;
   bool square;
   bool allow_rotate;
@@ -36,5 +45,4 @@ struct PackSettings {
   int max_height;
 };
 
-// ensure that settings are sane (e.g. max width > 0) and all sizes can fit.
-std::vector<PackResult> pack(const PackSettings& settings, const std::vector<PackSize>& sizes);
+std::vector<PackSheet> pack(PackSettings settings, std::vector<PackSize> sizes);

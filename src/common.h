@@ -4,6 +4,7 @@
 #include <vector>
 #include <filesystem>
 #include <cctype>
+#include <cmath>
 
 struct Size {
   int x;
@@ -73,6 +74,8 @@ std::pair<std::string_view, int> split_name_number(LStringView str);
 
 inline int floor(int v, int q) { return (v / q) * q; };
 inline int ceil(int v, int q) { return ((v + q - 1) / q) * q; };
+inline int sqrt(int a) { return static_cast<int>(std::sqrt(a)); }
+inline int div_ceil(int a, int b) { return (a + b - 1) / b; }
 
 constexpr int ceil_to_pot(int value) {
   for (auto pot = 1; ; pot <<= 1)

@@ -46,12 +46,6 @@ namespace {
     };
   }
 
-  bool fits_in_texture(const Sprite& sprite, int max_width, int max_height, bool allow_rotate) {
-    const auto size = get_sprite_size(sprite);
-    return ((size.x <= max_width && size.y <= max_height) ||
-            (allow_rotate && size.x <= max_height && size.y <= max_width));
-  }
-
   void prepare_sprites(std::span<Sprite> sprites) {
     // trim rects
     for (auto& sprite : sprites) {
@@ -128,12 +122,7 @@ namespace {
 
   void pack_sprite_texture(const Texture& texture,
       std::span<Sprite> sprites, std::vector<PackedTexture>& packed_textures) {
-    const auto [max_texture_width, max_texture_height] = get_texture_max_size(texture);
-    const auto max_width = max_texture_width - texture.border_padding * 2;
-    const auto max_height = max_texture_height - texture.border_padding * 2;
-    for (const auto& sprite : sprites)
-      if (!fits_in_texture(sprite, max_width, max_height, texture.allow_rotate))
-        throw std::runtime_error("sprite '" + sprite.id + "' can not fit in texture");
+    assert(!sprites.empty());
 
     // pack rects
     auto pack_sizes = std::vector<PackSize>();
@@ -158,8 +147,10 @@ namespace {
       }
     }
 
+    const auto [max_texture_width, max_texture_height] = get_texture_max_size(texture);
     auto pack_sheets = pack(
       PackSettings{
+        .max_sheets = texture.filename.count(),
         .power_of_two = texture.power_of_two,
         .square = texture.square,
         .allow_rotate = texture.allow_rotate,
@@ -171,13 +162,10 @@ namespace {
         .max_width = max_texture_width,
         .max_height = max_texture_height,
       },
-      pack_sizes);
-
-    if (std::cmp_greater(pack_sheets.size(), texture.filename.count()))
-      throw std::runtime_error("not all sprites fit on texture '" +
-        texture.filename.filename() + "'");
+      std::move(pack_sizes));
 
     // update sprite rects
+    auto packed_sprites = 0;
     auto texture_index = 0;
     for (const auto& pack_sheet : pack_sheets) {
       for (const auto& pack_rect : pack_sheet.rects) {
@@ -191,6 +179,7 @@ namespace {
           sprite.trimmed_source_rect.w,
           sprite.trimmed_source_rect.h
         };
+        ++packed_sprites;
       }
       ++texture_index;
     }
@@ -199,7 +188,11 @@ namespace {
       sprites[i].rotated = sprites[j].rotated;
       sprites[i].texture_index = sprites[j].texture_index;
       sprites[i].trimmed_rect = sprites[j].trimmed_rect;
+      ++packed_sprites;
     }
+
+    if (std::cmp_less(packed_sprites, sprites.size()))
+      throw std::runtime_error("not all sprites could be packed");
 
     complete_sprite_info(sprites);
 
