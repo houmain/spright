@@ -1,5 +1,6 @@
 
 #include "InputParser.h"
+#include "globbing.h"
 #include <charconv>
 #include <algorithm>
 #include <sstream>
@@ -159,6 +160,13 @@ void InputParser::sprite_ends(State& state) {
   ++m_sprites_in_current_sheet;
 }
 
+void InputParser::deduce_globbing_sheets(State& state) {
+  for (const auto& filename : glob_sequences(state.path / state.sheet.filename())) {
+    state.sheet = filename;
+    sheet_ends(state);
+  }
+}
+
 void InputParser::deduce_sequence_sprites(State& state) {
   auto error = std::error_code{ };
   if (state.sheet.is_infinite_sequence())
@@ -254,7 +262,10 @@ void InputParser::texture_ends(State& state) {
 
 void InputParser::sheet_ends(State& state) {
   if (!m_sprites_in_current_sheet) {
-    if (state.sheet.is_sequence()) {
+    if (is_globbing_pattern(state.sheet.filename())) {
+      deduce_globbing_sheets(state);
+    }
+    else if (state.sheet.is_sequence()) {
       deduce_sequence_sprites(state);
     }
     else if (!empty(state.grid)) {
@@ -265,6 +276,7 @@ void InputParser::sheet_ends(State& state) {
     }
   }
   m_sprites_in_current_sheet = { };
+  m_current_sequence_index = { };
 }
 
 void InputParser::apply_definition(State& state,
@@ -397,7 +409,6 @@ void InputParser::apply_definition(State& state,
     case Definition::sheet:
       state.sheet = path_to_utf8(check_path());
       m_current_offset = { };
-      m_current_sequence_index = 0;
       break;
 
     case Definition::colorkey:

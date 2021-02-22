@@ -29,6 +29,7 @@ public:
   int first() const { return m_first; }
   int count() const { return m_count; }
   void set_count(int count) { m_count = count; }
+  void set_infinite() { if (is_sequence()) m_count = infinite; }
 
   friend bool operator<(const FilenameSequence& a, const FilenameSequence& b) {
     return a.m_filename < b.m_filename;
@@ -146,4 +147,35 @@ inline std::string make_sequence_filename(const std::string& base,
     const std::string& first_frame, const std::string& last_frame, 
     const std::string& extension) {
   return base + "{" + first_frame + "-" + last_frame + "}" + extension;
+}
+
+inline FilenameSequence try_make_sequence(const std::string& first_filename,
+                                          const std::string& last_filename) {
+  auto it0 = begin(first_filename);
+  auto it1 = begin(last_filename);
+  const auto end0 = end(first_filename);
+  const auto end1 = end(last_filename);
+  // advance to first mismatch
+  for (; it0 != end0 && it1 != end1 && *it0 == *it1; ++it0, ++it1) ;
+  if (it0 == end0)
+    return { first_filename };
+  // revert to begin of digit
+  for (; it0 != begin(first_filename) && std::isdigit(*std::prev(it0)); --it0, --it1) ;
+  // advance to end of digit
+  const auto pattern_begin0 = it0;
+  const auto pattern_begin1 = it1;
+  for (; it0 != end0 && std::isdigit(*it0); ++it0) ;
+  for (; it1 != end1 && std::isdigit(*it1); ++it1) ;
+  const auto pattern_end0 = it0;
+  const auto pattern_end1 = it1;
+  // advance to end
+  for (; it0 != end0 && it1 != end1 && *it0 == *it1; ++it0, ++it1) ;
+  // both should have reached end
+  if (it0 != end0 || it1 != end1)
+    return { };
+  return make_sequence_filename(
+    { begin(first_filename), pattern_begin0 },
+    { pattern_begin0, pattern_end0 },
+    { pattern_begin1, pattern_end1 },
+    { pattern_end0, end0 });
 }

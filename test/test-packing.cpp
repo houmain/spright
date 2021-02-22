@@ -247,7 +247,7 @@ TEST_CASE("Multiple sheets", "[packing]") {
   CHECK(textures.size() == 3);
   CHECK(le_size(textures[0], 40, 40));
   CHECK(le_size(textures[1], 40, 40));
-  CHECK(le_size(textures[2], 30, 20));
+  CHECK(le_size(textures[2], 32, 32));
 
   CHECK_NOTHROW(textures = pack(R"(
     max-width 40

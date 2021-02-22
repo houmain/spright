@@ -23,6 +23,7 @@ set(SOURCES
     src/packing.cpp
     src/pack.cpp
     src/output.cpp
+    src/globbing.cpp
     src/main.cpp
 )
 
@@ -41,6 +42,7 @@ set(SOURCES ${SOURCES}
     libs/texpack/bleeding.cpp
     libs/rbp/MaxRectsBinPack.cpp
     libs/rbp/Rect.cpp
+    libs/glob/glob.cpp
 )
 
 set(INCLUDES ${INCLUDES}

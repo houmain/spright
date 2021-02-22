@@ -63,5 +63,5 @@ TEST_CASE("Some", "[performance]") {
   });
   auto sheets = pack({ }, sizes);
   REQUIRE(sheets.size() == 1);
-  CHECK(le_size(sheets[0], 56, 50));
+  CHECK(le_size(sheets[0], 55, 52));
 }

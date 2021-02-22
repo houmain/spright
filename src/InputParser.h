@@ -98,6 +98,7 @@ private:
   ImagePtr get_sheet(const std::filesystem::path& path,
     const std::filesystem::path& filename, RGBA colorkey);
   void sprite_ends(State& state);
+  void deduce_globbing_sheets(State& state);
   void deduce_sequence_sprites(State& state);
   void deduce_grid_sprites(State& state);
   void deduce_unaligned_sprites(State& state);
