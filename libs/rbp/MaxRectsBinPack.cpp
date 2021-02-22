@@ -16,7 +16,18 @@
 
 #include "MaxRectsBinPack.h"
 
+#define RBP_ENABLE_OPTIMIZATIONS
+
 namespace rbp {
+
+#if defined(RBP_ENABLE_OPTIMIZATIONS)
+// order of elements after erased element is not stable
+template<typename C, typename It>
+void erase_unstable(C& container, const It& it) {
+	std::swap(*it, container.back());
+	container.pop_back();
+}
+#endif
 
 using namespace std;
 
@@ -72,7 +83,11 @@ Rect MaxRectsBinPack::Insert(int width, int height, FreeRectChoiceHeuristic meth
 	{
 		if (SplitFreeNode(freeRectangles[i], newNode))
 		{
+#if defined(RBP_ENABLE_OPTIMIZATIONS)
+			erase_unstable(freeRectangles, freeRectangles.begin() + i);
+#else
 			freeRectangles.erase(freeRectangles.begin() + i);
+#endif
 			--i;
 			--numRectanglesToProcess;
 		}
@@ -116,7 +131,12 @@ void MaxRectsBinPack::Insert(std::vector<RectSize> &rects, std::vector<Rect> &ds
 
 		PlaceRect(bestNode);
 		dst.push_back(bestNode);
+
+#if defined(RBP_ENABLE_OPTIMIZATIONS)
+		erase_unstable(rects, rects.begin() + bestRectIndex);
+#else
 		rects.erase(rects.begin() + bestRectIndex);
+#endif
 	}
 }
 
@@ -127,7 +147,14 @@ void MaxRectsBinPack::PlaceRect(const Rect &node)
 	{
 		if (SplitFreeNode(freeRectangles[i], node))
 		{
+#if defined(RBP_ENABLE_OPTIMIZATIONS)
+			const auto current = freeRectangles.begin() + i;
+			const auto last = freeRectangles.begin() + numRectanglesToProcess - 1;
+			std::swap(*current, *last);
+			erase_unstable(freeRectangles, last);
+#else
 			freeRectangles.erase(freeRectangles.begin() + i);
+#endif
 			--i;
 			--numRectanglesToProcess;
 		}
@@ -521,13 +548,21 @@ void MaxRectsBinPack::PruneFreeList()
 		{
 			if (IsContainedIn(freeRectangles[i], freeRectangles[j]))
 			{
+#if defined(RBP_ENABLE_OPTIMIZATIONS)
+				erase_unstable(freeRectangles, freeRectangles.begin()+i);
+#else
 				freeRectangles.erase(freeRectangles.begin()+i);
+#endif
 				--i;
 				break;
 			}
 			if (IsContainedIn(freeRectangles[j], freeRectangles[i]))
 			{
+#if defined(RBP_ENABLE_OPTIMIZATIONS)
+				erase_unstable(freeRectangles, freeRectangles.begin()+j);
+#else
 				freeRectangles.erase(freeRectangles.begin()+j);
+#endif
 				--j;
 			}
 		}
