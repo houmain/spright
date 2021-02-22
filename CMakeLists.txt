@@ -65,11 +65,11 @@ endif()
 option(ENABLE_TEST "Enable tests")
 if(ENABLE_TEST)
     set(TEST_SOURCES ${SOURCES}
-        test/main.cpp
-        test/scope.cpp
-        test/autocompletion.cpp
-        test/packing.cpp
-        test/performance.cpp
+        test/test-main.cpp
+        test/test-scope.cpp
+        test/test-autocompletion.cpp
+        test/test-packing.cpp
+        test/test-performance.cpp
     )
     list(REMOVE_ITEM TEST_SOURCES src/main.cpp)
     add_executable(spright-tests ${TEST_SOURCES})

@@ -6,34 +6,54 @@
 
 namespace {
   rbp::MaxRectsBinPack::FreeRectChoiceHeuristic to_rbp_method(PackMethod method) {
-    const auto first = static_cast<int>(PackMethod::rbp_MaxRects_BestShortSideFit);
-    const auto last = static_cast<int>(PackMethod::rbp_MaxRects_ContactPointRule);
+    const auto first = static_cast<int>(PackMethod::MaxRects_BestShortSideFit);
+    const auto last = static_cast<int>(PackMethod::MaxRects_ContactPointRule);
     const auto index = std::clamp(static_cast<int>(method), first, last) - first;
     return static_cast<rbp::MaxRectsBinPack::FreeRectChoiceHeuristic>(index);
   }
 
   bool advance(PackMethod& method, PackMethod first_method) {
-    if (method == PackMethod::rbp_MaxRects_ContactPointRule)
-      method = PackMethod::rbp_MaxRects_BestShortSideFit;
+    if (method == PackMethod::MaxRects_ContactPointRule)
+      method = PackMethod::MaxRects_BestShortSideFit;
     else
       method = static_cast<PackMethod>(static_cast<int>(method) + 1);
     return (method != first_method);
   }
-  
-  bool correct_settings(PackSettings& settings, std::vector<PackSize>& sizes) {
-    if (!settings.max_width)
-      settings.max_width = std::numeric_limits<int>::max();
-    if (!settings.max_height)
-      settings.max_height = std::numeric_limits<int>::max();
 
-    const auto can_fit = [&](const PackSize& size) {
-      return ((size.width <= settings.max_width && size.height <= settings.max_height) ||
-          (settings.allow_rotate && size.width <= settings.max_height && size.height <= settings.max_width));
-    };
+  bool can_fit(const PackSettings& settings, int width, int height) {
+    return ((width <= settings.max_width &&
+             height <= settings.max_height) ||
+             (settings.allow_rotate &&
+              width <= settings.max_height &&
+              height <= settings.max_width));
+  }
+
+  void apply_padding(const PackSettings& settings, int& width, int& height, bool indent) {
+    const auto dir = (indent ? 1 : -1);
+    width -= dir * settings.border_padding * 2;
+    height -= dir * settings.border_padding * 2;
+    width += dir * settings.over_allocate;
+    height += dir * settings.over_allocate;
+  }
+
+  bool correct_settings(PackSettings& settings, std::vector<PackSize>& sizes) {
+    // clamp min and max (not to numeric_limits<int>::max() to prevent overflow)
+    const auto size_limit = 1000000;
+    if (settings.max_width <= 0 || settings.max_width > size_limit)
+      settings.max_width = size_limit;
+    if (settings.max_height <= 0 || settings.max_height > size_limit)
+      settings.max_height = size_limit;
+    std::clamp(settings.min_width, 0, settings.max_width);
+    std::clamp(settings.min_height, 0, settings.max_height);
+
+    // immediately apply padding and over allocation, only relevant for power-of-two and alignment constraint
+    apply_padding(settings, settings.min_width, settings.min_height, true);
+    apply_padding(settings, settings.max_width, settings.max_height, true);
+
     auto max_rect_width = 0;
     auto max_rect_height = 0;
     for (auto it = begin(sizes); it != end(sizes); )
-      if (!can_fit(*it)) {
+      if (!can_fit(settings, it->width, it->height)) {
         it = sizes.erase(it);
       }
       else {
@@ -60,9 +80,10 @@ namespace {
     int total_area;
   };
 
-  std::pair<int, int> correct_size(const PackSettings& settings, int width, int height) {
+  void correct_size(const PackSettings& settings, int& width, int& height) {
     width = std::max(width, settings.min_width);
     height = std::max(height, settings.min_height);
+    apply_padding(settings, width, height, false);
 
     if (settings.power_of_two) {
       width = ceil_to_pot(width);
@@ -75,8 +96,10 @@ namespace {
     if (settings.square)
       width = height = std::max(width, height);
 
+    apply_padding(settings, width, height, true);
     width = std::min(width, settings.max_width);
     height = std::min(height, settings.max_height);
+    apply_padding(settings, width, height, false);
 
     if (settings.power_of_two) {
       width = floor_to_pot(width);
@@ -89,7 +112,7 @@ namespace {
     if (settings.square)
       width = height = std::min(width, height);
 
-    return { width, height };
+    apply_padding(settings, width, height, true);
   }
 
   bool is_better_than(const Run& a, const Run& b) {
@@ -100,17 +123,10 @@ namespace {
     return (a.total_area < b.total_area);
   }
 
-  int get_perfect_area(const PackSettings& settings, const std::vector<PackSize>& sizes) {
+  int get_perfect_area(const std::vector<PackSize>& sizes) {
     auto area = 0;
     for (const auto& size : sizes)
       area += size.width * size.height;
-    if (settings.border_padding || settings.over_allocate) {
-      auto width = sqrt(area);
-      auto height = div_ceil(area, width);
-      width += settings.border_padding * 2 + settings.over_allocate;
-      height += settings.border_padding * 2 + settings.over_allocate;
-      area = width * height;
-    }
     return area;
   }
 
@@ -125,13 +141,13 @@ namespace {
       height = std::clamp(height, settings.min_height, settings.max_height);
       width = div_ceil(area, height);
     }
-    std::tie(width, height) = correct_size(settings, width, height);
+    correct_size(settings, width, height);
     return { width, height };
   }
 
   RunSettings get_initial_run_settings(const PackSettings& settings, int perfect_area) {
     const auto method = (settings.method == PackMethod::undefined ?
-      PackMethod::rbp_MaxRects_BestLongSideFit : settings.method);
+      PackMethod::MaxRects_BestLongSideFit : settings.method);
 
     const auto [width, height] = get_run_size(settings, perfect_area * 5 / 4);
     return { width, height, method };
@@ -139,7 +155,6 @@ namespace {
 
   enum class OptimizationStage {
     first_run,
-    //optimize_method,
     minimize_sheet_count,
     shrink_square,
     shrink_width_fast,
@@ -173,15 +188,6 @@ namespace {
       case OptimizationStage::first_run:
       case OptimizationStage::end:
         return false;
-
-      //case OptimizationStage::optimize_method: {
-      //  // when no method is set, try with each method
-      //  if (pack_settings.method != PackMethod::undefined ||
-      //      !advance(run.method, state.first_method))
-      //    return false;
-      //
-      //  return true;
-      //}
 
       case OptimizationStage::minimize_sheet_count: {
         if (best_run.sheets.size() <= 1 ||
@@ -282,8 +288,9 @@ namespace {
 
       ++state.iteration;
 
-      const auto [width, height] = correct_size(
-        pack_settings, state.settings.width, state.settings.height);
+      auto width = state.settings.width;
+      auto height = state.settings.height;
+      correct_size(pack_settings, width, height);
       if (width != previous_state.settings.width ||
           height != previous_state.settings.height ||
           state.settings.method != previous_state.settings.method) {
@@ -306,7 +313,7 @@ std::vector<PackSheet> pack(PackSettings settings, std::vector<PackSize> sizes) 
   auto max_rects = rbp::MaxRectsBinPack();
   auto rbp_rects = std::vector<rbp::Rect>();
   rbp_rects.reserve(sizes.size());
-  const auto perfect_area = get_perfect_area(settings, sizes);
+  const auto perfect_area = get_perfect_area(sizes);
   auto optimization_state = OptimizationState{
     .perfect_area = perfect_area,
     .settings = get_initial_run_settings(settings, perfect_area),
@@ -326,17 +333,14 @@ std::vector<PackSheet> pack(PackSettings settings, std::vector<PackSize> sizes) 
 
     while (!cancelled && !run_rbp_sizes.empty()) {
       rbp_rects.clear();
-      max_rects.Init(
-        run.width - settings.border_padding * 2 + settings.over_allocate,
-        run.height - settings.border_padding * 2 + settings.over_allocate,
-        settings.allow_rotate);
+      max_rects.Init(run.width, run.height, settings.allow_rotate);
       max_rects.Insert(run_rbp_sizes, rbp_rects, to_rbp_method(run.method));
 
-      const auto [bottom, right] = max_rects.BottomRight();
-      const auto [width, height] = correct_size(settings,
-        bottom + settings.border_padding * 2 - settings.over_allocate,
-        right + settings.border_padding * 2 - settings.over_allocate);
-      auto& sheet = run.sheets.emplace_back(PackSheet{ width , height, { } });
+      auto [width, height] = max_rects.BottomRight();
+      correct_size(settings, width, height);
+      apply_padding(settings, width, height, false);
+
+      auto& sheet = run.sheets.emplace_back(PackSheet{ width, height, { } });
       run.total_area += width * height;
 
       if (best_run && !is_better_than(run, *best_run)) {

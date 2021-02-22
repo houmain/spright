@@ -4,11 +4,11 @@
 
 enum class PackMethod {
   undefined,
-  rbp_MaxRects_BestShortSideFit,
-  rbp_MaxRects_BestLongSideFit,
-  rbp_MaxRects_BestAreaFit,
-  rbp_MaxRects_BottomLeftRule,
-  rbp_MaxRects_ContactPointRule
+  MaxRects_BestShortSideFit,
+  MaxRects_BestLongSideFit,
+  MaxRects_BestAreaFit,
+  MaxRects_BottomLeftRule,
+  MaxRects_ContactPointRule
 };
 
 struct PackSize {
