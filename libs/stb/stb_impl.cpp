@@ -22,7 +22,7 @@ my_stbi_zlib_compress( unsigned char *data, int data_len,
   // Note that the returned buffer will be free'd by stbi_write_png*()
   // with STBIW_FREE(), so if you have overridden that (+ STBIW_MALLOC()),
   // adjust the next malloc() call accordingly:
-  unsigned char* buf = malloc(buflen);
+  unsigned char* buf = static_cast<unsigned char*>(malloc(buflen));
   if( buf == NULL
       || mz_compress2(buf, &buflen, data, data_len, quality) != 0 )
   {
@@ -38,6 +38,22 @@ my_stbi_zlib_compress( unsigned char *data, int data_len,
 #include "stb_image_write.h"
 
 
-//#define STB_RECT_PACK_IMPLEMENTATION
-//#define STBRP_LARGE_RECTS
-//#include "stb_rect_pack.h"
+#if 0
+
+#include <array>
+#include <algorithm>
+
+template<size_t size, typename C>
+void my_stbrp_sort(void* ptr, std::size_t count, const C& comp) {
+  using E = std::array<char, size>;
+  const auto begin = static_cast<E*>(ptr);
+  const auto end = begin + count;
+  std::sort(begin, end, [&](const E& a, const E& b) { return comp(&a, &b); });
+}
+#define STBRP_SORT(PTR, COUNT, SIZE, COMP) my_sort<(SIZE)>((PTR), (COUNT), (COMP))
+
+#define STB_RECT_PACK_IMPLEMENTATION
+#define STBRP_LARGE_RECTS
+#include "stb_rect_pack.h"
+
+#endif

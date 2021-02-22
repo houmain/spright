@@ -24,7 +24,6 @@ set(SOURCES
     src/pack.cpp
     src/output.cpp
     src/main.cpp
-    src/test.cpp
 )
 
 if(NOT MSVC)
@@ -37,7 +36,7 @@ else()
 endif()
 
 set(SOURCES ${SOURCES}
-    libs/stb/stb_impl.c
+    libs/stb/stb_impl.cpp
     libs/miniz/miniz.c
     libs/texpack/bleeding.cpp
     libs/rbp/MaxRectsBinPack.cpp
@@ -48,7 +47,7 @@ set(INCLUDES ${INCLUDES}
     libs
 )
 
-file(GLOB_RECURSE HEADERS include *.h *.hpp *.inc)
+file(GLOB_RECURSE HEADERS include src/**.h libs/*.hpp libs/**.h )
 
 if (WIN32)
     add_compile_definitions(UNICODE _WIN32_WINNT=0x0501)
@@ -63,9 +62,21 @@ if(WIN32 AND NOT MSVC)
   target_link_options(${PROJECT_NAME} BEFORE PUBLIC -municode)
 endif()
 
-if(NOT WIN32)
-  install(TARGETS ${PROJECT_NAME} DESTINATION "bin")
-else(NOT WIN32)
-  install(TARGETS ${PROJECT_NAME} DESTINATION .)
-endif(NOT WIN32)
+option(ENABLE_TEST "Enable tests")
+if(ENABLE_TEST)
+    set(TEST_SOURCES ${SOURCES}
+        test/main.cpp
+        test/scope.cpp
+        test/autocompletion.cpp
+        test/packing.cpp
+        test/performance.cpp
+    )
+    list(REMOVE_ITEM TEST_SOURCES src/main.cpp)
+    add_executable(spright-tests ${TEST_SOURCES})
+endif()
 
+if(NOT WIN32)
+    install(TARGETS ${PROJECT_NAME} DESTINATION "bin")
+else(NOT WIN32)
+    install(TARGETS ${PROJECT_NAME} DESTINATION .)
+endif(NOT WIN32)

@@ -91,6 +91,18 @@ Image::Image(std::filesystem::path path, std::filesystem::path filename)
   : m_path(std::move(path)),
     m_filename(std::move(filename)) {
 
+#if !defined(NDEBUG)
+  if (m_filename == "test/Items.png") {
+    unsigned char file[] {
+#include "test/Items.png.inc"
+    };
+    auto channels = 0;
+    m_data = reinterpret_cast<RGBA*>(stbi_load_from_memory(
+        file, sizeof(file), &m_width, &m_height, &channels, 4));
+    return;
+  }
+#endif
+
   const auto full_path = path_to_utf8(m_path / m_filename);
   if (auto file = std::fopen(full_path.c_str(), "rb")) {
     auto channels = 0;

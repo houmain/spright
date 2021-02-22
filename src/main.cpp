@@ -3,14 +3,7 @@
 #include "output.h"
 #include <iostream>
 
-extern void test();
-
 int main(int argc, const char* argv[]) try {
-
-#if !defined(NDEBUG)
-  test();
-#endif
-
   auto settings = Settings{ };
   if (!interpret_commandline(settings, argc, argv)) {
     print_help_message(argv[0]);
