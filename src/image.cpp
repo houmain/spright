@@ -83,7 +83,8 @@ Image::Image(int width, int height, const RGBA& background)
   if (!width || !height)
     throw std::runtime_error("invalid image size");
 
-  m_data = static_cast<RGBA*>(std::malloc(static_cast<size_t>(m_width * m_height * 4)));
+  const auto size = static_cast<size_t>(m_width * m_height) * sizeof(RGBA);
+  m_data = static_cast<RGBA*>(std::malloc(size));
   std::fill(m_data, m_data + (m_width * m_height), background);
 }
 
@@ -98,7 +99,7 @@ Image::Image(std::filesystem::path path, std::filesystem::path filename)
     };
     auto channels = 0;
     m_data = reinterpret_cast<RGBA*>(stbi_load_from_memory(
-        file, sizeof(file), &m_width, &m_height, &channels, 4));
+        file, sizeof(file), &m_width, &m_height, &channels, sizeof(RGBA)));
     return;
   }
 #endif
@@ -107,7 +108,7 @@ Image::Image(std::filesystem::path path, std::filesystem::path filename)
   if (auto file = std::fopen(full_path.c_str(), "rb")) {
     auto channels = 0;
     m_data = reinterpret_cast<RGBA*>(stbi_load_from_file(
-        file, &m_width, &m_height, &channels, 4));
+        file, &m_width, &m_height, &channels, sizeof(RGBA)));
     std::fclose(file);
   }
   if (!m_data)
@@ -136,13 +137,13 @@ Image::~Image() {
 
 Image Image::clone() const {
   auto clone = Image(width(), height());
-  std::memcpy(clone.rgba(), rgba(), static_cast<size_t>(width() * height()) * 4);
+  std::memcpy(clone.rgba(), rgba(), static_cast<size_t>(width() * height()) * sizeof(RGBA));
   return clone;
 }
 
 void save_image(const Image& image, const std::filesystem::path& filename) {
-  if (!stbi_write_png(path_to_utf8(filename).c_str(), image.width(), image.height(), 4,
-      image.rgba(), image.width() * 4))
+  if (!stbi_write_png(path_to_utf8(filename).c_str(), image.width(), image.height(), sizeof(RGBA),
+      image.rgba(), image.width() * static_cast<int>(sizeof(RGBA))))
     throw std::runtime_error("writing file '" + path_to_utf8(filename) + "' failed");
 }
 

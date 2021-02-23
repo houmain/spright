@@ -35,12 +35,16 @@ namespace {
       const auto index = json_sprites.size() - 1;
       const auto texture_filename = utf8_to_path(
         sprite.texture->filename.get_nth_filename(sprite.texture_index));
+      json_sprite["index"] = json_sprites.size() - 1;
       json_sprite["id"] = sprite.id;
       json_sprite["rect"] = json_rect(sprite.rect);
       json_sprite["trimmedRect"] = json_rect(sprite.trimmed_rect);
       json_sprite["sourceFilename"] = path_to_utf8(sprite.source->filename());
       json_sprite["sourcePath"] = path_to_utf8(sprite.source->path());
       json_sprite["sourceRect"] = json_rect(sprite.source_rect);
+      if (sprite.source->width() != sprite.source_rect.w ||
+          sprite.source->height() != sprite.source_rect.h)
+        json_sprite["sourceIndex"] = texture_sprites[texture_filename].size();
       json_sprite["trimmedSourceRect"] = json_rect(sprite.trimmed_source_rect);
       json_sprite["pivot"] = json_point(sprite.pivot_point);
       json_sprite["trimmedPivot"] = json_point(sprite.trimmed_pivot_point);
@@ -77,6 +81,20 @@ namespace {
     }
     return json;
   }
+
+  std::string get_sprite_id(const std::string& id, int index) {
+    if (!id.empty())
+      return id;
+    return "sprite_" + std::to_string(index);
+  }
+
+  std::string get_sprite_id_or_filename(const std::string& id, const std::string& source_filename, int source_index) {
+    if (!id.empty())
+      return id;
+    if (source_index < 0)
+      return source_filename;
+    return source_filename + "<" + std::to_string(source_index) + ">";
+  }
 } // namespace
 
 void output_description(const Settings& settings,
@@ -98,6 +116,16 @@ void output_description(const Settings& settings,
     auto env = inja::Environment();
     env.set_trim_blocks(false);
     env.set_lstrip_blocks(false);
+
+    env.add_callback("getId", 1, [](inja::Arguments& args) -> inja::json {
+      const auto& s = args.at(0)->get<inja::json>();
+      return get_sprite_id(s["id"], s["index"]);
+    });
+    env.add_callback("getIdOrFilename", 1, [](inja::Arguments& args) -> inja::json {
+      const auto& s = args.at(0)->get<inja::json>();
+      return get_sprite_id_or_filename(s["id"], s["sourceFilename"], s.value("sourceIndex", -1));
+    });
+
     env.render_to(os, env.parse_template(path_to_utf8(settings.template_file)), json);
   }
   else {

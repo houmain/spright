@@ -40,6 +40,8 @@ namespace {
     }
 
     FilenameSequence flush() {
+      if (m_count == 1)
+        return std::exchange(m_first_filename, { });
       m_sequence.set_count(m_count);
       m_first_filename.clear();
       return std::exchange(m_sequence, { });
@@ -52,7 +54,7 @@ bool is_globbing_pattern(const std::string& filename) {
 }
 
 std::vector<FilenameSequence> glob_sequences(const std::string& pattern) {
-  auto paths = glob::glob(pattern);
+  auto paths = glob::rglob(pattern);
   std::sort(begin(paths), end(paths));
 
   auto sequence_merger = SequenceMerger();

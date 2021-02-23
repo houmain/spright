@@ -139,8 +139,7 @@ void InputParser::sprite_ends(State& state) {
   }
 
   auto sprite = Sprite{ };
-  sprite.id = (!state.sprite.empty() ? state.sprite :
-    "sprite_" + std::to_string(m_sprites.size()));
+  sprite.id = state.sprite;
   sprite.texture = get_texture(state);
   sprite.source = get_sheet(state);
   sprite.source_rect = (!empty(state.rect) ?

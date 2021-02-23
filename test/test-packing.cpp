@@ -21,8 +21,9 @@ std::vector<PackedTexture> pack(const char* definition) {
   auto input = std::stringstream(definition);
   auto parser = InputParser(Settings{ });
   parser.parse(input);
-  auto sprites = std::move(parser).sprites();
-  return pack_sprites(sprites);
+  static auto s_sprites = std::vector<Sprite>();
+  s_sprites = std::move(parser).sprites();
+  return pack_sprites(s_sprites);
 }
 
 void dump(PackedTexture texture) {
