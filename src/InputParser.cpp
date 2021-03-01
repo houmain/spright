@@ -489,7 +489,7 @@ void InputParser::apply_definition(State& state,
       break;
 
     case Definition::trim_margin:
-      state.trim_margin = check_uint();
+      state.trim_margin = (arguments_left() ? check_uint() : 1);
       break;
 
     case Definition::trim_threshold:

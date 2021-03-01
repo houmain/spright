@@ -238,6 +238,11 @@ namespace {
               !advance(run.method, state.first_method))
             return false;
 
+          // do not try costy contact point rule
+          if (run.method == PackMethod::MaxRects_ContactPointRule &&
+              !advance(run.method, state.first_method))
+            return false;
+
           run.width = best_run.width;
           run.height = best_run.height;
         }

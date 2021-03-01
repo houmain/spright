@@ -28,6 +28,15 @@ namespace {
     return true;
   }
 
+  void blend(Image& image, int x, int y, const RGBA& color) {
+    auto& a = image.rgba_at({ x, y });
+    const auto& b = color;
+    a.r = static_cast<uint8_t>((a.r * (255 - b.a) + b.r * b.a) / 255);
+    a.g = static_cast<uint8_t>((a.g * (255 - b.a) + b.g * b.a) / 255);
+    a.b = static_cast<uint8_t>((a.b * (255 - b.a) + b.b * b.a) / 255);
+    a.a = std::max(a.a, b.a);
+  };
+
   template <int sides, // 4 or 8
     typename Match, // bool Match(RGBA)
     typename Count> // void Count(int x, int y)
@@ -92,7 +101,7 @@ Image::Image(std::filesystem::path path, std::filesystem::path filename)
   : m_path(std::move(path)),
     m_filename(std::move(filename)) {
 
-#if !defined(NDEBUG)
+#if defined(EMBED_TEST_FILES)
   if (m_filename == "test/Items.png") {
     unsigned char file[] {
 #include "test/Items.png.inc"
@@ -195,24 +204,25 @@ void extrude_rect(Image& image, const Rect& rect, bool left, bool top, bool righ
 }
 
 void draw_rect(Image& image, const Rect& rect, const RGBA& color) {
-  const auto blend = [&](int x, int y) {
-    if (x >= 0 && x < image.width() && y >= 0 && y < image.height()) {
-      auto& a = image.rgba_at({ x, y });
-      const auto& b = color;
-      a.r = static_cast<uint8_t>((a.r * (255 - b.a) + b.r * b.a) / 255);
-      a.g = static_cast<uint8_t>((a.g * (255 - b.a) + b.g * b.a) / 255);
-      a.b = static_cast<uint8_t>((a.b * (255 - b.a) + b.b * b.a) / 255);
-      a.a = std::max(a.a, b.a);
-    }
+  const auto checked_blend = [&](int x, int y) {
+    if (x >= 0 && x < image.width() && y >= 0 && y < image.height())
+      blend(image, x, y, color);
   };
   for (auto x = rect.x; x < rect.x + rect.w; ++x) {
-    blend(x, rect.y);
-    blend(x, rect.y + rect.h - 1);
+    checked_blend(x, rect.y);
+    checked_blend(x, rect.y + rect.h - 1);
   }
   for (auto y = rect.y + 1; y < rect.y + rect.h - 1; ++y) {
-    blend(rect.x, y);
-    blend(rect.x + rect.w - 1, y);
+    checked_blend(rect.x, y);
+    checked_blend(rect.x + rect.w - 1, y);
   }
+}
+
+void fill_rect(Image& image, const Rect& rect, const RGBA& color) {
+  check_rect(image, rect);
+  for (auto y = rect.y; y < rect.y + rect.h; ++y)
+    for (auto x = rect.x; x < rect.x + rect.w; ++x)
+      blend(image, x, y, color);
 }
 
 bool is_opaque(const Image& image, const Rect& rect) {

@@ -75,6 +75,7 @@ if(ENABLE_TEST)
     )
     list(REMOVE_ITEM TEST_SOURCES src/main.cpp)
     add_executable(spright-tests ${TEST_SOURCES})
+    add_compile_definitions(EMBED_TEST_FILES)
 endif()
 
 if(NOT WIN32)

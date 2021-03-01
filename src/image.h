@@ -36,6 +36,7 @@ void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx
 void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy);
 void extrude_rect(Image& image, const Rect& rect, bool left, bool top, bool right, bool bottom);
 void draw_rect(Image& image, const Rect& rect, const RGBA& color);
+void fill_rect(Image& image, const Rect& rect, const RGBA& color);
 bool is_opaque(const Image& image, const Rect& rect = { });
 bool is_fully_transparent(const Image& image, const Rect& rect = { }, int threshold = 1);
 bool is_identical(const Image& image_a, const Rect& rect_a, const Image& image_b, const Rect& rect_b);

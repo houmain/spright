@@ -5,44 +5,46 @@
 #include "src/output.h"
 #include <sstream>
 
-template<typename T>
-bool le_size(const T& texture, int w, int h) {
-  // here one can set a breakpoint to tighten the size constraints
-  if (texture.width * texture.height < w * h)
+namespace {
+  template<typename T>
+  bool le_size(const T& texture, int w, int h) {
+    // here one can set a breakpoint to tighten the size constraints
+    if (texture.width * texture.height < w * h)
+      return true;
+
+    if (texture.width * texture.height > w * h)
+      return false;
+
     return true;
+  }
 
-  if (texture.width * texture.height > w * h)
-    return false;
+  std::vector<PackedTexture> pack(const char* definition) {
+    auto input = std::stringstream(definition);
+    auto parser = InputParser(Settings{ });
+    parser.parse(input);
+    static auto s_sprites = std::vector<Sprite>();
+    s_sprites = std::move(parser).sprites();
+    return pack_sprites(s_sprites);
+  }
 
-  return true;
-}
+  void dump(PackedTexture texture) {
+    static auto i = 0;
+    texture.filename = FilenameSequence("dump-{000-}.png").get_nth_filename(i++);
+    output_texture({ .debug = true }, texture);
+  }
 
-std::vector<PackedTexture> pack(const char* definition) {
-  auto input = std::stringstream(definition);
-  auto parser = InputParser(Settings{ });
-  parser.parse(input);
-  static auto s_sprites = std::vector<Sprite>();
-  s_sprites = std::move(parser).sprites();
-  return pack_sprites(s_sprites);
-}
-
-void dump(PackedTexture texture) {
-  static auto i = 0;
-  texture.filename = FilenameSequence("dump-{000-}.png").get_nth_filename(i++);
-  output_texture({ .debug = true }, texture);
-}
-
-PackedTexture pack_single_sheet(const char* definition) {
-  auto textures = std::vector<PackedTexture>();
-  REQUIRE_NOTHROW(textures = pack(definition));
-  CHECK(textures.size() == 1);
-  if (textures.size() != 1)
-    return { };
-#if 0
-  dump(textures[0]);
-#endif
-  return textures[0];
-};
+  PackedTexture pack_single_sheet(const char* definition) {
+    auto textures = std::vector<PackedTexture>();
+    REQUIRE_NOTHROW(textures = pack(definition));
+    CHECK(textures.size() == 1);
+    if (textures.size() != 1)
+      return { };
+  #if 0
+    dump(textures[0]);
+  #endif
+    return textures[0];
+  };
+} // namespace
 
 TEST_CASE("Basic", "[packing]") {
   auto texture = pack_single_sheet(R"(
