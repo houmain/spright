@@ -59,6 +59,7 @@ include_directories(.)
 include_directories(SYSTEM ${INCLUDES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+add_compile_definitions(STBRP_LARGE_RECTS)
 
 if(WIN32 AND NOT MSVC)
   target_link_options(${PROJECT_NAME} BEFORE PUBLIC -municode)

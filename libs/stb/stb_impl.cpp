@@ -38,22 +38,17 @@ my_stbi_zlib_compress( unsigned char *data, int data_len,
 #include "stb_image_write.h"
 
 
-#if 0
-
 #include <array>
 #include <algorithm>
 
-template<size_t size, typename C>
-void my_stbrp_sort(void* ptr, std::size_t count, const C& comp) {
-  using E = std::array<char, size>;
-  const auto begin = static_cast<E*>(ptr);
+template<size_t size, typename T, typename C>
+void my_stbrp_sort(T* ptr, std::size_t count, const C& comp) {
+  static_assert(sizeof(T) == size);
+  const auto begin = static_cast<T*>(ptr);
   const auto end = begin + count;
-  std::sort(begin, end, [&](const E& a, const E& b) { return comp(&a, &b); });
+  std::sort(begin, end, [&](const T& a, const T& b) { return (comp(&a, &b) < 0); });
 }
-#define STBRP_SORT(PTR, COUNT, SIZE, COMP) my_sort<(SIZE)>((PTR), (COUNT), (COMP))
+#define STBRP_SORT(PTR, COUNT, SIZE, COMP) my_stbrp_sort<(SIZE)>((PTR), (COUNT), (COMP))
 
 #define STB_RECT_PACK_IMPLEMENTATION
-#define STBRP_LARGE_RECTS
 #include "stb_rect_pack.h"
-
-#endif

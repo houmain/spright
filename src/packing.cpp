@@ -150,6 +150,7 @@ namespace {
     const auto [max_texture_width, max_texture_height] = get_texture_max_size(texture);
     auto pack_sheets = pack(
       PackSettings{
+        .method = (sprites.size() <= 1000 ? PackMethod::Best : PackMethod::Best_Skyline),
         .max_sheets = texture.filename.count(),
         .power_of_two = texture.power_of_two,
         .square = texture.square,

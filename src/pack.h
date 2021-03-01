@@ -3,7 +3,11 @@
 #include <vector>
 
 enum class PackMethod {
-  undefined,
+  Best,
+  Best_Skyline,
+  Best_MaxRects,
+  Skyline_BottomLeft,
+  Skyline_BestFit,
   MaxRects_BestShortSideFit,
   MaxRects_BestLongSideFit,
   MaxRects_BestAreaFit,

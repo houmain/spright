@@ -27,7 +27,7 @@ namespace {
     return pack_sprites(s_sprites);
   }
 
-  void dump(PackedTexture texture) {
+  [[maybe_unused]] void dump(PackedTexture texture) {
     static auto i = 0;
     texture.filename = FilenameSequence("dump-{000-}.png").get_nth_filename(i++);
     output_texture({ .debug = true }, texture);
