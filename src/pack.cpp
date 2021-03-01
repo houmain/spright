@@ -305,43 +305,33 @@ namespace {
       }
     }
   }
-} // namespace
 
-std::vector<PackSheet> pack(PackSettings settings, std::vector<PackSize> sizes) {
-  if (!correct_settings(settings, sizes))
-    return { };
-
-  if (sizes.empty())
-    return { };
-
-  auto best_run = std::optional<Run>{ };
-  auto max_rects = rbp::MaxRectsBinPack();
-  auto rbp_rects = std::vector<rbp::Rect>();
-  rbp_rects.reserve(sizes.size());
-  const auto perfect_area = get_perfect_area(sizes);
-  auto optimization_state = OptimizationState{
-    .perfect_area = perfect_area,
-    .settings = get_initial_run_settings(settings, perfect_area),
-    .stage = OptimizationStage::first_run,
-    .iteration = 0,
+  struct RbpState {
+    rbp::MaxRectsBinPack max_rects;
+    std::vector<rbp::Rect> rects;
+    std::vector<rbp::RectSize> rect_sizes;
   };
 
-  auto rbp_sizes = std::vector<rbp::RectSize>();
-  rbp_sizes.reserve(sizes.size());
-  for (const auto& size : sizes)
-    rbp_sizes.push_back({ size.width, size.height, static_cast<int>(rbp_sizes.size()) });
+  RbpState init_rbp_state(const std::vector<PackSize>& sizes) {
+    auto rbp = RbpState();
+    rbp.rects.reserve(sizes.size());
+    rbp.rect_sizes.reserve(sizes.size());
+    for (const auto& size : sizes)
+      rbp.rect_sizes.push_back({ size.width, size.height,
+        static_cast<int>(rbp.rect_sizes.size()) });
+    return rbp;
+  }
 
-  for (;;) {
-    auto run_rbp_sizes = rbp_sizes;
+  bool run_rbp_method(RbpState& rbp, const PackSettings& settings, Run& run,
+      const std::optional<Run>& best_run, const std::vector<PackSize>& sizes) {
+    auto run_rect_sizes = rbp.rect_sizes;
     auto cancelled = false;
-    auto run = Run{ optimization_state.settings, { }, 0 };
+    while (!cancelled && !run_rect_sizes.empty()) {
+      rbp.rects.clear();
+      rbp.max_rects.Init(run.width, run.height, settings.allow_rotate);
+      rbp.max_rects.Insert(run_rect_sizes, rbp.rects, to_rbp_method(run.method));
 
-    while (!cancelled && !run_rbp_sizes.empty()) {
-      rbp_rects.clear();
-      max_rects.Init(run.width, run.height, settings.allow_rotate);
-      max_rects.Insert(run_rbp_sizes, rbp_rects, to_rbp_method(run.method));
-
-      auto [width, height] = max_rects.BottomRight();
+      auto [width, height] = rbp.max_rects.BottomRight();
       correct_size(settings, width, height);
       apply_padding(settings, width, height, false);
 
@@ -353,8 +343,8 @@ std::vector<PackSheet> pack(PackSettings settings, std::vector<PackSize> sizes) 
         continue;
       }
 
-      sheet.rects.reserve(rbp_rects.size());
-      for (auto& rbp_rect : rbp_rects) {
+      sheet.rects.reserve(rbp.rects.size());
+      for (auto& rbp_rect : rbp.rects) {
         const auto& size = sizes[static_cast<size_t>(rbp_rect.id)];
         sheet.rects.push_back({
           size.id,
@@ -364,8 +354,34 @@ std::vector<PackSheet> pack(PackSettings settings, std::vector<PackSize> sizes) 
         });
       }
     }
+    return !cancelled;
+  }
+} // namespace
 
-    if (!cancelled && (!best_run || is_better_than(run, *best_run)))
+std::vector<PackSheet> pack(PackSettings settings, std::vector<PackSize> sizes) {
+  if (!correct_settings(settings, sizes))
+    return { };
+
+  if (sizes.empty())
+    return { };
+
+  auto best_run = std::optional<Run>{ };
+  const auto perfect_area = get_perfect_area(sizes);
+  auto optimization_state = OptimizationState{
+    .perfect_area = perfect_area,
+    .settings = get_initial_run_settings(settings, perfect_area),
+    .stage = OptimizationStage::first_run,
+    .iteration = 0,
+  };
+
+  auto rbp_state = std::optional<RbpState>(init_rbp_state(sizes));
+
+  for (;;) {
+    auto run = Run{ optimization_state.settings, { }, 0 };
+
+    auto succeeded = run_rbp_method(*rbp_state, settings, run, best_run, sizes);
+
+    if (succeeded && (!best_run || is_better_than(run, *best_run)))
       best_run = std::move(run);
 
     if (!optimize_run_settings(optimization_state, settings, *best_run))
