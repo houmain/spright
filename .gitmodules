@@ -1,0 +1,3 @@
+[submodule "libs/rect_pack"]
+	path = libs/rect_pack
+	url = https://github.com/houmain/rect_pack
