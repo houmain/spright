@@ -31,6 +31,13 @@ void erase_unstable(C& container, const It& it) {
 
 using namespace std;
 
+bool IsContainedIn(const Rect &a, const Rect &b)
+{
+	return a.x >= b.x && a.y >= b.y
+		&& a.x+a.width <= b.x+b.width
+		&& a.y+a.height <= b.y+b.height;
+}
+
 MaxRectsBinPack::MaxRectsBinPack()
 :binWidth(0),
 binHeight(0)

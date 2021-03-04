@@ -1,8 +1,8 @@
 
 #include "catch.hpp"
-#include "src/pack.h"
 #include "src/image.h"
 #include "src/FilenameSequence.h"
+#include "rect_pack/rect_pack.h"
 #include <random>
 
 namespace {
@@ -15,7 +15,7 @@ namespace {
     bool rotate;
   };
 
-  std::vector<PackSize> generate_pack_sizes(std::initializer_list<GeneratePackSizes> types) {
+  std::vector<rect_pack::Size> generate_pack_sizes(std::initializer_list<GeneratePackSizes> types) {
     auto rand = std::minstd_rand0();
     const auto random = [&](int min, int max) -> int {
       if (max <= min)
@@ -23,7 +23,7 @@ namespace {
       return min + rand() % (max - min + 1);
     };
     auto id = 0;
-    auto sizes = std::vector<PackSize>();
+    auto sizes = std::vector<rect_pack::Size>();
     for (const auto& type : types) {
       for (auto i = 0; i < type.count; ++i) {
         auto w = random(type.min_width, type.max_width);
@@ -36,8 +36,8 @@ namespace {
     return sizes;
   }
 
-  [[maybe_unused]] Image generate_image(const PackSheet& sheet,
-      const std::vector<PackSize>& sizes) {
+  [[maybe_unused]] Image generate_image(const rect_pack::Sheet& sheet,
+      const std::vector<rect_pack::Size>& sizes) {
 
     const auto random_color = [](int seed) {
       const auto c = [&]() {
@@ -122,7 +122,7 @@ TEST_CASE("1000 Skyline", "[performance]") {
     { 333, 23, 20, 33, 30, true },
   });
   auto sheets = pack({
-    .method = PackMethod::Best_Skyline,
+    .method = rect_pack::Method::Best_Skyline,
     .allow_rotate = true
   }, sizes);
   REQUIRE(sheets.size() == 1);

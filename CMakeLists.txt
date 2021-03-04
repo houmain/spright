@@ -21,10 +21,10 @@ set(SOURCES
     src/input.cpp
     src/InputParser.cpp
     src/packing.cpp
-    src/pack.cpp
     src/output.cpp
     src/globbing.cpp
     src/main.cpp
+    libs/rect_pack/rect_pack.cpp
 )
 
 if(NOT MSVC)
@@ -37,11 +37,11 @@ else()
 endif()
 
 set(SOURCES ${SOURCES}
+    libs/rect_pack/stb_rect_pack.cpp
+    libs/rect_pack/MaxRectsBinPack.cpp
     libs/stb/stb_impl.cpp
     libs/miniz/miniz.c
     libs/texpack/bleeding.cpp
-    libs/rbp/MaxRectsBinPack.cpp
-    libs/rbp/Rect.cpp
     libs/glob/glob.cpp
 )
 
@@ -59,7 +59,6 @@ include_directories(.)
 include_directories(SYSTEM ${INCLUDES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
-add_compile_definitions(STBRP_LARGE_RECTS)
 
 if(WIN32 AND NOT MSVC)
   target_link_options(${PROJECT_NAME} BEFORE PUBLIC -municode)

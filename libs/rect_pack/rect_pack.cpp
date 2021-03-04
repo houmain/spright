@@ -1,68 +1,89 @@
 
-#include "pack.h"
-#include "rbp/MaxRectsBinPack.h"
-#include "stb/stb_rect_pack.h"
-#include "common.h"
+#define STBRP_LARGE_RECTS
+#include "rect_pack.h"
+#include "MaxRectsBinPack.h"
+#include "stb_rect_pack.h"
 #include <optional>
+#include <cmath>
+#include <cassert>
+
+namespace rect_pack {
 
 namespace {
-  const auto first_method = PackMethod::Skyline_BottomLeft;
-  const auto last_method = PackMethod::MaxRects_ContactPointRule;
-  const auto first_Skyline_method = PackMethod::Skyline_BottomLeft;
-  const auto last_Skyline_method = PackMethod::Skyline_BestFit;
-  const auto first_MaxRects_method = PackMethod::MaxRects_BestShortSideFit;
-  const auto last_MaxRects_method = PackMethod::MaxRects_ContactPointRule;
+  const auto first_method = Method::Skyline_BottomLeft;
+  const auto last_method = Method::MaxRects_ContactPointRule;
+  const auto first_Skyline_method = Method::Skyline_BottomLeft;
+  const auto last_Skyline_method = Method::Skyline_BestFit;
+  const auto first_MaxRects_method = Method::MaxRects_BestShortSideFit;
+  const auto last_MaxRects_method = Method::MaxRects_ContactPointRule;
 
-  bool is_stb_method(PackMethod method) {
+  int floor(int v, int q) { return (v / q) * q; };
+  int ceil(int v, int q) { return ((v + q - 1) / q) * q; };
+  int sqrt(int a) { return static_cast<int>(std::sqrt(a)); }
+  int div_ceil(int a, int b) { return (b > 0 ? (a + b - 1) / b : -1); }
+
+  int ceil_to_pot(int value) {
+    for (auto pot = 1; ; pot <<= 1)
+      if (pot >= value)
+        return pot;
+  }
+
+  int floor_to_pot(int value) {
+    for (auto pot = 1; ; pot <<= 1)
+      if (pot > value)
+        return (pot >> 1);
+  }
+
+  bool is_stb_method(Method method) {
     const auto first = static_cast<int>(first_Skyline_method);
     const auto last = static_cast<int>(last_Skyline_method);
     const auto index = static_cast<int>(method);
     return (index >= first && index <= last);
   }
 
-  bool is_rbp_method(PackMethod method) {
+  bool is_rbp_method(Method method) {
     const auto first = static_cast<int>(first_MaxRects_method);
     const auto last = static_cast<int>(last_MaxRects_method);
     const auto index = static_cast<int>(method);
     return (index >= first && index <= last);
   }
 
-  int to_stb_method(PackMethod method) {
+  int to_stb_method(Method method) {
     assert(is_stb_method(method));
     return static_cast<int>(method) - static_cast<int>(first_Skyline_method);
   }
 
-  rbp::MaxRectsBinPack::FreeRectChoiceHeuristic to_rbp_method(PackMethod method) {
+  rbp::MaxRectsBinPack::FreeRectChoiceHeuristic to_rbp_method(Method method) {
     assert(is_rbp_method(method));
     return static_cast<rbp::MaxRectsBinPack::FreeRectChoiceHeuristic>(
       static_cast<int>(method) - static_cast<int>(first_MaxRects_method));
   }
 
-  PackMethod advance_method(PackMethod method) {
+  Method advance_method(Method method) {
     return (method == last_method ? first_method :
-      static_cast<PackMethod>(static_cast<int>(method) + 1));
+      static_cast<Method>(static_cast<int>(method) + 1));
   }
 
-  PackMethod advance_Skyline_method(PackMethod method) {
+  Method advance_Skyline_method(Method method) {
     assert(is_stb_method(method));
     return (method == last_Skyline_method ? first_Skyline_method :
-      static_cast<PackMethod>(static_cast<int>(method) + 1));
+      static_cast<Method>(static_cast<int>(method) + 1));
   }
 
-  PackMethod advance_MaxRects_method(PackMethod method) {
+  Method advance_MaxRects_method(Method method) {
     assert(is_rbp_method(method));
     if (method == last_MaxRects_method)
       return first_MaxRects_method;
-    return static_cast<PackMethod>(static_cast<int>(method) + 1);
+    return static_cast<Method>(static_cast<int>(method) + 1);
   }
 
-  PackMethod get_concrete_method(PackMethod method) {
+  Method get_concrete_method(Method method) {
     switch (method) {
-      case PackMethod::Best:
-      case PackMethod::Best_Skyline:
+      case Method::Best:
+      case Method::Best_Skyline:
         return first_Skyline_method;
 
-      case PackMethod::Best_MaxRects:
+      case Method::Best_MaxRects:
         return first_MaxRects_method;
 
       default:
@@ -70,23 +91,23 @@ namespace {
     }
   }
 
-  bool advance(PackMethod& method, PackMethod settings_method, PackMethod first_method) {
+  bool advance(Method& method, Method settings_method, Method first_method) {
     const auto previous = method;
     switch (settings_method) {
-      case PackMethod::Best:
+      case Method::Best:
         method = advance_method(method);
 
         // do not try costly contact point rule
         if (method != first_method &&
-            method == PackMethod::MaxRects_ContactPointRule)
+            method == Method::MaxRects_ContactPointRule)
           method = advance_method(method);
         break;
 
-      case PackMethod::Best_Skyline:
+      case Method::Best_Skyline:
         method = advance_Skyline_method(method);
         break;
 
-      case PackMethod::Best_MaxRects:
+      case Method::Best_MaxRects:
         method = advance_MaxRects_method(method);
         break;
 
@@ -96,7 +117,7 @@ namespace {
     return (method != previous && method != first_method);
   }
 
-  bool can_fit(const PackSettings& settings, int width, int height) {
+  bool can_fit(const Settings& settings, int width, int height) {
     return ((width <= settings.max_width &&
              height <= settings.max_height) ||
              (settings.allow_rotate &&
@@ -104,7 +125,7 @@ namespace {
               height <= settings.max_width));
   }
 
-  void apply_padding(const PackSettings& settings, int& width, int& height, bool indent) {
+  void apply_padding(const Settings& settings, int& width, int& height, bool indent) {
     const auto dir = (indent ? 1 : -1);
     width -= dir * settings.border_padding * 2;
     height -= dir * settings.border_padding * 2;
@@ -112,7 +133,7 @@ namespace {
     height += dir * settings.over_allocate;
   }
 
-  bool correct_settings(PackSettings& settings, std::vector<PackSize>& sizes) {
+  bool correct_settings(Settings& settings, std::vector<Size>& sizes) {
     // clamp min and max (not to numeric_limits<int>::max() to prevent overflow)
     const auto size_limit = 1'000'000'000;
     if (settings.max_width <= 0 || settings.max_width > size_limit)
@@ -148,15 +169,15 @@ namespace {
   struct RunSettings {
     int width;
     int height;
-    PackMethod method;
+    Method method;
   };
 
   struct Run : RunSettings {
-    std::vector<PackSheet> sheets;
+    std::vector<Sheet> sheets;
     int total_area;
   };
 
-  void correct_size(const PackSettings& settings, int& width, int& height) {
+  void correct_size(const Settings& settings, int& width, int& height) {
     width = std::max(width, settings.min_width);
     height = std::max(height, settings.min_height);
     apply_padding(settings, width, height, false);
@@ -199,14 +220,14 @@ namespace {
     return (a.total_area < b.total_area);
   }
 
-  int get_perfect_area(const std::vector<PackSize>& sizes) {
+  int get_perfect_area(const std::vector<Size>& sizes) {
     auto area = 0;
     for (const auto& size : sizes)
       area += size.width * size.height;
     return area;
   }
 
-  std::pair<int, int> get_run_size(const PackSettings& settings, int area) {
+  std::pair<int, int> get_run_size(const Settings& settings, int area) {
     auto width = sqrt(area);
     auto height = div_ceil(area, width);
     if (width < settings.min_width || width > settings.max_width) {
@@ -221,7 +242,7 @@ namespace {
     return { width, height };
   }
 
-  RunSettings get_initial_run_settings(const PackSettings& settings, int perfect_area) {
+  RunSettings get_initial_run_settings(const Settings& settings, int perfect_area) {
     const auto [width, height] = get_run_size(settings, perfect_area * 5 / 4);
     return { width, height, get_concrete_method(settings.method) };
   }
@@ -241,7 +262,7 @@ namespace {
     const int perfect_area;
     RunSettings settings;
     OptimizationStage stage;
-    PackMethod first_method;
+    Method first_method;
     int iteration;
   };
 
@@ -254,7 +275,7 @@ namespace {
 
   // returns true when stage should be kept, false to advance
   bool optimize_stage(OptimizationState& state,
-      const PackSettings& pack_settings, const Run& best_run) {
+      const Settings& pack_settings, const Run& best_run) {
 
     auto& run = state.settings;
     switch (state.stage) {
@@ -341,7 +362,7 @@ namespace {
   }
 
   bool optimize_run_settings(OptimizationState& state,
-      const PackSettings& pack_settings, const Run& best_run) {
+      const Settings& pack_settings, const Run& best_run) {
 
     const auto previous_state = state;
     for (;;) {
@@ -386,7 +407,7 @@ namespace {
     std::vector<rbp::RectSize> run_rect_sizes;
   };
 
-  RbpState init_rbp_state(const std::vector<PackSize>& sizes) {
+  RbpState init_rbp_state(const std::vector<Size>& sizes) {
     auto rbp = RbpState();
     rbp.rects.reserve(sizes.size());
     rbp.rect_sizes.reserve(sizes.size());
@@ -396,8 +417,8 @@ namespace {
     return rbp;
   }
 
-  bool run_rbp_method(RbpState& rbp, const PackSettings& settings, Run& run,
-      const std::optional<Run>& best_run, const std::vector<PackSize>& sizes) {
+  bool run_rbp_method(RbpState& rbp, const Settings& settings, Run& run,
+      const std::optional<Run>& best_run, const std::vector<Size>& sizes) {
     copy_vector(rbp.rect_sizes, rbp.run_rect_sizes);
     auto cancelled = false;
     while (!cancelled && !rbp.run_rect_sizes.empty()) {
@@ -408,7 +429,7 @@ namespace {
 
       correct_size(settings, width, height);
       apply_padding(settings, width, height, false);
-      auto& sheet = run.sheets.emplace_back(PackSheet{ width, height, { } });
+      auto& sheet = run.sheets.emplace_back(Sheet{ width, height, { } });
       run.total_area += width * height;
 
       if (best_run && !is_better_than(run, *best_run)) {
@@ -437,7 +458,7 @@ namespace {
     std::vector<stbrp_rect> run_rects;
   };
 
-  StbState init_stb_state(const std::vector<PackSize>& sizes) {
+  StbState init_stb_state(const std::vector<Size>& sizes) {
     auto stb = StbState{ };
     stb.rects.reserve(sizes.size());
     stb.run_rects.reserve(sizes.size());
@@ -447,8 +468,8 @@ namespace {
     return stb;
   }
 
-  bool run_stb_method(StbState& stb, const PackSettings& settings, Run& run,
-      const std::optional<Run>& best_run, const std::vector<PackSize>& sizes) {
+  bool run_stb_method(StbState& stb, const Settings& settings, Run& run,
+      const std::optional<Run>& best_run, const std::vector<Size>& sizes) {
     copy_vector(stb.rects, stb.run_rects);
     stb.nodes.resize(std::max(stb.nodes.size(), static_cast<size_t>(run.width)));
 
@@ -480,6 +501,7 @@ namespace {
             size.id,
             stb_rect.x + settings.border_padding,
             stb_rect.y + settings.border_padding,
+            stb_rect.w, stb_rect.h,
             (stb_rect.w != size.width)
           });
           return true;
@@ -498,7 +520,7 @@ namespace {
   }
 } // namespace
 
-std::vector<PackSheet> pack(PackSettings settings, std::vector<PackSize> sizes) {
+std::vector<Sheet> pack(Settings settings, std::vector<Size> sizes) {
   if (!correct_settings(settings, sizes))
     return { };
 
@@ -515,14 +537,14 @@ std::vector<PackSheet> pack(PackSettings settings, std::vector<PackSize> sizes) 
   };
 
   auto stb_state = std::optional<StbState>();
-  if (settings.method == PackMethod::Best ||
-      settings.method == PackMethod::Best_Skyline ||
+  if (settings.method == Method::Best ||
+      settings.method == Method::Best_Skyline ||
       is_stb_method(settings.method))
     stb_state.emplace(init_stb_state(sizes));
 
   auto rbp_state = std::optional<RbpState>();
-  if (settings.method == PackMethod::Best ||
-      settings.method == PackMethod::Best_MaxRects ||
+  if (settings.method == Method::Best ||
+      settings.method == Method::Best_MaxRects ||
       is_rbp_method(settings.method))
     rbp_state.emplace(init_rbp_state(sizes));
 
@@ -545,3 +567,5 @@ std::vector<PackSheet> pack(PackSettings settings, std::vector<PackSize> sizes) 
 
   return std::move(best_run->sheets);
 }
+
+} // namespace

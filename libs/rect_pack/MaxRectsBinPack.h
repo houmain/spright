@@ -10,9 +10,25 @@
 #include <vector>
 #include <utility>
 
-#include "Rect.h"
-
 namespace rbp {
+
+struct RectSize
+{
+	int width;
+	int height;
+
+	int id;
+};
+
+struct Rect
+{
+	int x;
+	int y;
+	int width;
+	int height;
+
+	int id;
+};
 
 /** MaxRectsBinPack implements the MAXRECTS data structure and different bin packing algorithms that 
 	use this structure. */

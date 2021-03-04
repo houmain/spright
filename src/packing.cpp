@@ -1,8 +1,8 @@
 
 #include "packing.h"
-#include "pack.h"
 #include "image.h"
 #include "FilenameSequence.h"
+#include "rect_pack/rect_pack.h"
 #include <cmath>
 #include <array>
 #include <algorithm>
@@ -125,7 +125,7 @@ namespace {
     assert(!sprites.empty());
 
     // pack rects
-    auto pack_sizes = std::vector<PackSize>();
+    auto pack_sizes = std::vector<rect_pack::Size>();
     pack_sizes.reserve(sprites.size());
     auto duplicates = std::vector<std::pair<size_t, size_t>>();
     for (auto i = size_t{ }; i < sprites.size(); ++i) {
@@ -149,8 +149,8 @@ namespace {
 
     const auto [max_texture_width, max_texture_height] = get_texture_max_size(texture);
     auto pack_sheets = pack(
-      PackSettings{
-        .method = (sprites.size() <= 1000 ? PackMethod::Best : PackMethod::Best_Skyline),
+      rect_pack::Settings{
+        .method = (sprites.size() <= 1000 ? rect_pack::Method::Best : rect_pack::Method::Best_Skyline),
         .max_sheets = texture.filename.count(),
         .power_of_two = texture.power_of_two,
         .square = texture.square,
