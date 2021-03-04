@@ -25,7 +25,7 @@ enum class Definition {
   sheet,
   colorkey,
   grid,
-  grid_offset,
+  grid_padding,
   grid_spacing,
   offset,
   skip,
@@ -68,7 +68,7 @@ struct State {
   std::map<std::string, std::string> tags;
   std::string sprite;
   Size grid{ };
-  Size grid_offset{ };
+  Size grid_padding{ };
   Size grid_spacing{ };
   Size span{ 1, 1 };
   Pivot pivot{ PivotX::center, PivotY::middle };

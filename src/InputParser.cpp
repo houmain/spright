@@ -29,7 +29,7 @@ namespace {
       { "colorkey", Definition::colorkey },
       { "tag", Definition::tag },
       { "grid", Definition::grid },
-      { "grid-offset", Definition::grid_offset },
+      { "grid-padding", Definition::grid_padding },
       { "grid-spacing", Definition::grid_spacing },
       { "offset", Definition::offset },
       { "sprite", Definition::sprite },
@@ -206,8 +206,8 @@ void InputParser::deduce_grid_sprites(State& state) {
     for (auto x = x0; x < x1; ++x) {
 
       state.rect = {
-        state.grid_offset.x + x * grid.x,
-        state.grid_offset.y + y * grid.y,
+        state.grid_padding.x + x * grid.x,
+        state.grid_padding.y + y * grid.y,
         state.grid.x, state.grid.y
       };
 
@@ -423,8 +423,8 @@ void InputParser::apply_definition(State& state,
       state.grid = check_size(true);
       break;
 
-    case Definition::grid_offset:
-      state.grid_offset = check_size(true);
+    case Definition::grid_padding:
+      state.grid_padding = check_size(true);
       break;
 
     case Definition::grid_spacing:

@@ -76,7 +76,7 @@ namespace {
       case PackMethod::Best:
         method = advance_method(method);
 
-        // do not try costy contact point rule
+        // do not try costly contact point rule
         if (method != first_method &&
             method == PackMethod::MaxRects_ContactPointRule)
           method = advance_method(method);
