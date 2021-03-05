@@ -10,9 +10,9 @@ TEST_CASE("Tags", "[scope]") {
       trim none
       tag "A"
         tag "B"
-        sprite has_A_B
+        sprite has_A_B# comment
         trim crop
-          tag "C"
+          tag "C" # comment
           sprite has_A_B_C
             trim trim
         sprite has_A_B

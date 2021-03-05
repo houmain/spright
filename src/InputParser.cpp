@@ -7,7 +7,7 @@
 #include <cstring>
 
 namespace {
-  const auto default_texture_name = "spright-{0-}.png";
+  const auto default_texture_name = "spright{0-}.png";
 
   Definition get_definition(std::string_view command) {
     static const auto s_map = std::map<std::string, Definition, std::less<>>{
@@ -23,7 +23,7 @@ namespace {
       { "padding", Definition::padding },
       { "deduplicate", Definition::deduplicate },
       { "alpha", Definition::alpha },
-      { "begin", Definition::begin },
+      { "group", Definition::group },
       { "path", Definition::path },
       { "sheet", Definition::sheet },
       { "colorkey", Definition::colorkey },
@@ -44,8 +44,8 @@ namespace {
       { "common-divisor", Definition::common_divisor },
 
       // aliases
-      { "in", Definition::sheet },
-      { "out", Definition::texture },
+      { "input", Definition::sheet },
+      { "output", Definition::texture },
     };
     const auto it = s_map.find(command);
     if (it == s_map.end())
@@ -328,8 +328,6 @@ void InputParser::apply_definition(State& state,
   const auto check_color = [&]() {
     std::stringstream ss;
     ss << std::hex << check_string();
-    check(ss.peek() == '#', "color in HTML notation expected");
-    ss.seekg(1);
     auto color = RGBA{ };
     ss >> color.rgba;
     if (!color.a)
@@ -338,7 +336,7 @@ void InputParser::apply_definition(State& state,
   };
 
   switch (definition) {
-    case Definition::begin:
+    case Definition::group:
       // just for opening scopes, useful for additive definitions (e.g. tags)
       break;
 
@@ -585,7 +583,12 @@ void InputParser::parse(std::istream& input) {
     std::getline(input, buffer);
 
     auto line = ltrim(buffer);
-    if (line.empty() || starts_with(line, "#")) {
+    const auto level = static_cast<int>(buffer.size() - line.size());
+
+    if (auto hash = line.find('#'); hash != std::string::npos)
+      line = line.substr(0, hash);
+
+    if (line.empty()) {
       if (m_settings.autocomplete) {
         if (input.eof())
           m_autocomplete_output << autocomplete_space.str();
@@ -601,7 +604,6 @@ void InputParser::parse(std::istream& input) {
       error("invalid definition '" + std::string(arguments[0]) + "'");
     arguments.erase(arguments.begin());
 
-    const auto level = static_cast<int>(buffer.size() - line.size());
     pop_scope_stack(level);
 
     if (level > scope_stack.back().level || has_implicit_scope(definition))

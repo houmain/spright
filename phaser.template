@@ -1,4 +1,7 @@
 {
+	"meta": {
+		"app": "https://github.com/houmain/spright"
+	},
 	"textures": [
 {% for texture in textures %}
 		{
@@ -40,8 +43,5 @@
 			]
 		}
 {% endfor %}
-	],
-	"meta": {
-		"app": "https://github.com/houmain/spright"
-	}
+	]
 }

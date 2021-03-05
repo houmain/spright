@@ -6,7 +6,7 @@
 
 enum class Definition {
   none,
-  begin,
+  group,
 
   texture,
   width,
