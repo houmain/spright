@@ -29,9 +29,9 @@ namespace {
       { "colorkey", Definition::colorkey },
       { "tag", Definition::tag },
       { "grid", Definition::grid },
-      { "grid-padding", Definition::grid_padding },
+      { "grid-offset", Definition::grid_offset },
       { "grid-spacing", Definition::grid_spacing },
-      { "offset", Definition::offset },
+      { "row", Definition::row },
       { "sprite", Definition::sprite },
       { "skip", Definition::skip },
       { "span", Definition::span },
@@ -195,7 +195,7 @@ void InputParser::deduce_grid_sprites(State& state) {
   grid.x += state.grid_spacing.x;
   grid.y += state.grid_spacing.y;
 
-  const auto x0 = floor(bounds.x, grid.x) / grid.x;
+  const auto x0 = 0;
   const auto y0 = floor(bounds.y, grid.y) / grid.y;
   const auto x1 = std::min(ceil(bounds.x1(), grid.x), sheet.width()) / grid.x;
   const auto y1 = std::min(ceil(bounds.y1(), grid.y), sheet.height()) / grid.y;
@@ -206,8 +206,8 @@ void InputParser::deduce_grid_sprites(State& state) {
     for (auto x = x0; x < x1; ++x) {
 
       state.rect = {
-        state.grid_padding.x + x * grid.x,
-        state.grid_padding.y + y * grid.y,
+        state.grid_offset.x + x * grid.x,
+        state.grid_offset.y + y * grid.y,
         state.grid.x, state.grid.y
       };
 
@@ -219,8 +219,8 @@ void InputParser::deduce_grid_sprites(State& state) {
       if (m_settings.autocomplete) {
         auto& os = m_autocomplete_output;
         if (!std::exchange(output_offset, true)) {
-          if (x0 || y)
-            os << state.indent << "offset " << x0 << " " << y << "\n";
+          if (y)
+            os << state.indent << "row " << y << "\n";
         }
 
         if (skipped > 0) {
@@ -421,18 +421,18 @@ void InputParser::apply_definition(State& state,
       state.grid = check_size(true);
       break;
 
-    case Definition::grid_padding:
-      state.grid_padding = check_size(true);
+    case Definition::grid_offset:
+      state.grid_offset = check_size(true);
       break;
 
     case Definition::grid_spacing:
       state.grid_spacing = check_size(true);
       break;
 
-    case Definition::offset:
+    case Definition::row:
       check(!empty(state.grid), "offset is only valid in grid");
-      m_current_offset.x = static_cast<int>(check_float() * static_cast<float>(state.grid.x));
-      m_current_offset.y = static_cast<int>(check_float() * static_cast<float>(state.grid.y));
+      m_current_offset.x = 0;
+      m_current_offset.y = check_uint() * state.grid.y;
       break;
 
     case Definition::skip:
@@ -441,6 +441,7 @@ void InputParser::apply_definition(State& state,
       break;
 
     case Definition::span:
+      check(!empty(state.grid), "span is only valid in grid");
       state.span = check_size(false);
       check(state.span.x > 0 && state.span.y > 0, "invalid span");
       break;
