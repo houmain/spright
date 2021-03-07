@@ -46,6 +46,7 @@ struct State {
   Definition definition{ };
   int level;
   std::string indent;
+  std::string detected_indentation;
 
   std::filesystem::path texture;
   int width{ };
