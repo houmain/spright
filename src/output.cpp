@@ -20,7 +20,8 @@ namespace {
     return json_rect;
   };
 
-  nlohmann::json get_json_description(const std::vector<Sprite>& sprites, const std::vector<PackedTexture>& textures) {
+  nlohmann::json get_json_description(const std::vector<Sprite>& sprites,
+      const std::vector<PackedTexture>& textures) {
     auto json = nlohmann::json{ };
     auto& json_sprites = json["sprites"];
     json_sprites = nlohmann::json::array();
@@ -44,7 +45,7 @@ namespace {
       json_sprite["sourceRect"] = json_rect(sprite.source_rect);
       if (sprite.source->width() != sprite.source_rect.w ||
           sprite.source->height() != sprite.source_rect.h)
-        json_sprite["sourceIndex"] = texture_sprites[texture_filename].size();
+        json_sprite["sourceSpriteIndex"] = texture_sprites[texture_filename].size();
       json_sprite["trimmedSourceRect"] = json_rect(sprite.trimmed_source_rect);
       json_sprite["pivot"] = json_point(sprite.pivot_point);
       json_sprite["trimmedPivot"] = json_point(sprite.trimmed_pivot_point);
@@ -82,18 +83,22 @@ namespace {
     return json;
   }
 
-  std::string get_sprite_id(const std::string& id, int index) {
-    if (!id.empty())
-      return id;
+  std::string generate_sprite_id(int index) {
     return "sprite_" + std::to_string(index);
   }
 
-  std::string get_sprite_id_or_filename(const std::string& id, const std::string& source_filename, int source_index) {
-    if (!id.empty())
-      return id;
-    if (source_index < 0)
-      return source_filename;
-    return source_filename + "<" + std::to_string(source_index) + ">";
+  std::string remove_extension(std::string filename) {
+    const auto dot = filename.rfind('.');
+    if (dot != std::string::npos)
+      filename.resize(dot - 1);
+    return filename;
+  }
+
+  std::string get_id_from_filename(std::string filename, int sprite_index) {
+    auto id = remove_extension(std::move(filename));
+    if (sprite_index >= 0)
+      id += "<" + std::to_string(sprite_index) + ">";
+    return id;
   }
 } // namespace
 
@@ -119,11 +124,14 @@ void output_description(const Settings& settings,
 
     env.add_callback("getId", 1, [](inja::Arguments& args) -> inja::json {
       const auto& s = args.at(0)->get<inja::json>();
-      return get_sprite_id(s["id"], s["index"]);
+      auto id = std::string(s["id"]);
+      return (!id.empty() ? id : generate_sprite_id(s["index"]));
     });
     env.add_callback("getIdOrFilename", 1, [](inja::Arguments& args) -> inja::json {
       const auto& s = args.at(0)->get<inja::json>();
-      return get_sprite_id_or_filename(s["id"], s["sourceFilename"], s.value("sourceIndex", -1));
+      auto id = std::string(s["id"]);
+      return (!id.empty() ? id :
+        get_id_from_filename(s["sourceFilename"], s.value("sourceSpriteIndex", -1)));
     });
 
     env.render_to(os, env.parse_template(path_to_utf8(settings.template_file)), json);
