@@ -13,8 +13,7 @@ sheet "test/Items.png"
   const auto& sprites = parser.sprites();
   CHECK(sprites.size() == 18);
 
-  auto text = parser.autocomplete_output();
-  auto t= text.c_str();
+  const auto text = parser.autocomplete_output();
   CHECK(text == R"(
 sheet "test/Items.png"
   grid 16 16
@@ -59,4 +58,17 @@ TEST_CASE("Unaligned", "[autocompletion]") {
   REQUIRE_NOTHROW(parser.parse(input));
   const auto& sprites = parser.sprites();
   CHECK(sprites.size() == 31);
+}
+
+TEST_CASE("ID generator", "[autocompletion]") {
+  auto input = std::stringstream(R"(
+    path "test"
+    sheet "Items.png"
+      id "item_%i"
+  )");
+  auto parser = InputParser(Settings{ });
+  REQUIRE_NOTHROW(parser.parse(input));
+  const auto& sprites = parser.sprites();
+  CHECK(sprites.size() == 31);
+  CHECK(sprites[10].id == "item_10");
 }

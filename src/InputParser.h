@@ -32,6 +32,7 @@ enum class Definition {
   span,
 
   sprite,
+  id,
   rect,
   pivot,
   tag,
@@ -67,7 +68,7 @@ struct State {
   FilenameSequence sheet;
   RGBA colorkey{ };
   std::map<std::string, std::string> tags;
-  std::string sprite;
+  std::string sprite_id;
   Size grid{ };
   Size grid_offset{ };
   Size grid_spacing{ };
@@ -93,6 +94,7 @@ public:
 private:
   [[noreturn]] void error(std::string message);
   void check(bool condition, std::string_view message);
+  std::string get_sprite_id(const State& state) const;
   TexturePtr get_texture(const State& state);
   ImagePtr get_sheet(const State& state);
   ImagePtr get_sheet(const State& state, int index);

@@ -102,7 +102,7 @@ Image::Image(std::filesystem::path path, std::filesystem::path filename)
     m_filename(std::move(filename)) {
 
 #if defined(EMBED_TEST_FILES)
-  if (m_filename == "test/Items.png") {
+  if (m_path / m_filename == "test/Items.png") {
     unsigned char file[] {
 #include "test/Items.png.inc"
     };

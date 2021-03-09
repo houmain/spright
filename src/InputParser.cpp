@@ -33,6 +33,7 @@ namespace {
       { "grid-spacing", Definition::grid_spacing },
       { "row", Definition::row },
       { "sprite", Definition::sprite },
+      { "id", Definition::id },
       { "skip", Definition::skip },
       { "span", Definition::span },
       { "rect", Definition::rect },
@@ -73,6 +74,13 @@ namespace {
 void InputParser::check(bool condition, std::string_view message) {
   if (!condition)
     error(std::string(message));
+}
+
+std::string InputParser::get_sprite_id(const State& state) const {
+  auto id = state.sprite_id;
+  if (auto pos = id.find("%i"); pos != std::string::npos)
+    id.replace(pos, pos + 2, std::to_string(m_sprites_in_current_sheet));
+  return id;
 }
 
 TexturePtr InputParser::get_texture(const State& state) {
@@ -139,7 +147,7 @@ void InputParser::sprite_ends(State& state) {
   }
 
   auto sprite = Sprite{ };
-  sprite.id = state.sprite;
+  sprite.id = get_sprite_id(state);
   sprite.texture = get_texture(state);
   sprite.source = get_sheet(state);
   sprite.source_rect = (!empty(state.rect) ?
@@ -446,7 +454,11 @@ void InputParser::apply_definition(State& state,
 
     case Definition::sprite:
       if (arguments_left())
-        state.sprite = check_string();
+        state.sprite_id = check_string();
+      break;
+
+    case Definition::id:
+      state.sprite_id = check_string();
       break;
 
     case Definition::rect:
