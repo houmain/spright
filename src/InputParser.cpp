@@ -168,21 +168,19 @@ void InputParser::deduce_globbing_sheets(State& state) {
 
 void InputParser::deduce_sequence_sprites(State& state) {
   auto error = std::error_code{ };
-  if (state.sheet.is_infinite_sequence())
+  if (state.sheet.is_infinite_sequence()) {
     for (auto i = 0; ; ++i)
       if (!std::filesystem::exists(state.path / state.sheet.get_nth_filename(i), error)) {
         state.sheet.set_count(i);
         break;
       }
+    if (state.sheet.is_infinite_sequence())
+      return;
+  }
 
   for (auto i = 0; i < state.sheet.count(); ++i) {
     const auto& sheet = *get_sheet(state, i);
     state.rect = sheet.bounds();
-
-    if (m_settings.autocomplete) {
-      auto& os = m_autocomplete_output;
-      os << state.indent << "sprite\n";
-    }
     sprite_ends(state);
   }
 }
