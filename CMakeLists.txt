@@ -42,7 +42,6 @@ set(SOURCES ${SOURCES}
     libs/stb/stb_impl.cpp
     libs/miniz/miniz.c
     libs/texpack/bleeding.cpp
-    libs/glob/glob.cpp
 )
 
 set(INCLUDES ${INCLUDES}
@@ -72,6 +71,7 @@ if(ENABLE_TEST)
         test/test-autocompletion.cpp
         test/test-packing.cpp
         test/test-performance.cpp
+        test/test-globbing.cpp
     )
     list(REMOVE_ITEM TEST_SOURCES src/main.cpp)
     add_executable(spright-tests ${TEST_SOURCES})
