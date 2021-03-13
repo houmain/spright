@@ -4,6 +4,32 @@
 #include <algorithm>
 #include <sstream>
 
+namespace {
+  // replace comma with newline (not within string)
+  // skip spaces after newline
+  std::string arglist_to_input(std::string string) {
+    auto pos = begin(string);
+    auto in_string = false;
+    auto after_newline = false;
+    for (auto it = begin(string); it != end(string); ++it) {
+      auto c = *it;
+      if (c == '"') {
+        in_string = !in_string;
+      }
+      else if (!in_string && c == ',') {
+        c = '\n';
+      }
+      else if (after_newline && c == ' ') {
+        continue;
+      }
+      *pos++ = c;
+      after_newline = (c == '\n');
+    }
+    string.erase(pos, end(string));
+    return string;
+  }
+} // namespace
+
 bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
   for (auto i = 1; i < argc; i++) {
     const auto argument = std::string_view(argv[i]);
@@ -16,8 +42,7 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
       auto ss = std::stringstream();
       std::copy(&argv[i + 1], &argv[i + argc],
         std::ostream_iterator<const char*>(ss, " "));
-      settings.input = ss.str();
-      std::replace(begin(settings.input), end(settings.input), ',', '\n');
+      settings.input = arglist_to_input(ss.str());
       break;
     }
     else if (argument == "-t" || argument == "--template") {
@@ -77,8 +102,7 @@ void print_help_message(const char* argv0) {
     "  -d, --debug            draw sprite boundaries and pivot points on output.\n"
     "  -h, --help             print this help.\n"
     "  -- <args>              interpret remaining arguments as a comma separated\n"
-    "                         list of input definitions. WARNING: indentation after\n"
-    "                         commas affect property scope.\n"
+    "                         list of input definitions.\n"
     "\n"
     "All Rights Reserved.\n"
     "This program comes with absolutely no warranty.\n"
