@@ -1,0 +1,8935 @@
+{
+  "sprites": [
+    {
+      "id": "",
+      "index": 0,
+      "pivot": {
+        "x": 3.0,
+        "y": 17.0
+      },
+      "rect": {
+        "h": 34,
+        "w": 6,
+        "x": 188,
+        "y": 42
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 34,
+        "w": 6,
+        "x": 97,
+        "y": 9
+      },
+      "sourceSpriteIndex": 0,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 3.0,
+        "y": 17.0
+      },
+      "trimmedRect": {
+        "h": 34,
+        "w": 6,
+        "x": 188,
+        "y": 42
+      },
+      "trimmedSourceRect": {
+        "h": 34,
+        "w": 6,
+        "x": 97,
+        "y": 9
+      }
+    },
+    {
+      "id": "",
+      "index": 1,
+      "pivot": {
+        "x": 3.0,
+        "y": 3.5
+      },
+      "rect": {
+        "h": 7,
+        "w": 6,
+        "x": 37,
+        "y": 179
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 7,
+        "w": 6,
+        "x": 87,
+        "y": 50
+      },
+      "sourceSpriteIndex": 1,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 3.0,
+        "y": 3.5
+      },
+      "trimmedRect": {
+        "h": 7,
+        "w": 6,
+        "x": 37,
+        "y": 179
+      },
+      "trimmedSourceRect": {
+        "h": 7,
+        "w": 6,
+        "x": 87,
+        "y": 50
+      }
+    },
+    {
+      "id": "",
+      "index": 2,
+      "pivot": {
+        "x": 3.0,
+        "y": 3.5
+      },
+      "rect": {
+        "h": 7,
+        "w": 6,
+        "x": 59,
+        "y": 180
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 7,
+        "w": 6,
+        "x": 79,
+        "y": 50
+      },
+      "sourceSpriteIndex": 2,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 3.0,
+        "y": 3.5
+      },
+      "trimmedRect": {
+        "h": 7,
+        "w": 6,
+        "x": 59,
+        "y": 180
+      },
+      "trimmedSourceRect": {
+        "h": 7,
+        "w": 6,
+        "x": 79,
+        "y": 50
+      }
+    },
+    {
+      "id": "",
+      "index": 3,
+      "pivot": {
+        "x": 5.5,
+        "y": 33.5
+      },
+      "rect": {
+        "h": 67,
+        "w": 11,
+        "x": 34,
+        "y": 1
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 67,
+        "w": 11,
+        "x": 141,
+        "y": 5
+      },
+      "sourceSpriteIndex": 3,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 5.5,
+        "y": 33.5
+      },
+      "trimmedRect": {
+        "h": 67,
+        "w": 11,
+        "x": 34,
+        "y": 1
+      },
+      "trimmedSourceRect": {
+        "h": 67,
+        "w": 11,
+        "x": 141,
+        "y": 5
+      }
+    },
+    {
+      "id": "",
+      "index": 4,
+      "pivot": {
+        "x": 2.5,
+        "y": 33.5
+      },
+      "rect": {
+        "h": 67,
+        "w": 5,
+        "x": 52,
+        "y": 1
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 67,
+        "w": 5,
+        "x": 132,
+        "y": 5
+      },
+      "sourceSpriteIndex": 4,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 2.5,
+        "y": 33.5
+      },
+      "trimmedRect": {
+        "h": 67,
+        "w": 5,
+        "x": 52,
+        "y": 1
+      },
+      "trimmedSourceRect": {
+        "h": 67,
+        "w": 5,
+        "x": 132,
+        "y": 5
+      }
+    },
+    {
+      "id": "",
+      "index": 5,
+      "pivot": {
+        "x": 2.5,
+        "y": 33.5
+      },
+      "rect": {
+        "h": 67,
+        "w": 5,
+        "x": 46,
+        "y": 1
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 67,
+        "w": 5,
+        "x": 121,
+        "y": 5
+      },
+      "sourceSpriteIndex": 5,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 2.5,
+        "y": 33.5
+      },
+      "trimmedRect": {
+        "h": 67,
+        "w": 5,
+        "x": 46,
+        "y": 1
+      },
+      "trimmedSourceRect": {
+        "h": 67,
+        "w": 5,
+        "x": 121,
+        "y": 5
+      }
+    },
+    {
+      "id": "",
+      "index": 6,
+      "pivot": {
+        "x": 16.0,
+        "y": 38.5
+      },
+      "rect": {
+        "h": 77,
+        "w": 32,
+        "x": 1,
+        "y": 1
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 77,
+        "w": 32,
+        "x": 44,
+        "y": 8
+      },
+      "sourceSpriteIndex": 6,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 16.0,
+        "y": 38.5
+      },
+      "trimmedRect": {
+        "h": 77,
+        "w": 32,
+        "x": 1,
+        "y": 1
+      },
+      "trimmedSourceRect": {
+        "h": 77,
+        "w": 32,
+        "x": 44,
+        "y": 8
+      }
+    },
+    {
+      "id": "",
+      "index": 7,
+      "pivot": {
+        "x": 8.5,
+        "y": 25.5
+      },
+      "rect": {
+        "h": 51,
+        "w": 17,
+        "x": 170,
+        "y": 54
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 51,
+        "w": 17,
+        "x": 25,
+        "y": 18
+      },
+      "sourceSpriteIndex": 7,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 8.5,
+        "y": 25.5
+      },
+      "trimmedRect": {
+        "h": 51,
+        "w": 17,
+        "x": 170,
+        "y": 54
+      },
+      "trimmedSourceRect": {
+        "h": 51,
+        "w": 17,
+        "x": 25,
+        "y": 18
+      }
+    },
+    {
+      "id": "",
+      "index": 8,
+      "pivot": {
+        "x": 8.5,
+        "y": 26.0
+      },
+      "rect": {
+        "h": 52,
+        "w": 17,
+        "x": 170,
+        "y": 1
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 52,
+        "w": 17,
+        "x": 6,
+        "y": 17
+      },
+      "sourceSpriteIndex": 8,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 8.5,
+        "y": 26.0
+      },
+      "trimmedRect": {
+        "h": 52,
+        "w": 17,
+        "x": 170,
+        "y": 1
+      },
+      "trimmedSourceRect": {
+        "h": 52,
+        "w": 17,
+        "x": 6,
+        "y": 17
+      }
+    },
+    {
+      "id": "",
+      "index": 9,
+      "pivot": {
+        "x": 3.5,
+        "y": 20.0
+      },
+      "rect": {
+        "h": 40,
+        "w": 7,
+        "x": 188,
+        "y": 1
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 40,
+        "w": 7,
+        "x": 107,
+        "y": 8
+      },
+      "sourceSpriteIndex": 9,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 3.5,
+        "y": 20.0
+      },
+      "trimmedRect": {
+        "h": 40,
+        "w": 7,
+        "x": 188,
+        "y": 1
+      },
+      "trimmedSourceRect": {
+        "h": 40,
+        "w": 7,
+        "x": 107,
+        "y": 8
+      }
+    },
+    {
+      "id": "",
+      "index": 10,
+      "pivot": {
+        "x": 3.0,
+        "y": 3.5
+      },
+      "rect": {
+        "h": 7,
+        "w": 6,
+        "x": 30,
+        "y": 179
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 7,
+        "w": 6,
+        "x": 96,
+        "y": 50
+      },
+      "sourceSpriteIndex": 10,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 3.0,
+        "y": 3.5
+      },
+      "trimmedRect": {
+        "h": 7,
+        "w": 6,
+        "x": 30,
+        "y": 179
+      },
+      "trimmedSourceRect": {
+        "h": 7,
+        "w": 6,
+        "x": 96,
+        "y": 50
+      }
+    },
+    {
+      "id": "",
+      "index": 11,
+      "pivot": {
+        "x": 2.0,
+        "y": 12.0
+      },
+      "rect": {
+        "h": 24,
+        "w": 4,
+        "x": 159,
+        "y": 98
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 24,
+        "w": 4,
+        "x": 88,
+        "y": 12
+      },
+      "sourceSpriteIndex": 11,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 2.0,
+        "y": 12.0
+      },
+      "trimmedRect": {
+        "h": 24,
+        "w": 4,
+        "x": 159,
+        "y": 98
+      },
+      "trimmedSourceRect": {
+        "h": 24,
+        "w": 4,
+        "x": 88,
+        "y": 12
+      }
+    },
+    {
+      "id": "",
+      "index": 12,
+      "pivot": {
+        "x": 3.0,
+        "y": 13.5
+      },
+      "rect": {
+        "h": 27,
+        "w": 6,
+        "x": 188,
+        "y": 77
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 27,
+        "w": 6,
+        "x": 78,
+        "y": 12
+      },
+      "sourceSpriteIndex": 12,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 3.0,
+        "y": 13.5
+      },
+      "trimmedRect": {
+        "h": 27,
+        "w": 6,
+        "x": 188,
+        "y": 77
+      },
+      "trimmedSourceRect": {
+        "h": 27,
+        "w": 6,
+        "x": 78,
+        "y": 12
+      }
+    },
+    {
+      "id": "",
+      "index": 13,
+      "pivot": {
+        "x": 7.5,
+        "y": 6.5
+      },
+      "rect": {
+        "h": 13,
+        "w": 15,
+        "x": 18,
+        "y": 148
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 13,
+        "w": 15,
+        "x": 5,
+        "y": 118
+      },
+      "sourceSpriteIndex": 13,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 7.5,
+        "y": 6.5
+      },
+      "trimmedRect": {
+        "h": 13,
+        "w": 15,
+        "x": 18,
+        "y": 148
+      },
+      "trimmedSourceRect": {
+        "h": 13,
+        "w": 15,
+        "x": 5,
+        "y": 118
+      }
+    },
+    {
+      "id": "",
+      "index": 14,
+      "pivot": {
+        "x": 7.0,
+        "y": 10.0
+      },
+      "rect": {
+        "h": 20,
+        "w": 14,
+        "x": 164,
+        "y": 106
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 20,
+        "w": 14,
+        "x": 25,
+        "y": 111
+      },
+      "sourceSpriteIndex": 14,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 7.0,
+        "y": 10.0
+      },
+      "trimmedRect": {
+        "h": 20,
+        "w": 14,
+        "x": 164,
+        "y": 106
+      },
+      "trimmedSourceRect": {
+        "h": 20,
+        "w": 14,
+        "x": 25,
+        "y": 111
+      }
+    },
+    {
+      "id": "",
+      "index": 15,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 166,
+        "y": 140
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 80,
+        "y": 80
+      },
+      "sourceSpriteIndex": 15,
+      "tags": {
+        "green_enemy_run": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 8.0,
+        "y": 5.0
+      },
+      "trimmedRect": {
+        "h": 13,
+        "w": 16,
+        "x": 166,
+        "y": 143
+      },
+      "trimmedSourceRect": {
+        "h": 13,
+        "w": 16,
+        "x": 80,
+        "y": 83
+      }
+    },
+    {
+      "id": "",
+      "index": 16,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 149,
+        "y": 141
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 64,
+        "y": 80
+      },
+      "sourceSpriteIndex": 16,
+      "tags": {
+        "green_enemy_run": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 8.0,
+        "y": 6.0
+      },
+      "trimmedRect": {
+        "h": 13,
+        "w": 16,
+        "x": 149,
+        "y": 143
+      },
+      "trimmedSourceRect": {
+        "h": 13,
+        "w": 16,
+        "x": 64,
+        "y": 82
+      }
+    },
+    {
+      "id": "",
+      "index": 17,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 104,
+        "y": 138
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 48,
+        "y": 80
+      },
+      "sourceSpriteIndex": 17,
+      "tags": {
+        "green_enemy_run": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 8.0,
+        "y": 5.0
+      },
+      "trimmedRect": {
+        "h": 13,
+        "w": 16,
+        "x": 104,
+        "y": 141
+      },
+      "trimmedSourceRect": {
+        "h": 13,
+        "w": 16,
+        "x": 48,
+        "y": 83
+      }
+    },
+    {
+      "id": "",
+      "index": 18,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 182,
+        "y": 140
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 32,
+        "y": 80
+      },
+      "sourceSpriteIndex": 18,
+      "tags": {
+        "green_enemy_run": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 7.0,
+        "y": 5.0
+      },
+      "trimmedRect": {
+        "h": 13,
+        "w": 14,
+        "x": 183,
+        "y": 143
+      },
+      "trimmedSourceRect": {
+        "h": 13,
+        "w": 14,
+        "x": 33,
+        "y": 83
+      }
+    },
+    {
+      "id": "",
+      "index": 19,
+      "pivot": {
+        "x": 7.5,
+        "y": 1.5
+      },
+      "rect": {
+        "h": 3,
+        "w": 15,
+        "x": 142,
+        "y": 185
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 3,
+        "w": 15,
+        "x": 25,
+        "y": 80
+      },
+      "sourceSpriteIndex": 19,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 7.5,
+        "y": 1.5
+      },
+      "trimmedRect": {
+        "h": 3,
+        "w": 15,
+        "x": 142,
+        "y": 185
+      },
+      "trimmedSourceRect": {
+        "h": 3,
+        "w": 15,
+        "x": 25,
+        "y": 80
+      }
+    },
+    {
+      "id": "",
+      "index": 20,
+      "pivot": {
+        "x": 13.5,
+        "y": 19.0
+      },
+      "rect": {
+        "h": 38,
+        "w": 27,
+        "x": 138,
+        "y": 59
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 38,
+        "w": 27,
+        "x": 84,
+        "y": 88
+      },
+      "sourceSpriteIndex": 20,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 13.5,
+        "y": 19.0
+      },
+      "trimmedRect": {
+        "h": 38,
+        "w": 27,
+        "x": 138,
+        "y": 59
+      },
+      "trimmedSourceRect": {
+        "h": 38,
+        "w": 27,
+        "x": 84,
+        "y": 88
+      }
+    },
+    {
+      "id": "",
+      "index": 21,
+      "pivot": {
+        "x": 6.5,
+        "y": 6.5
+      },
+      "rect": {
+        "h": 13,
+        "w": 13,
+        "x": 34,
+        "y": 155
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 13,
+        "w": 13,
+        "x": 6,
+        "y": 99
+      },
+      "sourceSpriteIndex": 21,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 6.5,
+        "y": 6.5
+      },
+      "trimmedRect": {
+        "h": 13,
+        "w": 13,
+        "x": 34,
+        "y": 155
+      },
+      "trimmedSourceRect": {
+        "h": 13,
+        "w": 13,
+        "x": 6,
+        "y": 99
+      }
+    },
+    {
+      "id": "",
+      "index": 22,
+      "pivot": {
+        "x": 19.5,
+        "y": 19.0
+      },
+      "rect": {
+        "h": 38,
+        "w": 39,
+        "x": 98,
+        "y": 59
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 38,
+        "w": 39,
+        "x": 118,
+        "y": 75
+      },
+      "sourceSpriteIndex": 22,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 19.5,
+        "y": 19.0
+      },
+      "trimmedRect": {
+        "h": 38,
+        "w": 39,
+        "x": 98,
+        "y": 59
+      },
+      "trimmedSourceRect": {
+        "h": 38,
+        "w": 39,
+        "x": 118,
+        "y": 75
+      }
+    },
+    {
+      "id": "",
+      "index": 23,
+      "pivot": {
+        "x": 5.0,
+        "y": 10.0
+      },
+      "rect": {
+        "h": 20,
+        "w": 10,
+        "x": 1,
+        "y": 112
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 20,
+        "w": 10,
+        "x": 64,
+        "y": 88
+      },
+      "sourceSpriteIndex": 23,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 5.0,
+        "y": 10.0
+      },
+      "trimmedRect": {
+        "h": 20,
+        "w": 10,
+        "x": 1,
+        "y": 112
+      },
+      "trimmedSourceRect": {
+        "h": 20,
+        "w": 10,
+        "x": 64,
+        "y": 88
+      }
+    },
+    {
+      "id": "",
+      "index": 24,
+      "pivot": {
+        "x": 5.0,
+        "y": 9.0
+      },
+      "rect": {
+        "h": 18,
+        "w": 10,
+        "x": 34,
+        "y": 112
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 18,
+        "w": 10,
+        "x": 52,
+        "y": 90
+      },
+      "sourceSpriteIndex": 24,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 5.0,
+        "y": 9.0
+      },
+      "trimmedRect": {
+        "h": 18,
+        "w": 10,
+        "x": 34,
+        "y": 112
+      },
+      "trimmedSourceRect": {
+        "h": 18,
+        "w": 10,
+        "x": 52,
+        "y": 90
+      }
+    },
+    {
+      "id": "",
+      "index": 25,
+      "pivot": {
+        "x": 5.0,
+        "y": 10.0
+      },
+      "rect": {
+        "h": 20,
+        "w": 10,
+        "x": 12,
+        "y": 112
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 20,
+        "w": 10,
+        "x": 39,
+        "y": 88
+      },
+      "sourceSpriteIndex": 25,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 5.0,
+        "y": 10.0
+      },
+      "trimmedRect": {
+        "h": 20,
+        "w": 10,
+        "x": 12,
+        "y": 112
+      },
+      "trimmedSourceRect": {
+        "h": 20,
+        "w": 10,
+        "x": 39,
+        "y": 88
+      }
+    },
+    {
+      "id": "",
+      "index": 26,
+      "pivot": {
+        "x": 5.0,
+        "y": 9.0
+      },
+      "rect": {
+        "h": 18,
+        "w": 10,
+        "x": 23,
+        "y": 112
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 18,
+        "w": 10,
+        "x": 26,
+        "y": 90
+      },
+      "sourceSpriteIndex": 26,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 5.0,
+        "y": 9.0
+      },
+      "trimmedRect": {
+        "h": 18,
+        "w": 10,
+        "x": 23,
+        "y": 112
+      },
+      "trimmedSourceRect": {
+        "h": 18,
+        "w": 10,
+        "x": 26,
+        "y": 90
+      }
+    },
+    {
+      "id": "",
+      "index": 27,
+      "pivot": {
+        "x": 6.5,
+        "y": 3.0
+      },
+      "rect": {
+        "h": 6,
+        "w": 13,
+        "x": 99,
+        "y": 180
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 6,
+        "w": 13,
+        "x": 7,
+        "y": 89
+      },
+      "sourceSpriteIndex": 27,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 6.5,
+        "y": 3.0
+      },
+      "trimmedRect": {
+        "h": 6,
+        "w": 13,
+        "x": 99,
+        "y": 180
+      },
+      "trimmedSourceRect": {
+        "h": 6,
+        "w": 13,
+        "x": 7,
+        "y": 89
+      }
+    },
+    {
+      "id": "",
+      "index": 28,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 88,
+        "y": 152
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 16,
+        "y": 80
+      },
+      "sourceSpriteIndex": 28,
+      "tags": {
+        "green_enemy_run": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 7.0,
+        "y": 6.0
+      },
+      "trimmedRect": {
+        "h": 13,
+        "w": 14,
+        "x": 89,
+        "y": 154
+      },
+      "trimmedSourceRect": {
+        "h": 13,
+        "w": 14,
+        "x": 17,
+        "y": 82
+      }
+    },
+    {
+      "id": "",
+      "index": 29,
+      "pivot": {
+        "x": 7.5,
+        "y": 1.5
+      },
+      "rect": {
+        "h": 3,
+        "w": 15,
+        "x": 126,
+        "y": 185
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 3,
+        "w": 15,
+        "x": 7,
+        "y": 80
+      },
+      "sourceSpriteIndex": 29,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 7.5,
+        "y": 1.5
+      },
+      "trimmedRect": {
+        "h": 3,
+        "w": 15,
+        "x": 126,
+        "y": 185
+      },
+      "trimmedSourceRect": {
+        "h": 3,
+        "w": 15,
+        "x": 7,
+        "y": 80
+      }
+    },
+    {
+      "id": "",
+      "index": 30,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "rect": {
+        "h": 1,
+        "w": 1,
+        "x": 18,
+        "y": 182
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 1,
+        "w": 1,
+        "x": 89,
+        "y": 79
+      },
+      "sourceSpriteIndex": 30,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "trimmedRect": {
+        "h": 1,
+        "w": 1,
+        "x": 18,
+        "y": 182
+      },
+      "trimmedSourceRect": {
+        "h": 1,
+        "w": 1,
+        "x": 89,
+        "y": 79
+      }
+    },
+    {
+      "id": "",
+      "index": 31,
+      "pivot": {
+        "x": 10.5,
+        "y": 12.0
+      },
+      "rect": {
+        "h": 24,
+        "w": 21,
+        "x": 137,
+        "y": 98
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 24,
+        "w": 21,
+        "x": 98,
+        "y": 62
+      },
+      "sourceSpriteIndex": 31,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 10.5,
+        "y": 12.0
+      },
+      "trimmedRect": {
+        "h": 24,
+        "w": 21,
+        "x": 137,
+        "y": 98
+      },
+      "trimmedSourceRect": {
+        "h": 24,
+        "w": 21,
+        "x": 98,
+        "y": 62
+      }
+    },
+    {
+      "id": "",
+      "index": 32,
+      "pivot": {
+        "x": 3.0,
+        "y": 3.5
+      },
+      "rect": {
+        "h": 7,
+        "w": 6,
+        "x": 45,
+        "y": 178
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 7,
+        "w": 6,
+        "x": 87,
+        "y": 71
+      },
+      "sourceSpriteIndex": 32,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 3.0,
+        "y": 3.5
+      },
+      "trimmedRect": {
+        "h": 7,
+        "w": 6,
+        "x": 45,
+        "y": 178
+      },
+      "trimmedSourceRect": {
+        "h": 7,
+        "w": 6,
+        "x": 87,
+        "y": 71
+      }
+    },
+    {
+      "id": "",
+      "index": 33,
+      "pivot": {
+        "x": 3.0,
+        "y": 4.0
+      },
+      "rect": {
+        "h": 8,
+        "w": 6,
+        "x": 191,
+        "y": 157
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 8,
+        "w": 6,
+        "x": 79,
+        "y": 71
+      },
+      "sourceSpriteIndex": 33,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 3.0,
+        "y": 4.0
+      },
+      "trimmedRect": {
+        "h": 8,
+        "w": 6,
+        "x": 191,
+        "y": 157
+      },
+      "trimmedSourceRect": {
+        "h": 8,
+        "w": 6,
+        "x": 79,
+        "y": 71
+      }
+    },
+    {
+      "id": "",
+      "index": 34,
+      "pivot": {
+        "x": 2.0,
+        "y": 2.0
+      },
+      "rect": {
+        "h": 4,
+        "w": 4,
+        "x": 192,
+        "y": 177
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 4,
+        "w": 4,
+        "x": 105,
+        "y": 66
+      },
+      "sourceSpriteIndex": 34,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 2.0,
+        "y": 2.0
+      },
+      "trimmedRect": {
+        "h": 4,
+        "w": 4,
+        "x": 192,
+        "y": 177
+      },
+      "trimmedSourceRect": {
+        "h": 4,
+        "w": 4,
+        "x": 105,
+        "y": 66
+      }
+    },
+    {
+      "id": "",
+      "index": 35,
+      "pivot": {
+        "x": 3.0,
+        "y": 3.5
+      },
+      "rect": {
+        "h": 7,
+        "w": 6,
+        "x": 52,
+        "y": 178
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 7,
+        "w": 6,
+        "x": 89,
+        "y": 62
+      },
+      "sourceSpriteIndex": 35,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 3.0,
+        "y": 3.5
+      },
+      "trimmedRect": {
+        "h": 7,
+        "w": 6,
+        "x": 52,
+        "y": 178
+      },
+      "trimmedSourceRect": {
+        "h": 7,
+        "w": 6,
+        "x": 89,
+        "y": 62
+      }
+    },
+    {
+      "id": "",
+      "index": 36,
+      "pivot": {
+        "x": 3.0,
+        "y": 3.5
+      },
+      "rect": {
+        "h": 7,
+        "w": 6,
+        "x": 23,
+        "y": 179
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 7,
+        "w": 6,
+        "x": 78,
+        "y": 62
+      },
+      "sourceSpriteIndex": 36,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 3.0,
+        "y": 3.5
+      },
+      "trimmedRect": {
+        "h": 7,
+        "w": 6,
+        "x": 23,
+        "y": 179
+      },
+      "trimmedSourceRect": {
+        "h": 7,
+        "w": 6,
+        "x": 78,
+        "y": 62
+      }
+    },
+    {
+      "id": "",
+      "index": 37,
+      "pivot": {
+        "x": 4.5,
+        "y": 6.0
+      },
+      "rect": {
+        "h": 12,
+        "w": 9,
+        "x": 61,
+        "y": 155
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 12,
+        "w": 9,
+        "x": 58,
+        "y": 117
+      },
+      "sourceSpriteIndex": 37,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 4.5,
+        "y": 6.0
+      },
+      "trimmedRect": {
+        "h": 12,
+        "w": 9,
+        "x": 61,
+        "y": 155
+      },
+      "trimmedSourceRect": {
+        "h": 12,
+        "w": 9,
+        "x": 58,
+        "y": 117
+      }
+    },
+    {
+      "id": "",
+      "index": 38,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 85,
+        "y": 163
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 48,
+        "y": 16
+      },
+      "sourceSpriteIndex": 38,
+      "tags": {
+        "blue_enemy_run": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 6.0,
+        "y": 3.0
+      },
+      "trimmedRect": {
+        "h": 11,
+        "w": 12,
+        "x": 87,
+        "y": 168
+      },
+      "trimmedSourceRect": {
+        "h": 11,
+        "w": 12,
+        "x": 50,
+        "y": 21
+      }
+    },
+    {
+      "id": "",
+      "index": 39,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 1,
+        "y": 145
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 0,
+        "y": 80
+      },
+      "sourceSpriteIndex": 39,
+      "tags": {
+        "green_enemy_run": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 8.0,
+        "y": 5.0
+      },
+      "trimmedRect": {
+        "h": 13,
+        "w": 16,
+        "x": 1,
+        "y": 148
+      },
+      "trimmedSourceRect": {
+        "h": 13,
+        "w": 16,
+        "x": 0,
+        "y": 83
+      }
+    },
+    {
+      "id": "",
+      "index": 40,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 176,
+        "y": 153
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 16,
+        "y": 16
+      },
+      "sourceSpriteIndex": 40,
+      "tags": {
+        "blue_enemy_run": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 7.0,
+        "y": 4.0
+      },
+      "trimmedRect": {
+        "h": 11,
+        "w": 13,
+        "x": 177,
+        "y": 157
+      },
+      "trimmedSourceRect": {
+        "h": 11,
+        "w": 13,
+        "x": 17,
+        "y": 20
+      }
+    },
+    {
+      "id": "",
+      "index": 41,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": -1,
+        "y": 157
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 0,
+        "y": 16
+      },
+      "sourceSpriteIndex": 41,
+      "tags": {
+        "blue_enemy_run": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 6.0,
+        "y": 3.0
+      },
+      "trimmedRect": {
+        "h": 11,
+        "w": 12,
+        "x": 1,
+        "y": 162
+      },
+      "trimmedSourceRect": {
+        "h": 11,
+        "w": 12,
+        "x": 2,
+        "y": 21
+      }
+    },
+    {
+      "id": "",
+      "index": 42,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 161,
+        "y": 153
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 48,
+        "y": 0
+      },
+      "sourceSpriteIndex": 42,
+      "tags": {
+        "blue_enemy_jump": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 7.0,
+        "y": 4.0
+      },
+      "trimmedRect": {
+        "h": 11,
+        "w": 14,
+        "x": 162,
+        "y": 157
+      },
+      "trimmedSourceRect": {
+        "h": 11,
+        "w": 14,
+        "x": 49,
+        "y": 4
+      }
+    },
+    {
+      "id": "",
+      "index": 43,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 111,
+        "y": 169
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 32,
+        "y": 0
+      },
+      "sourceSpriteIndex": 43,
+      "tags": {
+        "blue_enemy_dead": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 6.0,
+        "y": -3.0
+      },
+      "trimmedRect": {
+        "h": 5,
+        "w": 12,
+        "x": 113,
+        "y": 180
+      },
+      "trimmedSourceRect": {
+        "h": 5,
+        "w": 12,
+        "x": 34,
+        "y": 11
+      }
+    },
+    {
+      "id": "",
+      "index": 44,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 12,
+        "y": 157
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 16,
+        "y": 0
+      },
+      "sourceSpriteIndex": 44,
+      "tags": {
+        "blue_enemy_idle": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 6.0,
+        "y": 3.0
+      },
+      "trimmedRect": {
+        "h": 11,
+        "w": 12,
+        "x": 14,
+        "y": 162
+      },
+      "trimmedSourceRect": {
+        "h": 11,
+        "w": 12,
+        "x": 18,
+        "y": 5
+      }
+    },
+    {
+      "id": "",
+      "index": 45,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 72,
+        "y": 163
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 0,
+        "y": 0
+      },
+      "sourceSpriteIndex": 45,
+      "tags": {
+        "blue_enemy_idle": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 6.0,
+        "y": 3.0
+      },
+      "trimmedRect": {
+        "h": 11,
+        "w": 12,
+        "x": 74,
+        "y": 168
+      },
+      "trimmedSourceRect": {
+        "h": 11,
+        "w": 12,
+        "x": 2,
+        "y": 5
+      }
+    },
+    {
+      "id": "",
+      "index": 46,
+      "pivot": {
+        "x": 6.5,
+        "y": 8.5
+      },
+      "rect": {
+        "h": 17,
+        "w": 13,
+        "x": 109,
+        "y": 123
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 17,
+        "w": 13,
+        "x": 43,
+        "y": 114
+      },
+      "sourceSpriteIndex": 46,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 6.5,
+        "y": 8.5
+      },
+      "trimmedRect": {
+        "h": 17,
+        "w": 13,
+        "x": 109,
+        "y": 123
+      },
+      "trimmedSourceRect": {
+        "h": 17,
+        "w": 13,
+        "x": 43,
+        "y": 114
+      }
+    },
+    {
+      "id": "",
+      "index": 47,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 59,
+        "y": 163
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 32,
+        "y": 16
+      },
+      "sourceSpriteIndex": 47,
+      "tags": {
+        "blue_enemy_run": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 6.0,
+        "y": 3.0
+      },
+      "trimmedRect": {
+        "h": 11,
+        "w": 12,
+        "x": 61,
+        "y": 168
+      },
+      "trimmedSourceRect": {
+        "h": 11,
+        "w": 12,
+        "x": 34,
+        "y": 21
+      }
+    },
+    {
+      "id": "",
+      "index": 48,
+      "pivot": {
+        "x": 5.5,
+        "y": 6.0
+      },
+      "rect": {
+        "h": 12,
+        "w": 11,
+        "x": 150,
+        "y": 157
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 12,
+        "w": 11,
+        "x": 69,
+        "y": 117
+      },
+      "sourceSpriteIndex": 48,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 5.5,
+        "y": 6.0
+      },
+      "trimmedRect": {
+        "h": 12,
+        "w": 11,
+        "x": 150,
+        "y": 157
+      },
+      "trimmedSourceRect": {
+        "h": 12,
+        "w": 11,
+        "x": 69,
+        "y": 117
+      }
+    },
+    {
+      "id": "",
+      "index": 49,
+      "pivot": {
+        "x": 19.5,
+        "y": 19.0
+      },
+      "rect": {
+        "h": 38,
+        "w": 39,
+        "x": 58,
+        "y": 59
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 38,
+        "w": 39,
+        "x": 119,
+        "y": 115
+      },
+      "sourceSpriteIndex": 49,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 19.5,
+        "y": 19.0
+      },
+      "trimmedRect": {
+        "h": 38,
+        "w": 39,
+        "x": 58,
+        "y": 59
+      },
+      "trimmedSourceRect": {
+        "h": 38,
+        "w": 39,
+        "x": 119,
+        "y": 115
+      }
+    },
+    {
+      "id": "",
+      "index": 50,
+      "pivot": {
+        "x": 5.5,
+        "y": 7.0
+      },
+      "rect": {
+        "h": 14,
+        "w": 11,
+        "x": 60,
+        "y": 140
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 14,
+        "w": 11,
+        "x": 13,
+        "y": 137
+      },
+      "sourceSpriteIndex": 50,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 5.5,
+        "y": 7.0
+      },
+      "trimmedRect": {
+        "h": 14,
+        "w": 11,
+        "x": 60,
+        "y": 140
+      },
+      "trimmedSourceRect": {
+        "h": 14,
+        "w": 11,
+        "x": 13,
+        "y": 137
+      }
+    },
+    {
+      "id": "",
+      "index": 51,
+      "pivot": {
+        "x": 5.5,
+        "y": 6.0
+      },
+      "rect": {
+        "h": 12,
+        "w": 11,
+        "x": 138,
+        "y": 157
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 12,
+        "w": 11,
+        "x": 29,
+        "y": 139
+      },
+      "sourceSpriteIndex": 51,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 5.5,
+        "y": 6.0
+      },
+      "trimmedRect": {
+        "h": 12,
+        "w": 11,
+        "x": 138,
+        "y": 157
+      },
+      "trimmedSourceRect": {
+        "h": 12,
+        "w": 11,
+        "x": 29,
+        "y": 139
+      }
+    },
+    {
+      "id": "",
+      "index": 52,
+      "pivot": {
+        "x": 3.5,
+        "y": 10.0
+      },
+      "rect": {
+        "h": 20,
+        "w": 7,
+        "x": 179,
+        "y": 106
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 20,
+        "w": 7,
+        "x": 63,
+        "y": 133
+      },
+      "sourceSpriteIndex": 52,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 3.5,
+        "y": 10.0
+      },
+      "trimmedRect": {
+        "h": 20,
+        "w": 7,
+        "x": 179,
+        "y": 106
+      },
+      "trimmedSourceRect": {
+        "h": 20,
+        "w": 7,
+        "x": 63,
+        "y": 133
+      }
+    },
+    {
+      "id": "",
+      "index": 53,
+      "pivot": {
+        "x": 3.5,
+        "y": 10.5
+      },
+      "rect": {
+        "h": 21,
+        "w": 7,
+        "x": 188,
+        "y": 105
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 21,
+        "w": 7,
+        "x": 72,
+        "y": 132
+      },
+      "sourceSpriteIndex": 53,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 3.5,
+        "y": 10.5
+      },
+      "trimmedRect": {
+        "h": 21,
+        "w": 7,
+        "x": 188,
+        "y": 105
+      },
+      "trimmedSourceRect": {
+        "h": 21,
+        "w": 7,
+        "x": 72,
+        "y": 132
+      }
+    },
+    {
+      "id": "",
+      "index": 54,
+      "pivot": {
+        "x": 13.5,
+        "y": 12.0
+      },
+      "rect": {
+        "h": 24,
+        "w": 27,
+        "x": 109,
+        "y": 98
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 24,
+        "w": 27,
+        "x": 85,
+        "y": 130
+      },
+      "sourceSpriteIndex": 54,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 13.5,
+        "y": 12.0
+      },
+      "trimmedRect": {
+        "h": 24,
+        "w": 27,
+        "x": 109,
+        "y": 98
+      },
+      "trimmedSourceRect": {
+        "h": 24,
+        "w": 27,
+        "x": 85,
+        "y": 130
+      }
+    },
+    {
+      "id": "",
+      "index": 55,
+      "pivot": {
+        "x": 8.5,
+        "y": 4.5
+      },
+      "rect": {
+        "h": 9,
+        "w": 17,
+        "x": 27,
+        "y": 169
+      },
+      "rotated": false,
+      "sourceFilename": "misc_scenery.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 9,
+        "w": 17,
+        "x": 43,
+        "y": 143
+      },
+      "sourceSpriteIndex": 55,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 8.5,
+        "y": 4.5
+      },
+      "trimmedRect": {
+        "h": 9,
+        "w": 17,
+        "x": 27,
+        "y": 169
+      },
+      "trimmedSourceRect": {
+        "h": 9,
+        "w": 17,
+        "x": 43,
+        "y": 143
+      }
+    },
+    {
+      "id": "",
+      "index": 56,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 111,
+        "y": 163
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 80,
+        "y": 16
+      },
+      "sourceSpriteIndex": 56,
+      "tags": {
+        "blue_enemy_run": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 6.0,
+        "y": 3.0
+      },
+      "trimmedRect": {
+        "h": 11,
+        "w": 12,
+        "x": 113,
+        "y": 168
+      },
+      "trimmedSourceRect": {
+        "h": 11,
+        "w": 12,
+        "x": 82,
+        "y": 21
+      }
+    },
+    {
+      "id": "",
+      "index": 57,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 104,
+        "y": 151
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 48,
+        "y": 64
+      },
+      "sourceSpriteIndex": 57,
+      "tags": {
+        "green_enemy_jump": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 8.0,
+        "y": 4.0
+      },
+      "trimmedRect": {
+        "h": 12,
+        "w": 16,
+        "x": 104,
+        "y": 155
+      },
+      "trimmedSourceRect": {
+        "h": 12,
+        "w": 16,
+        "x": 48,
+        "y": 68
+      }
+    },
+    {
+      "id": "",
+      "index": 58,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 1,
+        "y": 171
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 32,
+        "y": 64
+      },
+      "sourceSpriteIndex": 58,
+      "tags": {
+        "green_enemy_dead": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 8.0,
+        "y": -3.0
+      },
+      "trimmedRect": {
+        "h": 5,
+        "w": 16,
+        "x": 1,
+        "y": 182
+      },
+      "trimmedSourceRect": {
+        "h": 5,
+        "w": 16,
+        "x": 32,
+        "y": 75
+      }
+    },
+    {
+      "id": "",
+      "index": 59,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 72,
+        "y": 151
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 16,
+        "y": 64
+      },
+      "sourceSpriteIndex": 59,
+      "tags": {
+        "green_enemy_idle": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 8.0,
+        "y": 5.0
+      },
+      "trimmedRect": {
+        "h": 13,
+        "w": 16,
+        "x": 72,
+        "y": 154
+      },
+      "trimmedSourceRect": {
+        "h": 13,
+        "w": 16,
+        "x": 16,
+        "y": 67
+      }
+    },
+    {
+      "id": "",
+      "index": 60,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 121,
+        "y": 151
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 0,
+        "y": 64
+      },
+      "sourceSpriteIndex": 60,
+      "tags": {
+        "green_enemy_idle": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 8.0,
+        "y": 5.0
+      },
+      "trimmedRect": {
+        "h": 13,
+        "w": 16,
+        "x": 121,
+        "y": 154
+      },
+      "trimmedSourceRect": {
+        "h": 13,
+        "w": 16,
+        "x": 0,
+        "y": 67
+      }
+    },
+    {
+      "id": "",
+      "index": 61,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 45,
+        "y": 139
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 64,
+        "y": 48
+      },
+      "sourceSpriteIndex": 61,
+      "tags": {
+        "red_enemy_run": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 6.0,
+        "y": 7.0
+      },
+      "trimmedRect": {
+        "h": 14,
+        "w": 12,
+        "x": 47,
+        "y": 140
+      },
+      "trimmedSourceRect": {
+        "h": 14,
+        "w": 12,
+        "x": 66,
+        "y": 49
+      }
+    },
+    {
+      "id": "",
+      "index": 62,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 32,
+        "y": 138
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 48,
+        "y": 48
+      },
+      "sourceSpriteIndex": 62,
+      "tags": {
+        "red_enemy_run": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 6.0,
+        "y": 6.0
+      },
+      "trimmedRect": {
+        "h": 14,
+        "w": 12,
+        "x": 34,
+        "y": 140
+      },
+      "trimmedSourceRect": {
+        "h": 14,
+        "w": 12,
+        "x": 50,
+        "y": 50
+      }
+    },
+    {
+      "id": "",
+      "index": 63,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 134,
+        "y": 137
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 32,
+        "y": 48
+      },
+      "sourceSpriteIndex": 63,
+      "tags": {
+        "red_enemy_run": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 6.0,
+        "y": 6.0
+      },
+      "trimmedRect": {
+        "h": 14,
+        "w": 12,
+        "x": 136,
+        "y": 139
+      },
+      "trimmedSourceRect": {
+        "h": 14,
+        "w": 12,
+        "x": 34,
+        "y": 50
+      }
+    },
+    {
+      "id": "",
+      "index": 64,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 92,
+        "y": 123
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 16,
+        "y": 48
+      },
+      "sourceSpriteIndex": 64,
+      "tags": {
+        "red_enemy_run": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 7.0,
+        "y": 7.0
+      },
+      "trimmedRect": {
+        "h": 14,
+        "w": 13,
+        "x": 93,
+        "y": 124
+      },
+      "trimmedSourceRect": {
+        "h": 14,
+        "w": 13,
+        "x": 17,
+        "y": 49
+      }
+    },
+    {
+      "id": "",
+      "index": 65,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 89,
+        "y": 137
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 0,
+        "y": 48
+      },
+      "sourceSpriteIndex": 65,
+      "tags": {
+        "red_enemy_run": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 6.0,
+        "y": 6.0
+      },
+      "trimmedRect": {
+        "h": 14,
+        "w": 12,
+        "x": 91,
+        "y": 139
+      },
+      "trimmedSourceRect": {
+        "h": 14,
+        "w": 12,
+        "x": 2,
+        "y": 50
+      }
+    },
+    {
+      "id": "",
+      "index": 66,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 77,
+        "y": 123
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 48,
+        "y": 32
+      },
+      "sourceSpriteIndex": 66,
+      "tags": {
+        "red_enemy_jump": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 7.0,
+        "y": 7.0
+      },
+      "trimmedRect": {
+        "h": 14,
+        "w": 14,
+        "x": 78,
+        "y": 124
+      },
+      "trimmedSourceRect": {
+        "h": 14,
+        "w": 14,
+        "x": 49,
+        "y": 33
+      }
+    },
+    {
+      "id": "",
+      "index": 67,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 46,
+        "y": 152
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 32,
+        "y": 32
+      },
+      "sourceSpriteIndex": 67,
+      "tags": {
+        "red_enemy_dead": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 6.0,
+        "y": 5.0
+      },
+      "trimmedRect": {
+        "h": 13,
+        "w": 12,
+        "x": 48,
+        "y": 155
+      },
+      "trimmedSourceRect": {
+        "h": 13,
+        "w": 12,
+        "x": 34,
+        "y": 35
+      }
+    },
+    {
+      "id": "",
+      "index": 68,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 121,
+        "y": 137
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 16,
+        "y": 32
+      },
+      "sourceSpriteIndex": 68,
+      "tags": {
+        "red_enemy_idle": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 6.0,
+        "y": 6.0
+      },
+      "trimmedRect": {
+        "h": 14,
+        "w": 12,
+        "x": 123,
+        "y": 139
+      },
+      "trimmedSourceRect": {
+        "h": 14,
+        "w": 12,
+        "x": 18,
+        "y": 34
+      }
+    },
+    {
+      "id": "",
+      "index": 69,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 76,
+        "y": 137
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 0,
+        "y": 32
+      },
+      "sourceSpriteIndex": 69,
+      "tags": {
+        "red_enemy_idle": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 6.0,
+        "y": 6.0
+      },
+      "trimmedRect": {
+        "h": 14,
+        "w": 12,
+        "x": 78,
+        "y": 139
+      },
+      "trimmedSourceRect": {
+        "h": 14,
+        "w": 12,
+        "x": 2,
+        "y": 34
+      }
+    },
+    {
+      "id": "",
+      "index": 70,
+      "pivot": {
+        "x": 8.0,
+        "y": 8.0
+      },
+      "rect": {
+        "h": 16,
+        "w": 16,
+        "x": 98,
+        "y": 164
+      },
+      "rotated": false,
+      "sourceFilename": "Old enemies 2.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 16,
+        "w": 16,
+        "x": 64,
+        "y": 16
+      },
+      "sourceSpriteIndex": 70,
+      "tags": {
+        "blue_enemy_run": ""
+      },
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 6.0,
+        "y": 4.0
+      },
+      "trimmedRect": {
+        "h": 11,
+        "w": 12,
+        "x": 100,
+        "y": 168
+      },
+      "trimmedSourceRect": {
+        "h": 11,
+        "w": 12,
+        "x": 66,
+        "y": 20
+      }
+    },
+    {
+      "id": "banner_bottom_1",
+      "index": 71,
+      "pivot": {
+        "x": 16.0,
+        "y": 16.0
+      },
+      "rect": {
+        "h": 32,
+        "w": 32,
+        "x": 52,
+        "y": 98
+      },
+      "rotated": false,
+      "sourceFilename": "Decorations (32x32).png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 32,
+        "w": 32,
+        "x": 0,
+        "y": 64
+      },
+      "sourceSpriteIndex": 71,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 13.0,
+        "y": 16.0
+      },
+      "trimmedRect": {
+        "h": 25,
+        "w": 26,
+        "x": 55,
+        "y": 98
+      },
+      "trimmedSourceRect": {
+        "h": 25,
+        "w": 26,
+        "x": 3,
+        "y": 64
+      }
+    },
+    {
+      "id": "banner_bottom_2",
+      "index": 72,
+      "pivot": {
+        "x": 16.0,
+        "y": 16.0
+      },
+      "rect": {
+        "h": 32,
+        "w": 32,
+        "x": 79,
+        "y": 98
+      },
+      "rotated": false,
+      "sourceFilename": "Decorations (32x32).png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 32,
+        "w": 32,
+        "x": 0,
+        "y": 96
+      },
+      "sourceSpriteIndex": 72,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 13.0,
+        "y": 16.0
+      },
+      "trimmedRect": {
+        "h": 25,
+        "w": 26,
+        "x": 82,
+        "y": 98
+      },
+      "trimmedSourceRect": {
+        "h": 25,
+        "w": 26,
+        "x": 3,
+        "y": 96
+      }
+    },
+    {
+      "id": "banner_middle",
+      "index": 73,
+      "pivot": {
+        "x": 16.0,
+        "y": 16.0
+      },
+      "rect": {
+        "h": 32,
+        "w": 32,
+        "x": -2,
+        "y": 79
+      },
+      "rotated": false,
+      "sourceFilename": "Decorations (32x32).png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 32,
+        "w": 32,
+        "x": 0,
+        "y": 32
+      },
+      "sourceSpriteIndex": 73,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 13.0,
+        "y": 16.0
+      },
+      "trimmedRect": {
+        "h": 32,
+        "w": 26,
+        "x": 1,
+        "y": 79
+      },
+      "trimmedSourceRect": {
+        "h": 32,
+        "w": 26,
+        "x": 3,
+        "y": 32
+      }
+    },
+    {
+      "id": "banner_top",
+      "index": 74,
+      "pivot": {
+        "x": 16.0,
+        "y": 16.0
+      },
+      "rect": {
+        "h": 32,
+        "w": 32,
+        "x": 25,
+        "y": 79
+      },
+      "rotated": false,
+      "sourceFilename": "Decorations (32x32).png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 32,
+        "w": 32,
+        "x": 0,
+        "y": 0
+      },
+      "sourceSpriteIndex": 74,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 13.0,
+        "y": 16.0
+      },
+      "trimmedRect": {
+        "h": 32,
+        "w": 26,
+        "x": 28,
+        "y": 79
+      },
+      "trimmedSourceRect": {
+        "h": 32,
+        "w": 26,
+        "x": 3,
+        "y": 0
+      }
+    },
+    {
+      "id": "orc_attack_0",
+      "index": 75,
+      "pivot": {
+        "x": 7.5,
+        "y": 7.5
+      },
+      "rect": {
+        "h": 15,
+        "w": 15,
+        "x": 8,
+        "y": 170
+      },
+      "rotated": false,
+      "sourceFilename": "Orc Attack/Frame01.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 15,
+        "w": 15,
+        "x": 0,
+        "y": 0
+      },
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 1.5,
+        "y": 3.5
+      },
+      "trimmedRect": {
+        "h": 7,
+        "w": 8,
+        "x": 14,
+        "y": 174
+      },
+      "trimmedSourceRect": {
+        "h": 7,
+        "w": 8,
+        "x": 6,
+        "y": 4
+      }
+    },
+    {
+      "id": "orc_attack_1",
+      "index": 76,
+      "pivot": {
+        "x": 7.5,
+        "y": 7.5
+      },
+      "rect": {
+        "h": 15,
+        "w": 15,
+        "x": 0,
+        "y": 170
+      },
+      "rotated": false,
+      "sourceFilename": "Orc Attack/Frame02.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 15,
+        "w": 15,
+        "x": 0,
+        "y": 0
+      },
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 6.5,
+        "y": 3.5
+      },
+      "trimmedRect": {
+        "h": 7,
+        "w": 12,
+        "x": 1,
+        "y": 174
+      },
+      "trimmedSourceRect": {
+        "h": 7,
+        "w": 12,
+        "x": 1,
+        "y": 4
+      }
+    },
+    {
+      "id": "orc_attack_2",
+      "index": 77,
+      "pivot": {
+        "x": 7.5,
+        "y": 7.5
+      },
+      "rect": {
+        "h": 15,
+        "w": 15,
+        "x": 44,
+        "y": 166
+      },
+      "rotated": false,
+      "sourceFilename": "Orc Attack/Frame03.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 15,
+        "w": 15,
+        "x": 0,
+        "y": 0
+      },
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 6.5,
+        "y": 4.5
+      },
+      "trimmedRect": {
+        "h": 8,
+        "w": 12,
+        "x": 45,
+        "y": 169
+      },
+      "trimmedSourceRect": {
+        "h": 8,
+        "w": 12,
+        "x": 1,
+        "y": 3
+      }
+    },
+    {
+      "id": "orc_attack_3",
+      "index": 78,
+      "pivot": {
+        "x": 7.5,
+        "y": 7.5
+      },
+      "rect": {
+        "h": 15,
+        "w": 15,
+        "x": 121,
+        "y": 165
+      },
+      "rotated": false,
+      "sourceFilename": "Orc Attack/Frame04.png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 15,
+        "w": 15,
+        "x": 0,
+        "y": 0
+      },
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 2.5,
+        "y": 4.5
+      },
+      "trimmedRect": {
+        "h": 8,
+        "w": 8,
+        "x": 126,
+        "y": 168
+      },
+      "trimmedSourceRect": {
+        "h": 8,
+        "w": 8,
+        "x": 5,
+        "y": 3
+      }
+    },
+    {
+      "id": "platform_1_left",
+      "index": 79,
+      "pivot": {
+        "x": 16.0,
+        "y": 16.0
+      },
+      "rect": {
+        "h": 32,
+        "w": 32,
+        "x": 162,
+        "y": 169
+      },
+      "rotated": false,
+      "sourceFilename": "Decorations (32x32).png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 32,
+        "w": 32,
+        "x": 32,
+        "y": 0
+      },
+      "sourceSpriteIndex": 79,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 16.0,
+        "y": 16.0
+      },
+      "trimmedRect": {
+        "h": 7,
+        "w": 32,
+        "x": 162,
+        "y": 169
+      },
+      "trimmedSourceRect": {
+        "h": 7,
+        "w": 32,
+        "x": 32,
+        "y": 0
+      }
+    },
+    {
+      "id": "platform_1_middle",
+      "index": 80,
+      "pivot": {
+        "x": 16.0,
+        "y": 16.0
+      },
+      "rect": {
+        "h": 32,
+        "w": 32,
+        "x": 66,
+        "y": 180
+      },
+      "rotated": false,
+      "sourceFilename": "Decorations (32x32).png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 32,
+        "w": 32,
+        "x": 64,
+        "y": 0
+      },
+      "sourceSpriteIndex": 80,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 16.0,
+        "y": 16.0
+      },
+      "trimmedRect": {
+        "h": 6,
+        "w": 32,
+        "x": 66,
+        "y": 180
+      },
+      "trimmedSourceRect": {
+        "h": 6,
+        "w": 32,
+        "x": 64,
+        "y": 0
+      }
+    },
+    {
+      "id": "platform_1_right",
+      "index": 81,
+      "pivot": {
+        "x": 16.0,
+        "y": 16.0
+      },
+      "rect": {
+        "h": 32,
+        "w": 32,
+        "x": 126,
+        "y": 177
+      },
+      "rotated": false,
+      "sourceFilename": "Decorations (32x32).png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 32,
+        "w": 32,
+        "x": 96,
+        "y": 0
+      },
+      "sourceSpriteIndex": 81,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 16.0,
+        "y": 16.0
+      },
+      "trimmedRect": {
+        "h": 7,
+        "w": 32,
+        "x": 126,
+        "y": 177
+      },
+      "trimmedSourceRect": {
+        "h": 7,
+        "w": 32,
+        "x": 96,
+        "y": 0
+      }
+    },
+    {
+      "id": "platform_1_sole",
+      "index": 82,
+      "pivot": {
+        "x": 16.0,
+        "y": 16.0
+      },
+      "rect": {
+        "h": 32,
+        "w": 32,
+        "x": 159,
+        "y": 177
+      },
+      "rotated": false,
+      "sourceFilename": "Decorations (32x32).png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 32,
+        "w": 32,
+        "x": 128,
+        "y": 0
+      },
+      "sourceSpriteIndex": 82,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 16.0,
+        "y": 16.0
+      },
+      "trimmedRect": {
+        "h": 7,
+        "w": 32,
+        "x": 159,
+        "y": 177
+      },
+      "trimmedSourceRect": {
+        "h": 7,
+        "w": 32,
+        "x": 128,
+        "y": 0
+      }
+    },
+    {
+      "id": "platform_2_left",
+      "index": 83,
+      "pivot": {
+        "x": 16.0,
+        "y": 16.0
+      },
+      "rect": {
+        "h": 32,
+        "w": 32,
+        "x": 123,
+        "y": 123
+      },
+      "rotated": false,
+      "sourceFilename": "Decorations (32x32).png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 32,
+        "w": 32,
+        "x": 32,
+        "y": 32
+      },
+      "sourceSpriteIndex": 83,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 16.0,
+        "y": 16.0
+      },
+      "trimmedRect": {
+        "h": 15,
+        "w": 32,
+        "x": 123,
+        "y": 123
+      },
+      "trimmedSourceRect": {
+        "h": 15,
+        "w": 32,
+        "x": 32,
+        "y": 32
+      }
+    },
+    {
+      "id": "platform_2_middle",
+      "index": 84,
+      "pivot": {
+        "x": 16.0,
+        "y": 16.0
+      },
+      "rect": {
+        "h": 32,
+        "w": 32,
+        "x": 1,
+        "y": 133
+      },
+      "rotated": false,
+      "sourceFilename": "Decorations (32x32).png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 32,
+        "w": 32,
+        "x": 64,
+        "y": 32
+      },
+      "sourceSpriteIndex": 84,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 16.0,
+        "y": 16.0
+      },
+      "trimmedRect": {
+        "h": 14,
+        "w": 32,
+        "x": 1,
+        "y": 133
+      },
+      "trimmedSourceRect": {
+        "h": 14,
+        "w": 32,
+        "x": 64,
+        "y": 32
+      }
+    },
+    {
+      "id": "platform_2_right",
+      "index": 85,
+      "pivot": {
+        "x": 16.0,
+        "y": 16.0
+      },
+      "rect": {
+        "h": 32,
+        "w": 32,
+        "x": 45,
+        "y": 124
+      },
+      "rotated": false,
+      "sourceFilename": "Decorations (32x32).png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 32,
+        "w": 32,
+        "x": 96,
+        "y": 32
+      },
+      "sourceSpriteIndex": 85,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 16.0,
+        "y": 16.0
+      },
+      "trimmedRect": {
+        "h": 15,
+        "w": 32,
+        "x": 45,
+        "y": 124
+      },
+      "trimmedSourceRect": {
+        "h": 15,
+        "w": 32,
+        "x": 96,
+        "y": 32
+      }
+    },
+    {
+      "id": "platform_2_sole",
+      "index": 86,
+      "pivot": {
+        "x": 16.0,
+        "y": 16.0
+      },
+      "rect": {
+        "h": 32,
+        "w": 32,
+        "x": 156,
+        "y": 127
+      },
+      "rotated": false,
+      "sourceFilename": "Decorations (32x32).png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 32,
+        "w": 32,
+        "x": 128,
+        "y": 32
+      },
+      "sourceSpriteIndex": 86,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 16.0,
+        "y": 16.0
+      },
+      "trimmedRect": {
+        "h": 15,
+        "w": 32,
+        "x": 156,
+        "y": 127
+      },
+      "trimmedSourceRect": {
+        "h": 15,
+        "w": 32,
+        "x": 128,
+        "y": 32
+      }
+    },
+    {
+      "id": "window_1",
+      "index": 87,
+      "pivot": {
+        "x": 32.0,
+        "y": 32.0
+      },
+      "rect": {
+        "h": 64,
+        "w": 64,
+        "x": 105,
+        "y": -6
+      },
+      "rotated": false,
+      "sourceFilename": "Decorations (32x32).png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 64,
+        "w": 64,
+        "x": 32,
+        "y": 64
+      },
+      "sourceSpriteIndex": 87,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 23.0,
+        "y": 25.0
+      },
+      "trimmedRect": {
+        "h": 57,
+        "w": 55,
+        "x": 114,
+        "y": 1
+      },
+      "trimmedSourceRect": {
+        "h": 57,
+        "w": 55,
+        "x": 41,
+        "y": 71
+      }
+    },
+    {
+      "id": "window_2",
+      "index": 88,
+      "pivot": {
+        "x": 32.0,
+        "y": 32.0
+      },
+      "rect": {
+        "h": 64,
+        "w": 64,
+        "x": 49,
+        "y": -6
+      },
+      "rotated": false,
+      "sourceFilename": "Decorations (32x32).png",
+      "sourcePath": "",
+      "sourceRect": {
+        "h": 64,
+        "w": 64,
+        "x": 96,
+        "y": 64
+      },
+      "sourceSpriteIndex": 88,
+      "tags": {},
+      "textureFilename": "spright0.png",
+      "trimmedPivot": {
+        "x": 23.0,
+        "y": 25.0
+      },
+      "trimmedRect": {
+        "h": 57,
+        "w": 55,
+        "x": 58,
+        "y": 1
+      },
+      "trimmedSourceRect": {
+        "h": 57,
+        "w": 55,
+        "x": 105,
+        "y": 71
+      }
+    }
+  ],
+  "tags": [
+    {
+      "id": "blue_enemy_dead",
+      "sprites": [
+        {
+          "id": "",
+          "index": 43,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 111,
+            "y": 169
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 32,
+            "y": 0
+          },
+          "sourceSpriteIndex": 43,
+          "tags": {
+            "blue_enemy_dead": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": -3.0
+          },
+          "trimmedRect": {
+            "h": 5,
+            "w": 12,
+            "x": 113,
+            "y": 180
+          },
+          "trimmedSourceRect": {
+            "h": 5,
+            "w": 12,
+            "x": 34,
+            "y": 11
+          }
+        }
+      ]
+    },
+    {
+      "id": "blue_enemy_idle",
+      "sprites": [
+        {
+          "id": "",
+          "index": 44,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 12,
+            "y": 157
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 16,
+            "y": 0
+          },
+          "sourceSpriteIndex": 44,
+          "tags": {
+            "blue_enemy_idle": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 3.0
+          },
+          "trimmedRect": {
+            "h": 11,
+            "w": 12,
+            "x": 14,
+            "y": 162
+          },
+          "trimmedSourceRect": {
+            "h": 11,
+            "w": 12,
+            "x": 18,
+            "y": 5
+          }
+        },
+        {
+          "id": "",
+          "index": 45,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 72,
+            "y": 163
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 0,
+            "y": 0
+          },
+          "sourceSpriteIndex": 45,
+          "tags": {
+            "blue_enemy_idle": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 3.0
+          },
+          "trimmedRect": {
+            "h": 11,
+            "w": 12,
+            "x": 74,
+            "y": 168
+          },
+          "trimmedSourceRect": {
+            "h": 11,
+            "w": 12,
+            "x": 2,
+            "y": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "blue_enemy_jump",
+      "sprites": [
+        {
+          "id": "",
+          "index": 42,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 161,
+            "y": 153
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 48,
+            "y": 0
+          },
+          "sourceSpriteIndex": 42,
+          "tags": {
+            "blue_enemy_jump": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 7.0,
+            "y": 4.0
+          },
+          "trimmedRect": {
+            "h": 11,
+            "w": 14,
+            "x": 162,
+            "y": 157
+          },
+          "trimmedSourceRect": {
+            "h": 11,
+            "w": 14,
+            "x": 49,
+            "y": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "blue_enemy_run",
+      "sprites": [
+        {
+          "id": "",
+          "index": 38,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 85,
+            "y": 163
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 48,
+            "y": 16
+          },
+          "sourceSpriteIndex": 38,
+          "tags": {
+            "blue_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 3.0
+          },
+          "trimmedRect": {
+            "h": 11,
+            "w": 12,
+            "x": 87,
+            "y": 168
+          },
+          "trimmedSourceRect": {
+            "h": 11,
+            "w": 12,
+            "x": 50,
+            "y": 21
+          }
+        },
+        {
+          "id": "",
+          "index": 40,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 176,
+            "y": 153
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 16,
+            "y": 16
+          },
+          "sourceSpriteIndex": 40,
+          "tags": {
+            "blue_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 7.0,
+            "y": 4.0
+          },
+          "trimmedRect": {
+            "h": 11,
+            "w": 13,
+            "x": 177,
+            "y": 157
+          },
+          "trimmedSourceRect": {
+            "h": 11,
+            "w": 13,
+            "x": 17,
+            "y": 20
+          }
+        },
+        {
+          "id": "",
+          "index": 41,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": -1,
+            "y": 157
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 0,
+            "y": 16
+          },
+          "sourceSpriteIndex": 41,
+          "tags": {
+            "blue_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 3.0
+          },
+          "trimmedRect": {
+            "h": 11,
+            "w": 12,
+            "x": 1,
+            "y": 162
+          },
+          "trimmedSourceRect": {
+            "h": 11,
+            "w": 12,
+            "x": 2,
+            "y": 21
+          }
+        },
+        {
+          "id": "",
+          "index": 47,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 59,
+            "y": 163
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 32,
+            "y": 16
+          },
+          "sourceSpriteIndex": 47,
+          "tags": {
+            "blue_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 3.0
+          },
+          "trimmedRect": {
+            "h": 11,
+            "w": 12,
+            "x": 61,
+            "y": 168
+          },
+          "trimmedSourceRect": {
+            "h": 11,
+            "w": 12,
+            "x": 34,
+            "y": 21
+          }
+        },
+        {
+          "id": "",
+          "index": 56,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 111,
+            "y": 163
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 80,
+            "y": 16
+          },
+          "sourceSpriteIndex": 56,
+          "tags": {
+            "blue_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 3.0
+          },
+          "trimmedRect": {
+            "h": 11,
+            "w": 12,
+            "x": 113,
+            "y": 168
+          },
+          "trimmedSourceRect": {
+            "h": 11,
+            "w": 12,
+            "x": 82,
+            "y": 21
+          }
+        },
+        {
+          "id": "",
+          "index": 70,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 98,
+            "y": 164
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 64,
+            "y": 16
+          },
+          "sourceSpriteIndex": 70,
+          "tags": {
+            "blue_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 4.0
+          },
+          "trimmedRect": {
+            "h": 11,
+            "w": 12,
+            "x": 100,
+            "y": 168
+          },
+          "trimmedSourceRect": {
+            "h": 11,
+            "w": 12,
+            "x": 66,
+            "y": 20
+          }
+        }
+      ]
+    },
+    {
+      "id": "green_enemy_dead",
+      "sprites": [
+        {
+          "id": "",
+          "index": 58,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 1,
+            "y": 171
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 32,
+            "y": 64
+          },
+          "sourceSpriteIndex": 58,
+          "tags": {
+            "green_enemy_dead": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 8.0,
+            "y": -3.0
+          },
+          "trimmedRect": {
+            "h": 5,
+            "w": 16,
+            "x": 1,
+            "y": 182
+          },
+          "trimmedSourceRect": {
+            "h": 5,
+            "w": 16,
+            "x": 32,
+            "y": 75
+          }
+        }
+      ]
+    },
+    {
+      "id": "green_enemy_idle",
+      "sprites": [
+        {
+          "id": "",
+          "index": 59,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 72,
+            "y": 151
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 16,
+            "y": 64
+          },
+          "sourceSpriteIndex": 59,
+          "tags": {
+            "green_enemy_idle": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 8.0,
+            "y": 5.0
+          },
+          "trimmedRect": {
+            "h": 13,
+            "w": 16,
+            "x": 72,
+            "y": 154
+          },
+          "trimmedSourceRect": {
+            "h": 13,
+            "w": 16,
+            "x": 16,
+            "y": 67
+          }
+        },
+        {
+          "id": "",
+          "index": 60,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 121,
+            "y": 151
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 0,
+            "y": 64
+          },
+          "sourceSpriteIndex": 60,
+          "tags": {
+            "green_enemy_idle": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 8.0,
+            "y": 5.0
+          },
+          "trimmedRect": {
+            "h": 13,
+            "w": 16,
+            "x": 121,
+            "y": 154
+          },
+          "trimmedSourceRect": {
+            "h": 13,
+            "w": 16,
+            "x": 0,
+            "y": 67
+          }
+        }
+      ]
+    },
+    {
+      "id": "green_enemy_jump",
+      "sprites": [
+        {
+          "id": "",
+          "index": 57,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 104,
+            "y": 151
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 48,
+            "y": 64
+          },
+          "sourceSpriteIndex": 57,
+          "tags": {
+            "green_enemy_jump": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 8.0,
+            "y": 4.0
+          },
+          "trimmedRect": {
+            "h": 12,
+            "w": 16,
+            "x": 104,
+            "y": 155
+          },
+          "trimmedSourceRect": {
+            "h": 12,
+            "w": 16,
+            "x": 48,
+            "y": 68
+          }
+        }
+      ]
+    },
+    {
+      "id": "green_enemy_run",
+      "sprites": [
+        {
+          "id": "",
+          "index": 15,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 166,
+            "y": 140
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 80,
+            "y": 80
+          },
+          "sourceSpriteIndex": 15,
+          "tags": {
+            "green_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 8.0,
+            "y": 5.0
+          },
+          "trimmedRect": {
+            "h": 13,
+            "w": 16,
+            "x": 166,
+            "y": 143
+          },
+          "trimmedSourceRect": {
+            "h": 13,
+            "w": 16,
+            "x": 80,
+            "y": 83
+          }
+        },
+        {
+          "id": "",
+          "index": 16,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 149,
+            "y": 141
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 64,
+            "y": 80
+          },
+          "sourceSpriteIndex": 16,
+          "tags": {
+            "green_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 8.0,
+            "y": 6.0
+          },
+          "trimmedRect": {
+            "h": 13,
+            "w": 16,
+            "x": 149,
+            "y": 143
+          },
+          "trimmedSourceRect": {
+            "h": 13,
+            "w": 16,
+            "x": 64,
+            "y": 82
+          }
+        },
+        {
+          "id": "",
+          "index": 17,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 104,
+            "y": 138
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 48,
+            "y": 80
+          },
+          "sourceSpriteIndex": 17,
+          "tags": {
+            "green_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 8.0,
+            "y": 5.0
+          },
+          "trimmedRect": {
+            "h": 13,
+            "w": 16,
+            "x": 104,
+            "y": 141
+          },
+          "trimmedSourceRect": {
+            "h": 13,
+            "w": 16,
+            "x": 48,
+            "y": 83
+          }
+        },
+        {
+          "id": "",
+          "index": 18,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 182,
+            "y": 140
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 32,
+            "y": 80
+          },
+          "sourceSpriteIndex": 18,
+          "tags": {
+            "green_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 7.0,
+            "y": 5.0
+          },
+          "trimmedRect": {
+            "h": 13,
+            "w": 14,
+            "x": 183,
+            "y": 143
+          },
+          "trimmedSourceRect": {
+            "h": 13,
+            "w": 14,
+            "x": 33,
+            "y": 83
+          }
+        },
+        {
+          "id": "",
+          "index": 28,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 88,
+            "y": 152
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 16,
+            "y": 80
+          },
+          "sourceSpriteIndex": 28,
+          "tags": {
+            "green_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 7.0,
+            "y": 6.0
+          },
+          "trimmedRect": {
+            "h": 13,
+            "w": 14,
+            "x": 89,
+            "y": 154
+          },
+          "trimmedSourceRect": {
+            "h": 13,
+            "w": 14,
+            "x": 17,
+            "y": 82
+          }
+        },
+        {
+          "id": "",
+          "index": 39,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 1,
+            "y": 145
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 0,
+            "y": 80
+          },
+          "sourceSpriteIndex": 39,
+          "tags": {
+            "green_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 8.0,
+            "y": 5.0
+          },
+          "trimmedRect": {
+            "h": 13,
+            "w": 16,
+            "x": 1,
+            "y": 148
+          },
+          "trimmedSourceRect": {
+            "h": 13,
+            "w": 16,
+            "x": 0,
+            "y": 83
+          }
+        }
+      ]
+    },
+    {
+      "id": "red_enemy_dead",
+      "sprites": [
+        {
+          "id": "",
+          "index": 67,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 46,
+            "y": 152
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 32,
+            "y": 32
+          },
+          "sourceSpriteIndex": 67,
+          "tags": {
+            "red_enemy_dead": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 5.0
+          },
+          "trimmedRect": {
+            "h": 13,
+            "w": 12,
+            "x": 48,
+            "y": 155
+          },
+          "trimmedSourceRect": {
+            "h": 13,
+            "w": 12,
+            "x": 34,
+            "y": 35
+          }
+        }
+      ]
+    },
+    {
+      "id": "red_enemy_idle",
+      "sprites": [
+        {
+          "id": "",
+          "index": 68,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 121,
+            "y": 137
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 16,
+            "y": 32
+          },
+          "sourceSpriteIndex": 68,
+          "tags": {
+            "red_enemy_idle": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 6.0
+          },
+          "trimmedRect": {
+            "h": 14,
+            "w": 12,
+            "x": 123,
+            "y": 139
+          },
+          "trimmedSourceRect": {
+            "h": 14,
+            "w": 12,
+            "x": 18,
+            "y": 34
+          }
+        },
+        {
+          "id": "",
+          "index": 69,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 76,
+            "y": 137
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 0,
+            "y": 32
+          },
+          "sourceSpriteIndex": 69,
+          "tags": {
+            "red_enemy_idle": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 6.0
+          },
+          "trimmedRect": {
+            "h": 14,
+            "w": 12,
+            "x": 78,
+            "y": 139
+          },
+          "trimmedSourceRect": {
+            "h": 14,
+            "w": 12,
+            "x": 2,
+            "y": 34
+          }
+        }
+      ]
+    },
+    {
+      "id": "red_enemy_jump",
+      "sprites": [
+        {
+          "id": "",
+          "index": 66,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 77,
+            "y": 123
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 48,
+            "y": 32
+          },
+          "sourceSpriteIndex": 66,
+          "tags": {
+            "red_enemy_jump": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 7.0,
+            "y": 7.0
+          },
+          "trimmedRect": {
+            "h": 14,
+            "w": 14,
+            "x": 78,
+            "y": 124
+          },
+          "trimmedSourceRect": {
+            "h": 14,
+            "w": 14,
+            "x": 49,
+            "y": 33
+          }
+        }
+      ]
+    },
+    {
+      "id": "red_enemy_run",
+      "sprites": [
+        {
+          "id": "",
+          "index": 61,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 45,
+            "y": 139
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 64,
+            "y": 48
+          },
+          "sourceSpriteIndex": 61,
+          "tags": {
+            "red_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 7.0
+          },
+          "trimmedRect": {
+            "h": 14,
+            "w": 12,
+            "x": 47,
+            "y": 140
+          },
+          "trimmedSourceRect": {
+            "h": 14,
+            "w": 12,
+            "x": 66,
+            "y": 49
+          }
+        },
+        {
+          "id": "",
+          "index": 62,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 32,
+            "y": 138
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 48,
+            "y": 48
+          },
+          "sourceSpriteIndex": 62,
+          "tags": {
+            "red_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 6.0
+          },
+          "trimmedRect": {
+            "h": 14,
+            "w": 12,
+            "x": 34,
+            "y": 140
+          },
+          "trimmedSourceRect": {
+            "h": 14,
+            "w": 12,
+            "x": 50,
+            "y": 50
+          }
+        },
+        {
+          "id": "",
+          "index": 63,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 134,
+            "y": 137
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 32,
+            "y": 48
+          },
+          "sourceSpriteIndex": 63,
+          "tags": {
+            "red_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 6.0
+          },
+          "trimmedRect": {
+            "h": 14,
+            "w": 12,
+            "x": 136,
+            "y": 139
+          },
+          "trimmedSourceRect": {
+            "h": 14,
+            "w": 12,
+            "x": 34,
+            "y": 50
+          }
+        },
+        {
+          "id": "",
+          "index": 64,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 92,
+            "y": 123
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 16,
+            "y": 48
+          },
+          "sourceSpriteIndex": 64,
+          "tags": {
+            "red_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 7.0,
+            "y": 7.0
+          },
+          "trimmedRect": {
+            "h": 14,
+            "w": 13,
+            "x": 93,
+            "y": 124
+          },
+          "trimmedSourceRect": {
+            "h": 14,
+            "w": 13,
+            "x": 17,
+            "y": 49
+          }
+        },
+        {
+          "id": "",
+          "index": 65,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 89,
+            "y": 137
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 0,
+            "y": 48
+          },
+          "sourceSpriteIndex": 65,
+          "tags": {
+            "red_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 6.0
+          },
+          "trimmedRect": {
+            "h": 14,
+            "w": 12,
+            "x": 91,
+            "y": 139
+          },
+          "trimmedSourceRect": {
+            "h": 14,
+            "w": 12,
+            "x": 2,
+            "y": 50
+          }
+        }
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "filename": "spright0.png",
+      "height": 189,
+      "sprites": [
+        {
+          "id": "",
+          "index": 0,
+          "pivot": {
+            "x": 3.0,
+            "y": 17.0
+          },
+          "rect": {
+            "h": 34,
+            "w": 6,
+            "x": 188,
+            "y": 42
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 34,
+            "w": 6,
+            "x": 97,
+            "y": 9
+          },
+          "sourceSpriteIndex": 0,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 3.0,
+            "y": 17.0
+          },
+          "trimmedRect": {
+            "h": 34,
+            "w": 6,
+            "x": 188,
+            "y": 42
+          },
+          "trimmedSourceRect": {
+            "h": 34,
+            "w": 6,
+            "x": 97,
+            "y": 9
+          }
+        },
+        {
+          "id": "",
+          "index": 1,
+          "pivot": {
+            "x": 3.0,
+            "y": 3.5
+          },
+          "rect": {
+            "h": 7,
+            "w": 6,
+            "x": 37,
+            "y": 179
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 7,
+            "w": 6,
+            "x": 87,
+            "y": 50
+          },
+          "sourceSpriteIndex": 1,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 3.0,
+            "y": 3.5
+          },
+          "trimmedRect": {
+            "h": 7,
+            "w": 6,
+            "x": 37,
+            "y": 179
+          },
+          "trimmedSourceRect": {
+            "h": 7,
+            "w": 6,
+            "x": 87,
+            "y": 50
+          }
+        },
+        {
+          "id": "",
+          "index": 2,
+          "pivot": {
+            "x": 3.0,
+            "y": 3.5
+          },
+          "rect": {
+            "h": 7,
+            "w": 6,
+            "x": 59,
+            "y": 180
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 7,
+            "w": 6,
+            "x": 79,
+            "y": 50
+          },
+          "sourceSpriteIndex": 2,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 3.0,
+            "y": 3.5
+          },
+          "trimmedRect": {
+            "h": 7,
+            "w": 6,
+            "x": 59,
+            "y": 180
+          },
+          "trimmedSourceRect": {
+            "h": 7,
+            "w": 6,
+            "x": 79,
+            "y": 50
+          }
+        },
+        {
+          "id": "",
+          "index": 3,
+          "pivot": {
+            "x": 5.5,
+            "y": 33.5
+          },
+          "rect": {
+            "h": 67,
+            "w": 11,
+            "x": 34,
+            "y": 1
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 67,
+            "w": 11,
+            "x": 141,
+            "y": 5
+          },
+          "sourceSpriteIndex": 3,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 5.5,
+            "y": 33.5
+          },
+          "trimmedRect": {
+            "h": 67,
+            "w": 11,
+            "x": 34,
+            "y": 1
+          },
+          "trimmedSourceRect": {
+            "h": 67,
+            "w": 11,
+            "x": 141,
+            "y": 5
+          }
+        },
+        {
+          "id": "",
+          "index": 4,
+          "pivot": {
+            "x": 2.5,
+            "y": 33.5
+          },
+          "rect": {
+            "h": 67,
+            "w": 5,
+            "x": 52,
+            "y": 1
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 67,
+            "w": 5,
+            "x": 132,
+            "y": 5
+          },
+          "sourceSpriteIndex": 4,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 2.5,
+            "y": 33.5
+          },
+          "trimmedRect": {
+            "h": 67,
+            "w": 5,
+            "x": 52,
+            "y": 1
+          },
+          "trimmedSourceRect": {
+            "h": 67,
+            "w": 5,
+            "x": 132,
+            "y": 5
+          }
+        },
+        {
+          "id": "",
+          "index": 5,
+          "pivot": {
+            "x": 2.5,
+            "y": 33.5
+          },
+          "rect": {
+            "h": 67,
+            "w": 5,
+            "x": 46,
+            "y": 1
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 67,
+            "w": 5,
+            "x": 121,
+            "y": 5
+          },
+          "sourceSpriteIndex": 5,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 2.5,
+            "y": 33.5
+          },
+          "trimmedRect": {
+            "h": 67,
+            "w": 5,
+            "x": 46,
+            "y": 1
+          },
+          "trimmedSourceRect": {
+            "h": 67,
+            "w": 5,
+            "x": 121,
+            "y": 5
+          }
+        },
+        {
+          "id": "",
+          "index": 6,
+          "pivot": {
+            "x": 16.0,
+            "y": 38.5
+          },
+          "rect": {
+            "h": 77,
+            "w": 32,
+            "x": 1,
+            "y": 1
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 77,
+            "w": 32,
+            "x": 44,
+            "y": 8
+          },
+          "sourceSpriteIndex": 6,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 16.0,
+            "y": 38.5
+          },
+          "trimmedRect": {
+            "h": 77,
+            "w": 32,
+            "x": 1,
+            "y": 1
+          },
+          "trimmedSourceRect": {
+            "h": 77,
+            "w": 32,
+            "x": 44,
+            "y": 8
+          }
+        },
+        {
+          "id": "",
+          "index": 7,
+          "pivot": {
+            "x": 8.5,
+            "y": 25.5
+          },
+          "rect": {
+            "h": 51,
+            "w": 17,
+            "x": 170,
+            "y": 54
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 51,
+            "w": 17,
+            "x": 25,
+            "y": 18
+          },
+          "sourceSpriteIndex": 7,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 8.5,
+            "y": 25.5
+          },
+          "trimmedRect": {
+            "h": 51,
+            "w": 17,
+            "x": 170,
+            "y": 54
+          },
+          "trimmedSourceRect": {
+            "h": 51,
+            "w": 17,
+            "x": 25,
+            "y": 18
+          }
+        },
+        {
+          "id": "",
+          "index": 8,
+          "pivot": {
+            "x": 8.5,
+            "y": 26.0
+          },
+          "rect": {
+            "h": 52,
+            "w": 17,
+            "x": 170,
+            "y": 1
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 52,
+            "w": 17,
+            "x": 6,
+            "y": 17
+          },
+          "sourceSpriteIndex": 8,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 8.5,
+            "y": 26.0
+          },
+          "trimmedRect": {
+            "h": 52,
+            "w": 17,
+            "x": 170,
+            "y": 1
+          },
+          "trimmedSourceRect": {
+            "h": 52,
+            "w": 17,
+            "x": 6,
+            "y": 17
+          }
+        },
+        {
+          "id": "",
+          "index": 9,
+          "pivot": {
+            "x": 3.5,
+            "y": 20.0
+          },
+          "rect": {
+            "h": 40,
+            "w": 7,
+            "x": 188,
+            "y": 1
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 40,
+            "w": 7,
+            "x": 107,
+            "y": 8
+          },
+          "sourceSpriteIndex": 9,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 3.5,
+            "y": 20.0
+          },
+          "trimmedRect": {
+            "h": 40,
+            "w": 7,
+            "x": 188,
+            "y": 1
+          },
+          "trimmedSourceRect": {
+            "h": 40,
+            "w": 7,
+            "x": 107,
+            "y": 8
+          }
+        },
+        {
+          "id": "",
+          "index": 10,
+          "pivot": {
+            "x": 3.0,
+            "y": 3.5
+          },
+          "rect": {
+            "h": 7,
+            "w": 6,
+            "x": 30,
+            "y": 179
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 7,
+            "w": 6,
+            "x": 96,
+            "y": 50
+          },
+          "sourceSpriteIndex": 10,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 3.0,
+            "y": 3.5
+          },
+          "trimmedRect": {
+            "h": 7,
+            "w": 6,
+            "x": 30,
+            "y": 179
+          },
+          "trimmedSourceRect": {
+            "h": 7,
+            "w": 6,
+            "x": 96,
+            "y": 50
+          }
+        },
+        {
+          "id": "",
+          "index": 11,
+          "pivot": {
+            "x": 2.0,
+            "y": 12.0
+          },
+          "rect": {
+            "h": 24,
+            "w": 4,
+            "x": 159,
+            "y": 98
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 24,
+            "w": 4,
+            "x": 88,
+            "y": 12
+          },
+          "sourceSpriteIndex": 11,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 2.0,
+            "y": 12.0
+          },
+          "trimmedRect": {
+            "h": 24,
+            "w": 4,
+            "x": 159,
+            "y": 98
+          },
+          "trimmedSourceRect": {
+            "h": 24,
+            "w": 4,
+            "x": 88,
+            "y": 12
+          }
+        },
+        {
+          "id": "",
+          "index": 12,
+          "pivot": {
+            "x": 3.0,
+            "y": 13.5
+          },
+          "rect": {
+            "h": 27,
+            "w": 6,
+            "x": 188,
+            "y": 77
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 27,
+            "w": 6,
+            "x": 78,
+            "y": 12
+          },
+          "sourceSpriteIndex": 12,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 3.0,
+            "y": 13.5
+          },
+          "trimmedRect": {
+            "h": 27,
+            "w": 6,
+            "x": 188,
+            "y": 77
+          },
+          "trimmedSourceRect": {
+            "h": 27,
+            "w": 6,
+            "x": 78,
+            "y": 12
+          }
+        },
+        {
+          "id": "",
+          "index": 13,
+          "pivot": {
+            "x": 7.5,
+            "y": 6.5
+          },
+          "rect": {
+            "h": 13,
+            "w": 15,
+            "x": 18,
+            "y": 148
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 13,
+            "w": 15,
+            "x": 5,
+            "y": 118
+          },
+          "sourceSpriteIndex": 13,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 7.5,
+            "y": 6.5
+          },
+          "trimmedRect": {
+            "h": 13,
+            "w": 15,
+            "x": 18,
+            "y": 148
+          },
+          "trimmedSourceRect": {
+            "h": 13,
+            "w": 15,
+            "x": 5,
+            "y": 118
+          }
+        },
+        {
+          "id": "",
+          "index": 14,
+          "pivot": {
+            "x": 7.0,
+            "y": 10.0
+          },
+          "rect": {
+            "h": 20,
+            "w": 14,
+            "x": 164,
+            "y": 106
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 20,
+            "w": 14,
+            "x": 25,
+            "y": 111
+          },
+          "sourceSpriteIndex": 14,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 7.0,
+            "y": 10.0
+          },
+          "trimmedRect": {
+            "h": 20,
+            "w": 14,
+            "x": 164,
+            "y": 106
+          },
+          "trimmedSourceRect": {
+            "h": 20,
+            "w": 14,
+            "x": 25,
+            "y": 111
+          }
+        },
+        {
+          "id": "",
+          "index": 15,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 166,
+            "y": 140
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 80,
+            "y": 80
+          },
+          "sourceSpriteIndex": 15,
+          "tags": {
+            "green_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 8.0,
+            "y": 5.0
+          },
+          "trimmedRect": {
+            "h": 13,
+            "w": 16,
+            "x": 166,
+            "y": 143
+          },
+          "trimmedSourceRect": {
+            "h": 13,
+            "w": 16,
+            "x": 80,
+            "y": 83
+          }
+        },
+        {
+          "id": "",
+          "index": 16,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 149,
+            "y": 141
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 64,
+            "y": 80
+          },
+          "sourceSpriteIndex": 16,
+          "tags": {
+            "green_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 8.0,
+            "y": 6.0
+          },
+          "trimmedRect": {
+            "h": 13,
+            "w": 16,
+            "x": 149,
+            "y": 143
+          },
+          "trimmedSourceRect": {
+            "h": 13,
+            "w": 16,
+            "x": 64,
+            "y": 82
+          }
+        },
+        {
+          "id": "",
+          "index": 17,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 104,
+            "y": 138
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 48,
+            "y": 80
+          },
+          "sourceSpriteIndex": 17,
+          "tags": {
+            "green_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 8.0,
+            "y": 5.0
+          },
+          "trimmedRect": {
+            "h": 13,
+            "w": 16,
+            "x": 104,
+            "y": 141
+          },
+          "trimmedSourceRect": {
+            "h": 13,
+            "w": 16,
+            "x": 48,
+            "y": 83
+          }
+        },
+        {
+          "id": "",
+          "index": 18,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 182,
+            "y": 140
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 32,
+            "y": 80
+          },
+          "sourceSpriteIndex": 18,
+          "tags": {
+            "green_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 7.0,
+            "y": 5.0
+          },
+          "trimmedRect": {
+            "h": 13,
+            "w": 14,
+            "x": 183,
+            "y": 143
+          },
+          "trimmedSourceRect": {
+            "h": 13,
+            "w": 14,
+            "x": 33,
+            "y": 83
+          }
+        },
+        {
+          "id": "",
+          "index": 19,
+          "pivot": {
+            "x": 7.5,
+            "y": 1.5
+          },
+          "rect": {
+            "h": 3,
+            "w": 15,
+            "x": 142,
+            "y": 185
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 3,
+            "w": 15,
+            "x": 25,
+            "y": 80
+          },
+          "sourceSpriteIndex": 19,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 7.5,
+            "y": 1.5
+          },
+          "trimmedRect": {
+            "h": 3,
+            "w": 15,
+            "x": 142,
+            "y": 185
+          },
+          "trimmedSourceRect": {
+            "h": 3,
+            "w": 15,
+            "x": 25,
+            "y": 80
+          }
+        },
+        {
+          "id": "",
+          "index": 20,
+          "pivot": {
+            "x": 13.5,
+            "y": 19.0
+          },
+          "rect": {
+            "h": 38,
+            "w": 27,
+            "x": 138,
+            "y": 59
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 38,
+            "w": 27,
+            "x": 84,
+            "y": 88
+          },
+          "sourceSpriteIndex": 20,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 13.5,
+            "y": 19.0
+          },
+          "trimmedRect": {
+            "h": 38,
+            "w": 27,
+            "x": 138,
+            "y": 59
+          },
+          "trimmedSourceRect": {
+            "h": 38,
+            "w": 27,
+            "x": 84,
+            "y": 88
+          }
+        },
+        {
+          "id": "",
+          "index": 21,
+          "pivot": {
+            "x": 6.5,
+            "y": 6.5
+          },
+          "rect": {
+            "h": 13,
+            "w": 13,
+            "x": 34,
+            "y": 155
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 13,
+            "w": 13,
+            "x": 6,
+            "y": 99
+          },
+          "sourceSpriteIndex": 21,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.5,
+            "y": 6.5
+          },
+          "trimmedRect": {
+            "h": 13,
+            "w": 13,
+            "x": 34,
+            "y": 155
+          },
+          "trimmedSourceRect": {
+            "h": 13,
+            "w": 13,
+            "x": 6,
+            "y": 99
+          }
+        },
+        {
+          "id": "",
+          "index": 22,
+          "pivot": {
+            "x": 19.5,
+            "y": 19.0
+          },
+          "rect": {
+            "h": 38,
+            "w": 39,
+            "x": 98,
+            "y": 59
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 38,
+            "w": 39,
+            "x": 118,
+            "y": 75
+          },
+          "sourceSpriteIndex": 22,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 19.5,
+            "y": 19.0
+          },
+          "trimmedRect": {
+            "h": 38,
+            "w": 39,
+            "x": 98,
+            "y": 59
+          },
+          "trimmedSourceRect": {
+            "h": 38,
+            "w": 39,
+            "x": 118,
+            "y": 75
+          }
+        },
+        {
+          "id": "",
+          "index": 23,
+          "pivot": {
+            "x": 5.0,
+            "y": 10.0
+          },
+          "rect": {
+            "h": 20,
+            "w": 10,
+            "x": 1,
+            "y": 112
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 20,
+            "w": 10,
+            "x": 64,
+            "y": 88
+          },
+          "sourceSpriteIndex": 23,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 5.0,
+            "y": 10.0
+          },
+          "trimmedRect": {
+            "h": 20,
+            "w": 10,
+            "x": 1,
+            "y": 112
+          },
+          "trimmedSourceRect": {
+            "h": 20,
+            "w": 10,
+            "x": 64,
+            "y": 88
+          }
+        },
+        {
+          "id": "",
+          "index": 24,
+          "pivot": {
+            "x": 5.0,
+            "y": 9.0
+          },
+          "rect": {
+            "h": 18,
+            "w": 10,
+            "x": 34,
+            "y": 112
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 18,
+            "w": 10,
+            "x": 52,
+            "y": 90
+          },
+          "sourceSpriteIndex": 24,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 5.0,
+            "y": 9.0
+          },
+          "trimmedRect": {
+            "h": 18,
+            "w": 10,
+            "x": 34,
+            "y": 112
+          },
+          "trimmedSourceRect": {
+            "h": 18,
+            "w": 10,
+            "x": 52,
+            "y": 90
+          }
+        },
+        {
+          "id": "",
+          "index": 25,
+          "pivot": {
+            "x": 5.0,
+            "y": 10.0
+          },
+          "rect": {
+            "h": 20,
+            "w": 10,
+            "x": 12,
+            "y": 112
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 20,
+            "w": 10,
+            "x": 39,
+            "y": 88
+          },
+          "sourceSpriteIndex": 25,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 5.0,
+            "y": 10.0
+          },
+          "trimmedRect": {
+            "h": 20,
+            "w": 10,
+            "x": 12,
+            "y": 112
+          },
+          "trimmedSourceRect": {
+            "h": 20,
+            "w": 10,
+            "x": 39,
+            "y": 88
+          }
+        },
+        {
+          "id": "",
+          "index": 26,
+          "pivot": {
+            "x": 5.0,
+            "y": 9.0
+          },
+          "rect": {
+            "h": 18,
+            "w": 10,
+            "x": 23,
+            "y": 112
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 18,
+            "w": 10,
+            "x": 26,
+            "y": 90
+          },
+          "sourceSpriteIndex": 26,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 5.0,
+            "y": 9.0
+          },
+          "trimmedRect": {
+            "h": 18,
+            "w": 10,
+            "x": 23,
+            "y": 112
+          },
+          "trimmedSourceRect": {
+            "h": 18,
+            "w": 10,
+            "x": 26,
+            "y": 90
+          }
+        },
+        {
+          "id": "",
+          "index": 27,
+          "pivot": {
+            "x": 6.5,
+            "y": 3.0
+          },
+          "rect": {
+            "h": 6,
+            "w": 13,
+            "x": 99,
+            "y": 180
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 6,
+            "w": 13,
+            "x": 7,
+            "y": 89
+          },
+          "sourceSpriteIndex": 27,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.5,
+            "y": 3.0
+          },
+          "trimmedRect": {
+            "h": 6,
+            "w": 13,
+            "x": 99,
+            "y": 180
+          },
+          "trimmedSourceRect": {
+            "h": 6,
+            "w": 13,
+            "x": 7,
+            "y": 89
+          }
+        },
+        {
+          "id": "",
+          "index": 28,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 88,
+            "y": 152
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 16,
+            "y": 80
+          },
+          "sourceSpriteIndex": 28,
+          "tags": {
+            "green_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 7.0,
+            "y": 6.0
+          },
+          "trimmedRect": {
+            "h": 13,
+            "w": 14,
+            "x": 89,
+            "y": 154
+          },
+          "trimmedSourceRect": {
+            "h": 13,
+            "w": 14,
+            "x": 17,
+            "y": 82
+          }
+        },
+        {
+          "id": "",
+          "index": 29,
+          "pivot": {
+            "x": 7.5,
+            "y": 1.5
+          },
+          "rect": {
+            "h": 3,
+            "w": 15,
+            "x": 126,
+            "y": 185
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 3,
+            "w": 15,
+            "x": 7,
+            "y": 80
+          },
+          "sourceSpriteIndex": 29,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 7.5,
+            "y": 1.5
+          },
+          "trimmedRect": {
+            "h": 3,
+            "w": 15,
+            "x": 126,
+            "y": 185
+          },
+          "trimmedSourceRect": {
+            "h": 3,
+            "w": 15,
+            "x": 7,
+            "y": 80
+          }
+        },
+        {
+          "id": "",
+          "index": 30,
+          "pivot": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "rect": {
+            "h": 1,
+            "w": 1,
+            "x": 18,
+            "y": 182
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 1,
+            "w": 1,
+            "x": 89,
+            "y": 79
+          },
+          "sourceSpriteIndex": 30,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 0.5,
+            "y": 0.5
+          },
+          "trimmedRect": {
+            "h": 1,
+            "w": 1,
+            "x": 18,
+            "y": 182
+          },
+          "trimmedSourceRect": {
+            "h": 1,
+            "w": 1,
+            "x": 89,
+            "y": 79
+          }
+        },
+        {
+          "id": "",
+          "index": 31,
+          "pivot": {
+            "x": 10.5,
+            "y": 12.0
+          },
+          "rect": {
+            "h": 24,
+            "w": 21,
+            "x": 137,
+            "y": 98
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 24,
+            "w": 21,
+            "x": 98,
+            "y": 62
+          },
+          "sourceSpriteIndex": 31,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 10.5,
+            "y": 12.0
+          },
+          "trimmedRect": {
+            "h": 24,
+            "w": 21,
+            "x": 137,
+            "y": 98
+          },
+          "trimmedSourceRect": {
+            "h": 24,
+            "w": 21,
+            "x": 98,
+            "y": 62
+          }
+        },
+        {
+          "id": "",
+          "index": 32,
+          "pivot": {
+            "x": 3.0,
+            "y": 3.5
+          },
+          "rect": {
+            "h": 7,
+            "w": 6,
+            "x": 45,
+            "y": 178
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 7,
+            "w": 6,
+            "x": 87,
+            "y": 71
+          },
+          "sourceSpriteIndex": 32,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 3.0,
+            "y": 3.5
+          },
+          "trimmedRect": {
+            "h": 7,
+            "w": 6,
+            "x": 45,
+            "y": 178
+          },
+          "trimmedSourceRect": {
+            "h": 7,
+            "w": 6,
+            "x": 87,
+            "y": 71
+          }
+        },
+        {
+          "id": "",
+          "index": 33,
+          "pivot": {
+            "x": 3.0,
+            "y": 4.0
+          },
+          "rect": {
+            "h": 8,
+            "w": 6,
+            "x": 191,
+            "y": 157
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 8,
+            "w": 6,
+            "x": 79,
+            "y": 71
+          },
+          "sourceSpriteIndex": 33,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 3.0,
+            "y": 4.0
+          },
+          "trimmedRect": {
+            "h": 8,
+            "w": 6,
+            "x": 191,
+            "y": 157
+          },
+          "trimmedSourceRect": {
+            "h": 8,
+            "w": 6,
+            "x": 79,
+            "y": 71
+          }
+        },
+        {
+          "id": "",
+          "index": 34,
+          "pivot": {
+            "x": 2.0,
+            "y": 2.0
+          },
+          "rect": {
+            "h": 4,
+            "w": 4,
+            "x": 192,
+            "y": 177
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 4,
+            "w": 4,
+            "x": 105,
+            "y": 66
+          },
+          "sourceSpriteIndex": 34,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 2.0,
+            "y": 2.0
+          },
+          "trimmedRect": {
+            "h": 4,
+            "w": 4,
+            "x": 192,
+            "y": 177
+          },
+          "trimmedSourceRect": {
+            "h": 4,
+            "w": 4,
+            "x": 105,
+            "y": 66
+          }
+        },
+        {
+          "id": "",
+          "index": 35,
+          "pivot": {
+            "x": 3.0,
+            "y": 3.5
+          },
+          "rect": {
+            "h": 7,
+            "w": 6,
+            "x": 52,
+            "y": 178
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 7,
+            "w": 6,
+            "x": 89,
+            "y": 62
+          },
+          "sourceSpriteIndex": 35,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 3.0,
+            "y": 3.5
+          },
+          "trimmedRect": {
+            "h": 7,
+            "w": 6,
+            "x": 52,
+            "y": 178
+          },
+          "trimmedSourceRect": {
+            "h": 7,
+            "w": 6,
+            "x": 89,
+            "y": 62
+          }
+        },
+        {
+          "id": "",
+          "index": 36,
+          "pivot": {
+            "x": 3.0,
+            "y": 3.5
+          },
+          "rect": {
+            "h": 7,
+            "w": 6,
+            "x": 23,
+            "y": 179
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 7,
+            "w": 6,
+            "x": 78,
+            "y": 62
+          },
+          "sourceSpriteIndex": 36,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 3.0,
+            "y": 3.5
+          },
+          "trimmedRect": {
+            "h": 7,
+            "w": 6,
+            "x": 23,
+            "y": 179
+          },
+          "trimmedSourceRect": {
+            "h": 7,
+            "w": 6,
+            "x": 78,
+            "y": 62
+          }
+        },
+        {
+          "id": "",
+          "index": 37,
+          "pivot": {
+            "x": 4.5,
+            "y": 6.0
+          },
+          "rect": {
+            "h": 12,
+            "w": 9,
+            "x": 61,
+            "y": 155
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 12,
+            "w": 9,
+            "x": 58,
+            "y": 117
+          },
+          "sourceSpriteIndex": 37,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 4.5,
+            "y": 6.0
+          },
+          "trimmedRect": {
+            "h": 12,
+            "w": 9,
+            "x": 61,
+            "y": 155
+          },
+          "trimmedSourceRect": {
+            "h": 12,
+            "w": 9,
+            "x": 58,
+            "y": 117
+          }
+        },
+        {
+          "id": "",
+          "index": 38,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 85,
+            "y": 163
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 48,
+            "y": 16
+          },
+          "sourceSpriteIndex": 38,
+          "tags": {
+            "blue_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 3.0
+          },
+          "trimmedRect": {
+            "h": 11,
+            "w": 12,
+            "x": 87,
+            "y": 168
+          },
+          "trimmedSourceRect": {
+            "h": 11,
+            "w": 12,
+            "x": 50,
+            "y": 21
+          }
+        },
+        {
+          "id": "",
+          "index": 39,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 1,
+            "y": 145
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 0,
+            "y": 80
+          },
+          "sourceSpriteIndex": 39,
+          "tags": {
+            "green_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 8.0,
+            "y": 5.0
+          },
+          "trimmedRect": {
+            "h": 13,
+            "w": 16,
+            "x": 1,
+            "y": 148
+          },
+          "trimmedSourceRect": {
+            "h": 13,
+            "w": 16,
+            "x": 0,
+            "y": 83
+          }
+        },
+        {
+          "id": "",
+          "index": 40,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 176,
+            "y": 153
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 16,
+            "y": 16
+          },
+          "sourceSpriteIndex": 40,
+          "tags": {
+            "blue_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 7.0,
+            "y": 4.0
+          },
+          "trimmedRect": {
+            "h": 11,
+            "w": 13,
+            "x": 177,
+            "y": 157
+          },
+          "trimmedSourceRect": {
+            "h": 11,
+            "w": 13,
+            "x": 17,
+            "y": 20
+          }
+        },
+        {
+          "id": "",
+          "index": 41,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": -1,
+            "y": 157
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 0,
+            "y": 16
+          },
+          "sourceSpriteIndex": 41,
+          "tags": {
+            "blue_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 3.0
+          },
+          "trimmedRect": {
+            "h": 11,
+            "w": 12,
+            "x": 1,
+            "y": 162
+          },
+          "trimmedSourceRect": {
+            "h": 11,
+            "w": 12,
+            "x": 2,
+            "y": 21
+          }
+        },
+        {
+          "id": "",
+          "index": 42,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 161,
+            "y": 153
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 48,
+            "y": 0
+          },
+          "sourceSpriteIndex": 42,
+          "tags": {
+            "blue_enemy_jump": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 7.0,
+            "y": 4.0
+          },
+          "trimmedRect": {
+            "h": 11,
+            "w": 14,
+            "x": 162,
+            "y": 157
+          },
+          "trimmedSourceRect": {
+            "h": 11,
+            "w": 14,
+            "x": 49,
+            "y": 4
+          }
+        },
+        {
+          "id": "",
+          "index": 43,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 111,
+            "y": 169
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 32,
+            "y": 0
+          },
+          "sourceSpriteIndex": 43,
+          "tags": {
+            "blue_enemy_dead": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": -3.0
+          },
+          "trimmedRect": {
+            "h": 5,
+            "w": 12,
+            "x": 113,
+            "y": 180
+          },
+          "trimmedSourceRect": {
+            "h": 5,
+            "w": 12,
+            "x": 34,
+            "y": 11
+          }
+        },
+        {
+          "id": "",
+          "index": 44,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 12,
+            "y": 157
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 16,
+            "y": 0
+          },
+          "sourceSpriteIndex": 44,
+          "tags": {
+            "blue_enemy_idle": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 3.0
+          },
+          "trimmedRect": {
+            "h": 11,
+            "w": 12,
+            "x": 14,
+            "y": 162
+          },
+          "trimmedSourceRect": {
+            "h": 11,
+            "w": 12,
+            "x": 18,
+            "y": 5
+          }
+        },
+        {
+          "id": "",
+          "index": 45,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 72,
+            "y": 163
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 0,
+            "y": 0
+          },
+          "sourceSpriteIndex": 45,
+          "tags": {
+            "blue_enemy_idle": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 3.0
+          },
+          "trimmedRect": {
+            "h": 11,
+            "w": 12,
+            "x": 74,
+            "y": 168
+          },
+          "trimmedSourceRect": {
+            "h": 11,
+            "w": 12,
+            "x": 2,
+            "y": 5
+          }
+        },
+        {
+          "id": "",
+          "index": 46,
+          "pivot": {
+            "x": 6.5,
+            "y": 8.5
+          },
+          "rect": {
+            "h": 17,
+            "w": 13,
+            "x": 109,
+            "y": 123
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 17,
+            "w": 13,
+            "x": 43,
+            "y": 114
+          },
+          "sourceSpriteIndex": 46,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.5,
+            "y": 8.5
+          },
+          "trimmedRect": {
+            "h": 17,
+            "w": 13,
+            "x": 109,
+            "y": 123
+          },
+          "trimmedSourceRect": {
+            "h": 17,
+            "w": 13,
+            "x": 43,
+            "y": 114
+          }
+        },
+        {
+          "id": "",
+          "index": 47,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 59,
+            "y": 163
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 32,
+            "y": 16
+          },
+          "sourceSpriteIndex": 47,
+          "tags": {
+            "blue_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 3.0
+          },
+          "trimmedRect": {
+            "h": 11,
+            "w": 12,
+            "x": 61,
+            "y": 168
+          },
+          "trimmedSourceRect": {
+            "h": 11,
+            "w": 12,
+            "x": 34,
+            "y": 21
+          }
+        },
+        {
+          "id": "",
+          "index": 48,
+          "pivot": {
+            "x": 5.5,
+            "y": 6.0
+          },
+          "rect": {
+            "h": 12,
+            "w": 11,
+            "x": 150,
+            "y": 157
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 12,
+            "w": 11,
+            "x": 69,
+            "y": 117
+          },
+          "sourceSpriteIndex": 48,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 5.5,
+            "y": 6.0
+          },
+          "trimmedRect": {
+            "h": 12,
+            "w": 11,
+            "x": 150,
+            "y": 157
+          },
+          "trimmedSourceRect": {
+            "h": 12,
+            "w": 11,
+            "x": 69,
+            "y": 117
+          }
+        },
+        {
+          "id": "",
+          "index": 49,
+          "pivot": {
+            "x": 19.5,
+            "y": 19.0
+          },
+          "rect": {
+            "h": 38,
+            "w": 39,
+            "x": 58,
+            "y": 59
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 38,
+            "w": 39,
+            "x": 119,
+            "y": 115
+          },
+          "sourceSpriteIndex": 49,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 19.5,
+            "y": 19.0
+          },
+          "trimmedRect": {
+            "h": 38,
+            "w": 39,
+            "x": 58,
+            "y": 59
+          },
+          "trimmedSourceRect": {
+            "h": 38,
+            "w": 39,
+            "x": 119,
+            "y": 115
+          }
+        },
+        {
+          "id": "",
+          "index": 50,
+          "pivot": {
+            "x": 5.5,
+            "y": 7.0
+          },
+          "rect": {
+            "h": 14,
+            "w": 11,
+            "x": 60,
+            "y": 140
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 14,
+            "w": 11,
+            "x": 13,
+            "y": 137
+          },
+          "sourceSpriteIndex": 50,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 5.5,
+            "y": 7.0
+          },
+          "trimmedRect": {
+            "h": 14,
+            "w": 11,
+            "x": 60,
+            "y": 140
+          },
+          "trimmedSourceRect": {
+            "h": 14,
+            "w": 11,
+            "x": 13,
+            "y": 137
+          }
+        },
+        {
+          "id": "",
+          "index": 51,
+          "pivot": {
+            "x": 5.5,
+            "y": 6.0
+          },
+          "rect": {
+            "h": 12,
+            "w": 11,
+            "x": 138,
+            "y": 157
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 12,
+            "w": 11,
+            "x": 29,
+            "y": 139
+          },
+          "sourceSpriteIndex": 51,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 5.5,
+            "y": 6.0
+          },
+          "trimmedRect": {
+            "h": 12,
+            "w": 11,
+            "x": 138,
+            "y": 157
+          },
+          "trimmedSourceRect": {
+            "h": 12,
+            "w": 11,
+            "x": 29,
+            "y": 139
+          }
+        },
+        {
+          "id": "",
+          "index": 52,
+          "pivot": {
+            "x": 3.5,
+            "y": 10.0
+          },
+          "rect": {
+            "h": 20,
+            "w": 7,
+            "x": 179,
+            "y": 106
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 20,
+            "w": 7,
+            "x": 63,
+            "y": 133
+          },
+          "sourceSpriteIndex": 52,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 3.5,
+            "y": 10.0
+          },
+          "trimmedRect": {
+            "h": 20,
+            "w": 7,
+            "x": 179,
+            "y": 106
+          },
+          "trimmedSourceRect": {
+            "h": 20,
+            "w": 7,
+            "x": 63,
+            "y": 133
+          }
+        },
+        {
+          "id": "",
+          "index": 53,
+          "pivot": {
+            "x": 3.5,
+            "y": 10.5
+          },
+          "rect": {
+            "h": 21,
+            "w": 7,
+            "x": 188,
+            "y": 105
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 21,
+            "w": 7,
+            "x": 72,
+            "y": 132
+          },
+          "sourceSpriteIndex": 53,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 3.5,
+            "y": 10.5
+          },
+          "trimmedRect": {
+            "h": 21,
+            "w": 7,
+            "x": 188,
+            "y": 105
+          },
+          "trimmedSourceRect": {
+            "h": 21,
+            "w": 7,
+            "x": 72,
+            "y": 132
+          }
+        },
+        {
+          "id": "",
+          "index": 54,
+          "pivot": {
+            "x": 13.5,
+            "y": 12.0
+          },
+          "rect": {
+            "h": 24,
+            "w": 27,
+            "x": 109,
+            "y": 98
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 24,
+            "w": 27,
+            "x": 85,
+            "y": 130
+          },
+          "sourceSpriteIndex": 54,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 13.5,
+            "y": 12.0
+          },
+          "trimmedRect": {
+            "h": 24,
+            "w": 27,
+            "x": 109,
+            "y": 98
+          },
+          "trimmedSourceRect": {
+            "h": 24,
+            "w": 27,
+            "x": 85,
+            "y": 130
+          }
+        },
+        {
+          "id": "",
+          "index": 55,
+          "pivot": {
+            "x": 8.5,
+            "y": 4.5
+          },
+          "rect": {
+            "h": 9,
+            "w": 17,
+            "x": 27,
+            "y": 169
+          },
+          "rotated": false,
+          "sourceFilename": "misc_scenery.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 9,
+            "w": 17,
+            "x": 43,
+            "y": 143
+          },
+          "sourceSpriteIndex": 55,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 8.5,
+            "y": 4.5
+          },
+          "trimmedRect": {
+            "h": 9,
+            "w": 17,
+            "x": 27,
+            "y": 169
+          },
+          "trimmedSourceRect": {
+            "h": 9,
+            "w": 17,
+            "x": 43,
+            "y": 143
+          }
+        },
+        {
+          "id": "",
+          "index": 56,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 111,
+            "y": 163
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 80,
+            "y": 16
+          },
+          "sourceSpriteIndex": 56,
+          "tags": {
+            "blue_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 3.0
+          },
+          "trimmedRect": {
+            "h": 11,
+            "w": 12,
+            "x": 113,
+            "y": 168
+          },
+          "trimmedSourceRect": {
+            "h": 11,
+            "w": 12,
+            "x": 82,
+            "y": 21
+          }
+        },
+        {
+          "id": "",
+          "index": 57,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 104,
+            "y": 151
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 48,
+            "y": 64
+          },
+          "sourceSpriteIndex": 57,
+          "tags": {
+            "green_enemy_jump": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 8.0,
+            "y": 4.0
+          },
+          "trimmedRect": {
+            "h": 12,
+            "w": 16,
+            "x": 104,
+            "y": 155
+          },
+          "trimmedSourceRect": {
+            "h": 12,
+            "w": 16,
+            "x": 48,
+            "y": 68
+          }
+        },
+        {
+          "id": "",
+          "index": 58,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 1,
+            "y": 171
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 32,
+            "y": 64
+          },
+          "sourceSpriteIndex": 58,
+          "tags": {
+            "green_enemy_dead": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 8.0,
+            "y": -3.0
+          },
+          "trimmedRect": {
+            "h": 5,
+            "w": 16,
+            "x": 1,
+            "y": 182
+          },
+          "trimmedSourceRect": {
+            "h": 5,
+            "w": 16,
+            "x": 32,
+            "y": 75
+          }
+        },
+        {
+          "id": "",
+          "index": 59,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 72,
+            "y": 151
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 16,
+            "y": 64
+          },
+          "sourceSpriteIndex": 59,
+          "tags": {
+            "green_enemy_idle": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 8.0,
+            "y": 5.0
+          },
+          "trimmedRect": {
+            "h": 13,
+            "w": 16,
+            "x": 72,
+            "y": 154
+          },
+          "trimmedSourceRect": {
+            "h": 13,
+            "w": 16,
+            "x": 16,
+            "y": 67
+          }
+        },
+        {
+          "id": "",
+          "index": 60,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 121,
+            "y": 151
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 0,
+            "y": 64
+          },
+          "sourceSpriteIndex": 60,
+          "tags": {
+            "green_enemy_idle": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 8.0,
+            "y": 5.0
+          },
+          "trimmedRect": {
+            "h": 13,
+            "w": 16,
+            "x": 121,
+            "y": 154
+          },
+          "trimmedSourceRect": {
+            "h": 13,
+            "w": 16,
+            "x": 0,
+            "y": 67
+          }
+        },
+        {
+          "id": "",
+          "index": 61,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 45,
+            "y": 139
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 64,
+            "y": 48
+          },
+          "sourceSpriteIndex": 61,
+          "tags": {
+            "red_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 7.0
+          },
+          "trimmedRect": {
+            "h": 14,
+            "w": 12,
+            "x": 47,
+            "y": 140
+          },
+          "trimmedSourceRect": {
+            "h": 14,
+            "w": 12,
+            "x": 66,
+            "y": 49
+          }
+        },
+        {
+          "id": "",
+          "index": 62,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 32,
+            "y": 138
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 48,
+            "y": 48
+          },
+          "sourceSpriteIndex": 62,
+          "tags": {
+            "red_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 6.0
+          },
+          "trimmedRect": {
+            "h": 14,
+            "w": 12,
+            "x": 34,
+            "y": 140
+          },
+          "trimmedSourceRect": {
+            "h": 14,
+            "w": 12,
+            "x": 50,
+            "y": 50
+          }
+        },
+        {
+          "id": "",
+          "index": 63,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 134,
+            "y": 137
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 32,
+            "y": 48
+          },
+          "sourceSpriteIndex": 63,
+          "tags": {
+            "red_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 6.0
+          },
+          "trimmedRect": {
+            "h": 14,
+            "w": 12,
+            "x": 136,
+            "y": 139
+          },
+          "trimmedSourceRect": {
+            "h": 14,
+            "w": 12,
+            "x": 34,
+            "y": 50
+          }
+        },
+        {
+          "id": "",
+          "index": 64,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 92,
+            "y": 123
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 16,
+            "y": 48
+          },
+          "sourceSpriteIndex": 64,
+          "tags": {
+            "red_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 7.0,
+            "y": 7.0
+          },
+          "trimmedRect": {
+            "h": 14,
+            "w": 13,
+            "x": 93,
+            "y": 124
+          },
+          "trimmedSourceRect": {
+            "h": 14,
+            "w": 13,
+            "x": 17,
+            "y": 49
+          }
+        },
+        {
+          "id": "",
+          "index": 65,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 89,
+            "y": 137
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 0,
+            "y": 48
+          },
+          "sourceSpriteIndex": 65,
+          "tags": {
+            "red_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 6.0
+          },
+          "trimmedRect": {
+            "h": 14,
+            "w": 12,
+            "x": 91,
+            "y": 139
+          },
+          "trimmedSourceRect": {
+            "h": 14,
+            "w": 12,
+            "x": 2,
+            "y": 50
+          }
+        },
+        {
+          "id": "",
+          "index": 66,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 77,
+            "y": 123
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 48,
+            "y": 32
+          },
+          "sourceSpriteIndex": 66,
+          "tags": {
+            "red_enemy_jump": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 7.0,
+            "y": 7.0
+          },
+          "trimmedRect": {
+            "h": 14,
+            "w": 14,
+            "x": 78,
+            "y": 124
+          },
+          "trimmedSourceRect": {
+            "h": 14,
+            "w": 14,
+            "x": 49,
+            "y": 33
+          }
+        },
+        {
+          "id": "",
+          "index": 67,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 46,
+            "y": 152
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 32,
+            "y": 32
+          },
+          "sourceSpriteIndex": 67,
+          "tags": {
+            "red_enemy_dead": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 5.0
+          },
+          "trimmedRect": {
+            "h": 13,
+            "w": 12,
+            "x": 48,
+            "y": 155
+          },
+          "trimmedSourceRect": {
+            "h": 13,
+            "w": 12,
+            "x": 34,
+            "y": 35
+          }
+        },
+        {
+          "id": "",
+          "index": 68,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 121,
+            "y": 137
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 16,
+            "y": 32
+          },
+          "sourceSpriteIndex": 68,
+          "tags": {
+            "red_enemy_idle": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 6.0
+          },
+          "trimmedRect": {
+            "h": 14,
+            "w": 12,
+            "x": 123,
+            "y": 139
+          },
+          "trimmedSourceRect": {
+            "h": 14,
+            "w": 12,
+            "x": 18,
+            "y": 34
+          }
+        },
+        {
+          "id": "",
+          "index": 69,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 76,
+            "y": 137
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 0,
+            "y": 32
+          },
+          "sourceSpriteIndex": 69,
+          "tags": {
+            "red_enemy_idle": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 6.0
+          },
+          "trimmedRect": {
+            "h": 14,
+            "w": 12,
+            "x": 78,
+            "y": 139
+          },
+          "trimmedSourceRect": {
+            "h": 14,
+            "w": 12,
+            "x": 2,
+            "y": 34
+          }
+        },
+        {
+          "id": "",
+          "index": 70,
+          "pivot": {
+            "x": 8.0,
+            "y": 8.0
+          },
+          "rect": {
+            "h": 16,
+            "w": 16,
+            "x": 98,
+            "y": 164
+          },
+          "rotated": false,
+          "sourceFilename": "Old enemies 2.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 16,
+            "w": 16,
+            "x": 64,
+            "y": 16
+          },
+          "sourceSpriteIndex": 70,
+          "tags": {
+            "blue_enemy_run": ""
+          },
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.0,
+            "y": 4.0
+          },
+          "trimmedRect": {
+            "h": 11,
+            "w": 12,
+            "x": 100,
+            "y": 168
+          },
+          "trimmedSourceRect": {
+            "h": 11,
+            "w": 12,
+            "x": 66,
+            "y": 20
+          }
+        },
+        {
+          "id": "banner_bottom_1",
+          "index": 71,
+          "pivot": {
+            "x": 16.0,
+            "y": 16.0
+          },
+          "rect": {
+            "h": 32,
+            "w": 32,
+            "x": 52,
+            "y": 98
+          },
+          "rotated": false,
+          "sourceFilename": "Decorations (32x32).png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 32,
+            "w": 32,
+            "x": 0,
+            "y": 64
+          },
+          "sourceSpriteIndex": 71,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 13.0,
+            "y": 16.0
+          },
+          "trimmedRect": {
+            "h": 25,
+            "w": 26,
+            "x": 55,
+            "y": 98
+          },
+          "trimmedSourceRect": {
+            "h": 25,
+            "w": 26,
+            "x": 3,
+            "y": 64
+          }
+        },
+        {
+          "id": "banner_bottom_2",
+          "index": 72,
+          "pivot": {
+            "x": 16.0,
+            "y": 16.0
+          },
+          "rect": {
+            "h": 32,
+            "w": 32,
+            "x": 79,
+            "y": 98
+          },
+          "rotated": false,
+          "sourceFilename": "Decorations (32x32).png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 32,
+            "w": 32,
+            "x": 0,
+            "y": 96
+          },
+          "sourceSpriteIndex": 72,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 13.0,
+            "y": 16.0
+          },
+          "trimmedRect": {
+            "h": 25,
+            "w": 26,
+            "x": 82,
+            "y": 98
+          },
+          "trimmedSourceRect": {
+            "h": 25,
+            "w": 26,
+            "x": 3,
+            "y": 96
+          }
+        },
+        {
+          "id": "banner_middle",
+          "index": 73,
+          "pivot": {
+            "x": 16.0,
+            "y": 16.0
+          },
+          "rect": {
+            "h": 32,
+            "w": 32,
+            "x": -2,
+            "y": 79
+          },
+          "rotated": false,
+          "sourceFilename": "Decorations (32x32).png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 32,
+            "w": 32,
+            "x": 0,
+            "y": 32
+          },
+          "sourceSpriteIndex": 73,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 13.0,
+            "y": 16.0
+          },
+          "trimmedRect": {
+            "h": 32,
+            "w": 26,
+            "x": 1,
+            "y": 79
+          },
+          "trimmedSourceRect": {
+            "h": 32,
+            "w": 26,
+            "x": 3,
+            "y": 32
+          }
+        },
+        {
+          "id": "banner_top",
+          "index": 74,
+          "pivot": {
+            "x": 16.0,
+            "y": 16.0
+          },
+          "rect": {
+            "h": 32,
+            "w": 32,
+            "x": 25,
+            "y": 79
+          },
+          "rotated": false,
+          "sourceFilename": "Decorations (32x32).png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 32,
+            "w": 32,
+            "x": 0,
+            "y": 0
+          },
+          "sourceSpriteIndex": 74,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 13.0,
+            "y": 16.0
+          },
+          "trimmedRect": {
+            "h": 32,
+            "w": 26,
+            "x": 28,
+            "y": 79
+          },
+          "trimmedSourceRect": {
+            "h": 32,
+            "w": 26,
+            "x": 3,
+            "y": 0
+          }
+        },
+        {
+          "id": "orc_attack_0",
+          "index": 75,
+          "pivot": {
+            "x": 7.5,
+            "y": 7.5
+          },
+          "rect": {
+            "h": 15,
+            "w": 15,
+            "x": 8,
+            "y": 170
+          },
+          "rotated": false,
+          "sourceFilename": "Orc Attack/Frame01.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 15,
+            "w": 15,
+            "x": 0,
+            "y": 0
+          },
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 1.5,
+            "y": 3.5
+          },
+          "trimmedRect": {
+            "h": 7,
+            "w": 8,
+            "x": 14,
+            "y": 174
+          },
+          "trimmedSourceRect": {
+            "h": 7,
+            "w": 8,
+            "x": 6,
+            "y": 4
+          }
+        },
+        {
+          "id": "orc_attack_1",
+          "index": 76,
+          "pivot": {
+            "x": 7.5,
+            "y": 7.5
+          },
+          "rect": {
+            "h": 15,
+            "w": 15,
+            "x": 0,
+            "y": 170
+          },
+          "rotated": false,
+          "sourceFilename": "Orc Attack/Frame02.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 15,
+            "w": 15,
+            "x": 0,
+            "y": 0
+          },
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.5,
+            "y": 3.5
+          },
+          "trimmedRect": {
+            "h": 7,
+            "w": 12,
+            "x": 1,
+            "y": 174
+          },
+          "trimmedSourceRect": {
+            "h": 7,
+            "w": 12,
+            "x": 1,
+            "y": 4
+          }
+        },
+        {
+          "id": "orc_attack_2",
+          "index": 77,
+          "pivot": {
+            "x": 7.5,
+            "y": 7.5
+          },
+          "rect": {
+            "h": 15,
+            "w": 15,
+            "x": 44,
+            "y": 166
+          },
+          "rotated": false,
+          "sourceFilename": "Orc Attack/Frame03.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 15,
+            "w": 15,
+            "x": 0,
+            "y": 0
+          },
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 6.5,
+            "y": 4.5
+          },
+          "trimmedRect": {
+            "h": 8,
+            "w": 12,
+            "x": 45,
+            "y": 169
+          },
+          "trimmedSourceRect": {
+            "h": 8,
+            "w": 12,
+            "x": 1,
+            "y": 3
+          }
+        },
+        {
+          "id": "orc_attack_3",
+          "index": 78,
+          "pivot": {
+            "x": 7.5,
+            "y": 7.5
+          },
+          "rect": {
+            "h": 15,
+            "w": 15,
+            "x": 121,
+            "y": 165
+          },
+          "rotated": false,
+          "sourceFilename": "Orc Attack/Frame04.png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 15,
+            "w": 15,
+            "x": 0,
+            "y": 0
+          },
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 2.5,
+            "y": 4.5
+          },
+          "trimmedRect": {
+            "h": 8,
+            "w": 8,
+            "x": 126,
+            "y": 168
+          },
+          "trimmedSourceRect": {
+            "h": 8,
+            "w": 8,
+            "x": 5,
+            "y": 3
+          }
+        },
+        {
+          "id": "platform_1_left",
+          "index": 79,
+          "pivot": {
+            "x": 16.0,
+            "y": 16.0
+          },
+          "rect": {
+            "h": 32,
+            "w": 32,
+            "x": 162,
+            "y": 169
+          },
+          "rotated": false,
+          "sourceFilename": "Decorations (32x32).png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 32,
+            "w": 32,
+            "x": 32,
+            "y": 0
+          },
+          "sourceSpriteIndex": 79,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 16.0,
+            "y": 16.0
+          },
+          "trimmedRect": {
+            "h": 7,
+            "w": 32,
+            "x": 162,
+            "y": 169
+          },
+          "trimmedSourceRect": {
+            "h": 7,
+            "w": 32,
+            "x": 32,
+            "y": 0
+          }
+        },
+        {
+          "id": "platform_1_middle",
+          "index": 80,
+          "pivot": {
+            "x": 16.0,
+            "y": 16.0
+          },
+          "rect": {
+            "h": 32,
+            "w": 32,
+            "x": 66,
+            "y": 180
+          },
+          "rotated": false,
+          "sourceFilename": "Decorations (32x32).png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 32,
+            "w": 32,
+            "x": 64,
+            "y": 0
+          },
+          "sourceSpriteIndex": 80,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 16.0,
+            "y": 16.0
+          },
+          "trimmedRect": {
+            "h": 6,
+            "w": 32,
+            "x": 66,
+            "y": 180
+          },
+          "trimmedSourceRect": {
+            "h": 6,
+            "w": 32,
+            "x": 64,
+            "y": 0
+          }
+        },
+        {
+          "id": "platform_1_right",
+          "index": 81,
+          "pivot": {
+            "x": 16.0,
+            "y": 16.0
+          },
+          "rect": {
+            "h": 32,
+            "w": 32,
+            "x": 126,
+            "y": 177
+          },
+          "rotated": false,
+          "sourceFilename": "Decorations (32x32).png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 32,
+            "w": 32,
+            "x": 96,
+            "y": 0
+          },
+          "sourceSpriteIndex": 81,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 16.0,
+            "y": 16.0
+          },
+          "trimmedRect": {
+            "h": 7,
+            "w": 32,
+            "x": 126,
+            "y": 177
+          },
+          "trimmedSourceRect": {
+            "h": 7,
+            "w": 32,
+            "x": 96,
+            "y": 0
+          }
+        },
+        {
+          "id": "platform_1_sole",
+          "index": 82,
+          "pivot": {
+            "x": 16.0,
+            "y": 16.0
+          },
+          "rect": {
+            "h": 32,
+            "w": 32,
+            "x": 159,
+            "y": 177
+          },
+          "rotated": false,
+          "sourceFilename": "Decorations (32x32).png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 32,
+            "w": 32,
+            "x": 128,
+            "y": 0
+          },
+          "sourceSpriteIndex": 82,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 16.0,
+            "y": 16.0
+          },
+          "trimmedRect": {
+            "h": 7,
+            "w": 32,
+            "x": 159,
+            "y": 177
+          },
+          "trimmedSourceRect": {
+            "h": 7,
+            "w": 32,
+            "x": 128,
+            "y": 0
+          }
+        },
+        {
+          "id": "platform_2_left",
+          "index": 83,
+          "pivot": {
+            "x": 16.0,
+            "y": 16.0
+          },
+          "rect": {
+            "h": 32,
+            "w": 32,
+            "x": 123,
+            "y": 123
+          },
+          "rotated": false,
+          "sourceFilename": "Decorations (32x32).png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 32,
+            "w": 32,
+            "x": 32,
+            "y": 32
+          },
+          "sourceSpriteIndex": 83,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 16.0,
+            "y": 16.0
+          },
+          "trimmedRect": {
+            "h": 15,
+            "w": 32,
+            "x": 123,
+            "y": 123
+          },
+          "trimmedSourceRect": {
+            "h": 15,
+            "w": 32,
+            "x": 32,
+            "y": 32
+          }
+        },
+        {
+          "id": "platform_2_middle",
+          "index": 84,
+          "pivot": {
+            "x": 16.0,
+            "y": 16.0
+          },
+          "rect": {
+            "h": 32,
+            "w": 32,
+            "x": 1,
+            "y": 133
+          },
+          "rotated": false,
+          "sourceFilename": "Decorations (32x32).png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 32,
+            "w": 32,
+            "x": 64,
+            "y": 32
+          },
+          "sourceSpriteIndex": 84,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 16.0,
+            "y": 16.0
+          },
+          "trimmedRect": {
+            "h": 14,
+            "w": 32,
+            "x": 1,
+            "y": 133
+          },
+          "trimmedSourceRect": {
+            "h": 14,
+            "w": 32,
+            "x": 64,
+            "y": 32
+          }
+        },
+        {
+          "id": "platform_2_right",
+          "index": 85,
+          "pivot": {
+            "x": 16.0,
+            "y": 16.0
+          },
+          "rect": {
+            "h": 32,
+            "w": 32,
+            "x": 45,
+            "y": 124
+          },
+          "rotated": false,
+          "sourceFilename": "Decorations (32x32).png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 32,
+            "w": 32,
+            "x": 96,
+            "y": 32
+          },
+          "sourceSpriteIndex": 85,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 16.0,
+            "y": 16.0
+          },
+          "trimmedRect": {
+            "h": 15,
+            "w": 32,
+            "x": 45,
+            "y": 124
+          },
+          "trimmedSourceRect": {
+            "h": 15,
+            "w": 32,
+            "x": 96,
+            "y": 32
+          }
+        },
+        {
+          "id": "platform_2_sole",
+          "index": 86,
+          "pivot": {
+            "x": 16.0,
+            "y": 16.0
+          },
+          "rect": {
+            "h": 32,
+            "w": 32,
+            "x": 156,
+            "y": 127
+          },
+          "rotated": false,
+          "sourceFilename": "Decorations (32x32).png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 32,
+            "w": 32,
+            "x": 128,
+            "y": 32
+          },
+          "sourceSpriteIndex": 86,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 16.0,
+            "y": 16.0
+          },
+          "trimmedRect": {
+            "h": 15,
+            "w": 32,
+            "x": 156,
+            "y": 127
+          },
+          "trimmedSourceRect": {
+            "h": 15,
+            "w": 32,
+            "x": 128,
+            "y": 32
+          }
+        },
+        {
+          "id": "window_1",
+          "index": 87,
+          "pivot": {
+            "x": 32.0,
+            "y": 32.0
+          },
+          "rect": {
+            "h": 64,
+            "w": 64,
+            "x": 105,
+            "y": -6
+          },
+          "rotated": false,
+          "sourceFilename": "Decorations (32x32).png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 64,
+            "w": 64,
+            "x": 32,
+            "y": 64
+          },
+          "sourceSpriteIndex": 87,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 23.0,
+            "y": 25.0
+          },
+          "trimmedRect": {
+            "h": 57,
+            "w": 55,
+            "x": 114,
+            "y": 1
+          },
+          "trimmedSourceRect": {
+            "h": 57,
+            "w": 55,
+            "x": 41,
+            "y": 71
+          }
+        },
+        {
+          "id": "window_2",
+          "index": 88,
+          "pivot": {
+            "x": 32.0,
+            "y": 32.0
+          },
+          "rect": {
+            "h": 64,
+            "w": 64,
+            "x": 49,
+            "y": -6
+          },
+          "rotated": false,
+          "sourceFilename": "Decorations (32x32).png",
+          "sourcePath": "",
+          "sourceRect": {
+            "h": 64,
+            "w": 64,
+            "x": 96,
+            "y": 64
+          },
+          "sourceSpriteIndex": 88,
+          "tags": {},
+          "textureFilename": "spright0.png",
+          "trimmedPivot": {
+            "x": 23.0,
+            "y": 25.0
+          },
+          "trimmedRect": {
+            "h": 57,
+            "w": 55,
+            "x": 58,
+            "y": 1
+          },
+          "trimmedSourceRect": {
+            "h": 57,
+            "w": 55,
+            "x": 105,
+            "y": 71
+          }
+        }
+      ],
+      "width": 198
+    }
+  ]
+}
