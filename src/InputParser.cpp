@@ -168,7 +168,7 @@ void InputParser::sprite_ends(State& state) {
 }
 
 void InputParser::deduce_globbing_sheets(State& state) {
-  for (const auto& filename : glob_sequences(state.path / state.sheet.filename())) {
+  for (const auto& filename : glob_sequences(path_to_utf8(state.path / state.sheet.filename()))) {
     state.sheet = filename;
     sheet_ends(state);
   }
@@ -187,15 +187,15 @@ void InputParser::deduce_sequence_sprites(State& state) {
   }
 
   for (auto i = 0; i < state.sheet.count(); ++i) {
-    const auto& sheet = *get_sheet(state, i);
-    state.rect = sheet.bounds();
+    const auto sheet = get_sheet(state, i);
+    state.rect = sheet->bounds();
     sprite_ends(state);
   }
 }
 
 void InputParser::deduce_grid_sprites(State& state) {
-  const auto& sheet = *get_sheet(state);
-  const auto bounds = get_used_bounds(sheet);
+  const auto sheet = get_sheet(state);
+  const auto bounds = get_used_bounds(*sheet);
 
   auto grid = state.grid;
   grid.x += state.grid_spacing.x;
@@ -203,8 +203,8 @@ void InputParser::deduce_grid_sprites(State& state) {
 
   const auto x0 = 0;
   const auto y0 = floor(bounds.y, grid.y) / grid.y;
-  const auto x1 = std::min(ceil(bounds.x1(), grid.x), sheet.width()) / grid.x;
-  const auto y1 = std::min(ceil(bounds.y1(), grid.y), sheet.height()) / grid.y;
+  const auto x1 = std::min(ceil(bounds.x1(), grid.x), sheet->width()) / grid.x;
+  const auto y1 = std::min(ceil(bounds.y1(), grid.y), sheet->height()) / grid.y;
 
   for (auto y = y0; y < y1; ++y) {
     auto output_offset = false;
@@ -217,7 +217,7 @@ void InputParser::deduce_grid_sprites(State& state) {
         state.grid.x, state.grid.y
       };
 
-      if (is_fully_transparent(sheet, state.rect)) {
+      if (is_fully_transparent(*sheet, state.rect)) {
         ++skipped;
         continue;
       }
@@ -246,12 +246,12 @@ void InputParser::deduce_grid_sprites(State& state) {
 }
 
 void InputParser::deduce_unaligned_sprites(State& state) {
-  const auto& sheet = *get_sheet(state);
-  for (const auto& rect : find_islands(sheet)) {
+  const auto sheet = get_sheet(state);
+  for (const auto& rect : find_islands(*sheet)) {
     if (m_settings.autocomplete) {
       auto& os = m_autocomplete_output;
       os << state.indent << "sprite \n";
-      if (rect != sheet.bounds())
+      if (rect != sheet->bounds())
         os << state.indent << "  rect "
           << rect.x << " " << rect.y << " "
           << rect.w << " " << rect.h << "\n";
