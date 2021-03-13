@@ -109,7 +109,7 @@ void output_description(const Settings& settings,
 
   auto file = std::ofstream();
   auto& os = [&]() -> std::ostream& {
-    if (settings.output_file == "cout")
+    if (settings.output_file == "stdout")
       return std::cout;
     file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     file.open(settings.output_file, std::ios::out);

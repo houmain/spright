@@ -16,7 +16,7 @@ std::vector<Sprite> parse_definition(const Settings& settings) {
 
   for (const auto& input_file : settings.input_files) {
 
-    if (input_file == "cin") {
+    if (input_file == "stdin") {
       parser.parse(std::cin);
       continue;;
     }
