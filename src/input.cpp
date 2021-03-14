@@ -21,7 +21,7 @@ std::vector<Sprite> parse_definition(const Settings& settings) {
       continue;;
     }
 
-    auto input = std::fstream(input_file, std::ios::in);
+    auto input = std::fstream(input_file, std::ios::in | std::ios::binary);
     if (!input.good())
       throw std::runtime_error("opening file '" + path_to_utf8(input_file) + "' failed");
 

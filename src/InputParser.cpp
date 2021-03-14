@@ -125,7 +125,7 @@ ImagePtr InputParser::get_sheet(const std::filesystem::path& path,
 
 ImagePtr InputParser::get_sheet(const State& state, int index) {
   return get_sheet(state.path,
-    state.sheet.get_nth_filename(index),
+    utf8_to_path(state.sheet.get_nth_filename(index)),
     state.colorkey);
 }
 
@@ -608,6 +608,12 @@ void InputParser::parse(std::istream& input) {
   auto arguments = std::vector<std::string_view>();
   for (m_line_number = 1; !input.eof(); ++m_line_number) {
     std::getline(input, buffer);
+
+    // skip UTF-8 BOM
+    if (m_line_number == 1 && starts_with(buffer.data(), "\xEF\xBB\xBF")) {
+      --m_line_number;
+      continue;
+    }
 
     auto line = ltrim(buffer);
     const auto level = static_cast<int>(buffer.size() - line.size());

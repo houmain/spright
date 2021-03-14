@@ -4,6 +4,11 @@
 #include <iostream>
 
 int main(int argc, const char* argv[]) try {
+
+#if defined(_WIN32)
+  setlocale(LC_ALL, ".UTF-8");
+#endif
+
   auto settings = Settings{ };
   if (!interpret_commandline(settings, argc, argv)) {
     print_help_message(argv[0]);

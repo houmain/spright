@@ -52,6 +52,10 @@ file(GLOB_RECURSE HEADERS include src/**.h libs/*.hpp libs/**.h )
 
 if (WIN32)
     add_compile_definitions(UNICODE _WIN32_WINNT=0x0501)
+
+    set(SOURCES ${SOURCES}
+        libs/utf8_console/utf8_console.cpp
+    )
 endif()
 
 include_directories(.)

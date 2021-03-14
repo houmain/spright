@@ -112,7 +112,7 @@ void output_description(const Settings& settings,
     if (settings.output_file == "stdout")
       return std::cout;
     file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-    file.open(settings.output_file, std::ios::out);
+    file.open(settings.output_file, std::ios::out | std::ios::binary);
     return file;
   }();
 
