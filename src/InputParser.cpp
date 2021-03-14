@@ -160,11 +160,27 @@ void InputParser::sprite_ends(State& state) {
   sprite.extrude = state.extrude;
   sprite.common_divisor = state.common_divisor;
   sprite.tags = state.tags;
+  validate_sprite(sprite);
   m_sprites.push_back(std::move(sprite));
 
   if (state.sheet.is_sequence())
     ++m_current_sequence_index;
   ++m_sprites_in_current_sheet;
+}
+
+void InputParser::validate_sprite(const Sprite& sprite) {
+  if (sprite.source_rect != intersect(sprite.source->bounds(), sprite.source_rect)) {
+    auto message = std::stringstream();
+    message << "sprite";
+    if (!sprite.id.empty())
+      message << " '" << sprite.id << "' ";
+    message << "(" <<
+      sprite.source_rect.x << ", " <<
+      sprite.source_rect.y << ", " <<
+      sprite.source_rect.w << ", " <<
+      sprite.source_rect.h << ") outside '" << path_to_utf8(sprite.source->filename()) << "' bounds";
+    error(message.str());
+  }
 }
 
 void InputParser::deduce_globbing_sheets(State& state) {

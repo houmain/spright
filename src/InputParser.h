@@ -112,6 +112,7 @@ private:
       std::vector<std::string_view>& arguments);
   bool has_implicit_scope(Definition definition);
   void scope_ends(State& state);
+  void validate_sprite(const Sprite& sprite);
 
   const Settings& m_settings;
   std::stringstream m_autocomplete_output;
