@@ -16,6 +16,28 @@ Rect intersect(const Rect& a, const Rect& b) {
   return { x0, y0, x1 - x0, y1 - y0 };
 }
 
+bool containing(const Rect& a, const Rect& b) {
+  return (a.x <= b.x &&
+          a.y <= b.y &&
+          a.x + a.w >= b.x + b.w &&
+          a.y + a.h >= b.y + b.h);
+}
+
+bool overlapping(const Rect& a, const Rect& b) {
+  return !(a.x + a.w < b.x ||
+           b.x + b.w < a.x ||
+           a.y + a.h < b.y ||
+           b.y + b.h < a.y);
+}
+
+Rect combine(const Rect& a, const Rect& b) {
+  const auto x0 = std::min(a.x, b.x);
+  const auto y0 = std::min(a.y, b.y);
+  const auto x1 = std::max(a.x + a.w, b.x + b.w);
+  const auto y1 = std::max(a.y + a.h, b.y + b.h);
+  return { x0, y0, x1 - x0, y1 - y0 };
+}
+
 std::filesystem::path utf8_to_path(std::string_view utf8_string) {
   static_assert(sizeof(char) == sizeof(char8_t));
 #if defined(__cpp_char8_t)

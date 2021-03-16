@@ -9,11 +9,7 @@
 
 namespace {
   void check_rect(const Image& image, const Rect& rect) {
-    const auto [x, y, w, h] = rect;
-    if (x < 0 ||
-        y < 0 ||
-        x + w > image.width() ||
-        y + h > image.height())
+    if (!containing(image.bounds(), rect))
       throw std::logic_error("access outside image bounds");
   }
 
@@ -82,6 +78,39 @@ namespace {
         }
       }
     }
+  }
+
+  void merge_contained_rects(std::vector<Rect>& rects) {
+    for (auto i = 0u; i < rects.size(); ++i) {
+      const auto& a = rects[i];
+      if (!empty(a))
+        for (auto j = i + 1; j < rects.size(); ++j) {
+          auto& b = rects[j];
+          if (containing(a, b))
+            b = { };
+        }
+    }
+    rects.erase(std::remove_if(begin(rects), end(rects),
+      [](const Rect& a) { return empty(a); }), end(rects));
+  }
+
+  [[maybe_unused]] void merge_overlapping_rects(std::vector<Rect>& rects) {
+    for (auto i = 0u; i < rects.size(); ++i) {
+      auto& a = rects[i];
+      if (!empty(a))
+        for (auto j = i + 1; j < rects.size(); ++j) {
+          auto& b = rects[j];
+          if (overlapping(a, b)) {
+            a = combine(a, b);
+            b = { };
+            // restart i after expansion
+            --i;
+            break;
+          }
+        }
+    }
+    rects.erase(std::remove_if(begin(rects), end(rects),
+      [](const Rect& a) { return empty(a); }), end(rects));
   }
 } // namespace
 
@@ -339,6 +368,9 @@ std::vector<Rect> find_islands(const Image& image, const Rect& rect) {
         islands.push_back({ min_x, min_y, max_x - min_x + 1, max_y - min_y + 1 });
       }
 
+  merge_contained_rects(islands);
+  //merge_overlapping_rects(islands);
+
   // fuzzy sort from top to bottom, left to right
   const auto center_considerably_less = [](const Rect& a, const Rect& b) {
     const auto row_tolerance = std::min(a.h, b.h) / 4;
@@ -348,7 +380,7 @@ std::vector<Rect> find_islands(const Image& image, const Rect& rect) {
     if (cb.y < ca.y - row_tolerance) return false;
     return std::tie(ca.x, ca.y) < std::tie(cb.x, cb.y);
   };
-  std::sort(begin(islands), end(islands), center_considerably_less);
+  std::stable_sort(begin(islands), end(islands), center_considerably_less);
 
   return islands;
 }

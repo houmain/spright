@@ -40,6 +40,9 @@ inline bool operator==(const Rect& a, const Rect& b) { return std::tie(a.x, a.y,
 inline bool operator!=(const Rect& a, const Rect& b) { return !(a == b); }
 Rect expand(const Rect& rect, int value);
 Rect intersect(const Rect& a, const Rect& b);
+bool containing(const Rect& a, const Rect& b);
+bool overlapping(const Rect& a, const Rect& b);
+Rect combine(const Rect& a, const Rect& b);
 
 struct LStringView : std::string_view {
   LStringView(std::string_view s) : std::string_view(s) { }

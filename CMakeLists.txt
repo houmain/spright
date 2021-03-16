@@ -84,6 +84,6 @@ endif()
 
 if(NOT WIN32)
     install(TARGETS ${PROJECT_NAME} DESTINATION "bin")
-else(NOT WIN32)
+else()
     install(TARGETS ${PROJECT_NAME} DESTINATION .)
-endif(NOT WIN32)
+endif()

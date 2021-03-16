@@ -279,8 +279,8 @@ So each sprite can appear in multiple contexts. SPRITE represents objects with t
 ```
 For example, [spright.json](docs/spright.json) was generated from the [sample](#advanced-usage-example) above. As you can see, it is very verbose and only intended as an intermediate file, which should be transformed using the [template engine](#output-template-engine).
 
-Output template engine:
------------------------
+Output template engine
+----------------------
 With the power of the [inja](https://github.com/pantor/inja/) template engine it should be possible to transform the [output description](#output-description) to a text file consumable by your game engine.\
 A template is selected with the **-t** or **--template** and the output filename with the **-o** or **--output** parameter:
 
@@ -309,7 +309,7 @@ The C++ template is just an example for how the sprite description can be direct
 Installation
 ------------
 
-No packages are provided yet, please follow the instructions for [building manually](#Building) or download a portable build from the [latest release](https://github.com/houmain/keymapper/releases/latest) page.
+No packages are provided yet, please follow the instructions for [building manually](#Building) or download a portable build from the [latest release](https://github.com/houmain/spright/releases/latest) page.
 
 Building
 --------
