@@ -112,7 +112,7 @@ ImagePtr InputParser::get_sheet(const std::filesystem::path& path,
   if (!sheet) {
     auto image = Image(path, filename);
 
-    if (is_opaque(image)) {
+    if (colorkey != RGBA{ }) {
       if (!colorkey.a)
         colorkey = guess_colorkey(image);
       replace_color(image, colorkey, RGBA{ });
@@ -430,10 +430,11 @@ void InputParser::apply_definition(State& state,
       m_current_offset = { };
       break;
 
-    case Definition::colorkey:
-      state.colorkey = check_color();
+    case Definition::colorkey: {
+      const auto guess = RGBA{ { 255, 255, 255, 0 } };
+      state.colorkey = (arguments_left() ? check_color() : guess);
       break;
-
+    }
     case Definition::tag: {
       auto& tag = state.tags[std::string(check_string())];
       tag = (arguments_left() ? check_string() : "");

@@ -198,7 +198,7 @@ The following table contains a list of all definitions, with the subject each af
 | -------------- |-------| -------------| ----------- |
 | **input**      |-      | path         | Adds a new input file at _path_. It can contain wildcards (e.g. "sprites/**/*.png") or it can describe an un-/bounded sequence of files (e.g. "frames_{0-}.png, frames_{0001-0013}.png").
 | path           |input  | path         | A _path_ which should be prepended to the input's path.
-| colorkey       |input  | color        | Sets a _color_ which should be considered transparent (in hex notation e.g. _FF00FF_).
+| colorkey       |input  | [color]      | Specifies that the input has a color, which should be considered transparent (in hex notation e.g. _FF00FF_).
 | grid           |input  | x, [y]       | Specifies that the sprites in the input are arranged in a grid of a certain cell size. In this mode the _rect_ of each _sprite_ is deduced from the grid. Each _sprite_ automatically advances the current cell horizontally.
 | grid-offset    |input  | x, [y]       | Offsets the grid from the top-left corner.
 | grid-spacing   |input  | x, [y]       | Sets a spacing between the grid cells.
