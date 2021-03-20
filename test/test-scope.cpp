@@ -3,7 +3,7 @@
 #include "src/InputParser.h"
 #include <sstream>
 
-TEST_CASE("Tags", "[scope]") {
+TEST_CASE("scope - Tags") {
   auto input = std::stringstream(R"(
     input "test/Items.png"
       grid 16 16
@@ -55,7 +55,7 @@ TEST_CASE("Tags", "[scope]") {
   CHECK(sprites[4].trim == Trim::none);
 }
 
-TEST_CASE("Texture", "[scope]") {
+TEST_CASE("scope - Texture") {
   auto input = std::stringstream(R"(
     width 256
     texture "tex1"

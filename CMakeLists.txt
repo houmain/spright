@@ -76,6 +76,7 @@ if(ENABLE_TEST)
         test/test-packing.cpp
         test/test-performance.cpp
         test/test-globbing.cpp
+        test/test-templates.cpp
     )
     list(REMOVE_ITEM TEST_SOURCES src/main.cpp)
     add_executable(spright-tests ${TEST_SOURCES})

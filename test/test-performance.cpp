@@ -77,7 +77,7 @@ namespace {
   }
 } // namespace
 
-TEST_CASE("100 pixels", "[performance]") {
+TEST_CASE("performance - 100 pixels") {
   auto sizes = generate_pack_sizes({
     { 100, 1, 1, 1, 1, true }
   });
@@ -86,7 +86,7 @@ TEST_CASE("100 pixels", "[performance]") {
   CHECK(le_size(sheets[0], 10, 10));
 }
 
-TEST_CASE("Some", "[performance]") {
+TEST_CASE("performance - Some") {
   auto sizes = generate_pack_sizes({
     { 10, 5, 5, 5, 9, true },
     { 10, 13, 5, 13, 9, true },
@@ -97,7 +97,7 @@ TEST_CASE("Some", "[performance]") {
   CHECK(le_size(sheets[0], 57, 57));
 }
 
-TEST_CASE("Big", "[performance]") {
+TEST_CASE("performance - Big") {
   auto sizes = generate_pack_sizes({
     { 10, 30, 30, 400, 400, true }
   });
@@ -106,7 +106,7 @@ TEST_CASE("Big", "[performance]") {
   CHECK(le_size(sheets[0], 533, 570));
 }
 
-TEST_CASE("Long", "[performance]") {
+TEST_CASE("performance - Long") {
   auto sizes = generate_pack_sizes({
     { 50, 30, 30, 50, 400, true },
   });
@@ -115,7 +115,7 @@ TEST_CASE("Long", "[performance]") {
   CHECK(le_size(sheets[0], 660, 632));
 }
 
-TEST_CASE("1000 Skyline", "[performance]") {
+TEST_CASE("performance - 1000 Skyline") {
   auto sizes = generate_pack_sizes({
     { 333, 5, 5, 15, 10, true },
     { 333, 13, 10, 23, 20, true },

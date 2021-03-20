@@ -2,7 +2,7 @@
 #include "catch.hpp"
 #include "src/globbing.h"
 
-TEST_CASE("Match", "[globbing]") {
+TEST_CASE("globbing - Match") {
   CHECK(match("", ""));
   CHECK(!match("a", "b"));
   CHECK(match("?", "b"));

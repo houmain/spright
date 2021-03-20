@@ -3,7 +3,7 @@
 #include "src/InputParser.h"
 #include <sstream>
 
-TEST_CASE("Grid", "[autocompletion]") {
+TEST_CASE("autocompletion - Grid") {
   auto input = std::stringstream(R"(
 input "test/Items.png"
   colorkey
@@ -52,7 +52,7 @@ input "test/Items.png"
 )");
 }
 
-TEST_CASE("Unaligned", "[autocompletion]") {
+TEST_CASE("autocompletion - Unaligned") {
   auto input = std::stringstream(R"(
     input "test/Items.png"
       colorkey
@@ -63,7 +63,7 @@ TEST_CASE("Unaligned", "[autocompletion]") {
   CHECK(sprites.size() == 31);
 }
 
-TEST_CASE("ID generator", "[autocompletion]") {
+TEST_CASE("autocompletion - ID generator") {
   auto input = std::stringstream(R"(
     path "test"
     input "Items.png"

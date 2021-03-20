@@ -46,7 +46,7 @@ namespace {
   };
 } // namespace
 
-TEST_CASE("Basic", "[packing]") {
+TEST_CASE("packing - Basic") {
   auto texture = pack_single_sheet(R"(
     input "test/Items.png"
       colorkey
@@ -232,7 +232,7 @@ TEST_CASE("Basic", "[packing]") {
   CHECK(le_size(texture, 478, 18));
 }
 
-TEST_CASE("Errors", "[packing]") {
+TEST_CASE("packing - Errors") {
   CHECK_THROWS(pack(R"(
     padding 1
     max-width 16
@@ -250,7 +250,7 @@ TEST_CASE("Errors", "[packing]") {
   )"));
 }
 
-TEST_CASE("Multiple sheets", "[packing]") {
+TEST_CASE("packing - Multiple sheets") {
   auto textures = pack(R"(
     allow-rotate
     deduplicate
