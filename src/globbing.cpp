@@ -96,26 +96,22 @@ bool match(std::string_view pattern, std::string_view string) {
   return false;
 }
 
-std::vector<std::string> glob(const std::string& pattern) {
-  const auto pattern_path = utf8_to_path(pattern);
-  auto root = std::filesystem::path{ };
-  for (const auto& part : pattern_path) {
+std::vector<std::string> glob(
+    const std::filesystem::path& path, const std::string& pattern) {
+  auto root = (path.empty() ? "." : path) / "";
+  const auto path_size = path_to_utf8(root).size();
+  for (const auto& part : utf8_to_path(pattern)) {
     if (path_to_utf8(part).find_first_of("*?") != std::string::npos) {
-      const auto pattern_string = path_to_utf8(pattern_path.generic_string());
-      const auto added_dot_directory = root.empty();
-      if (added_dot_directory)
-        root /= ".";
       auto files = std::vector<std::string>();
       for_each_file(root, [&](const std::filesystem::path& file) {
-        auto file_string = path_to_utf8(file.generic_string());
-        if (added_dot_directory)
-          file_string.erase(0, 2);
-        if (match(pattern_string, file_string))
-          files.push_back(std::move(file_string));
+        auto file_string = path_to_utf8(file);
+        file_string.erase(0, path_size);
+        if (match(pattern, file_string))
+          files.emplace_back(std::move(file_string));
       });
       return files;
     }
-    root += part;
+    root /= part;
   }
   auto error = std::error_code();
   if (std::filesystem::exists(pattern, error))
@@ -127,14 +123,14 @@ bool is_globbing_pattern(const std::string& filename) {
   return (filename.find_first_of("*?") != std::string::npos);
 }
 
-std::vector<FilenameSequence> glob_sequences(const std::string& pattern) {
-  auto paths = glob(pattern);
+std::vector<FilenameSequence> glob_sequences(
+    const std::filesystem::path& path, const std::string& pattern) {
+  auto paths = glob(path, pattern);
   std::sort(begin(paths), end(paths));
 
   auto sequence_merger = SequenceMerger();
   auto sequences = std::vector<FilenameSequence>();
-  for (const auto& path : paths) {
-    const auto filename = path_to_utf8(path);
+  for (const auto& filename : paths) {
     if (!sequence_merger.add(filename)) {
       sequences.push_back(sequence_merger.flush());
       sequence_merger.add(filename);

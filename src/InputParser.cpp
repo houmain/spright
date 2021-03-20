@@ -184,7 +184,7 @@ void InputParser::validate_sprite(const Sprite& sprite) {
 }
 
 void InputParser::deduce_globbing_sheets(State& state) {
-  for (const auto& filename : glob_sequences(path_to_utf8(state.path / state.sheet.filename()))) {
+  for (const auto& filename : glob_sequences(state.path, state.sheet.filename())) {
     state.sheet = filename;
     sheet_ends(state);
   }

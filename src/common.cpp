@@ -49,9 +49,13 @@ std::filesystem::path utf8_to_path(std::string_view utf8_string) {
 #endif
 }
 
+std::filesystem::path utf8_to_path(const std::string& utf8_string) {
+  return utf8_to_path(std::string_view(utf8_string));
+}
+
 std::string path_to_utf8(const std::filesystem::path& path) {
   static_assert(sizeof(char) == sizeof(char8_t));
-  const auto u8string = path.u8string();
+  const auto u8string = path.generic_u8string();
   return std::string(
     reinterpret_cast<const char*>(u8string.data()),
     reinterpret_cast<const char*>(u8string.data() + u8string.size()));
