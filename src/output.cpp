@@ -83,24 +83,47 @@ namespace {
     return json;
   }
 
+  std::string remove_extension(std::string filename) {
+    const auto dot = filename.rfind('.');
+    if (dot != std::string::npos)
+      filename.resize(dot);
+    return filename;
+  }
+
   std::string generate_sprite_id(int index) {
     return "sprite_" + std::to_string(index);
   }
 
-  std::string remove_extension(std::string filename) {
-    const auto dot = filename.rfind('.');
-    if (dot != std::string::npos)
-      filename.resize(dot - 1);
-    return filename;
-  }
+  inja::Environment setup_inja_environment() {
+    auto env = inja::Environment();
+    env.set_trim_blocks(false);
+    env.set_lstrip_blocks(false);
 
-  std::string get_id_from_filename(std::string filename, int sprite_index) {
-    auto id = remove_extension(std::move(filename));
-    if (sprite_index >= 0)
-      id += "<" + std::to_string(sprite_index) + ">";
-    return id;
+    env.add_callback("getId", 1, [](inja::Arguments& args) -> inja::json {
+      const auto& s = args.at(0)->get<inja::json>();
+      const auto id = std::string(s["id"]);
+      return (!id.empty() ? id : generate_sprite_id(s["index"]));
+    });
+    env.add_callback("getIdOrFilename", 1, [](inja::Arguments& args) -> inja::json {
+      const auto& s = args.at(0)->get<inja::json>();
+      const auto id = std::string(s["id"]);
+      return (!id.empty() ? id : std::string(s["sourceFilename"]));
+    });
+    env.add_callback("removeExtension", 1, [](inja::Arguments& args) -> inja::json {
+      return remove_extension(args.at(0)->get<std::string>());
+    });
+    return env;
   }
 } // namespace
+
+std::string get_description(const std::string& template_source,
+    const std::vector<Sprite>& sprites, const std::vector<PackedTexture>& textures) {
+  auto ss = std::stringstream();
+  const auto json = get_json_description(sprites, textures);
+  auto env = setup_inja_environment();
+  env.render_to(ss, env.parse(template_source), json);
+  return ss.str();
+}
 
 void output_description(const Settings& settings,
     const std::vector<Sprite>& sprites, const std::vector<PackedTexture>& textures) {
@@ -118,22 +141,7 @@ void output_description(const Settings& settings,
 
   const auto json = get_json_description(sprites, textures);
   if (!settings.template_file.empty()) {
-    auto env = inja::Environment();
-    env.set_trim_blocks(false);
-    env.set_lstrip_blocks(false);
-
-    env.add_callback("getId", 1, [](inja::Arguments& args) -> inja::json {
-      const auto& s = args.at(0)->get<inja::json>();
-      auto id = std::string(s["id"]);
-      return (!id.empty() ? id : generate_sprite_id(s["index"]));
-    });
-    env.add_callback("getIdOrFilename", 1, [](inja::Arguments& args) -> inja::json {
-      const auto& s = args.at(0)->get<inja::json>();
-      auto id = std::string(s["id"]);
-      return (!id.empty() ? id :
-        get_id_from_filename(s["sourceFilename"], s.value("sourceSpriteIndex", -1)));
-    });
-
+    auto env = setup_inja_environment();
     env.render_to(os, env.parse_template(path_to_utf8(settings.template_file)), json);
   }
   else {
