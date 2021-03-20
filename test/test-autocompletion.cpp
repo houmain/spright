@@ -5,7 +5,8 @@
 
 TEST_CASE("Grid", "[autocompletion]") {
   auto input = std::stringstream(R"(
-sheet "test/Items.png"
+input "test/Items.png"
+  colorkey
   grid 16 16
   )");
   auto parser = InputParser(Settings{ .autocomplete = true });
@@ -15,7 +16,8 @@ sheet "test/Items.png"
 
   const auto text = parser.autocomplete_output();
   CHECK(text == R"(
-sheet "test/Items.png"
+input "test/Items.png"
+  colorkey
   grid 16 16
   row 1
     skip
@@ -52,7 +54,8 @@ sheet "test/Items.png"
 
 TEST_CASE("Unaligned", "[autocompletion]") {
   auto input = std::stringstream(R"(
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
   auto parser = InputParser(Settings{ });
   REQUIRE_NOTHROW(parser.parse(input));
@@ -63,7 +66,8 @@ TEST_CASE("Unaligned", "[autocompletion]") {
 TEST_CASE("ID generator", "[autocompletion]") {
   auto input = std::stringstream(R"(
     path "test"
-    sheet "Items.png"
+    input "Items.png"
+      colorkey
       id "item_%i"
   )");
   auto parser = InputParser(Settings{ });

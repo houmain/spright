@@ -5,7 +5,7 @@
 
 TEST_CASE("Tags", "[scope]") {
   auto input = std::stringstream(R"(
-    sheet "test/Items.png"
+    input "test/Items.png"
       grid 16 16
       trim none
       tag "A"
@@ -66,7 +66,7 @@ TEST_CASE("Texture", "[scope]") {
     texture "tex3"
       padding 3
     width 64
-    sheet "test/Items.png"
+    input "test/Items.png"
       grid 16 16
       sprite
       sprite

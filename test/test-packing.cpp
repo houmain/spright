@@ -48,42 +48,48 @@ namespace {
 
 TEST_CASE("Basic", "[packing]") {
   auto texture = pack_single_sheet(R"(
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
-  CHECK(le_size(texture, 58, 60));
+  CHECK(le_size(texture, 58, 58));
 
   texture = pack_single_sheet(R"(
     allow-rotate true
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
-  CHECK(le_size(texture, 58, 59));
+  CHECK(le_size(texture, 58, 58));
 
   texture = pack_single_sheet(R"(
     deduplicate true
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
   CHECK(le_size(texture, 55, 58));
 
   texture = pack_single_sheet(R"(
     allow-rotate true
     deduplicate true
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
-  CHECK(le_size(texture, 58, 55));
+  CHECK(le_size(texture, 56, 56));
 
   texture = pack_single_sheet(R"(
     max-width 128
     max-height 128
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
   CHECK(texture.width <= 128);
   CHECK(texture.height <= 128);
-  CHECK(le_size(texture, 58, 60));
+  CHECK(le_size(texture, 58, 58));
 
   texture = pack_single_sheet(R"(
     width 128
     max-height 128
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
   CHECK(texture.width == 128);
   CHECK(texture.height <= 128);
@@ -92,7 +98,8 @@ TEST_CASE("Basic", "[packing]") {
   texture = pack_single_sheet(R"(
     max-width 128
     height 128
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
   CHECK(texture.width <= 128);
   CHECK(texture.height == 128);
@@ -100,35 +107,40 @@ TEST_CASE("Basic", "[packing]") {
 
   texture = pack_single_sheet(R"(
     max-width 40
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
   CHECK(texture.width <= 40);
-  CHECK(le_size(texture, 40, 86));
+  CHECK(le_size(texture, 40, 85));
 
   texture = pack_single_sheet(R"(
     max-height 40
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
   CHECK(texture.height <= 40);
-  CHECK(le_size(texture, 86, 40));
+  CHECK(le_size(texture, 89, 38));
 
   texture = pack_single_sheet(R"(
     power-of-two true
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
   CHECK(texture.width == 64);
   CHECK(texture.height == 64);
 
   texture = pack_single_sheet(R"(
     padding 1
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
-  CHECK(le_size(texture, 64, 66));
+  CHECK(le_size(texture, 63, 65));
 
   texture = pack_single_sheet(R"(
     padding 1
     power-of-two true
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
   CHECK(ceil_to_pot(texture.width) == texture.width);
   CHECK(ceil_to_pot(texture.height) == texture.height);
@@ -137,7 +149,8 @@ TEST_CASE("Basic", "[packing]") {
   texture = pack_single_sheet(R"(
     max-height 16
     common-divisor 16
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
   CHECK(texture.height <= 16);
   CHECK(le_size(texture, 496, 16));
@@ -146,7 +159,8 @@ TEST_CASE("Basic", "[packing]") {
     padding 0 1
     common-divisor 16
     max-height 20
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
   CHECK(texture.height <= 20);
   CHECK(le_size(texture, 498, 18));
@@ -155,7 +169,8 @@ TEST_CASE("Basic", "[packing]") {
     padding 1
     common-divisor 16
     max-height 30
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
   CHECK(texture.height <= 30);
   CHECK(le_size(texture, 528, 18));
@@ -164,7 +179,8 @@ TEST_CASE("Basic", "[packing]") {
     padding 1 0
     common-divisor 16
     max-height 20
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
   CHECK(texture.height <= 20);
   CHECK(le_size(texture, 526, 16));
@@ -173,7 +189,8 @@ TEST_CASE("Basic", "[packing]") {
     max-height 30
     common-divisor 24
     extrude 1
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
   CHECK(texture.height <= 30);
   CHECK(le_size(texture, 806, 26));
@@ -181,7 +198,8 @@ TEST_CASE("Basic", "[packing]") {
   texture = pack_single_sheet(R"(
     padding 8 0
     common-divisor 16
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
   CHECK(le_size(texture, 136, 136));
 
@@ -190,14 +208,16 @@ TEST_CASE("Basic", "[packing]") {
     deduplicate
     allow-rotate
     common-divisor 16
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
   CHECK(le_size(texture, 112, 112));
 
   texture = pack_single_sheet(R"(
     padding 8 0
     max-width 16
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
   CHECK(texture.width == 16);
   CHECK(le_size(texture, 492, 16));
@@ -205,7 +225,8 @@ TEST_CASE("Basic", "[packing]") {
   texture = pack_single_sheet(R"(
     padding 8 1
     max-height 18
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
   CHECK(texture.height == 18);
   CHECK(le_size(texture, 478, 18));
@@ -216,14 +237,16 @@ TEST_CASE("Errors", "[packing]") {
     padding 1
     max-width 16
     max-height 16
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )"));
 
   CHECK_THROWS(pack(R"(
     padding 0 1
     max-width 16
     max-height 16
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )"));
 }
 
@@ -234,7 +257,8 @@ TEST_CASE("Multiple sheets", "[packing]") {
     max-width 30
     square
     power-of-two
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )");
   CHECK(textures.size() == 13);
   CHECK(textures[0].width <= 30);
@@ -245,35 +269,38 @@ TEST_CASE("Multiple sheets", "[packing]") {
   CHECK_NOTHROW(textures = pack(R"(
     max-width 40
     max-height 40
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )"));
   CHECK(textures.size() == 3);
-  CHECK(le_size(textures[0], 40, 40));
-  CHECK(le_size(textures[1], 40, 40));
+  CHECK(le_size(textures[0], 36, 40));
+  CHECK(le_size(textures[1], 32, 32));
   CHECK(le_size(textures[2], 32, 32));
 
   CHECK_NOTHROW(textures = pack(R"(
     max-width 40
     max-height 40
     square
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )"));
   CHECK(textures.size() == 3);
   CHECK(le_size(textures[0], 40, 40));
-  CHECK(le_size(textures[1], 40, 40));
+  CHECK(le_size(textures[1], 32, 32));
   CHECK(textures[2].width == textures[2].height);
 
   CHECK_NOTHROW(textures = pack(R"(
     max-width 40
     max-height 40
     power-of-two true
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )"));
   CHECK(textures.size() == 4);
   CHECK(le_size(textures[0], 32, 32));
   CHECK(le_size(textures[1], 32, 32));
   CHECK(le_size(textures[2], 32, 32));
-  CHECK(le_size(textures[3], 32, 32));
+  CHECK(le_size(textures[3], 32, 16));
 
   textures = pack("");
   CHECK(textures.size() == 0);
@@ -284,7 +311,8 @@ TEST_CASE("Multiple sheets", "[packing]") {
   CHECK_NOTHROW(textures = pack(R"(
     max-width 16
     max-height 16
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )"));
   CHECK(textures.size() == 14);
   CHECK(textures[0].width <= 16);
@@ -294,7 +322,8 @@ TEST_CASE("Multiple sheets", "[packing]") {
     padding 1 0
     max-width 16
     max-height 16
-    sheet "test/Items.png"
+    input "test/Items.png"
+      colorkey
   )"));
   CHECK(textures.size() == 15);
   CHECK(textures[0].width <= 16);
