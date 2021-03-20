@@ -13,7 +13,7 @@ No graphical user interface is required, a text editor is enough. A program like
 
 ---
 
-Commandline arguments
+Command line arguments
 ---------------------
 ```
 Usage: spright [-options]
@@ -300,7 +300,8 @@ For information about the functionality of the template engine, please see the [
 Target  | Template
 --------|--------
 C++     | [cpp.template](cpp.template)
-[Phaser](https://github.com/photonstorm/phaser) | [phaser.template](phaser.template)
+[Phaser 3](https://github.com/photonstorm/phaser) | [phaser.template](phaser.template)
+[Phaser 2](https://github.com/photonstorm/phaser) | [phaser2.template](phaser2.template)
 
 The C++ template is just an example for how the sprite description can be directly embedded in code. This [spright.h](docs/spright.h) was generated from the [sample](#advanced-usage-example), using the [cpp.template](cpp.template) template.
 
