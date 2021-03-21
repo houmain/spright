@@ -139,11 +139,12 @@ void InputParser::sprite_ends(State& state) {
   // generate rect from grid
   if (empty(state.rect) && !empty(state.grid)) {
     state.rect = {
-      m_current_offset.x, m_current_offset.y,
+      state.grid_offset.x + (state.grid.x + state.grid_spacing.x) * m_current_grid_cell_x,
+      state.grid_offset.y + (state.grid.y + state.grid_spacing.y) * m_current_grid_cell_y,
       state.grid.x * state.span.x,
       state.grid.y * state.span.y
     };
-    m_current_offset.x += state.grid.x * state.span.x;
+    m_current_grid_cell_x += state.span.x;
   }
 
   auto sprite = Sprite{ };
@@ -428,7 +429,8 @@ void InputParser::apply_definition(State& state,
 
     case Definition::sheet:
       state.sheet = path_to_utf8(check_path());
-      m_current_offset = { };
+      m_current_grid_cell_x = { };
+      m_current_grid_cell_y = { };
       break;
 
     case Definition::colorkey: {
@@ -455,13 +457,13 @@ void InputParser::apply_definition(State& state,
 
     case Definition::row:
       check(!empty(state.grid), "offset is only valid in grid");
-      m_current_offset.x = 0;
-      m_current_offset.y = check_uint() * state.grid.y;
+      m_current_grid_cell_x = 0;
+      m_current_grid_cell_y = check_uint();
       break;
 
     case Definition::skip:
       check(!empty(state.grid), "skip is only valid in grid");
-      m_current_offset.x += (arguments_left() ? check_uint() : 1) * state.grid.x;
+      m_current_grid_cell_x += (arguments_left() ? check_uint() : 1);
       break;
 
     case Definition::span:
@@ -568,7 +570,8 @@ InputParser::InputParser(const Settings& settings)
 void InputParser::parse(std::istream& input) {
   m_autocomplete_output = { };
   m_sprites_in_current_sheet = { };
-  m_current_offset = { };
+  m_current_grid_cell_x = { };
+  m_current_grid_cell_y = { };
   m_current_sequence_index = { };
 
   auto indentation_detected = false;

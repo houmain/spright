@@ -121,6 +121,7 @@ private:
   std::map<std::filesystem::path, ImagePtr> m_sheets;
   std::vector<Sprite> m_sprites;
   int m_sprites_in_current_sheet{ };
-  Point m_current_offset{ };
+  int m_current_grid_cell_x{ };
+  int m_current_grid_cell_y{ };
   int m_current_sequence_index{ };
 };
