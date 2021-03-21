@@ -31,7 +31,7 @@ private:
   int m_height{ };
 };
 
-void save_image(const Image& image, const std::filesystem::path& path);
+void save_image(const Image& image, const std::filesystem::path& filename);
 void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy);
 void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy);
 void extrude_rect(Image& image, const Rect& rect, bool left, bool top, bool right, bool bottom);

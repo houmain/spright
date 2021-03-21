@@ -29,8 +29,8 @@ namespace {
 
   [[maybe_unused]] void dump(PackedTexture texture) {
     static auto i = 0;
-    texture.filename = FilenameSequence("dump-{000-}.png").get_nth_filename(i++);
-    output_texture({ .debug = true }, texture);
+    const auto filename = FilenameSequence("dump-{000-}.png").get_nth_filename(i++);
+    save_image(get_output_texture({ .debug = true }, texture), filename);
   }
 
   PackedTexture pack_single_sheet(const char* definition) {

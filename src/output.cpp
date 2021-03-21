@@ -125,7 +125,7 @@ std::string get_description(const std::string& template_source,
   return ss.str();
 }
 
-void output_description(const Settings& settings,
+void write_output_description(const Settings& settings,
     const std::vector<Sprite>& sprites, const std::vector<PackedTexture>& textures) {
   if (settings.output_file.empty())
     return;
@@ -149,7 +149,7 @@ void output_description(const Settings& settings,
   }
 }
 
-void output_texture(const Settings& settings, const PackedTexture& texture) {
+Image get_output_texture(const Settings& settings, const PackedTexture& texture) {
   // copy from sources to target sheet
   auto target = Image(texture.width, texture.height);
   for (const auto& sprite : texture.sprites) {
@@ -225,8 +225,5 @@ void output_texture(const Settings& settings, const PackedTexture& texture) {
       // draw_rect(target, expand(pivot_rect, 1), RGBA{ { 255, 255, 0, 128 } });
     }
   }
-
-  auto error = std::error_code{ };
-  std::filesystem::create_directories(texture.filename.parent_path(), error);
-  save_image(target, texture.filename);
+  return target;
 }

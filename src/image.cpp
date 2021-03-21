@@ -180,6 +180,8 @@ Image Image::clone() const {
 }
 
 void save_image(const Image& image, const std::filesystem::path& filename) {
+  auto error = std::error_code{ };
+  std::filesystem::create_directories(filename.parent_path(), error);
   if (!stbi_write_png(path_to_utf8(filename).c_str(), image.width(), image.height(), sizeof(RGBA),
       image.rgba(), image.width() * static_cast<int>(sizeof(RGBA))))
     throw std::runtime_error("writing file '" + path_to_utf8(filename) + "' failed");

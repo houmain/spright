@@ -30,7 +30,7 @@ set(SOURCES
 if(NOT MSVC)
     set_source_files_properties(${SOURCES}
        PROPERTIES COMPILE_FLAGS  "-Wall -Wextra -Wsign-conversion -Wconversion -Wno-missing-field-initializers")
-    link_libraries(stdc++fs)
+    link_libraries(stdc++fs pthread)
 else()
     add_compile_options(/GR- /W1)
     set(MSVC_SHARED_RUNTIME OFF)
