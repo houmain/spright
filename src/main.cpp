@@ -30,7 +30,8 @@ int main(int argc, const char* argv[]) try {
 
   for_each_parallel(begin(textures), end(textures),
     [&](const PackedTexture& texture) {
-      save_image(get_output_texture(settings, texture), texture.filename);
+      save_image(get_output_texture(settings, texture),
+        settings.output_path / texture.filename);
     });
   const auto t4 = Clock::now();
 

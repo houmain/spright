@@ -134,8 +134,11 @@ void write_output_description(const Settings& settings,
   auto& os = [&]() -> std::ostream& {
     if (settings.output_file == "stdout")
       return std::cout;
+    const auto filename = settings.output_path / settings.output_file;
+    auto error = std::error_code{ };
+    std::filesystem::create_directories(filename.parent_path(), error);
     file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-    file.open(settings.output_file, std::ios::out | std::ios::binary);
+    file.open(filename, std::ios::out | std::ios::binary);
     return file;
   }();
 

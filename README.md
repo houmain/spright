@@ -19,7 +19,8 @@ Command line arguments
 Usage: spright [-options]
   -i, --input <file>     input definition file (default: spright.conf).
   -o, --output <file>    output description file (default: spright.json).
-  -t, --template <file>  output description template file.
+  -t, --template <file>  template for output description.
+  -p, --path <path>      path to prepend to all output files.
   -a, --autocomplete     autocomplete input sheet definition.
   -d, --debug            draw sprite boundaries and pivot points on output.
   -h, --help             print this help.
