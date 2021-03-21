@@ -197,10 +197,13 @@ namespace {
 
     complete_sprite_info(sprites);
 
-    // sort sprites by sheet index
+    // sort sprites by texture index
     if (pack_sheets.size() > 1)
-      std::stable_sort(begin(sprites), end(sprites),
-        [](const Sprite& a, const Sprite& b) { return a.texture_index < b.texture_index; });
+      std::sort(begin(sprites), end(sprites),
+        [](const Sprite& a, const Sprite& b) {
+          return std::tie(a.texture_index, a.index) <
+                 std::tie(b.texture_index, b.index);
+        });
 
     // add to output textures
     auto texture_begin = sprites.begin();
@@ -230,8 +233,11 @@ namespace {
       return;
 
     // sort sprites by texture
-    std::stable_sort(begin(sprites), end(sprites),
-      [](const Sprite& a, const Sprite& b) { return a.texture->filename < b.texture->filename; });
+    std::sort(begin(sprites), end(sprites),
+      [](const Sprite& a, const Sprite& b) {
+        return std::tie(a.texture->filename, a.index) <
+               std::tie(b.texture->filename, b.index);
+      });
 
     for (auto begin = sprites.begin(), it = begin; ; ++it)
       if (it == sprites.end() ||

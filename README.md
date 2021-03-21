@@ -34,6 +34,7 @@ To pack your sprites into one or more sheets, a simple input definition like the
 ```perl
 trim
 padding
+colorkey
 deduplicate
 
 output "sheet{0-}.png"
@@ -67,6 +68,8 @@ Then you may want to use spright to define the sprites within their original sou
 
 To do so, start by creating a ```spright.conf``` containing the essential information:
 ```perl
+colorkey
+
 input "Decorations (32x32).png"
   grid 32 32
 
@@ -116,6 +119,7 @@ input "misc_scenery.png"
 ```
 Now you can complete the definition manually by e.g. giving the sprites IDs and customizing their pivot points:
 ```perl
+colorkey
 trim
 padding 1
 deduplicate

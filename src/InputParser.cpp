@@ -147,6 +147,7 @@ void InputParser::sprite_ends(State& state) {
   }
 
   auto sprite = Sprite{ };
+  sprite.index = static_cast<int>(m_sprites.size());
   sprite.id = get_sprite_id(state);
   sprite.texture = get_texture(state);
   sprite.source = get_sheet(state);

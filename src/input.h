@@ -35,6 +35,7 @@ struct Texture {
 };
 
 struct Sprite {
+  int index{ };
   std::string id;
   TexturePtr texture;
   ImagePtr source;

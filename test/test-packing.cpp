@@ -51,7 +51,7 @@ TEST_CASE("packing - Basic") {
     input "test/Items.png"
       colorkey
   )");
-  CHECK(le_size(texture, 58, 58));
+  CHECK(le_size(texture, 59, 58));
 
   texture = pack_single_sheet(R"(
     allow-rotate true
@@ -73,7 +73,7 @@ TEST_CASE("packing - Basic") {
     input "test/Items.png"
       colorkey
   )");
-  CHECK(le_size(texture, 56, 56));
+  CHECK(le_size(texture, 55, 58));
 
   texture = pack_single_sheet(R"(
     max-width 128
@@ -83,7 +83,7 @@ TEST_CASE("packing - Basic") {
   )");
   CHECK(texture.width <= 128);
   CHECK(texture.height <= 128);
-  CHECK(le_size(texture, 58, 58));
+  CHECK(le_size(texture, 59, 58));
 
   texture = pack_single_sheet(R"(
     width 128
@@ -273,9 +273,9 @@ TEST_CASE("packing - Multiple sheets") {
       colorkey
   )"));
   CHECK(textures.size() == 3);
-  CHECK(le_size(textures[0], 36, 40));
-  CHECK(le_size(textures[1], 32, 32));
-  CHECK(le_size(textures[2], 32, 32));
+  CHECK(le_size(textures[0], 39, 40));
+  CHECK(le_size(textures[1], 38, 40));
+  CHECK(le_size(textures[2], 16, 30));
 
   CHECK_NOTHROW(textures = pack(R"(
     max-width 40
