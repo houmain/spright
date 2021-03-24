@@ -56,6 +56,15 @@ set(INCLUDES ${INCLUDES}
 
 file(GLOB_RECURSE HEADERS include src/**.h libs/*.hpp libs/**.h )
 
+option(ENABLE_PORTABLE "Enable portable build")
+if(ENABLE_PORTABLE)
+    if(NOT MSVC)
+        add_compile_options(-flto -ffunction-sections -fdata-sections)
+        set(CMAKE_EXE_LINKER_FLAGS " -static -s -Wl,--gc-sections")
+        link_libraries(-static-libgcc -static-libstdc++)
+    endif()
+endif()
+
 if (WIN32)
     add_compile_definitions(UNICODE _WIN32_WINNT=0x0501)
 
