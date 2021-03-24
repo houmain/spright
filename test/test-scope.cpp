@@ -11,14 +11,14 @@ TEST_CASE("scope - Tags") {
       tag "A"
         tag "B"
         sprite has_A_B# comment
-        trim crop
+        trim convex
           tag "C" # comment
           sprite has_A_B_C
-            trim trim
+            trim rect
         sprite has_A_B
       sprite has_A_D_E
         tag "D"
-          trim trim
+          trim rect
             tag "F"
           tag "E"
       tag "G"
@@ -35,18 +35,18 @@ TEST_CASE("scope - Tags") {
 
   CHECK(sprites[1].id == "has_A_B_C");
   CHECK(sprites[1].tags.size() == 3u);
-  CHECK(sprites[1].trim == Trim::trim);
+  CHECK(sprites[1].trim == Trim::rect);
 
   CHECK(sprites[2].id == "has_A_B");
   CHECK(sprites[2].tags.size() == 2u);
   CHECK(sprites[2].tags.count("B") == 1u);
-  CHECK(sprites[2].trim == Trim::crop);
+  CHECK(sprites[2].trim == Trim::convex);
 
   CHECK(sprites[3].id == "has_A_D_E");
   CHECK(sprites[3].tags.size() == 3u);
   CHECK(sprites[3].tags.count("B") == 0u);
   CHECK(sprites[3].tags.count("E") == 1u);
-  CHECK(sprites[3].trim == Trim::trim);
+  CHECK(sprites[3].trim == Trim::rect);
 
   CHECK(sprites[4].id == "has_A_G");
   CHECK(sprites[4].tags.size() == 2u);

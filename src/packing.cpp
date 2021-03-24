@@ -2,12 +2,10 @@
 #include "packing.h"
 #include "image.h"
 #include "FilenameSequence.h"
-#include "humus/humus.h"
 #include "rect_pack/rect_pack.h"
 #include <cmath>
 #include <array>
 #include <algorithm>
-#include <span>
 
 namespace {
   int get_max_size(int size, int max_size, bool power_of_two) {
@@ -47,96 +45,72 @@ namespace {
     };
   }
 
-  void prepare_sprites(std::span<Sprite> sprites) {
-    // trim rects
-    for (auto& sprite : sprites) {
-      if (sprite.trim != Trim::none) {
-        sprite.trimmed_source_rect =
-          get_used_bounds(*sprite.source, sprite.source_rect, sprite.trim_threshold);
-
-        if (sprite.trim == Trim::convex) {
-          const auto alpha = get_alpha_levels(*sprite.source, sprite.trimmed_source_rect);
-          sprite.vertices.resize(8);
-          const auto count = CreateConvexHull(sprite.trimmed_source_rect.w, sprite.trimmed_source_rect.h,
-              alpha.data(), sprite.trim_threshold, 8,
-              static_cast<int>(sprite.vertices.size()), &sprite.vertices[0].x);
-          sprite.vertices.resize(static_cast<size_t>(count));
-        }
-
-        if (sprite.trim_margin)
-          sprite.trimmed_source_rect = intersect(expand(
-            sprite.trimmed_source_rect, sprite.trim_margin), sprite.source_rect);
-      }
-      else {
-        sprite.trimmed_source_rect = sprite.source_rect;
-      }
-
-      const auto distance_to_next_multiple =
-        [](int value, int divisor) { return ceil(value, divisor) - value; };
-      sprite.common_divisor_margin = {
-        distance_to_next_multiple(sprite.trimmed_source_rect.w, sprite.common_divisor.x),
-        distance_to_next_multiple(sprite.trimmed_source_rect.h, sprite.common_divisor.y),
-      };
-      sprite.common_divisor_offset = {
-        sprite.common_divisor_margin.x / 2,
-        sprite.common_divisor_margin.y / 2
-      };
-    }
+  void prepare_sprite(Sprite& sprite) {
+    const auto distance_to_next_multiple =
+      [](int value, int divisor) { return ceil(value, divisor) - value; };
+    sprite.common_divisor_margin = {
+      distance_to_next_multiple(sprite.trimmed_source_rect.w, sprite.common_divisor.x),
+      distance_to_next_multiple(sprite.trimmed_source_rect.h, sprite.common_divisor.y),
+    };
+    sprite.common_divisor_offset = {
+      sprite.common_divisor_margin.x / 2,
+      sprite.common_divisor_margin.y / 2
+    };
   }
 
-  void complete_sprite_info(std::span<Sprite> sprites) {
-    // calculate rects and pivot points
-    for (auto& sprite : sprites) {
-      auto& rect = sprite.rect;
-      auto& pivot_point = sprite.pivot_point;
+  void complete_sprite(Sprite& sprite) {
+    auto& rect = sprite.rect;
+    auto& pivot_point = sprite.pivot_point;
 
-      if (sprite.trim == Trim::crop) {
-        rect = sprite.trimmed_rect;
-      }
-      else {
-        rect = {
-          sprite.trimmed_rect.x - (sprite.trimmed_source_rect.x - sprite.source_rect.x),
-          sprite.trimmed_rect.y - (sprite.trimmed_source_rect.y - sprite.source_rect.y),
-          sprite.source_rect.w,
-          sprite.source_rect.h,
-        };
-      }
-
-      sprite.rect.x -= sprite.common_divisor_offset.x;
-      sprite.rect.y -= sprite.common_divisor_offset.y;
-      sprite.rect.w += sprite.common_divisor_margin.x;
-      sprite.rect.h += sprite.common_divisor_margin.y;
-
-      switch (sprite.pivot.x) {
-        case PivotX::left: pivot_point.x = 0; break;
-        case PivotX::center: pivot_point.x = static_cast<float>(rect.w) / 2; break;
-        case PivotX::right: pivot_point.x = static_cast<float>(rect.w); break;
-        case PivotX::custom: pivot_point.x = sprite.pivot_point.x;
-      }
-      switch (sprite.pivot.y) {
-        case PivotY::top: pivot_point.y = 0; break;
-        case PivotY::middle: pivot_point.y = static_cast<float>(rect.h) / 2; break;
-        case PivotY::bottom: pivot_point.y = static_cast<float>(rect.h); break;
-        case PivotY::custom: pivot_point.y = sprite.pivot_point.y;
-      }
-      if (sprite.integral_pivot_point) {
-        pivot_point.x = std::floor(pivot_point.x);
-        pivot_point.y = std::floor(pivot_point.y);
-      }
-      sprite.trimmed_pivot_point.x =
-        pivot_point.x + static_cast<float>(sprite.rect.x - sprite.trimmed_rect.x);
-      sprite.trimmed_pivot_point.y =
-        pivot_point.y + static_cast<float>(sprite.rect.y - sprite.trimmed_rect.y);
-
-      if (sprite.rotated)
-        for (auto& vertex : sprite.vertices)
-          std::swap(vertex.x, vertex.y);
+    if (sprite.trim == Trim::crop) {
+      rect = sprite.trimmed_rect;
     }
+    else {
+      rect = {
+        sprite.trimmed_rect.x - (sprite.trimmed_source_rect.x - sprite.source_rect.x),
+        sprite.trimmed_rect.y - (sprite.trimmed_source_rect.y - sprite.source_rect.y),
+        sprite.source_rect.w,
+        sprite.source_rect.h,
+      };
+    }
+
+    sprite.rect.x -= sprite.common_divisor_offset.x;
+    sprite.rect.y -= sprite.common_divisor_offset.y;
+    sprite.rect.w += sprite.common_divisor_margin.x;
+    sprite.rect.h += sprite.common_divisor_margin.y;
+
+    switch (sprite.pivot.x) {
+      case PivotX::left: pivot_point.x = 0; break;
+      case PivotX::center: pivot_point.x = static_cast<float>(rect.w) / 2; break;
+      case PivotX::right: pivot_point.x = static_cast<float>(rect.w); break;
+      case PivotX::custom: pivot_point.x = sprite.pivot_point.x;
+    }
+    switch (sprite.pivot.y) {
+      case PivotY::top: pivot_point.y = 0; break;
+      case PivotY::middle: pivot_point.y = static_cast<float>(rect.h) / 2; break;
+      case PivotY::bottom: pivot_point.y = static_cast<float>(rect.h); break;
+      case PivotY::custom: pivot_point.y = sprite.pivot_point.y;
+    }
+    if (sprite.integral_pivot_point) {
+      pivot_point.x = std::floor(pivot_point.x);
+      pivot_point.y = std::floor(pivot_point.y);
+    }
+    sprite.trimmed_pivot_point.x =
+      pivot_point.x + static_cast<float>(sprite.rect.x - sprite.trimmed_rect.x);
+    sprite.trimmed_pivot_point.y =
+      pivot_point.y + static_cast<float>(sprite.rect.y - sprite.trimmed_rect.y);
+
+    if (sprite.rotated)
+      for (auto& vertex : sprite.vertices)
+        std::swap(vertex.x, vertex.y);
   }
 
   void pack_sprite_texture(const Texture& texture,
       std::span<Sprite> sprites, std::vector<PackedTexture>& packed_textures) {
     assert(!sprites.empty());
+
+    for (auto& sprite : sprites)
+      prepare_sprite(sprite);
 
     // pack rects
     auto pack_sizes = std::vector<rect_pack::Size>();
@@ -209,7 +183,8 @@ namespace {
     if (std::cmp_less(packed_sprites, sprites.size()))
       throw std::runtime_error("not all sprites could be packed");
 
-    complete_sprite_info(sprites);
+    for (auto& sprite : sprites)
+      complete_sprite(sprite);
 
     // sort sprites by texture index
     if (pack_sheets.size() > 1)
@@ -266,7 +241,6 @@ namespace {
 
 std::vector<PackedTexture> pack_sprites(std::vector<Sprite>& sprites) {
   auto packed_textures = std::vector<PackedTexture>();
-  prepare_sprites(sprites);
   pack_sprites_by_texture(sprites, packed_textures);
   return packed_textures;
 }

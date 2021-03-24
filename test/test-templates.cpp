@@ -1,6 +1,7 @@
 
 #include "catch.hpp"
 #include "src/InputParser.h"
+#include "src/trimming.h"
 #include "src/packing.h"
 #include "src/output.h"
 
@@ -10,6 +11,8 @@ namespace {
     auto parser = InputParser(Settings{ });
     parser.parse(input);
     auto sprites = std::move(parser).sprites();
+    for (auto& sprite : sprites)
+      trim_sprite(sprite);
     auto textures = pack_sprites(sprites);
     return { std::move(sprites), std::move(textures) };
   }

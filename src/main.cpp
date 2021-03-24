@@ -1,4 +1,5 @@
 
+#include "trimming.h"
 #include "packing.h"
 #include "compacting.h"
 #include "output.h"
@@ -18,38 +19,48 @@ int main(int argc, const char* argv[]) try {
   }
 
   using Clock = std::chrono::high_resolution_clock;
-  const auto t0 = Clock::now();
+  auto time_points = std::vector<Clock::time_point>();
+  const auto add_time_point = [&]() { time_points.push_back(Clock::now()); };
+  add_time_point();
 
   auto sprites = parse_definition(settings);  
-  const auto t1 = Clock::now();
+  add_time_point();
+
+  for (auto& sprite : sprites)
+    trim_sprite(sprite);
+  add_time_point();
 
   const auto textures = pack_sprites(sprites);
-  const auto t2 = Clock::now();
+  add_time_point();
 
   for (const auto& texture : textures)
     compact_sprites(texture);
-  const auto t3 = Clock::now();
+  add_time_point();
 
   write_output_description(settings, sprites, textures);
-  const auto t4 = Clock::now();
+  add_time_point();
 
   for_each_parallel(begin(textures), end(textures),
     [&](const PackedTexture& texture) {
       save_image(get_output_texture(settings, texture),
         settings.output_path / texture.filename);
     });
-  const auto t5 = Clock::now();
+  add_time_point();
 
   if (settings.debug) {
-    const auto to_ms = [](const auto& duration) {
-      return std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+    auto time_it = time_points.begin();
+    const auto time_elapsed = [&]() {
+      const auto start = *time_it++;
+      const auto stop = *time_it;
+      return std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count();
     };
     std::cout <<
-      "input: " << to_ms(t1 - t0) << "ms, " <<
-      "packing: " << to_ms(t2 - t1) << "ms, " <<
-      "compacting: " << to_ms(t3 - t2) << "ms, " <<
-      "output description: " << to_ms(t4 - t3) << "ms, " <<
-      "output textures: " << to_ms(t5 - t4) << "ms" <<
+      "input: " << time_elapsed() << "ms, " <<
+      "trimming: " << time_elapsed() << "ms, " <<
+      "packing: " << time_elapsed() << "ms, " <<
+      "compacting: " << time_elapsed() << "ms, " <<
+      "output description: " << time_elapsed() << "ms, " <<
+      "output textures: " << time_elapsed() << "ms" <<
       std::endl;
   }
   return 0;

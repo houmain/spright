@@ -1,6 +1,7 @@
 
 #include "catch.hpp"
 #include "src/InputParser.h"
+#include "src/trimming.h"
 #include "src/packing.h"
 #include "src/output.h"
 #include <sstream>
@@ -24,6 +25,8 @@ namespace {
     parser.parse(input);
     static auto s_sprites = std::vector<Sprite>();
     s_sprites = std::move(parser).sprites();
+    for (auto& sprite : s_sprites)
+      trim_sprite(sprite);
     return pack_sprites(s_sprites);
   }
 
