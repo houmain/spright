@@ -62,18 +62,12 @@ namespace {
     auto& rect = sprite.rect;
     auto& pivot_point = sprite.pivot_point;
 
-    if (sprite.trim == Trim::crop) {
-      rect = sprite.trimmed_rect;
-    }
-    else {
-      rect = {
-        sprite.trimmed_rect.x - (sprite.trimmed_source_rect.x - sprite.source_rect.x),
-        sprite.trimmed_rect.y - (sprite.trimmed_source_rect.y - sprite.source_rect.y),
-        sprite.source_rect.w,
-        sprite.source_rect.h,
-      };
-    }
-
+    rect = {
+      sprite.trimmed_rect.x - (sprite.trimmed_source_rect.x - sprite.source_rect.x),
+      sprite.trimmed_rect.y - (sprite.trimmed_source_rect.y - sprite.source_rect.y),
+      sprite.source_rect.w,
+      sprite.source_rect.h,
+    };
     sprite.rect.x -= sprite.common_divisor_offset.x;
     sprite.rect.y -= sprite.common_divisor_offset.y;
     sprite.rect.w += sprite.common_divisor_margin.x;
@@ -173,12 +167,13 @@ namespace {
       ++texture_index;
     }
 
-    for (auto [i, j] : duplicates) {
-      sprites[i].rotated = sprites[j].rotated;
-      sprites[i].texture_index = sprites[j].texture_index;
-      sprites[i].trimmed_rect = sprites[j].trimmed_rect;
-      ++packed_sprites;
-    }
+    for (auto [i, j] : duplicates)
+      if (!empty(sprites[j].trimmed_rect)) {
+        sprites[i].rotated = sprites[j].rotated;
+        sprites[i].texture_index = sprites[j].texture_index;
+        sprites[i].trimmed_rect = sprites[j].trimmed_rect;
+        ++packed_sprites;
+      }
 
     if (std::cmp_less(packed_sprites, sprites.size()))
       throw std::runtime_error("not all sprites could be packed");

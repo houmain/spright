@@ -506,11 +506,11 @@ void InputParser::apply_definition(State& state,
 
     case Definition::trim:
       if (!arguments_left()) {
-        state.trim = Trim::trim;
+        state.trim = Trim::rect;
       }
       else {
         const auto string = check_string();
-        if (const auto index = index_of(string, { "none", "trim", "crop", "convex" }); index >= 0)
+        if (const auto index = index_of(string, { "none", "rect", "convex" }); index >= 0)
           state.trim = static_cast<Trim>(index);
         else
           error("invalid trim value '" + std::string(string) + "'");

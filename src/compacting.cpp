@@ -44,7 +44,7 @@ void compact_sprites(const PackedTexture& texture) {
       static_cast<float>(sprite.trimmed_rect.y),
     });
 
-    const auto radius = 1;
+    const auto radius = 0;
     shapes.emplace_back(cpSpaceAddShape(space, cpPolyShapeNew(body,
       static_cast<int>(vertices.size()), vertices.data(), cpTransformIdentity, radius))).get();
   }
@@ -59,8 +59,8 @@ void compact_sprites(const PackedTexture& texture) {
   for (const auto& body : bodies) {
     auto& sprite = texture.sprites[i++];
     const auto position = cpBodyGetPosition(body.get());
-    const auto dx = static_cast<int>(position.x) - sprite.trimmed_rect.x;
-    const auto dy = static_cast<int>(position.y) - sprite.trimmed_rect.y;
+    const auto dx = static_cast<int>(position.x + 0.5) - sprite.trimmed_rect.x;
+    const auto dy = static_cast<int>(position.y + 0.5) - sprite.trimmed_rect.y;
     sprite.trimmed_rect.x += dx;
     sprite.trimmed_rect.y += dy;
     sprite.rect.x += dx;
