@@ -13,7 +13,7 @@ enum class PivotX { left, center, right, custom };
 enum class PivotY { top, middle, bottom, custom };
 struct Pivot { PivotX x; PivotY y; };
 
-enum class Trim { none, trim, crop };
+enum class Trim { none, trim, crop, convex };
 
 enum class Alpha { keep, clear, bleed, premultiply, colorkey };
 
@@ -57,6 +57,7 @@ struct Sprite {
   Size common_divisor{ };
   Point common_divisor_offset{ };
   Size common_divisor_margin{ };
+  std::vector<PointF> vertices;
 };
 
 std::vector<Sprite> parse_definition(const Settings& settings);

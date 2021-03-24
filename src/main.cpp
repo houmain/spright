@@ -1,5 +1,6 @@
 
 #include "packing.h"
+#include "compacting.h"
 #include "output.h"
 #include <iostream>
 #include <chrono>
@@ -25,15 +26,19 @@ int main(int argc, const char* argv[]) try {
   const auto textures = pack_sprites(sprites);
   const auto t2 = Clock::now();
 
-  write_output_description(settings, sprites, textures);
+  for (const auto& texture : textures)
+    compact_sprites(texture);
   const auto t3 = Clock::now();
+
+  write_output_description(settings, sprites, textures);
+  const auto t4 = Clock::now();
 
   for_each_parallel(begin(textures), end(textures),
     [&](const PackedTexture& texture) {
       save_image(get_output_texture(settings, texture),
         settings.output_path / texture.filename);
     });
-  const auto t4 = Clock::now();
+  const auto t5 = Clock::now();
 
   if (settings.debug) {
     const auto to_ms = [](const auto& duration) {
@@ -41,9 +46,10 @@ int main(int argc, const char* argv[]) try {
     };
     std::cout <<
       "input: " << to_ms(t1 - t0) << "ms, " <<
-      "pack: " << to_ms(t2 - t1) << "ms, " <<
-      "output description: " << to_ms(t3 - t2) << "ms, " <<
-      "output textures: " << to_ms(t4 - t3) << "ms" <<
+      "packing: " << to_ms(t2 - t1) << "ms, " <<
+      "compacting: " << to_ms(t3 - t2) << "ms, " <<
+      "output description: " << to_ms(t4 - t3) << "ms, " <<
+      "output textures: " << to_ms(t5 - t4) << "ms" <<
       std::endl;
   }
   return 0;

@@ -42,6 +42,7 @@ inline bool operator!=(const Rect& a, const Rect& b) { return !(a == b); }
 Rect expand(const Rect& rect, int value);
 Rect intersect(const Rect& a, const Rect& b);
 bool containing(const Rect& a, const Rect& b);
+bool containing(const Rect& a, const Point& p);
 bool overlapping(const Rect& a, const Rect& b);
 Rect combine(const Rect& a, const Rect& b);
 
@@ -57,6 +58,10 @@ union RGBA {
     uint8_t r, g, b, a;
   };
   uint32_t rgba;
+
+  uint8_t gray() const {
+    return static_cast<uint8_t>((r * 77 + g * 151 + b * 28) >> 8);
+  }
 };
 
 inline bool operator==(const RGBA& a, const RGBA& b) { return (a.rgba == b.rgba); }

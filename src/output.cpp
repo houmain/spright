@@ -11,6 +11,13 @@ namespace {
     return json_point;
   }
 
+  nlohmann::json json_point_list(const std::vector<PointF>& points) {
+    auto list = nlohmann::json::array();
+    for (const auto& point : points)
+      list.push_back(json_point(point));
+    return list;
+  }
+
   nlohmann::json json_rect(const Rect& rect) {
     auto json_rect = nlohmann::json::object();
     json_rect["x"] = rect.x;
@@ -52,6 +59,7 @@ namespace {
       json_sprite["textureFilename"] = path_to_utf8(texture_filename);
       json_sprite["rotated"] = sprite.rotated;
       json_sprite["tags"] = sprite.tags;
+      json_sprite["vertices"] = json_point_list(sprite.vertices);
       for (const auto& tag_key : sprite.tags)
         tags[tag_key].push_back(index);
       texture_sprites[texture_filename].push_back(index);
@@ -61,7 +69,7 @@ namespace {
     json_tags = nlohmann::json::array();
     for (const auto& [tag_key, sprite_indices] : tags) {
       auto& json_tag = json_tags.emplace_back();
-      json_tag["id"] = tag_key.first;
+      json_tag["key"] = tag_key.first;
       if (!tag_key.second.empty())
         json_tag["value"] = tag_key.second;
       auto& json_tag_sprites = json_tag["sprites"];
@@ -157,12 +165,24 @@ Image get_output_texture(const Settings& settings, const PackedTexture& texture)
   auto target = Image(texture.width, texture.height);
   for (const auto& sprite : texture.sprites) {
     if (sprite.rotated) {
-      copy_rect_rotated_cw(*sprite.source, sprite.trimmed_source_rect,
-        target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
+      if (sprite.vertices.empty()) {
+        copy_rect_rotated_cw(*sprite.source, sprite.trimmed_source_rect,
+          target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
+      }
+      else {
+        copy_rect_rotated_cw(*sprite.source, sprite.trimmed_source_rect,
+          target, sprite.trimmed_rect.x, sprite.trimmed_rect.y, sprite.vertices);
+      }
     }
     else {
-      copy_rect(*sprite.source, sprite.trimmed_source_rect,
-        target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
+      if (sprite.vertices.empty()) {
+        copy_rect(*sprite.source, sprite.trimmed_source_rect,
+          target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
+      }
+      else {
+        copy_rect(*sprite.source, sprite.trimmed_source_rect,
+          target, sprite.trimmed_rect.x, sprite.trimmed_rect.y, sprite.vertices);
+      }
     }
 
     if (sprite.extrude) {
@@ -204,7 +224,7 @@ Image get_output_texture(const Settings& settings, const PackedTexture& texture)
   }
 
   // draw debug info
-  if (settings.debug) {
+  if (settings.debug)
     for (const auto& sprite : texture.sprites) {
       auto rect = sprite.rect;
       auto trimmed_rect = sprite.trimmed_rect;
@@ -226,7 +246,22 @@ Image get_output_texture(const Settings& settings, const PackedTexture& texture)
       draw_rect(target, pivot_rect, RGBA{ { 255, 0, 0, 255 } });
       // draw_rect(target, expand(rect, -1), RGBA{ { 255, 255, 0, 128 } });
       // draw_rect(target, expand(pivot_rect, 1), RGBA{ { 255, 255, 0, 128 } });
+
+      if (!sprite.vertices.empty()) {
+        const auto x = static_cast<float>(sprite.trimmed_rect.x);
+        const auto y = static_cast<float>(sprite.trimmed_rect.y);
+        for (auto i = 0u; i < sprite.vertices.size(); i++) {
+          const auto& v0 = sprite.vertices[i];
+          const auto& v1 = sprite.vertices[(i + 1) % sprite.vertices.size()];
+          draw_line(target,
+            static_cast<int>(x + v0.x),
+            static_cast<int>(y + v0.y),
+            static_cast<int>(x + v1.x),
+            static_cast<int>(y + v1.y),
+            RGBA{ { 0, 255, 255, 128 } });
+        }
+      }
     }
-  }
+
   return target;
 }

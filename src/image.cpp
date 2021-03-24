@@ -7,10 +7,20 @@
 #include <stdexcept>
 #include <cstring>
 
+#if __has_builtin(__builtin_expect)
+# define UNLIKELY( exp )  (__builtin_expect( !!(exp), false ))
+#else
+# define UNLIKELY( exp )  (!!(exp))
+#endif
+
 namespace {
-  void check_rect(const Image& image, const Rect& rect) {
-    if (!containing(image.bounds(), rect))
+  inline void check(bool inside) {
+    if UNLIKELY(!inside)
       throw std::logic_error("access outside image bounds");
+  }
+
+  void check_rect(const Image& image, const Rect& rect) {
+    check(containing(image.bounds(), rect));
   }
 
   template <typename P>
@@ -22,6 +32,15 @@ namespace {
         if (!predicate(rgba[y * image.width() + x]))
           return false;
     return true;
+  }
+
+  template <typename F>
+  void for_each_pixel(const Image& image, Rect rect, F&& func) {
+    for (auto y = 0; y < rect.h; ++y) {
+      auto row = image.rgba() + image.width() * (rect.y + y) + rect.x;
+      for (auto x = 0; x < rect.w; ++x, ++row)
+        func(*row);
+    }
   }
 
   void blend(Image& image, int x, int y, const RGBA& color) {
@@ -111,6 +130,43 @@ namespace {
     }
     rects.erase(std::remove_if(begin(rects), end(rects),
       [](const Rect& a) { return empty(a); }), end(rects));
+  }
+
+  // https://en.wikipedia.org/wiki/Bresenham's_line_algorithm
+  template<typename F>
+  void bresenham_line(int x0, int y0, int x1, int y1, F&& func) {
+    const auto dx = std::abs(x1-x0);
+    const auto sx = (x0 < x1 ? 1 : -1);
+    const auto dy = -std::abs(y1-y0);
+    const auto sy = (y0 < y1 ? 1 : -1);
+    for (auto err = dx + dy;;) {
+      func(x0, y0);
+
+      if (x0 == x1 && y0 == y1)
+        break;
+
+      const auto e2 = 2 * err;
+      if (e2 >= dy) {
+        err += dy;
+        x0 += sx;
+      }
+      if (e2 <= dx) {
+        err += dx;
+        y0 += sy;
+      }
+    }
+  }
+
+  // http://paulbourke.net/geometry/polygonmesh/
+  bool point_in_polygon(float x, float y, const std::vector<PointF>& p) {
+    auto c = false;
+    for (auto i = size_t{ }, j = p.size() - 1; i < p.size(); j = i++) {
+      if ((((p[i].y <= y) && (y < p[j].y)) ||
+           ((p[j].y <= y) && (y < p[i].y))) &&
+          (x < (p[j].x - p[i].x) * (y - p[i].y) / (p[j].y - p[i].y) + p[i].x))
+        c = !c;
+    }
+    return c;
   }
 } // namespace
 
@@ -210,6 +266,30 @@ void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& d
         sizeof(RGBA));
 }
 
+void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy,
+    const std::vector<PointF>& mask_vertices) {
+  const auto [sx, sy, w, h] = source_rect;
+  for (auto y = 0; y < h; ++y)
+    for (auto x = 0; x < w; ++x)
+      if (point_in_polygon(static_cast<float>(x), static_cast<float>(y), mask_vertices)) {
+        check(containing(source.bounds(), Point{ sx + x, sy + y }));
+        check(containing(dest.bounds(), Point{ dx + x, dy + y }));
+        dest.rgba_at({ dx + x, dy + y }) = source.rgba_at({ sx + x, sy + y });
+      }
+}
+
+void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy,
+    const std::vector<PointF>& mask_vertices) {
+  const auto [sx, sy, w, h] = source_rect;
+  for (auto y = 0; y < w; ++y)
+    for (auto x = 0; x < h; ++x)
+      if (point_in_polygon(static_cast<float>(x), static_cast<float>(y), mask_vertices)) {
+        check(containing(source.bounds(), Point{ sx + y, sy + x }));
+        check(containing(dest.bounds(), Point{ dx + x, dy + y }));
+        dest.rgba_at({ dx + x, dy + y }) = source.rgba_at({ sx + y, sy + x });
+      }
+}
+
 void extrude_rect(Image& image, const Rect& rect, bool left, bool top, bool right, bool bottom) {
   check_rect(image, rect);
   if (rect.w <= 2 || rect.h <= 2)
@@ -247,6 +327,14 @@ void draw_rect(Image& image, const Rect& rect, const RGBA& color) {
     checked_blend(rect.x, y);
     checked_blend(rect.x + rect.w - 1, y);
   }
+}
+
+void draw_line(Image& image, int x0, int y0, int x1, int y1, const RGBA& color) {
+  const auto checked_blend = [&](int x, int y) {
+    if (x >= 0 && x < image.width() && y >= 0 && y < image.height())
+      blend(image, x, y, color);
+  };
+  bresenham_line(x0, y0, x1, y1, checked_blend);
 }
 
 void fill_rect(Image& image, const Rect& rect, const RGBA& color) {
@@ -423,3 +511,26 @@ void bleed_alpha(Image& image) {
     image.width(), image.height());
 }
 
+std::vector<uint8_t> get_alpha_levels(const Image& image, const Rect& rect) {
+  if (empty(rect))
+    return get_alpha_levels(image, get_used_bounds(image));
+  check_rect(image, rect);
+
+  auto result = std::vector<uint8_t>();
+  result.resize(static_cast<size_t>(rect.w * rect.h));
+  auto dest = result.data();
+  for_each_pixel(image, rect, [&](const RGBA& color) { *dest++ = color.a; });
+  return result;
+}
+
+std::vector<uint8_t> get_gray_levels(const Image& image, const Rect& rect) {
+  if (empty(rect))
+    return get_gray_levels(image, get_used_bounds(image));
+  check_rect(image, rect);
+
+  auto result = std::vector<uint8_t>();
+  result.resize(static_cast<size_t>(rect.w * rect.h));
+  auto dest = result.data();
+  for_each_pixel(image, rect, [&](const RGBA& color) { *dest++ = color.gray(); });
+  return result;
+}

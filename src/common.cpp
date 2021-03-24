@@ -23,6 +23,13 @@ bool containing(const Rect& a, const Rect& b) {
           a.y + a.h >= b.y + b.h);
 }
 
+bool containing(const Rect& a, const Point& p) {
+  return (a.x <= p.x &&
+          a.y <= p.y &&
+          a.x + a.w > p.x &&
+          a.y + a.h > p.y);
+}
+
 bool overlapping(const Rect& a, const Rect& b) {
   return !(a.x + a.w < b.x ||
            b.x + b.w < a.x ||

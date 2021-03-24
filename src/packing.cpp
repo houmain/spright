@@ -2,6 +2,7 @@
 #include "packing.h"
 #include "image.h"
 #include "FilenameSequence.h"
+#include "humus/humus.h"
 #include "rect_pack/rect_pack.h"
 #include <cmath>
 #include <array>
@@ -52,6 +53,15 @@ namespace {
       if (sprite.trim != Trim::none) {
         sprite.trimmed_source_rect =
           get_used_bounds(*sprite.source, sprite.source_rect, sprite.trim_threshold);
+
+        if (sprite.trim == Trim::convex) {
+          const auto alpha = get_alpha_levels(*sprite.source, sprite.trimmed_source_rect);
+          sprite.vertices.resize(8);
+          const auto count = CreateConvexHull(sprite.trimmed_source_rect.w, sprite.trimmed_source_rect.h,
+              alpha.data(), sprite.trim_threshold, 8,
+              static_cast<int>(sprite.vertices.size()), &sprite.vertices[0].x);
+          sprite.vertices.resize(static_cast<size_t>(count));
+        }
 
         if (sprite.trim_margin)
           sprite.trimmed_source_rect = intersect(expand(
@@ -117,6 +127,10 @@ namespace {
         pivot_point.x + static_cast<float>(sprite.rect.x - sprite.trimmed_rect.x);
       sprite.trimmed_pivot_point.y =
         pivot_point.y + static_cast<float>(sprite.rect.y - sprite.trimmed_rect.y);
+
+      if (sprite.rotated)
+        for (auto& vertex : sprite.vertices)
+          std::swap(vertex.x, vertex.y);
     }
   }
 

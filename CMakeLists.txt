@@ -21,6 +21,7 @@ set(SOURCES
     src/input.cpp
     src/InputParser.cpp
     src/packing.cpp
+    src/compacting.cpp
     src/output.cpp
     src/globbing.cpp
     src/main.cpp
@@ -36,16 +37,21 @@ else()
     set(MSVC_SHARED_RUNTIME OFF)
 endif()
 
+file(GLOB CHIPMUNK_SOURCES libs/chipmunk/src/*.c)
+
 set(SOURCES ${SOURCES}
     libs/rect_pack/stb_rect_pack.cpp
     libs/rect_pack/MaxRectsBinPack.cpp
     libs/stb/stb_impl.cpp
     libs/miniz/miniz.c
     libs/texpack/bleeding.cpp
+    libs/humus/humus.cpp
+    ${CHIPMUNK_SOURCES}
 )
 
 set(INCLUDES ${INCLUDES}
     libs
+    libs/chipmunk/include
 )
 
 file(GLOB_RECURSE HEADERS include src/**.h libs/*.hpp libs/**.h )
