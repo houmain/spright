@@ -13,6 +13,6 @@ struct Sprite {
 const Sprite {{ getId(sprite) }} { {{ sprite.trimmedRect.x }}, {{ sprite.trimmedRect.y }}, {{ sprite.trimmedRect.w }}, {{ sprite.trimmedRect.h }}, {{ sprite.trimmedPivot.x }}, {{ sprite.trimmedPivot.y }} };
 {% endfor %}
 {% for tag in tags -%}
-const Sprite* const {{ tag.id }}[] { {% for sprite in tag.sprites %}&{{ getId(sprite) }}, {% endfor %}};
+const Sprite* const {{ tag.value }}[] { {% for sprite in tag.sprites %}&{{ getId(sprite) }}, {% endfor %}};
 {% endfor %}
 } // namespace

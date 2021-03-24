@@ -149,16 +149,15 @@ You can also tag sprites to define animations or other game specific properties 
 ...
 input "Old enemies 2.png"
   grid 16 16
-    group
-      tag "blue_enemy_idle"
-      sprite
-      sprite
+    tag anim "blue_enemy_idle"
     sprite
-      tag "blue_enemy_dead"
     sprite
-      tag "blue_enemy_jump"
+    tag anim "blue_enemy_dead"
+    sprite
+    tag anim "blue_enemy_jump"
+    sprite
   row 1
-    tag "blue_enemy_run"
+    tag anim "blue_enemy_run"
     sprite
     sprite
     sprite
@@ -244,7 +243,7 @@ By default a [JSON](https://www.json.org) file containing all the information ab
   ],
   "tags": [
     {
-      "id": "key",
+      "key": "key",
       "value": "value",
       "sprites": [
         SPRITE
