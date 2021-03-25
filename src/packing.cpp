@@ -197,13 +197,15 @@ namespace {
         const auto sheet_index = texture_begin->texture_index;
         const auto sheet_sprites = std::span(texture_begin, it);
         const auto& pack_sheet = pack_sheets[static_cast<size_t>(sheet_index)];
-        packed_textures.push_back({
-          texture.filename.get_nth_filename(sheet_index),
-          pack_sheet.width,
-          pack_sheet.height,
-          sheet_sprites,
-          texture.alpha,
-          texture.colorkey,
+        packed_textures.push_back(PackedTexture{
+          .filename = texture.filename.get_nth_filename(sheet_index),
+          .width = pack_sheet.width,
+          .height = pack_sheet.height,
+          .sprites = sheet_sprites,
+          .alpha = texture.alpha,
+          .colorkey = texture.colorkey,
+          .border_padding = texture.border_padding,
+          .shape_padding = texture.shape_padding
         });
 
         texture_begin = it;

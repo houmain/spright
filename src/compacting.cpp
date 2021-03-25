@@ -15,10 +15,12 @@ void compact_sprites(const PackedTexture& texture) {
   const auto space_ptr = SpacePtr(cpSpaceNew());
   const auto space = space_ptr.get();
 
-  const auto x0 = cpFloat{ };
-  const auto y0 = cpFloat{ };
-  const auto x1 = static_cast<cpFloat>(texture.width);
-  const auto y1 = static_cast<cpFloat>(texture.height);
+  const auto shape_padding = static_cast<cpFloat>(texture.shape_padding) / 2.0;
+  const auto border = static_cast<cpFloat>(texture.border_padding) - shape_padding;
+  const auto x0 = static_cast<cpFloat>(border);
+  const auto y0 = static_cast<cpFloat>(border);
+  const auto x1 = static_cast<cpFloat>(texture.width - border);
+  const auto y1 = static_cast<cpFloat>(texture.height - border);
 
   auto shapes = std::vector<ShapePtr>();
   shapes.emplace_back(cpSpaceAddShape(space, cpSegmentShapeNew(cpSpaceGetStaticBody(space), cpv(x0, y0), cpv(x1, y0), 0)));
@@ -44,9 +46,8 @@ void compact_sprites(const PackedTexture& texture) {
       static_cast<float>(sprite.trimmed_rect.y),
     });
 
-    const auto radius = 0;
     shapes.emplace_back(cpSpaceAddShape(space, cpPolyShapeNew(body,
-      static_cast<int>(vertices.size()), vertices.data(), cpTransformIdentity, radius))).get();
+      static_cast<int>(vertices.size()), vertices.data(), cpTransformIdentity, shape_padding))).get();
   }
 
   // TODO: improve
