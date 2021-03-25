@@ -122,6 +122,114 @@ namespace {
     });
     return env;
   }
+
+  void copy_sprite(Image& target, const Sprite& sprite) try {
+
+    if (sprite.rotated) {
+      if (sprite.vertices.empty()) {
+        copy_rect_rotated_cw(*sprite.source, sprite.trimmed_source_rect,
+          target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
+      }
+      else {
+        copy_rect_rotated_cw(*sprite.source, sprite.trimmed_source_rect,
+          target, sprite.trimmed_rect.x, sprite.trimmed_rect.y, sprite.vertices);
+      }
+    }
+    else {
+      if (sprite.vertices.empty()) {
+        copy_rect(*sprite.source, sprite.trimmed_source_rect,
+          target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
+      }
+      else {
+        copy_rect(*sprite.source, sprite.trimmed_source_rect,
+          target, sprite.trimmed_rect.x, sprite.trimmed_rect.y, sprite.vertices);
+      }
+    }
+
+    if (sprite.extrude) {
+      const auto left = (sprite.source_rect.x0() == sprite.trimmed_source_rect.x0());
+      const auto top = (sprite.source_rect.y0() == sprite.trimmed_source_rect.y0());
+      const auto right = (sprite.source_rect.x1() == sprite.trimmed_source_rect.x1());
+      const auto bottom = (sprite.source_rect.y1() == sprite.trimmed_source_rect.y1());
+      if (left || top || right || bottom) {
+        auto rect = sprite.trimmed_rect;
+        if (sprite.rotated)
+          std::swap(rect.w, rect.h);
+        for (auto i = 0; i < sprite.extrude; i++) {
+          rect = expand(rect, 1);
+          extrude_rect(target, rect, left, top, right, bottom);
+        }
+      }
+    }
+  }
+  catch (const std::exception& ex) {
+#if defined(NDEBUG)
+    throw;
+#else
+    std::fprintf(stderr, "copying sprite failed: %s\n", ex.what());
+#endif
+  }
+
+  void process_alpha(Image& target, const PackedTexture& texture) {
+    switch (texture.alpha) {
+      case Alpha::keep:
+        break;
+
+      case Alpha::clear:
+        clear_alpha(target);
+        break;
+
+      case Alpha::bleed:
+        bleed_alpha(target);
+        break;
+
+      case Alpha::premultiply:
+        premultiply_alpha(target);
+        break;
+
+      case Alpha::colorkey:
+        make_opaque(target, texture.colorkey);
+        break;
+    }
+  }
+
+  void draw_debug_info(Image& target, const Sprite& sprite) {
+    auto rect = sprite.rect;
+    auto trimmed_rect = sprite.trimmed_rect;
+    auto pivot_point = sprite.pivot_point;
+    if (sprite.rotated) {
+      std::swap(rect.w, rect.h);
+      std::swap(trimmed_rect.w, trimmed_rect.h);
+      std::swap(pivot_point.x, pivot_point.y);
+      pivot_point.x = (static_cast<float>(rect.w-1) - pivot_point.x);
+    }
+    const auto pivot_rect = Rect{
+      rect.x + static_cast<int>(pivot_point.x - 0.25f),
+      rect.y + static_cast<int>(pivot_point.y - 0.25f),
+      (pivot_point.x == std::floor(pivot_point.x) ? 2 : 1),
+      (pivot_point.y == std::floor(pivot_point.y) ? 2 : 1),
+    };
+    draw_rect(target, rect, RGBA{ { 255, 0, 255, 128 } });
+    draw_rect(target, trimmed_rect, RGBA{ { 255, 255, 0, 128 } });
+    draw_rect(target, pivot_rect, RGBA{ { 255, 0, 0, 255 } });
+    // draw_rect(target, expand(rect, -1), RGBA{ { 255, 255, 0, 128 } });
+    // draw_rect(target, expand(pivot_rect, 1), RGBA{ { 255, 255, 0, 128 } });
+
+    if (!sprite.vertices.empty()) {
+      const auto x = static_cast<float>(sprite.trimmed_rect.x);
+      const auto y = static_cast<float>(sprite.trimmed_rect.y);
+      for (auto i = 0u; i < sprite.vertices.size(); i++) {
+        const auto& v0 = sprite.vertices[i];
+        const auto& v1 = sprite.vertices[(i + 1) % sprite.vertices.size()];
+        draw_line(target,
+          static_cast<int>(x + v0.x),
+          static_cast<int>(y + v0.y),
+          static_cast<int>(x + v1.x),
+          static_cast<int>(y + v1.y),
+          RGBA{ { 0, 255, 255, 128 } });
+      }
+    }
+  }
 } // namespace
 
 std::string get_description(const std::string& template_source,
@@ -161,107 +269,15 @@ void write_output_description(const Settings& settings,
 }
 
 Image get_output_texture(const Settings& settings, const PackedTexture& texture) {
-  // copy from sources to target sheet
   auto target = Image(texture.width, texture.height);
-  for (const auto& sprite : texture.sprites) {
-    if (sprite.rotated) {
-      if (sprite.vertices.empty()) {
-        copy_rect_rotated_cw(*sprite.source, sprite.trimmed_source_rect,
-          target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
-      }
-      else {
-        copy_rect_rotated_cw(*sprite.source, sprite.trimmed_source_rect,
-          target, sprite.trimmed_rect.x, sprite.trimmed_rect.y, sprite.vertices);
-      }
-    }
-    else {
-      if (sprite.vertices.empty()) {
-        copy_rect(*sprite.source, sprite.trimmed_source_rect,
-          target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
-      }
-      else {
-        copy_rect(*sprite.source, sprite.trimmed_source_rect,
-          target, sprite.trimmed_rect.x, sprite.trimmed_rect.y, sprite.vertices);
-      }
-    }
+  for (const auto& sprite : texture.sprites)
+    copy_sprite(target, sprite);
 
-    if (sprite.extrude) {
-      const auto left = (sprite.source_rect.x0() == sprite.trimmed_source_rect.x0());
-      const auto top = (sprite.source_rect.y0() == sprite.trimmed_source_rect.y0());
-      const auto right = (sprite.source_rect.x1() == sprite.trimmed_source_rect.x1());
-      const auto bottom = (sprite.source_rect.y1() == sprite.trimmed_source_rect.y1());
-      if (left || top || right || bottom) {
-        auto rect = sprite.trimmed_rect;
-        if (sprite.rotated)
-          std::swap(rect.w, rect.h);
-        for (auto i = 0; i < sprite.extrude; i++) {
-          rect = expand(rect, 1);
-          extrude_rect(target, rect, left, top, right, bottom);
-        }
-      }
-    }
-  }
+  process_alpha(target, texture);
 
-  switch (texture.alpha) {
-    case Alpha::keep:
-      break;
-
-    case Alpha::clear:
-      clear_alpha(target);
-      break;
-
-    case Alpha::bleed:
-      bleed_alpha(target);
-      break;
-
-    case Alpha::premultiply:
-      premultiply_alpha(target);
-      break;
-
-    case Alpha::colorkey:
-      make_opaque(target, texture.colorkey);
-      break;
-  }
-
-  // draw debug info
   if (settings.debug)
-    for (const auto& sprite : texture.sprites) {
-      auto rect = sprite.rect;
-      auto trimmed_rect = sprite.trimmed_rect;
-      auto pivot_point = sprite.pivot_point;
-      if (sprite.rotated) {
-        std::swap(rect.w, rect.h);
-        std::swap(trimmed_rect.w, trimmed_rect.h);
-        std::swap(pivot_point.x, pivot_point.y);
-        pivot_point.x = (static_cast<float>(rect.w-1) - pivot_point.x);
-      }
-      const auto pivot_rect = Rect{
-        rect.x + static_cast<int>(pivot_point.x - 0.25f),
-        rect.y + static_cast<int>(pivot_point.y - 0.25f),
-        (pivot_point.x == std::floor(pivot_point.x) ? 2 : 1),
-        (pivot_point.y == std::floor(pivot_point.y) ? 2 : 1),
-      };
-      draw_rect(target, rect, RGBA{ { 255, 0, 255, 128 } });
-      draw_rect(target, trimmed_rect, RGBA{ { 255, 255, 0, 128 } });
-      draw_rect(target, pivot_rect, RGBA{ { 255, 0, 0, 255 } });
-      // draw_rect(target, expand(rect, -1), RGBA{ { 255, 255, 0, 128 } });
-      // draw_rect(target, expand(pivot_rect, 1), RGBA{ { 255, 255, 0, 128 } });
-
-      if (!sprite.vertices.empty()) {
-        const auto x = static_cast<float>(sprite.trimmed_rect.x);
-        const auto y = static_cast<float>(sprite.trimmed_rect.y);
-        for (auto i = 0u; i < sprite.vertices.size(); i++) {
-          const auto& v0 = sprite.vertices[i];
-          const auto& v1 = sprite.vertices[(i + 1) % sprite.vertices.size()];
-          draw_line(target,
-            static_cast<int>(x + v0.x),
-            static_cast<int>(y + v0.y),
-            static_cast<int>(x + v1.x),
-            static_cast<int>(y + v1.y),
-            RGBA{ { 0, 255, 255, 128 } });
-        }
-      }
-    }
+    for (const auto& sprite : texture.sprites)
+      draw_debug_info(target, sprite);
 
   return target;
 }

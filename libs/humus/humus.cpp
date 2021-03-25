@@ -186,9 +186,15 @@ namespace {
             }
           }
         }
-
       }
+    }
 
+    if (!hull.GetCount())
+    {
+      hull.InsertPoint(float2(0, 0));
+      hull.InsertPoint(float2(w, 0));
+      hull.InsertPoint(float2(w, h));
+      hull.InsertPoint(float2(0, h));
     }
 
     if (hull.GetCount() > max_hull_size)
@@ -208,16 +214,17 @@ namespace {
 int CreateConvexHull(int width, int height, const unsigned char* pixels,
     int threshold, int sub_pixel, int max_vertex_count, float* vertices_xy)
 {
-  ConvexHull hull = CreateConvexHull(width, height, pixels, threshold, sub_pixel, max_vertex_count);
-
-  hull.GoToFirst();
-  float2 bias = float2(width, height) / 2.0f;
-  for (int i = 0; ; i++)
+  ConvexHull hull = CreateConvexHull(width, height, pixels, threshold, max_vertex_count, sub_pixel);
+  if (hull.GoToFirst())
   {
-    vertices_xy[i * 2 + 0] = hull.GetCurrPoint().x + bias.x;
-    vertices_xy[i * 2 + 1] = hull.GetCurrPoint().y + bias.y;
-    if (!hull.GoToNext())
-      break;
+    float2 bias = float2(width, height) / 2.0f;
+    for (int i = 0; ; i++)
+    {
+      vertices_xy[i * 2 + 0] = hull.GetCurrPoint().x + bias.x;
+      vertices_xy[i * 2 + 1] = hull.GetCurrPoint().y + bias.y;
+      if (!hull.GoToNext())
+        break;
+    }
   }
   return hull.GetCount();
 }
@@ -225,7 +232,7 @@ int CreateConvexHull(int width, int height, const unsigned char* pixels,
 int CreateConvexHullOptimize(int width, int height, const unsigned char* pixels,
     int threshold, int max_hull_size, int sub_pixel, int vertex_count, float* vertices_xy)
 {
-  ConvexHull hull = CreateConvexHull(width, height, pixels, threshold, sub_pixel, max_hull_size);
+  ConvexHull hull = CreateConvexHull(width, height, pixels, threshold, max_hull_size, sub_pixel);
   float2 polygon[8];
   float area;
   int count = hull.FindOptimalPolygon(polygon, vertex_count, &area);

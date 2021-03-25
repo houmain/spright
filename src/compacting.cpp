@@ -19,8 +19,8 @@ void compact_sprites(const PackedTexture& texture) {
   const auto border = static_cast<cpFloat>(texture.border_padding) - shape_padding;
   const auto x0 = static_cast<cpFloat>(border);
   const auto y0 = static_cast<cpFloat>(border);
-  const auto x1 = static_cast<cpFloat>(texture.width - border);
-  const auto y1 = static_cast<cpFloat>(texture.height - border);
+  const auto x1 = static_cast<cpFloat>(texture.width) - border - 0.5;
+  const auto y1 = static_cast<cpFloat>(texture.height) - border - 0.5;
 
   auto shapes = std::vector<ShapePtr>();
   shapes.emplace_back(cpSpaceAddShape(space, cpSegmentShapeNew(cpSpaceGetStaticBody(space), cpv(x0, y0), cpv(x1, y0), 0)));
