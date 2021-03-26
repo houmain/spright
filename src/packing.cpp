@@ -62,12 +62,17 @@ namespace {
     auto& rect = sprite.rect;
     auto& pivot_point = sprite.pivot_point;
 
-    rect = {
-      sprite.trimmed_rect.x - (sprite.trimmed_source_rect.x - sprite.source_rect.x),
-      sprite.trimmed_rect.y - (sprite.trimmed_source_rect.y - sprite.source_rect.y),
-      sprite.source_rect.w,
-      sprite.source_rect.h,
-    };
+    if (sprite.crop) {
+      rect = sprite.trimmed_rect;
+    }
+    else {
+      rect = {
+        sprite.trimmed_rect.x - (sprite.trimmed_source_rect.x - sprite.source_rect.x),
+        sprite.trimmed_rect.y - (sprite.trimmed_source_rect.y - sprite.source_rect.y),
+        sprite.source_rect.w,
+        sprite.source_rect.h,
+      };
+    }
     sprite.rect.x -= sprite.common_divisor_offset.x;
     sprite.rect.y -= sprite.common_divisor_offset.y;
     sprite.rect.w += sprite.common_divisor_margin.x;

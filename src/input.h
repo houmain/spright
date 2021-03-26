@@ -46,6 +46,7 @@ struct Sprite {
   Pivot pivot{ };
   PointF pivot_point{ };
   Trim trim{ };
+  bool crop{ };
   int trim_margin{ };
   int trim_threshold{ };
   int extrude{ };

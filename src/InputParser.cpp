@@ -41,6 +41,7 @@ namespace {
       { "trim", Definition::trim },
       { "trim-threshold", Definition::trim_threshold },
       { "trim-margin", Definition::trim_margin },
+      { "crop", Definition::crop },
       { "extrude", Definition::extrude },
       { "common-divisor", Definition::common_divisor },
 
@@ -159,6 +160,7 @@ void InputParser::sprite_ends(State& state) {
   sprite.trim = state.trim;
   sprite.trim_margin = state.trim_margin;
   sprite.trim_threshold = state.trim_threshold;
+  sprite.crop = state.crop;
   sprite.extrude = state.extrude;
   sprite.common_divisor = state.common_divisor;
   sprite.tags = state.tags;
@@ -524,6 +526,10 @@ void InputParser::apply_definition(State& state,
     case Definition::trim_threshold:
       state.trim_threshold = check_uint();
       check(state.trim_threshold >= 1 && state.trim_threshold <= 255, "invalid threshold");
+      break;
+
+    case Definition::crop:
+      state.crop = check_bool(true);
       break;
 
     case Definition::extrude:
