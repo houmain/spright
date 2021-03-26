@@ -10,7 +10,7 @@ public:
   Image(Image&& rhs);
   Image& operator=(Image&& rhs);
   ~Image();
-  Image clone() const;
+  Image clone(const Rect& rect = {}) const;
 
   const std::filesystem::path& path() const { return m_path; }
   const std::filesystem::path& filename() const { return m_filename; }
@@ -26,6 +26,29 @@ private:
   std::filesystem::path m_path;
   std::filesystem::path m_filename;
   RGBA* m_data{ };
+  int m_width{ };
+  int m_height{ };
+};
+
+class MonoImage {
+public:
+  using Value = uint8_t;
+
+  MonoImage(int width, int height);
+  MonoImage(MonoImage&& rhs);
+  MonoImage& operator=(MonoImage&& rhs);
+  ~MonoImage();
+
+  int width() const { return m_width; }
+  int height() const { return m_height; }
+  Rect bounds() const { return { 0, 0, m_width, m_height }; }
+  const Value* data() const { return m_data; }
+  Value* data() { return m_data; }
+  Value& value_at(const Point& p) { return m_data[p.y * m_width + p.x]; }
+  const Value& value_at(const Point& p) const { return m_data[p.y * m_width + p.x]; }
+
+private:
+  Value* m_data{ };
   int m_width{ };
   int m_height{ };
 };
@@ -50,5 +73,5 @@ void clear_alpha(Image& image);
 void make_opaque(Image& image, RGBA background);
 void premultiply_alpha(Image& image);
 void bleed_alpha(Image& image);
-std::vector<uint8_t> get_alpha_levels(const Image& image, const Rect& rect = { });
-std::vector<uint8_t> get_gray_levels(const Image& image, const Rect& rect = { });
+MonoImage get_alpha_levels(const Image& image, const Rect& rect = { });
+MonoImage get_gray_levels(const Image& image, const Rect& rect = { });

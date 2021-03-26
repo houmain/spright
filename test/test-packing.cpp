@@ -263,7 +263,7 @@ TEST_CASE("packing - Multiple sheets") {
     input "test/Items.png"
       colorkey
   )");
-  CHECK(textures.size() == 13);
+  REQUIRE(textures.size() == 13);
   CHECK(textures[0].width <= 30);
   CHECK(textures[0].width == textures[0].height);
   CHECK(ceil_to_pot(textures[12].width) == textures[12].width);
@@ -275,7 +275,7 @@ TEST_CASE("packing - Multiple sheets") {
     input "test/Items.png"
       colorkey
   )"));
-  CHECK(textures.size() == 3);
+  REQUIRE(textures.size() == 3);
   CHECK(le_size(textures[0], 39, 40));
   CHECK(le_size(textures[1], 38, 40));
   CHECK(le_size(textures[2], 16, 30));
@@ -287,7 +287,7 @@ TEST_CASE("packing - Multiple sheets") {
     input "test/Items.png"
       colorkey
   )"));
-  CHECK(textures.size() == 3);
+  REQUIRE(textures.size() == 3);
   CHECK(le_size(textures[0], 40, 40));
   CHECK(le_size(textures[1], 32, 32));
   CHECK(textures[2].width == textures[2].height);
@@ -299,7 +299,7 @@ TEST_CASE("packing - Multiple sheets") {
     input "test/Items.png"
       colorkey
   )"));
-  CHECK(textures.size() == 4);
+  REQUIRE(textures.size() == 4);
   CHECK(le_size(textures[0], 32, 32));
   CHECK(le_size(textures[1], 32, 32));
   CHECK(le_size(textures[2], 32, 32));
@@ -317,7 +317,7 @@ TEST_CASE("packing - Multiple sheets") {
     input "test/Items.png"
       colorkey
   )"));
-  CHECK(textures.size() == 14);
+  REQUIRE(textures.size() == 14);
   CHECK(textures[0].width <= 16);
   CHECK(textures[0].height <= 16);
 
@@ -328,7 +328,7 @@ TEST_CASE("packing - Multiple sheets") {
     input "test/Items.png"
       colorkey
   )"));
-  CHECK(textures.size() == 15);
+  REQUIRE(textures.size() == 15);
   CHECK(textures[0].width <= 16);
   CHECK(textures[0].height <= 16);
 }

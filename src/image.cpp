@@ -53,11 +53,17 @@ namespace {
   };
 
   template <int sides, // 4 or 8
-    typename Match, // bool Match(RGBA)
+    typename Color,
+    typename GetPixel, // Color&(int x, int y)
+    typename Match, // bool Match(Color color)
     typename Count> // void Count(int x, int y)
-  void flood_fill(Image& image, const Rect& bounds,
-      const Point& start, const RGBA& new_color,
-      Match&& match, Count&& count = [](int, int) {}) {
+  void flood_fill(
+      int start_x, int start_y,
+      int w, int h,
+      const Color& new_color,
+      GetPixel&& get_pixel,
+      Match&& match,
+      Count&& count = [](int, int) {}) {
 
     // cancel when new color is indistinguishable from rest
     if (match(new_color))
@@ -65,35 +71,35 @@ namespace {
 
     auto stack = std::vector<Point>();
     const auto add = [&](auto x, auto y) {
-      auto& pixel = image.rgba_at({ x, y });
+      auto& pixel = get_pixel(x, y);
       if (match(pixel)) {
         pixel = new_color;
         stack.push_back(Point{ x, y });
       }
     };
-    add(start.x, start.y);
+    add(start_x, start_y);
 
     while (!stack.empty()) {
-      const auto pos = stack.back();
+      const auto [x, y] = stack.back();
       stack.pop_back();
-      count(pos.x, pos.y);
+      count(x, y);
 
-      if (pos.y > bounds.y)     add(pos.x, pos.y - 1);
-      if (pos.y < bounds.h - 1) add(pos.x, pos.y + 1);
+      if (y > 0) add(x, y - 1);
+      if (y < h - 1) add(x, y + 1);
       if (sides == 4) {
-        if (pos.x > bounds.x)     add(pos.x - 1, pos.y);
-        if (pos.x < bounds.w - 1) add(pos.x + 1, pos.y);
+        if (x > 0) add(x - 1, y);
+        if (x < w - 1) add(x + 1, y);
       }
       else {
-        if (pos.x > bounds.x) {
-          add(pos.x - 1, pos.y);
-          if (pos.y > bounds.y)     add(pos.x - 1, pos.y - 1);
-          if (pos.y < bounds.h - 1) add(pos.x - 1, pos.y + 1);
+        if (x > 0) {
+          add(x - 1, y);
+          if (y > 0) add(x - 1, y - 1);
+          if (y < h - 1) add(x - 1, y + 1);
         }
-        if (pos.x < bounds.w - 1) {
-          add(pos.x + 1, pos.y);
-          if (pos.y > bounds.y)     add(pos.x + 1, pos.y - 1);
-          if (pos.y < bounds.h - 1) add(pos.x + 1, pos.y + 1);
+        if (x < w - 1) {
+          add(x + 1, y);
+          if (y > 0) add(x + 1, y - 1);
+          if (y < h - 1) add(x + 1, y + 1);
         }
       }
     }
@@ -210,7 +216,8 @@ Image::Image(std::filesystem::path path, std::filesystem::path filename)
 }
 
 Image::Image(Image&& rhs)
-  : m_filename(std::exchange(rhs.m_filename, { })),
+  : m_path(std::exchange(rhs.m_path, { })),
+    m_filename(std::exchange(rhs.m_filename, { })),
     m_data(std::exchange(rhs.m_data, nullptr)),
     m_width(std::exchange(rhs.m_width, 0)),
     m_height(std::exchange(rhs.m_height, 0)) {
@@ -218,6 +225,7 @@ Image::Image(Image&& rhs)
 
 Image& Image::operator=(Image&& rhs) {
   auto tmp = std::move(rhs);
+  std::swap(m_path, tmp.m_path);
   std::swap(m_filename, tmp.m_filename);
   std::swap(m_data, tmp.m_data);
   std::swap(m_width, tmp.m_width);
@@ -229,9 +237,42 @@ Image::~Image() {
   stbi_image_free(m_data);
 }
 
-Image Image::clone() const {
-  auto clone = Image(width(), height());
-  std::memcpy(clone.rgba(), rgba(), static_cast<size_t>(width() * height()) * sizeof(RGBA));
+MonoImage::MonoImage(int width, int height)
+  : m_width(width),
+    m_height(height) {
+
+  if (!width || !height)
+    throw std::runtime_error("invalid image size");
+
+  const auto size = static_cast<size_t>(m_width * m_height) * sizeof(uint8_t);
+  m_data = static_cast<uint8_t*>(std::malloc(size));
+  std::fill(m_data, m_data + (m_width * m_height), 0x00);
+}
+
+MonoImage::MonoImage(MonoImage&& rhs)
+  : m_data(std::exchange(rhs.m_data, nullptr)),
+    m_width(std::exchange(rhs.m_width, 0)),
+    m_height(std::exchange(rhs.m_height, 0)) {
+}
+
+MonoImage& MonoImage::operator=(MonoImage&& rhs) {
+  auto tmp = std::move(rhs);
+  std::swap(m_data, tmp.m_data);
+  std::swap(m_width, tmp.m_width);
+  std::swap(m_height, tmp.m_height);
+  return *this;
+}
+
+MonoImage::~MonoImage() {
+  stbi_image_free(m_data);
+}
+
+Image Image::clone(const Rect& rect) const {
+  if (empty(rect))
+    return clone(bounds());
+  check_rect(*this, rect);
+  auto clone = Image(rect.w, rect.h);
+  copy_rect(*this, rect, clone, 0, 0);
   return clone;
 }
 
@@ -245,13 +286,22 @@ void save_image(const Image& image, const std::filesystem::path& filename) {
 
 void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy) {
   const auto [sx, sy, w, h] = source_rect;
-  check_rect(source, source_rect);
-  check_rect(dest, { dx, dy, w, h });
-  for (auto y = 0; y < h; ++y)
-    std::memcpy(
-      dest.rgba() + ((dy + y) * dest.width() + dx),
-      source.rgba() + ((sy + y) * source.width() + sx),
-      static_cast<size_t>(w) * sizeof(RGBA));
+  const auto dest_rect = Rect{ dx, dy, w, h };
+  if (source_rect == source.bounds() &&
+      dest_rect == dest.bounds() &&
+      source_rect == dest_rect) {
+    std::memcpy(dest.rgba(), source.rgba(),
+      static_cast<size_t>(w * h) * sizeof(RGBA));
+  }
+  else {
+    check_rect(source, source_rect);
+    check_rect(dest, dest_rect);
+    for (auto y = 0; y < h; ++y)
+      std::memcpy(
+        dest.rgba() + ((dy + y) * dest.width() + dx),
+        source.rgba() + ((sy + y) * source.width() + sx),
+        static_cast<size_t>(w) * sizeof(RGBA));
+  }
 }
 
 void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy) {
@@ -430,25 +480,28 @@ std::vector<Rect> find_islands(const Image& image, const Rect& rect) {
   if (empty(rect))
     return find_islands(image, get_used_bounds(image));
 
-  auto clone = image.clone();
+  using Value = MonoImage::Value;
+  auto alpha = get_alpha_levels(image, rect);
 
   auto islands = std::vector<Rect>();
-  for (auto y = rect.y; y < rect.y + rect.h; ++y)
-    for (auto x = rect.x; x < rect.x + rect.w; ++x)
-      if (clone.rgba_at({ x, y }).a) {
+  for (auto y = 0; y < rect.h; ++y)
+    for (auto x = 0; x < rect.w; ++x)
+      if (alpha.value_at({ x, y })) {
         auto min_x = x;
         auto min_y = y;
         auto max_x = x;
         auto max_y = y;
-        flood_fill<8>(clone, clone.bounds(), { x, y }, RGBA{ },
-          [&](const RGBA& pixel) { return (pixel.a != 0); },
+        flood_fill<8>(x, y, rect.w, rect.h,
+          Value{ },
+          [&](int x, int y) -> Value& { return alpha.value_at({ x, y }); },
+          [&](const Value& pixel) { return (pixel != 0); },
           [&](int x, int y) {
             min_x = std::min(x, min_x);
             min_y = std::min(y, min_y);
             max_x = std::max(x, max_x);
             max_y = std::max(y, max_y);
           });
-        islands.push_back({ min_x, min_y, max_x - min_x + 1, max_y - min_y + 1 });
+        islands.push_back({ rect.x + min_x, rect.y + min_y, max_x - min_x + 1, max_y - min_y + 1 });
       }
 
   merge_contained_rects(islands);
@@ -504,25 +557,23 @@ void bleed_alpha(Image& image) {
     image.width(), image.height());
 }
 
-std::vector<uint8_t> get_alpha_levels(const Image& image, const Rect& rect) {
+MonoImage get_alpha_levels(const Image& image, const Rect& rect) {
   if (empty(rect))
     return get_alpha_levels(image, get_used_bounds(image));
   check_rect(image, rect);
 
-  auto result = std::vector<uint8_t>();
-  result.resize(static_cast<size_t>(rect.w * rect.h));
+  auto result = MonoImage(rect.w, rect.h);
   auto dest = result.data();
   for_each_pixel(image, rect, [&](const RGBA& color) { *dest++ = color.a; });
   return result;
 }
 
-std::vector<uint8_t> get_gray_levels(const Image& image, const Rect& rect) {
+MonoImage get_gray_levels(const Image& image, const Rect& rect) {
   if (empty(rect))
     return get_gray_levels(image, get_used_bounds(image));
   check_rect(image, rect);
 
-  auto result = std::vector<uint8_t>();
-  result.resize(static_cast<size_t>(rect.w * rect.h));
+  auto result = MonoImage(rect.w, rect.h);
   auto dest = result.data();
   for_each_pixel(image, rect, [&](const RGBA& color) { *dest++ = color.gray(); });
   return result;

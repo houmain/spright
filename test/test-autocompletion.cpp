@@ -12,7 +12,7 @@ input "test/Items.png"
   auto parser = InputParser(Settings{ .autocomplete = true });
   REQUIRE_NOTHROW(parser.parse(input));
   const auto& sprites = parser.sprites();
-  CHECK(sprites.size() == 18);
+  REQUIRE(sprites.size() == 18);
 
   const auto text = parser.autocomplete_output();
   CHECK(text == R"(
@@ -60,7 +60,7 @@ TEST_CASE("autocompletion - Unaligned") {
   auto parser = InputParser(Settings{ });
   REQUIRE_NOTHROW(parser.parse(input));
   const auto& sprites = parser.sprites();
-  CHECK(sprites.size() == 31);
+  REQUIRE(sprites.size() == 31);
 }
 
 TEST_CASE("autocompletion - ID generator") {
@@ -73,6 +73,6 @@ TEST_CASE("autocompletion - ID generator") {
   auto parser = InputParser(Settings{ });
   REQUIRE_NOTHROW(parser.parse(input));
   const auto& sprites = parser.sprites();
-  CHECK(sprites.size() == 31);
+  REQUIRE(sprites.size() == 31);
   CHECK(sprites[10].id == "item_10");
 }
