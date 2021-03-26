@@ -44,9 +44,7 @@ struct Sprite {
   Rect rect{ };
   Rect trimmed_rect{ };
   Pivot pivot{ };
-  bool integral_pivot_point{ };
   PointF pivot_point{ };
-  PointF trimmed_pivot_point{ };
   Trim trim{ };
   int trim_margin{ };
   int trim_threshold{ };

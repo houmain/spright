@@ -85,14 +85,6 @@ namespace {
       case PivotY::bottom: pivot_point.y = static_cast<float>(rect.h); break;
       case PivotY::custom: pivot_point.y = sprite.pivot_point.y;
     }
-    if (sprite.integral_pivot_point) {
-      pivot_point.x = std::floor(pivot_point.x);
-      pivot_point.y = std::floor(pivot_point.y);
-    }
-    sprite.trimmed_pivot_point.x =
-      pivot_point.x + static_cast<float>(sprite.rect.x - sprite.trimmed_rect.x);
-    sprite.trimmed_pivot_point.y =
-      pivot_point.y + static_cast<float>(sprite.rect.y - sprite.trimmed_rect.y);
 
     if (sprite.rotated)
       for (auto& vertex : sprite.vertices)

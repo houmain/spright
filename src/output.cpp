@@ -55,7 +55,6 @@ namespace {
         json_sprite["sourceSpriteIndex"] = texture_sprites[texture_filename].size();
       json_sprite["trimmedSourceRect"] = json_rect(sprite.trimmed_source_rect);
       json_sprite["pivot"] = json_point(sprite.pivot_point);
-      json_sprite["trimmedPivot"] = json_point(sprite.trimmed_pivot_point);
       json_sprite["textureFilename"] = path_to_utf8(texture_filename);
       json_sprite["rotated"] = sprite.rotated;
       json_sprite["tags"] = sprite.tags;
