@@ -5,7 +5,6 @@
 
 class Image {
 public:
-  Image() = default;
   Image(std::filesystem::path path, std::filesystem::path filename);
   Image(int width, int height, const RGBA& background = { });
   Image(Image&& rhs);

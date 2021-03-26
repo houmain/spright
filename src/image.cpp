@@ -405,26 +405,19 @@ Rect get_used_bounds(const Image& image, const Rect& rect, int threshold) {
 }
 
 RGBA guess_colorkey(const Image& image) {
-  // find a corner within larger same-color area using flood fill
-  const auto limit = std::max(image.height(), image.height());
-
+  // simply take median of corner colors
   const auto corners = {
     Point{ image.width() - 1, image.height() - 1 },
     Point{ image.width() - 1, 0 },
     Point{ 0, image.height() - 1  },
     Point{ 0, 0 },
   };
-  auto clone = image.clone();
-  for (const auto& corner : corners) {
-    const auto color = image.rgba_at(corner);
-    auto count = 0;
-    flood_fill<4>(clone, clone.bounds(), corner, RGBA{ },
-      [&](const RGBA& pixel) { return (pixel == color); },
-      [&](int, int) { ++count; });
-    if (count > limit)
-      return color;
-  }
-  return { };
+  auto colors = std::vector<RGBA>();
+  for (const auto& corner : corners)
+    colors.push_back(image.rgba_at(corner));
+  std::sort(begin(colors), end(colors),
+    [](const RGBA& a, const RGBA& b) { return a.rgba < b.rgba; });
+  return colors[1];
 }
 
 void replace_color(Image& image, RGBA original, RGBA color) {
