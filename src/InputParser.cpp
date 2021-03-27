@@ -41,6 +41,7 @@ namespace {
       { "trim", Definition::trim },
       { "trim-threshold", Definition::trim_threshold },
       { "trim-margin", Definition::trim_margin },
+      { "trim-channel", Definition::trim_channel },
       { "crop", Definition::crop },
       { "extrude", Definition::extrude },
       { "common-divisor", Definition::common_divisor },
@@ -160,6 +161,7 @@ void InputParser::sprite_ends(State& state) {
   sprite.trim = state.trim;
   sprite.trim_margin = state.trim_margin;
   sprite.trim_threshold = state.trim_threshold;
+  sprite.trim_gray_levels = state.trim_gray_levels;
   sprite.crop = state.crop;
   sprite.extrude = state.extrude;
   sprite.common_divisor = state.common_divisor;
@@ -215,7 +217,7 @@ void InputParser::deduce_sequence_sprites(State& state) {
 
 void InputParser::deduce_grid_sprites(State& state) {
   const auto sheet = get_sheet(state);
-  const auto bounds = get_used_bounds(*sheet);
+  const auto bounds = get_used_bounds(*sheet, state.trim_gray_levels);
 
   auto grid = state.grid;
   grid.x += state.grid_spacing.x;
@@ -237,7 +239,9 @@ void InputParser::deduce_grid_sprites(State& state) {
         state.grid.x, state.grid.y
       };
 
-      if (is_fully_transparent(*sheet, state.rect)) {
+      if (state.trim_gray_levels ?
+          is_fully_black(*sheet, state.trim_threshold, state.rect) :
+          is_fully_transparent(*sheet, state.trim_threshold, state.rect)) {
         ++skipped;
         continue;
       }
@@ -267,7 +271,7 @@ void InputParser::deduce_grid_sprites(State& state) {
 
 void InputParser::deduce_unaligned_sprites(State& state) {
   const auto sheet = get_sheet(state);
-  for (const auto& rect : find_islands(*sheet)) {
+  for (const auto& rect : find_islands(*sheet, state.trim_gray_levels)) {
     if (m_settings.autocomplete) {
       auto& os = m_autocomplete_output;
       os << state.indent << "sprite \n";
@@ -527,6 +531,13 @@ void InputParser::apply_definition(State& state,
       state.trim_threshold = check_uint();
       check(state.trim_threshold >= 1 && state.trim_threshold <= 255, "invalid threshold");
       break;
+
+    case Definition::trim_channel: {
+      auto channel = check_string();
+      check(channel == "alpha" || channel == "gray", "invalid trim channel");
+      state.trim_gray_levels = (channel == "gray");
+      break;
+    }
 
     case Definition::crop:
       state.crop = check_bool(true);

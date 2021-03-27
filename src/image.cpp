@@ -409,11 +409,18 @@ bool is_opaque(const Image& image, const Rect& rect) {
   return all_of(image, rect, [](const RGBA& rgba) { return (rgba.a == 255); });
 }
 
-bool is_fully_transparent(const Image& image, const Rect& rect, int threshold) {
+bool is_fully_transparent(const Image& image, int threshold, const Rect& rect) {
   if (empty(rect))
-    return is_fully_transparent(image, image.bounds(), threshold);
+    return is_fully_transparent(image, threshold, image.bounds());
 
   return all_of(image, rect, [&](const RGBA& rgba) { return (rgba.a < threshold); });
+}
+
+bool is_fully_black(const Image& image, int threshold, const Rect& rect) {
+  if (empty(rect))
+    return is_fully_black(image, threshold, image.bounds());
+
+  return all_of(image, rect, [&](const RGBA& rgba) { return (rgba.gray() < threshold); });
 }
 
 bool is_identical(const Image& image_a, const Rect& rect_a, const Image& image_b, const Rect& rect_b) {
@@ -432,31 +439,33 @@ bool is_identical(const Image& image_a, const Rect& rect_a, const Image& image_b
   return true;
 }
 
-Rect get_used_bounds(const Image& image, const Rect& rect, int threshold) {
+Rect get_used_bounds(const Image& image, bool gray_levels, int threshold, const Rect& rect) {
   if (empty(rect))
-    return get_used_bounds(image, image.bounds(), threshold);
+    return get_used_bounds(image, gray_levels, threshold, image.bounds());
 
   const auto x1 = rect.x + rect.w - 1;
   const auto y1 = rect.y + rect.h - 1;
 
+  const auto check = (gray_levels ? is_fully_black : is_fully_transparent);
+
   auto min_y = rect.y;
   for (; min_y < y1; ++min_y)
-    if (!is_fully_transparent(image, { rect.x, min_y, rect.w, 1 }, threshold))
+    if (!check(image, threshold, { rect.x, min_y, rect.w, 1 }))
       break;
 
   auto max_y = y1;
   for (; max_y > min_y; --max_y)
-    if (!is_fully_transparent(image, { rect.x, max_y, rect.w, 1 }, threshold))
+    if (!check(image, threshold, { rect.x, max_y, rect.w, 1 }))
       break;
 
   auto min_x = rect.x;
   for (; min_x < x1; ++min_x)
-    if (!is_fully_transparent(image, { min_x, min_y, 1, max_y - min_y }, threshold))
+    if (!check(image, threshold, { min_x, min_y, 1, max_y - min_y }))
       break;
 
   auto max_x = x1;
   for (; max_x > min_x; --max_x)
-    if (!is_fully_transparent(image, { max_x, min_y, 1, max_y - min_y }, threshold))
+    if (!check(image, threshold, { max_x, min_y, 1, max_y - min_y }))
       break;
 
   return { min_x, min_y, max_x - min_x + 1, max_y - min_y + 1 };
@@ -484,24 +493,26 @@ void replace_color(Image& image, RGBA original, RGBA color) {
       original, color);
 }
 
-std::vector<Rect> find_islands(const Image& image, const Rect& rect) {
+std::vector<Rect> find_islands(const Image& image, bool gray_levels, const Rect& rect) {
   if (empty(rect))
-    return find_islands(image, get_used_bounds(image));
+    return find_islands(image, gray_levels, get_used_bounds(image, gray_levels));
 
   using Value = MonoImage::Value;
-  auto alpha = get_alpha_levels(image, rect);
+  auto levels = (gray_levels ?
+    get_gray_levels(image, rect) :
+    get_alpha_levels(image, rect));
 
   auto islands = std::vector<Rect>();
   for (auto y = 0; y < rect.h; ++y)
     for (auto x = 0; x < rect.w; ++x)
-      if (alpha.value_at({ x, y })) {
+      if (levels.value_at({ x, y })) {
         auto min_x = x;
         auto min_y = y;
         auto max_x = x;
         auto max_y = y;
         flood_fill<8>(x, y, rect.w, rect.h,
           Value{ },
-          [&](int x, int y) -> Value& { return alpha.value_at({ x, y }); },
+          [&](int x, int y) -> Value& { return levels.value_at({ x, y }); },
           [&](const Value& pixel) { return (pixel != 0); },
           [&](int x, int y) {
             min_x = std::min(x, min_x);
@@ -567,7 +578,7 @@ void bleed_alpha(Image& image) {
 
 MonoImage get_alpha_levels(const Image& image, const Rect& rect) {
   if (empty(rect))
-    return get_alpha_levels(image, get_used_bounds(image));
+    return get_alpha_levels(image, get_used_bounds(image, false));
   check_rect(image, rect);
 
   auto result = MonoImage(rect.w, rect.h);
@@ -578,7 +589,7 @@ MonoImage get_alpha_levels(const Image& image, const Rect& rect) {
 
 MonoImage get_gray_levels(const Image& image, const Rect& rect) {
   if (empty(rect))
-    return get_gray_levels(image, get_used_bounds(image));
+    return get_gray_levels(image, get_used_bounds(image, true));
   check_rect(image, rect);
 
   auto result = MonoImage(rect.w, rect.h);

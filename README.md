@@ -215,11 +215,13 @@ The following table contains a list of all definitions, with the subject each af
 | pivot          |sprite | pivot-x, pivot-y | Sets the horizontal (_left, center, right_) and vertical (_top, middle, bottom_) alignment of a sprite's pivot point. Alternatively the coordinates of the pivot point can be specified.
 | tag            |sprite | key, [value] | Adds a tag to a sprite (_value_ defaults to an empty string).
 | trim           |sprite | [trim-mode]  | Enables trimming, which reduces the sprite to the non-transparent region. <br/>- _none_ : Do not trim.  <br/>- _rect_ : Trim to rectangular region (default).<br/>- _convex_ : Trim to convex region (_vertices_ are set in output description).
-| trim-threshold |sprite | [alpha]      | Sets the alpha value which should be considered non-transparent during trimming (1 - 255).
+| trim-channel   |sprite | channel      | Sets the channel which should be considered during trimming.<br/>- _alpha_ : The alpha channel of a pixel.<br/>-_gray_ : The gray level of the pixel.
+| trim-threshold |sprite | value        | Sets the value which should be considered non-transparent during trimming (1 - 255).
 | trim-margin    |sprite | [pixels]     | Sets a number of transparent pixel rows around the sprite, which should not be removed by trimming.
+| crop           |sprite | [boolean]    | Sets whether the sprite's rectangle should be reduced to the trimmed bounds.
 | extrude        |sprite | [pixels]     | Adds a padding around the sprite and fills it with the sprite's border pixel color.
 | common-divisor |sprite | x, y         | Restricts the sprite's size to be divisible by a certain number of pixels. Smaller sprites are filled up with transparency.
-| **output**     |input  | path         | Sets the output texture's _path_. It can describe an un-/bounded sequence of files (e.g.  "sheet{0-}.png").
+| **output**     |input  | path         | Sets the output texture's _path_. It can describe an un-/bounded sequence of files (e.g. "sheet{0-}.png").
 | width          |output | width        | Sets a fixed output texture width.
 | height         |output | height       | Sets a fixed output texture height.
 | max-width      |output | width        | Sets a maximum output texture width.
@@ -273,7 +275,6 @@ So each sprite can appear in multiple contexts. SPRITE represents objects with t
   "sourcePath": "path",
   "sourceRect":  { "x": 0, "y": 0, "w": 16, "h": 16 },
   "textureFilename": "spright0.png",
-  "trimmedPivot": { "x": 0, "y": 0 },
   "trimmedRect": { "x": 0, "y": 0, "w": 16, "h": 16 },
   "trimmedSourceRect": { "x": 0, "y": 0, "w": 16, "h": 16 },
   "vertices": [ { "x": 0, "y": 0 }, ... ],

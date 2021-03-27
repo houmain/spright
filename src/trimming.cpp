@@ -39,18 +39,20 @@ void trim_sprite(Sprite& sprite) {
     return;
   }
 
-  sprite.trimmed_source_rect =
-    get_used_bounds(*sprite.source, sprite.source_rect, sprite.trim_threshold);
+  sprite.trimmed_source_rect = get_used_bounds(*sprite.source,
+    sprite.trim_gray_levels, sprite.trim_threshold, sprite.source_rect);
 
   if (sprite.trim_margin)
     sprite.trimmed_source_rect = intersect(expand(
       sprite.trimmed_source_rect, sprite.trim_margin), sprite.source_rect);
 
   if (sprite.trim == Trim::convex) {
-    const auto alpha = get_alpha_levels(*sprite.source, sprite.trimmed_source_rect);
+    const auto levels = (sprite.trim_gray_levels ?
+      get_gray_levels(*sprite.source, sprite.trimmed_source_rect) :
+      get_alpha_levels(*sprite.source, sprite.trimmed_source_rect));
     sprite.vertices.resize(8);
     const auto count = CreateConvexHull(sprite.trimmed_source_rect.w, sprite.trimmed_source_rect.h,
-        alpha.data(), sprite.trim_threshold, 16,
+        levels.data(), sprite.trim_threshold, 16,
         static_cast<int>(sprite.vertices.size()), &sprite.vertices[0].x);
     sprite.vertices.resize(static_cast<size_t>(count));
     expand_convex_polygon(sprite.vertices, static_cast<float>(sprite.trim_margin));

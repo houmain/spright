@@ -39,6 +39,7 @@ enum class Definition {
   trim,
   trim_threshold,
   trim_margin,
+  trim_channel,
   crop,
   extrude,
   common_divisor,
@@ -78,9 +79,10 @@ struct State {
   PointF pivot_point{ };
   Rect rect{ };
   Trim trim{ };
-  bool crop{ };
   int trim_threshold{ 1 };
   int trim_margin{ };
+  bool trim_gray_levels{ };
+  bool crop{ };
   int extrude{ };
   Size common_divisor{ 1, 1 };
 };

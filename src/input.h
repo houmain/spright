@@ -46,9 +46,10 @@ struct Sprite {
   Pivot pivot{ };
   PointF pivot_point{ };
   Trim trim{ };
-  bool crop{ };
   int trim_margin{ };
   int trim_threshold{ };
+  bool trim_gray_levels{ };
+  bool crop{ };
   int extrude{ };
   std::map<std::string, std::string> tags;
   bool rotated{ };
