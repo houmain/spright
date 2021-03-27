@@ -268,7 +268,7 @@ void write_output_description(const Settings& settings,
 }
 
 Image get_output_texture(const Settings& settings, const PackedTexture& texture) {
-  auto target = Image(texture.width, texture.height);
+  auto target = Image(texture.width, texture.height, RGBA{ });
   for (const auto& sprite : texture.sprites)
     copy_sprite(target, sprite);
 

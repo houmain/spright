@@ -5,8 +5,9 @@
 
 class Image {
 public:
+  Image(int width, int height);
+  Image(int width, int height, const RGBA& background);
   Image(std::filesystem::path path, std::filesystem::path filename);
-  Image(int width, int height, const RGBA& background = { });
   Image(Image&& rhs);
   Image& operator=(Image&& rhs);
   ~Image();
@@ -35,6 +36,7 @@ public:
   using Value = uint8_t;
 
   MonoImage(int width, int height);
+  MonoImage(int width, int height, Value background);
   MonoImage(MonoImage&& rhs);
   MonoImage& operator=(MonoImage&& rhs);
   ~MonoImage();
