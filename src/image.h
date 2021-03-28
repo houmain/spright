@@ -71,7 +71,7 @@ bool is_identical(const Image& image_a, const Rect& rect_a, const Image& image_b
 Rect get_used_bounds(const Image& image, bool gray_levels, int threshold = 1, const Rect& rect = { });
 RGBA guess_colorkey(const Image& image);
 void replace_color(Image& image, RGBA original, RGBA color);
-std::vector<Rect> find_islands(const Image& image, bool gray_levels, const Rect& rect = { });
+std::vector<Rect> find_islands(const Image& image, int merge_distance, bool gray_levels, const Rect& rect = { });
 void clear_alpha(Image& image);
 void make_opaque(Image& image, RGBA background);
 void premultiply_alpha(Image& image);

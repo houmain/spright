@@ -105,37 +105,38 @@ namespace {
     }
   }
 
-  void merge_contained_rects(std::vector<Rect>& rects) {
-    for (auto i = 0u; i < rects.size(); ++i) {
-      const auto& a = rects[i];
-      if (!empty(a))
-        for (auto j = i + 1; j < rects.size(); ++j) {
-          auto& b = rects[j];
-          if (containing(a, b))
-            b = { };
-        }
-    }
-    rects.erase(std::remove_if(begin(rects), end(rects),
-      [](const Rect& a) { return empty(a); }), end(rects));
-  }
+  void merge_adjacent_rects(const Image& image, std::vector<Rect>& rects,
+      int distance, bool gray_levels) {
 
-  [[maybe_unused]] void merge_overlapping_rects(std::vector<Rect>& rects) {
-    for (auto i = 0u; i < rects.size(); ++i) {
-      auto& a = rects[i];
-      if (!empty(a))
-        for (auto j = i + 1; j < rects.size(); ++j) {
+    const auto adjacent = [&](const Rect& a, const Rect& b) {
+      const auto intersection = intersect(a, expand(b, distance));
+      if (empty(intersection))
+        return false;
+      if (gray_levels)
+        return !is_fully_black(image, 1, intersection);
+      return !is_fully_transparent(image, 1, intersection);
+    };
+
+    for (;;) {
+      auto merged = false;
+      for (auto i = size_t{ }; i < rects.size(); ++i) {
+        auto& a = rects[i];
+        for (auto j = i + 1; j < rects.size(); ) {
           auto& b = rects[j];
-          if (overlapping(a, b)) {
+          if (adjacent(a, b)) {
             a = combine(a, b);
-            b = { };
-            // restart i after expansion
-            --i;
-            break;
+            b = rects.back();
+            rects.pop_back();
+            merged = true;
+          }
+          else {
+            ++j;
           }
         }
+      }
+      if (!merged)
+        break;
     }
-    rects.erase(std::remove_if(begin(rects), end(rects),
-      [](const Rect& a) { return empty(a); }), end(rects));
   }
 
   // https://en.wikipedia.org/wiki/Bresenham's_line_algorithm
@@ -493,9 +494,11 @@ void replace_color(Image& image, RGBA original, RGBA color) {
       original, color);
 }
 
-std::vector<Rect> find_islands(const Image& image, bool gray_levels, const Rect& rect) {
+std::vector<Rect> find_islands(const Image& image, int merge_distance,
+    bool gray_levels, const Rect& rect) {
   if (empty(rect))
-    return find_islands(image, gray_levels, get_used_bounds(image, gray_levels));
+    return find_islands(image, merge_distance, gray_levels,
+      get_used_bounds(image, gray_levels));
 
   using Value = MonoImage::Value;
   auto levels = (gray_levels ?
@@ -523,8 +526,7 @@ std::vector<Rect> find_islands(const Image& image, bool gray_levels, const Rect&
         islands.push_back({ rect.x + min_x, rect.y + min_y, max_x - min_x + 1, max_y - min_y + 1 });
       }
 
-  merge_contained_rects(islands);
-  //merge_overlapping_rects(islands);
+  merge_adjacent_rects(image, islands, merge_distance, gray_levels);
 
   // fuzzy sort from top to bottom, left to right
   const auto center_considerably_less = [](const Rect& a, const Rect& b) {

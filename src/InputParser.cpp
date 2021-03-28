@@ -36,6 +36,7 @@ namespace {
       { "id", Definition::id },
       { "skip", Definition::skip },
       { "span", Definition::span },
+      { "atlas", Definition::atlas },
       { "rect", Definition::rect },
       { "pivot", Definition::pivot },
       { "trim", Definition::trim },
@@ -269,9 +270,10 @@ void InputParser::deduce_grid_sprites(State& state) {
   }
 }
 
-void InputParser::deduce_unaligned_sprites(State& state) {
+void InputParser::deduce_atlas_sprites(State& state) {
   const auto sheet = get_sheet(state);
-  for (const auto& rect : find_islands(*sheet, state.trim_gray_levels)) {
+  for (const auto& rect : find_islands(*sheet,
+      state.atlas_merge_distance, state.trim_gray_levels)) {
     if (m_settings.autocomplete) {
       auto& os = m_autocomplete_output;
       os << state.indent << "sprite \n";
@@ -283,6 +285,12 @@ void InputParser::deduce_unaligned_sprites(State& state) {
     state.rect = rect;
     sprite_ends(state);
   }
+}
+
+void InputParser::deduce_single_sprite(State& state) {
+  const auto sheet = get_sheet(state);
+  state.rect = sheet->bounds();
+  sprite_ends(state);
 }
 
 void InputParser::texture_ends(State& state) {
@@ -300,8 +308,11 @@ void InputParser::sheet_ends(State& state) {
     else if (!empty(state.grid)) {
       deduce_grid_sprites(state);
     }
+    else if (state.atlas_merge_distance >= 0) {
+      deduce_atlas_sprites(state);
+    }
     else {
-      deduce_unaligned_sprites(state);
+      deduce_single_sprite(state);
     }
   }
   m_sprites_in_current_sheet = { };
@@ -451,6 +462,7 @@ void InputParser::apply_definition(State& state,
     }
     case Definition::grid:
       state.grid = check_size(true);
+      check(state.grid.x > 0 && state.grid.y > 0, "invalid grid");
       break;
 
     case Definition::grid_offset:
@@ -476,6 +488,10 @@ void InputParser::apply_definition(State& state,
       check(!empty(state.grid), "span is only valid in grid");
       state.span = check_size(false);
       check(state.span.x > 0 && state.span.y > 0, "invalid span");
+      break;
+
+    case Definition::atlas:
+      state.atlas_merge_distance = (arguments_left() ? check_uint() : 0);
       break;
 
     case Definition::sprite:

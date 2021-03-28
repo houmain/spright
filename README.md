@@ -80,6 +80,7 @@ input "Old enemies 2.png"
 input "Orc Attack/Frame{01-04}.png"
 
 input "misc_scenery.png"
+  atlas
 ```
 When spright is called without [command line](#commandline-arguments) arguments, the [input definition](#input-definition-reference) is read from ```spright.conf``` and it writes a ```spright0.png``` containing the packed sprites and a ```spright.json``` file containing the [output description](#output-description).
 
@@ -106,6 +107,7 @@ For sheets without grids it adds the sprites' rectangles:
 ```perl
 ...
 input "misc_scenery.png"
+  atlas
   sprite
     rect 78 12 6 27
   sprite
@@ -203,12 +205,13 @@ The following table contains a list of all definitions, with the subject each af
 | **input**      |-      | path         | Adds a new input file at _path_. It can contain wildcards (e.g. "sprites/**/*.png") or it can describe an un-/bounded sequence of files (e.g. "frames_{0-}.png, frames_{0001-0013}.png").
 | path           |input  | path         | A _path_ which should be prepended to the input's path.
 | colorkey       |input  | [color]      | Specifies that the input has a color, which should be considered transparent (in hex notation e.g. _FF00FF_).
-| grid           |input  | x, [y]       | Specifies that the sprites in the input are arranged in a grid of a certain cell size. In this mode the _rect_ of each _sprite_ is deduced from the grid. Each _sprite_ automatically advances the current cell horizontally.
+| grid           |input  | x, [y]       | Specifies that the input contains multiple sprites, arranged in a grid of a certain cell size. In this mode the _rect_ of each _sprite_ is deduced from the grid. Each _sprite_ automatically advances the current cell horizontally.
 | grid-offset    |input  | x, [y]       | Offsets the grid from the top-left corner.
 | grid-spacing   |input  | x, [y]       | Sets a spacing between the grid cells.
 | row            |input  | row          | Sets a sprite's vertical offset within a grid (starting with 0).
 | skip           |input  | [columns]    | Skips one or more horizontal grid cells.
 | span           |input  | columns, rows| Sets the number of grid cells a sprite spans.
+| atlas          |input  | [pixels]     | Specifies that the input contains multiple unaligned sprites, separated by more than a specific number of transparent pixel rows.
 | **sprite**     |input  | [id]         | Adds a new sprite to an input sheet (_id_ defaults to an empty string).
 | id             |sprite | id           | Sets a sprite's id. Can contain the placeholder _%i_, which is replaced by the sprite index.
 | rect           |sprite | x, y, width, height | Sets a sprite's rectangle in the input sheet.
@@ -220,7 +223,7 @@ The following table contains a list of all definitions, with the subject each af
 | trim-margin    |sprite | [pixels]     | Sets a number of transparent pixel rows around the sprite, which should not be removed by trimming.
 | crop           |sprite | [boolean]    | Sets whether the sprite's rectangle should be reduced to the trimmed bounds.
 | extrude        |sprite | [pixels]     | Adds a padding around the sprite and fills it with the sprite's border pixel color.
-| common-divisor |sprite | x, y         | Restricts the sprite's size to be divisible by a certain number of pixels. Smaller sprites are filled up with transparency.
+| common-divisor |sprite | x, [y]       | Restricts the sprite's size to be divisible by a certain number of pixels. Smaller sprites are filled up with transparency.
 | **output**     |input  | path         | Sets the output texture's _path_. It can describe an un-/bounded sequence of files (e.g. "sheet{0-}.png").
 | width          |output | width        | Sets a fixed output texture width.
 | height         |output | height       | Sets a fixed output texture height.

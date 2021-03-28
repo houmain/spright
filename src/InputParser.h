@@ -30,6 +30,7 @@ enum class Definition {
   row,
   skip,
   span,
+  atlas,
 
   sprite,
   id,
@@ -75,6 +76,7 @@ struct State {
   Size grid_offset{ };
   Size grid_spacing{ };
   Size span{ 1, 1 };
+  int atlas_merge_distance{ -1 };
   Pivot pivot{ PivotX::center, PivotY::middle };
   PointF pivot_point{ };
   Rect rect{ };
@@ -108,7 +110,8 @@ private:
   void deduce_globbing_sheets(State& state);
   void deduce_sequence_sprites(State& state);
   void deduce_grid_sprites(State& state);
-  void deduce_unaligned_sprites(State& state);
+  void deduce_atlas_sprites(State& state);
+  void deduce_single_sprite(State& state);
   void texture_ends(State& state);
   void sheet_ends(State& state);
   void apply_definition(State& state,

@@ -35,8 +35,8 @@ struct Rect {
   Point center() const { return { x + w / 2, y + h / 2 }; }
 };
 
-inline bool empty(const Size& size) { return (size.x == 0 && size.y == 0); }
-inline bool empty(const Rect& rect) { return (rect.w == 0 && rect.h == 0); }
+inline bool empty(const Size& size) { return (size.x == 0 || size.y == 0); }
+inline bool empty(const Rect& rect) { return (rect.w == 0 || rect.h == 0); }
 inline bool operator==(const Rect& a, const Rect& b) { return std::tie(a.x, a.y, a.w, a.h) == std::tie(b.x, b.y, b.w, b.h); }
 inline bool operator!=(const Rect& a, const Rect& b) { return !(a == b); }
 Rect expand(const Rect& rect, int value);
