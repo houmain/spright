@@ -22,7 +22,8 @@ set(SOURCES
     src/InputParser.cpp
     src/trimming.cpp
     src/packing.cpp
-    src/compacting.cpp
+    src/pack_binpack.cpp
+    src/pack_compact.cpp
     src/output.cpp
     src/globbing.cpp
     src/main.cpp

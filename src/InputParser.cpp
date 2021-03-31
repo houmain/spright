@@ -23,6 +23,7 @@ namespace {
       { "padding", Definition::padding },
       { "deduplicate", Definition::deduplicate },
       { "alpha", Definition::alpha },
+      { "pack", Definition::pack },
       { "group", Definition::group },
       { "path", Definition::path },
       { "sheet", Definition::sheet },
@@ -104,6 +105,7 @@ TexturePtr InputParser::get_texture(const State& state) {
       .deduplicate = state.deduplicate,
       .alpha = state.alpha,
       .colorkey = state.alpha_colorkey,
+      .pack = state.pack,
     });
   }
   return texture;
@@ -437,6 +439,15 @@ void InputParser::apply_definition(State& state,
 
       if (state.alpha == Alpha::colorkey)
         state.alpha_colorkey = check_color();
+      break;
+    }
+
+    case Definition::pack: {
+      const auto string = check_string();
+      if (const auto index = index_of(string, { "binpack", "compact" }); index >= 0)
+        state.pack = static_cast<Pack>(index);
+      else
+        error("invalid pack method '" + std::string(string) + "'");
       break;
     }
 

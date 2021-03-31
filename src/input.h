@@ -17,6 +17,8 @@ enum class Trim { none, rect, convex };
 
 enum class Alpha { keep, clear, bleed, premultiply, colorkey };
 
+enum class Pack { binpack, compact };
+
 struct Texture {
   FilenameSequence filename;
   int width{ };
@@ -32,6 +34,7 @@ struct Texture {
   bool deduplicate{ };
   Alpha alpha{ };
   RGBA colorkey{ };
+  Pack pack{ Pack::binpack };
 };
 
 struct Sprite {

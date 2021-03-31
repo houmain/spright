@@ -46,7 +46,7 @@ output "sheet{0-}.png"
 input "characters/**/*.png"
 input "scenery/**/*.png"
 ```
-Unless specified on the [command line](#commandline-arguments) spright reads the input definition from ```spright.conf``` in the current directory. To pack the sheets and generate an output description consumable by e.g. [Phaser](https://github.com/photonstorm/phaser) using the [phaser.template](phaser.template), call:
+Unless specified on the [command line](#command-line-arguments) spright reads the input definition from ```spright.conf``` in the current directory. To pack the sheets and generate an output description consumable by e.g. [Phaser](https://github.com/photonstorm/phaser) using the [phaser.template](phaser.template), call:
 ```
 spright -t phaser.template
 ```
@@ -82,7 +82,7 @@ input "Orc Attack/Frame{01-04}.png"
 input "misc_scenery.png"
   atlas
 ```
-When spright is called without [command line](#commandline-arguments) arguments, the [input definition](#input-definition-reference) is read from ```spright.conf``` and it writes a ```spright0.png``` containing the packed sprites and a ```spright.json``` file containing the [output description](#output-description).
+When spright is called without [command line](#command-line-arguments) arguments, the [input definition](#input-definition-reference) is read from ```spright.conf``` and it writes a ```spright0.png``` containing the packed sprites and a ```spright.json``` file containing the [output description](#output-description).
 
 Passing the argument **-a** or **--autocomplete** activates the auto-completion, which extends ```spright.conf``` with automatically deduced information:
 
@@ -217,7 +217,7 @@ The following table contains a list of all definitions, with the subject each af
 | rect           |sprite | x, y, width, height | Sets a sprite's rectangle in the input sheet.
 | pivot          |sprite | pivot-x, pivot-y | Sets the horizontal (_left, center, right_) and vertical (_top, middle, bottom_) alignment of a sprite's pivot point. Alternatively the coordinates of the pivot point can be specified.
 | tag            |sprite | key, [value] | Adds a tag to a sprite (_value_ defaults to an empty string).
-| trim           |sprite | [trim-mode]  | Enables trimming, which reduces the sprite to the non-transparent region. <br/>- _none_ : Do not trim.  <br/>- _rect_ : Trim to rectangular region (default).<br/>- _convex_ : Trim to convex region (_vertices_ are set in output description).
+| trim           |sprite | [trim-mode]  | Enables trimming, which reduces the sprite to the non-transparent region. <br/>- _none_ : Do not trim.  <br/>- _rect_ : Trim to rectangular region.<br/>- _convex_ : Trim to convex region (_vertices_ are set in output description).
 | trim-channel   |sprite | channel      | Sets the channel which should be considered during trimming.<br/>- _alpha_ : The alpha channel of a pixel.<br/>-_gray_ : The gray level of the pixel.
 | trim-threshold |sprite | value        | Sets the value which should be considered non-transparent during trimming (1 - 255).
 | trim-margin    |sprite | [pixels]     | Sets a number of transparent pixel rows around the sprite, which should not be removed by trimming.
@@ -225,6 +225,7 @@ The following table contains a list of all definitions, with the subject each af
 | extrude        |sprite | [pixels]     | Adds a padding around the sprite and fills it with the sprite's border pixel color.
 | common-divisor |sprite | x, [y]       | Restricts the sprite's size to be divisible by a certain number of pixels. Smaller sprites are filled up with transparency.
 | **output**     |input  | path         | Sets the output texture's _path_. It can describe an un-/bounded sequence of files (e.g. "sheet{0-}.png").
+| pack           |output | pack-method  | Sets the method, which is used for placing the sprites on the output textures:<br/>- _binpack_ : Tries to reduce the texture size, while keeping the sprites' (trimmed) rectangles apart (default).<br/>- _compact_ : Tries to reduce the texture size, while keeping the sprites' convex outlines apart.
 | width          |output | width        | Sets a fixed output texture width.
 | height         |output | height       | Sets a fixed output texture height.
 | max-width      |output | width        | Sets a maximum output texture width.
@@ -270,20 +271,18 @@ By default a [JSON](https://www.json.org) file containing all the information ab
 So each sprite can appear in multiple contexts. SPRITE represents objects with the following structure:
 ```json
 {
+  "filename": "spright0.png",
   "id": "sprite_0",
   "pivot": { "x": 0, "y": 0 },
   "rect": { "x": 0, "y": 0, "w": 16, "h": 16 },
-  "rotated": true,
+  "rotated": false,
   "sourceFilename": "source.png",
   "sourcePath": "path",
   "sourceRect":  { "x": 0, "y": 0, "w": 16, "h": 16 },
-  "textureFilename": "spright0.png",
   "trimmedRect": { "x": 0, "y": 0, "w": 16, "h": 16 },
   "trimmedSourceRect": { "x": 0, "y": 0, "w": 16, "h": 16 },
   "vertices": [ { "x": 0, "y": 0 }, ... ],
-  "tags": {
-    "key": "value"
-  }
+  "tags": { "key": "value" }
 }
 ```
 For example, [spright.json](docs/spright.json) was generated from the [sample](#advanced-usage-example) above. As you can see, it is very verbose and only intended as an intermediate file, which should be transformed using the [template engine](#output-template-engine).

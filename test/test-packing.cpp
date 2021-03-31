@@ -53,6 +53,7 @@ TEST_CASE("packing - Basic") {
   auto texture = pack_single_sheet(R"(
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(le_size(texture, 59, 58));
 
@@ -60,6 +61,7 @@ TEST_CASE("packing - Basic") {
     allow-rotate true
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(le_size(texture, 58, 58));
 
@@ -67,6 +69,7 @@ TEST_CASE("packing - Basic") {
     deduplicate true
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(le_size(texture, 55, 58));
 
@@ -75,6 +78,7 @@ TEST_CASE("packing - Basic") {
     deduplicate true
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(le_size(texture, 55, 58));
 
@@ -83,6 +87,7 @@ TEST_CASE("packing - Basic") {
     max-height 128
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(texture.width <= 128);
   CHECK(texture.height <= 128);
@@ -93,6 +98,7 @@ TEST_CASE("packing - Basic") {
     max-height 128
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(texture.width == 128);
   CHECK(texture.height <= 128);
@@ -103,6 +109,7 @@ TEST_CASE("packing - Basic") {
     height 128
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(texture.width <= 128);
   CHECK(texture.height == 128);
@@ -112,6 +119,7 @@ TEST_CASE("packing - Basic") {
     max-width 40
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(texture.width <= 40);
   CHECK(le_size(texture, 40, 85));
@@ -120,6 +128,7 @@ TEST_CASE("packing - Basic") {
     max-height 40
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(texture.height <= 40);
   CHECK(le_size(texture, 89, 38));
@@ -128,6 +137,7 @@ TEST_CASE("packing - Basic") {
     power-of-two true
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(texture.width == 64);
   CHECK(texture.height == 64);
@@ -136,6 +146,7 @@ TEST_CASE("packing - Basic") {
     padding 1
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(le_size(texture, 63, 65));
 
@@ -144,6 +155,7 @@ TEST_CASE("packing - Basic") {
     power-of-two true
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(ceil_to_pot(texture.width) == texture.width);
   CHECK(ceil_to_pot(texture.height) == texture.height);
@@ -154,6 +166,7 @@ TEST_CASE("packing - Basic") {
     common-divisor 16
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(texture.height <= 16);
   CHECK(le_size(texture, 496, 16));
@@ -164,6 +177,7 @@ TEST_CASE("packing - Basic") {
     max-height 20
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(texture.height <= 20);
   CHECK(le_size(texture, 498, 18));
@@ -174,6 +188,7 @@ TEST_CASE("packing - Basic") {
     max-height 30
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(texture.height <= 30);
   CHECK(le_size(texture, 528, 18));
@@ -184,6 +199,7 @@ TEST_CASE("packing - Basic") {
     max-height 20
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(texture.height <= 20);
   CHECK(le_size(texture, 526, 16));
@@ -194,6 +210,7 @@ TEST_CASE("packing - Basic") {
     extrude 1
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(texture.height <= 30);
   CHECK(le_size(texture, 806, 26));
@@ -203,6 +220,7 @@ TEST_CASE("packing - Basic") {
     common-divisor 16
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(le_size(texture, 136, 136));
 
@@ -213,6 +231,7 @@ TEST_CASE("packing - Basic") {
     common-divisor 16
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(le_size(texture, 112, 112));
 
@@ -221,6 +240,7 @@ TEST_CASE("packing - Basic") {
     max-width 16
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(texture.width == 16);
   CHECK(le_size(texture, 492, 16));
@@ -230,6 +250,7 @@ TEST_CASE("packing - Basic") {
     max-height 18
     input "test/Items.png"
       colorkey
+      atlas
   )");
   CHECK(texture.height == 18);
   CHECK(le_size(texture, 478, 18));
@@ -242,6 +263,7 @@ TEST_CASE("packing - Errors") {
     max-height 16
     input "test/Items.png"
       colorkey
+      atlas
   )"));
 
   CHECK_THROWS(pack(R"(
@@ -250,6 +272,7 @@ TEST_CASE("packing - Errors") {
     max-height 16
     input "test/Items.png"
       colorkey
+      atlas
   )"));
 }
 
@@ -262,6 +285,7 @@ TEST_CASE("packing - Multiple sheets") {
     power-of-two
     input "test/Items.png"
       colorkey
+      atlas
   )");
   REQUIRE(textures.size() == 13);
   CHECK(textures[0].width <= 30);
@@ -274,6 +298,7 @@ TEST_CASE("packing - Multiple sheets") {
     max-height 40
     input "test/Items.png"
       colorkey
+      atlas
   )"));
   REQUIRE(textures.size() == 3);
   CHECK(le_size(textures[0], 39, 40));
@@ -286,6 +311,7 @@ TEST_CASE("packing - Multiple sheets") {
     square
     input "test/Items.png"
       colorkey
+      atlas
   )"));
   REQUIRE(textures.size() == 3);
   CHECK(le_size(textures[0], 40, 40));
@@ -298,6 +324,7 @@ TEST_CASE("packing - Multiple sheets") {
     power-of-two true
     input "test/Items.png"
       colorkey
+      atlas
   )"));
   REQUIRE(textures.size() == 4);
   CHECK(le_size(textures[0], 32, 32));
@@ -316,6 +343,7 @@ TEST_CASE("packing - Multiple sheets") {
     max-height 16
     input "test/Items.png"
       colorkey
+      atlas
   )"));
   REQUIRE(textures.size() == 14);
   CHECK(textures[0].width <= 16);
@@ -327,6 +355,7 @@ TEST_CASE("packing - Multiple sheets") {
     max-height 16
     input "test/Items.png"
       colorkey
+      atlas
   )"));
   REQUIRE(textures.size() == 15);
   CHECK(textures[0].width <= 16);

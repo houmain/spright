@@ -56,6 +56,7 @@ TEST_CASE("autocompletion - Unaligned") {
   auto input = std::stringstream(R"(
     input "test/Items.png"
       colorkey
+      atlas
   )");
   auto parser = InputParser(Settings{ });
   REQUIRE_NOTHROW(parser.parse(input));
@@ -68,6 +69,7 @@ TEST_CASE("autocompletion - ID generator") {
     path "test"
     input "Items.png"
       colorkey
+      atlas
       id "item_%i"
   )");
   auto parser = InputParser(Settings{ });

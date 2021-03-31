@@ -20,6 +20,7 @@ enum class Definition {
   padding,
   deduplicate,
   alpha,
+  pack,
 
   path,
   sheet,
@@ -66,6 +67,7 @@ struct State {
   bool deduplicate{ };
   Alpha alpha{ };
   RGBA alpha_colorkey{ };
+  Pack pack{ };
 
   std::filesystem::path path;
   FilenameSequence sheet;

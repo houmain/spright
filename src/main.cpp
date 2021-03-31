@@ -1,7 +1,6 @@
 
 #include "trimming.h"
 #include "packing.h"
-#include "compacting.h"
 #include "output.h"
 #include <iostream>
 #include <chrono>
@@ -33,10 +32,6 @@ int main(int argc, const char* argv[]) try {
   const auto textures = pack_sprites(sprites);
   add_time_point();
 
-  for (const auto& texture : textures)
-    compact_sprites(texture);
-  add_time_point();
-
   write_output_description(settings, sprites, textures);
   add_time_point();
 
@@ -58,7 +53,6 @@ int main(int argc, const char* argv[]) try {
       "input: " << time_elapsed() << "ms, " <<
       "trimming: " << time_elapsed() << "ms, " <<
       "packing: " << time_elapsed() << "ms, " <<
-      "compacting: " << time_elapsed() << "ms, " <<
       "output description: " << time_elapsed() << "ms, " <<
       "output textures: " << time_elapsed() << "ms" <<
       std::endl;
