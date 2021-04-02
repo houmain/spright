@@ -66,7 +66,7 @@ TEST_CASE("packing - Basic") {
   CHECK(le_size(texture, 58, 58));
 
   texture = pack_single_sheet(R"(
-    deduplicate true
+    duplicates share
     input "test/Items.png"
       colorkey
       atlas
@@ -75,7 +75,7 @@ TEST_CASE("packing - Basic") {
 
   texture = pack_single_sheet(R"(
     allow-rotate true
-    deduplicate true
+    duplicates share
     input "test/Items.png"
       colorkey
       atlas
@@ -226,7 +226,7 @@ TEST_CASE("packing - Basic") {
 
   texture = pack_single_sheet(R"(
     padding 8 0
-    deduplicate
+    duplicates share
     allow-rotate
     common-divisor 16
     input "test/Items.png"
@@ -279,7 +279,7 @@ TEST_CASE("packing - Errors") {
 TEST_CASE("packing - Multiple sheets") {
   auto textures = pack(R"(
     allow-rotate
-    deduplicate
+    duplicates share
     max-width 30
     square
     power-of-two

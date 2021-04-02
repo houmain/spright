@@ -33,10 +33,7 @@ Simple sheet packing
 --------------------
 To pack your sprites into one or more sheets, a simple input definition like the following example is enough:
 ```perl
-trim
-padding
 colorkey
-deduplicate
 
 output "sheet{0-}.png"
   max-width 1024
@@ -70,6 +67,7 @@ Then you may want to use spright to define the sprites within their original sou
 To do so, start by creating a ```spright.conf``` containing the essential information:
 ```perl
 colorkey
+padding 1
 
 input "Decorations (32x32).png"
   grid 32 32
@@ -123,9 +121,7 @@ input "misc_scenery.png"
 Now you can complete the definition manually by e.g. giving the sprites IDs and customizing their pivot points:
 ```perl
 colorkey
-trim
 padding 1
-deduplicate
 
 input "Decorations (32x32).png"
   grid 32 32
@@ -217,15 +213,15 @@ The following table contains a list of all definitions, with the subject each af
 | rect           |sprite | x, y, width, height | Sets a sprite's rectangle in the input sheet.
 | pivot          |sprite | pivot-x, pivot-y | Sets the horizontal (_left, center, right_) and vertical (_top, middle, bottom_) alignment of a sprite's pivot point. Alternatively the coordinates of the pivot point can be specified.
 | tag            |sprite | key, [value] | Adds a tag to a sprite (_value_ defaults to an empty string).
-| trim           |sprite | [trim-mode]  | Enables trimming, which reduces the sprite to the non-transparent region. <br/>- _none_ : Do not trim.  <br/>- _rect_ : Trim to rectangular region.<br/>- _convex_ : Trim to convex region (_vertices_ are set in output description).
-| trim-channel   |sprite | channel      | Sets the channel which should be considered during trimming.<br/>- _alpha_ : The alpha channel of a pixel.<br/>-_gray_ : The gray level of the pixel.
+| trim           |sprite | trim-mode    | Enables trimming, which reduces the sprite to the non-transparent region:<br/>- _none_ : Do not trim.<br/>- _rect_ : Trim to rectangular region (default).<br/>- _convex_ : Trim to convex region (_vertices_ are set in output description).
+| trim-channel   |sprite | channel      | Sets the channel which should be considered during trimming:<br/>- _alpha_ : The alpha channel of a pixel (default).<br/>-_gray_ : The gray level of the pixel.
 | trim-threshold |sprite | value        | Sets the value which should be considered non-transparent during trimming (1 - 255).
 | trim-margin    |sprite | [pixels]     | Sets a number of transparent pixel rows around the sprite, which should not be removed by trimming.
 | crop           |sprite | [boolean]    | Sets whether the sprite's rectangle should be reduced to the trimmed bounds.
 | extrude        |sprite | [pixels]     | Adds a padding around the sprite and fills it with the sprite's border pixel color.
 | common-divisor |sprite | x, [y]       | Restricts the sprite's size to be divisible by a certain number of pixels. Smaller sprites are filled up with transparency.
 | **output**     |input  | path         | Sets the output texture's _path_. It can describe an un-/bounded sequence of files (e.g. "sheet{0-}.png").
-| pack           |output | pack-method  | Sets the method, which is used for placing the sprites on the output textures:<br/>- _binpack_ : Tries to reduce the texture size, while keeping the sprites' (trimmed) rectangles apart (default).<br/>- _compact_ : Tries to reduce the texture size, while keeping the sprites' convex outlines apart.<br/>- _single_ : Put each sprite on its own texture.
+| pack           |output | pack-method  | Sets the method, which is used for placing the sprites on the output textures:<br/>- _binpack_ : Tries to reduce the texture size, while keeping the sprites' (trimmed) rectangles apart (default).<br/>- _compact_ : Tries to reduce the texture size, while keeping the sprites' convex outlines apart.<br/>- _single_ : Put each sprite on its own texture.<br/>
 | width          |output | width        | Sets a fixed output texture width.
 | height         |output | height       | Sets a fixed output texture height.
 | max-width      |output | width        | Sets a maximum output texture width.
@@ -235,7 +231,7 @@ The following table contains a list of all definitions, with the subject each af
 | align-width    |output | pixels       | Restricts the output texture's width to be divisible by a certain number of _pixels_.
 | allow-rotate   |output | [boolean]    | Allows to rotate sprites by 90 degrees for improved packing performance.
 | padding        |output | [pixels], [pixels] | Sets the space between two sprites / the space between a sprite and the texture's border.
-| deduplicate    |output | [boolean]    | Sets whether identical sprites should share pixels on the output texture.
+| duplicates     |output | dedupe-mode  | Sets how identical sprites should be processed:<br/>- _keep_ : Disable duplicate detection (default).<br/>- _share_ : Identical sprites should share pixels on the output texture.<br/>- _drop_ : Duplicates should be dropped.
 | alpha          |output | alpha-mode<br/>[color] | Sets an operation depending on the pixels' alpha values:<br/>- _keep_ : Keep source color and alpha.<br/>- _clear_ : Set color of fully transparent pixels to black.<br/>- _bleed_ : Set color of fully transparent pixels to their nearest non-fully transparent pixel's color.<br/>- _premultiply_ : Premultiply colors with alpha values.<br/>- _colorkey_ : Replace fully transparent pixels with the specified _color_ and make all others opaque.
 | group          |-      | -            | Can be used for opening a new scope, to limit for example the effect of a tag.
 

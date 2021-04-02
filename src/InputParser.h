@@ -82,7 +82,7 @@ struct State {
   Pivot pivot{ PivotX::center, PivotY::middle };
   PointF pivot_point{ };
   Rect rect{ };
-  Trim trim{ };
+  Trim trim{ Trim::rect };
   int trim_threshold{ 1 };
   int trim_margin{ };
   bool trim_gray_levels{ };

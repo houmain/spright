@@ -542,18 +542,14 @@ void InputParser::apply_definition(State& state,
       }
       break;
 
-    case Definition::trim:
-      if (!arguments_left()) {
-        state.trim = Trim::rect;
-      }
-      else {
-        const auto string = check_string();
-        if (const auto index = index_of(string, { "none", "rect", "convex" }); index >= 0)
-          state.trim = static_cast<Trim>(index);
-        else
-          error("invalid trim value '" + std::string(string) + "'");
-      }
+    case Definition::trim: {
+      const auto string = check_string();
+      if (const auto index = index_of(string, { "none", "rect", "convex" }); index >= 0)
+        state.trim = static_cast<Trim>(index);
+      else
+        error("invalid trim value '" + std::string(string) + "'");
       break;
+    }
 
     case Definition::trim_margin:
       state.trim_margin = (arguments_left() ? check_uint() : 1);
