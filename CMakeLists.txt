@@ -24,6 +24,7 @@ set(SOURCES
     src/packing.cpp
     src/pack_binpack.cpp
     src/pack_compact.cpp
+    src/pack_single.cpp
     src/output.cpp
     src/globbing.cpp
     src/main.cpp

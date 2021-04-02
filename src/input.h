@@ -17,7 +17,7 @@ enum class Trim { none, rect, convex };
 
 enum class Alpha { keep, clear, bleed, premultiply, colorkey };
 
-enum class Pack { binpack, compact };
+enum class Pack { binpack, compact, single };
 
 struct Texture {
   FilenameSequence filename;
@@ -32,7 +32,7 @@ struct Texture {
   int border_padding{ };
   int shape_padding{ };
   bool deduplicate{ };
-  Alpha alpha{ };
+  Alpha alpha{ Alpha::keep };
   RGBA colorkey{ };
   Pack pack{ Pack::binpack };
 };
@@ -46,9 +46,9 @@ struct Sprite {
   Rect trimmed_source_rect{ };
   Rect rect{ };
   Rect trimmed_rect{ };
-  Pivot pivot{ };
+  Pivot pivot{ PivotX::center, PivotY::middle };
   PointF pivot_point{ };
-  Trim trim{ };
+  Trim trim{ Trim::none };
   int trim_margin{ };
   int trim_threshold{ };
   bool trim_gray_levels{ };

@@ -76,6 +76,7 @@ namespace {
     switch (texture.pack) {
       case Pack::binpack: return pack_binpack(texture, sprites, sprites.size() > 1000, packed_textures);
       case Pack::compact: return pack_compact(texture, sprites, packed_textures);
+      case Pack::single: return pack_single(texture, sprites, packed_textures);
     }
   }
 

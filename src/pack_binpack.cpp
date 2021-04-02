@@ -99,8 +99,6 @@ void pack_binpack(const Texture& texture, std::span<Sprite> sprites,
         .sprites = sheet_sprites,
         .alpha = texture.alpha,
         .colorkey = texture.colorkey,
-        .border_padding = texture.border_padding,
-        .shape_padding = texture.shape_padding
       });
 
       texture_begin = it;

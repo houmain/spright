@@ -10,12 +10,12 @@ namespace {
   struct FreeBody { void operator()(cpBody* body) { cpBodyFree(body); } };
   using BodyPtr = std::unique_ptr<cpBody, FreeBody>;
 
-  void compact_sprites(const PackedTexture& texture) {
+  void compact_sprites(const PackedTexture& texture, int border_padding, int shape_padding) {
     const auto space_ptr = SpacePtr(cpSpaceNew());
     const auto space = space_ptr.get();
 
-    const auto shape_padding = static_cast<cpFloat>(texture.shape_padding) / 2.0;
-    const auto border = static_cast<cpFloat>(texture.border_padding) - shape_padding;
+    const auto padding = static_cast<cpFloat>(shape_padding) / 2.0;
+    const auto border = static_cast<cpFloat>(border_padding) - padding;
     const auto x0 = static_cast<cpFloat>(border);
     const auto y0 = static_cast<cpFloat>(border);
     const auto x1 = static_cast<cpFloat>(texture.width) - border - 0.5;
@@ -46,7 +46,7 @@ namespace {
       });
 
       shapes.emplace_back(cpSpaceAddShape(space, cpPolyShapeNew(body,
-        static_cast<int>(vertices.size()), vertices.data(), cpTransformIdentity, shape_padding)));
+        static_cast<int>(vertices.size()), vertices.data(), cpTransformIdentity, padding)));
     }
 
     // TODO: improve
@@ -73,5 +73,5 @@ void pack_compact(const Texture& texture, std::span<Sprite> sprites,
     std::vector<PackedTexture>& packed_textures) {
   pack_binpack(texture, sprites, true, packed_textures);
   for (auto& packed_texture : packed_textures)
-    compact_sprites(packed_texture);
+    compact_sprites(packed_texture, texture.border_padding, texture.shape_padding);
 }

@@ -225,7 +225,7 @@ The following table contains a list of all definitions, with the subject each af
 | extrude        |sprite | [pixels]     | Adds a padding around the sprite and fills it with the sprite's border pixel color.
 | common-divisor |sprite | x, [y]       | Restricts the sprite's size to be divisible by a certain number of pixels. Smaller sprites are filled up with transparency.
 | **output**     |input  | path         | Sets the output texture's _path_. It can describe an un-/bounded sequence of files (e.g. "sheet{0-}.png").
-| pack           |output | pack-method  | Sets the method, which is used for placing the sprites on the output textures:<br/>- _binpack_ : Tries to reduce the texture size, while keeping the sprites' (trimmed) rectangles apart (default).<br/>- _compact_ : Tries to reduce the texture size, while keeping the sprites' convex outlines apart.
+| pack           |output | pack-method  | Sets the method, which is used for placing the sprites on the output textures:<br/>- _binpack_ : Tries to reduce the texture size, while keeping the sprites' (trimmed) rectangles apart (default).<br/>- _compact_ : Tries to reduce the texture size, while keeping the sprites' convex outlines apart.<br/>- _single_ : Put each sprite on its own texture.
 | width          |output | width        | Sets a fixed output texture width.
 | height         |output | height       | Sets a fixed output texture height.
 | max-width      |output | width        | Sets a maximum output texture width.
