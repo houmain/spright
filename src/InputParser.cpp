@@ -21,7 +21,7 @@ namespace {
       { "align-width", Definition::align_width },
       { "allow-rotate", Definition::allow_rotate },
       { "padding", Definition::padding },
-      { "deduplicate", Definition::deduplicate },
+      { "duplicates", Definition::duplicates },
       { "alpha", Definition::alpha },
       { "pack", Definition::pack },
       { "group", Definition::group },
@@ -102,7 +102,7 @@ TexturePtr InputParser::get_texture(const State& state) {
       .allow_rotate = state.allow_rotate,
       .border_padding = state.border_padding,
       .shape_padding = state.shape_padding,
-      .deduplicate = state.deduplicate,
+      .duplicates = state.duplicates,
       .alpha = state.alpha,
       .colorkey = state.alpha_colorkey,
       .pack = state.pack,
@@ -426,9 +426,14 @@ void InputParser::apply_definition(State& state,
         (arguments_left() ? check_uint() : state.shape_padding);
       break;
 
-    case Definition::deduplicate:
-      state.deduplicate = check_bool(true);
+    case Definition::duplicates: {
+      const auto string = check_string();
+      if (const auto index = index_of(string, { "keep", "share", "drop" }); index >= 0)
+        state.duplicates = static_cast<Duplicates>(index);
+      else
+        error("invalid duplicates value '" + std::string(string) + "'");
       break;
+    }
 
     case Definition::alpha: {
       const auto string = check_string();

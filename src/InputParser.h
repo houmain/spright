@@ -18,7 +18,7 @@ enum class Definition {
   align_width,
   allow_rotate,
   padding,
-  deduplicate,
+  duplicates,
   alpha,
   pack,
 
@@ -64,7 +64,7 @@ struct State {
   bool allow_rotate{ };
   int border_padding{ };
   int shape_padding{ };
-  bool deduplicate{ };
+  Duplicates duplicates{ };
   Alpha alpha{ };
   RGBA alpha_colorkey{ };
   Pack pack{ };

@@ -19,6 +19,8 @@ enum class Alpha { keep, clear, bleed, premultiply, colorkey };
 
 enum class Pack { binpack, compact, single, keep };
 
+enum class Duplicates { keep, share, drop };
+
 struct Texture {
   FilenameSequence filename;
   int width{ };
@@ -31,7 +33,7 @@ struct Texture {
   bool allow_rotate{ };
   int border_padding{ };
   int shape_padding{ };
-  bool deduplicate{ };
+  Duplicates duplicates{ };
   Alpha alpha{ Alpha::keep };
   RGBA colorkey{ };
   Pack pack{ Pack::binpack };

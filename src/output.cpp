@@ -39,6 +39,9 @@ namespace {
     auto texture_sprites = std::map<std::filesystem::path, std::vector<SpriteIndex>>();
 
     for (const auto& sprite : sprites) {
+      if (!sprite.texture || !sprite.source)
+        continue;
+
       auto& json_sprite = json_sprites.emplace_back();
       const auto index = json_sprites.size() - 1;
       const auto texture_filename = utf8_to_path(
@@ -58,9 +61,10 @@ namespace {
       json_sprite["filename"] = path_to_utf8(texture_filename);
       json_sprite["rotated"] = sprite.rotated;
       json_sprite["tags"] = sprite.tags;
-      json_sprite["vertices"] = json_point_list(sprite.vertices);
       for (const auto& tag_key : sprite.tags)
         tags[tag_key].push_back(index);
+      if (!sprite.vertices.empty())
+        json_sprite["vertices"] = json_point_list(sprite.vertices);
       texture_sprites[texture_filename].push_back(index);
     }
 

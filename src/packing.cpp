@@ -101,13 +101,18 @@ namespace {
 
     pack_texture(texture, unique_sprites, packed_textures);
 
-    for (auto i = size_t{ }; i < duplicates.size(); ++i) {
-      const auto& sprite = unique_sprites[duplicates[i]];
-      auto& duplicate = sprites[sprites.size() - 1 - i];
-      duplicate.texture_index = sprite.texture_index;
-      duplicate.trimmed_rect = sprite.trimmed_rect;
-      duplicate.rotated = sprite.rotated;
-    }
+      for (auto i = size_t{ }; i < duplicates.size(); ++i) {
+        auto& duplicate = sprites[sprites.size() - 1 - i];
+        if (texture.duplicates == Duplicates::share) {
+          const auto& sprite = unique_sprites[duplicates[i]];
+          duplicate.texture_index = sprite.texture_index;
+          duplicate.trimmed_rect = sprite.trimmed_rect;
+          duplicate.rotated = sprite.rotated;
+        }
+        else {
+          duplicate = { };
+        }
+      }
   }
 
   void pack_sprites_by_texture(std::span<Sprite> sprites, std::vector<PackedTexture>& packed_textures) {
@@ -125,7 +130,7 @@ namespace {
       if (it == sprites.end() ||
           it->texture->filename != begin->texture->filename) {
         auto& texture = *begin->texture;
-        if (texture.deduplicate)
+        if (texture.duplicates != Duplicates::keep)
           pack_texture_deduplicate(texture, { begin, it }, packed_textures);
         else
           pack_texture(texture, { begin, it }, packed_textures);
