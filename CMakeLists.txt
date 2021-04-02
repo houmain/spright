@@ -25,6 +25,7 @@ set(SOURCES
     src/pack_binpack.cpp
     src/pack_compact.cpp
     src/pack_single.cpp
+    src/pack_keep.cpp
     src/output.cpp
     src/globbing.cpp
     src/main.cpp

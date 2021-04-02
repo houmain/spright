@@ -24,3 +24,5 @@ void pack_compact(const Texture& texture, std::span<Sprite> sprites,
   std::vector<PackedTexture>& packed_textures);
 void pack_single(const Texture& texture, std::span<Sprite> sprites,
   std::vector<PackedTexture>& packed_textures);
+void pack_keep(const Texture& texture, std::span<Sprite> sprites,
+  std::vector<PackedTexture>& packed_textures);

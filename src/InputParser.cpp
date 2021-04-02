@@ -444,7 +444,7 @@ void InputParser::apply_definition(State& state,
 
     case Definition::pack: {
       const auto string = check_string();
-      if (const auto index = index_of(string, { "binpack", "compact", "single" }); index >= 0)
+      if (const auto index = index_of(string, { "binpack", "compact", "single", "keep" }); index >= 0)
         state.pack = static_cast<Pack>(index);
       else
         error("invalid pack method '" + std::string(string) + "'");
