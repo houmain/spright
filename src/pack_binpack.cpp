@@ -7,28 +7,15 @@ void pack_binpack(const Texture& texture, std::span<Sprite> sprites,
   // pack rects
   auto pack_sizes = std::vector<rect_pack::Size>();
   pack_sizes.reserve(sprites.size());
-  auto duplicates = std::vector<std::pair<size_t, size_t>>();
-  for (auto i = size_t{ }; i < sprites.size(); ++i) {
-    auto is_duplicate = false;
-    if (texture.deduplicate)
-      for (auto j = size_t{ }; j < i; ++j)
-        if (is_identical(*sprites[i].source, sprites[i].trimmed_source_rect,
-                         *sprites[j].source, sprites[j].trimmed_source_rect)) {
-          duplicates.emplace_back(i, j);
-          is_duplicate = true;
-        }
-
-    if (!is_duplicate) {
-      auto size = get_sprite_size(sprites[i]);
-      size.x += texture.shape_padding;
-      size.y += texture.shape_padding;
-
-      pack_sizes.push_back({ static_cast<int>(i), size.x, size.y });
-    }
+  for (const auto& sprite : sprites) {
+    auto size = get_sprite_size(sprite);
+    size.x += texture.shape_padding;
+    size.y += texture.shape_padding;
+    pack_sizes.push_back({ static_cast<int>(pack_sizes.size()), size.x, size.y });
   }
 
   const auto [max_texture_width, max_texture_height] = get_texture_max_size(texture);
-  auto pack_sheets = pack(
+  const auto pack_sheets = pack(
     rect_pack::Settings{
       .method = (fast ? rect_pack::Method::Best_Skyline : rect_pack::Method::Best),
       .max_sheets = texture.filename.count(),
@@ -46,8 +33,8 @@ void pack_binpack(const Texture& texture, std::span<Sprite> sprites,
     std::move(pack_sizes));
 
   // update sprite rects
-  auto packed_sprites = 0;
   auto texture_index = 0;
+  auto packed_sprites = size_t{ };
   for (const auto& pack_sheet : pack_sheets) {
     for (const auto& pack_rect : pack_sheet.rects) {
       auto& sprite = sprites[static_cast<size_t>(pack_rect.id)];
@@ -65,15 +52,7 @@ void pack_binpack(const Texture& texture, std::span<Sprite> sprites,
     ++texture_index;
   }
 
-  for (auto [i, j] : duplicates)
-    if (!empty(sprites[j].trimmed_rect)) {
-      sprites[i].rotated = sprites[j].rotated;
-      sprites[i].texture_index = sprites[j].texture_index;
-      sprites[i].trimmed_rect = sprites[j].trimmed_rect;
-      ++packed_sprites;
-    }
-
-  if (std::cmp_less(packed_sprites, sprites.size()))
+  if (packed_sprites < sprites.size())
     throw std::runtime_error("not all sprites could be packed");
 
   // sort sprites by texture index

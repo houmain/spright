@@ -80,6 +80,35 @@ namespace {
     }
   }
 
+  void pack_texture_deduplicate(const Texture& texture,
+      std::span<Sprite> sprites, std::vector<PackedTexture>& packed_textures) {
+    assert(!sprites.empty());
+
+    // sort duplicates to back
+    auto unique_sprites = sprites;
+    auto duplicates = std::vector<size_t>();
+    for (auto i = size_t{ }; i < unique_sprites.size(); ++i) {
+      for (auto j = size_t{ }; j < i; ++j)
+        if (is_identical(*sprites[i].source, sprites[i].trimmed_source_rect,
+                         *sprites[j].source, sprites[j].trimmed_source_rect)) {
+          std::swap(sprites[i--], unique_sprites.back());
+          unique_sprites = unique_sprites.first(unique_sprites.size() - 1);
+          duplicates.emplace_back(j);
+          break;
+        }
+       }
+
+    pack_texture(texture, unique_sprites, packed_textures);
+
+    for (auto i = size_t{ }; i < duplicates.size(); ++i) {
+      const auto& sprite = unique_sprites[duplicates[i]];
+      auto& duplicate = sprites[sprites.size() - 1 - i];
+      duplicate.texture_index = sprite.texture_index;
+      duplicate.trimmed_rect = sprite.trimmed_rect;
+      duplicate.rotated = sprite.rotated;
+    }
+  }
+
   void pack_sprites_by_texture(std::span<Sprite> sprites, std::vector<PackedTexture>& packed_textures) {
     if (sprites.empty())
       return;
@@ -94,7 +123,12 @@ namespace {
     for (auto begin = sprites.begin(), it = begin; ; ++it)
       if (it == sprites.end() ||
           it->texture->filename != begin->texture->filename) {
-        pack_texture(*begin->texture, { begin, it }, packed_textures);
+        auto& texture = *begin->texture;
+        if (texture.deduplicate)
+          pack_texture_deduplicate(texture, { begin, it }, packed_textures);
+        else
+          pack_texture(texture, { begin, it }, packed_textures);
+
         if (it == sprites.end())
           break;
         begin = it;
