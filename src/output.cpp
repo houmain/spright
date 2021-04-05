@@ -229,7 +229,8 @@ namespace {
           static_cast<int>(y + v0.y),
           static_cast<int>(x + v1.x),
           static_cast<int>(y + v1.y),
-          RGBA{ { 0, 255, 255, 128 } });
+          RGBA{ { 0, 255, 255, 128 } },
+          true);
       }
     }
   }

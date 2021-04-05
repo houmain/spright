@@ -63,7 +63,7 @@ TEST_CASE("packing - Basic") {
       colorkey
       atlas
   )");
-  CHECK(le_size(texture, 58, 58));
+  CHECK(le_size(texture, 59, 58));
 
   texture = pack_single_sheet(R"(
     duplicates share

@@ -141,15 +141,20 @@ namespace {
 
   // https://en.wikipedia.org/wiki/Bresenham's_line_algorithm
   template<typename F>
-  void bresenham_line(int x0, int y0, int x1, int y1, F&& func) {
-    const auto dx = std::abs(x1-x0);
+  void bresenham_line(int x0, int y0, int x1, int y1, F&& func, bool omit_last) {
+    const auto dx = std::abs(x1 - x0);
     const auto sx = (x0 < x1 ? 1 : -1);
-    const auto dy = -std::abs(y1-y0);
+    const auto dy = -std::abs(y1 - y0);
     const auto sy = (y0 < y1 ? 1 : -1);
-    for (auto err = dx + dy;;) {
-      func(x0, y0);
+    omit_last = omit_last && (dx || dy);
 
-      if (x0 == x1 && y0 == y1)
+    for (auto err = dx + dy;;) {
+      const auto last = (x0 == x1 && y0 == y1);
+
+      if (!last || !omit_last)
+        func(x0, y0);
+
+      if (last)
         break;
 
       const auto e2 = 2 * err;
@@ -330,7 +335,7 @@ void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx
   const auto [sx, sy, w, h] = source_rect;
   for (auto y = 0; y < h; ++y)
     for (auto x = 0; x < w; ++x)
-      if (point_in_polygon(static_cast<float>(x), static_cast<float>(y), mask_vertices)) {
+      if (point_in_polygon(static_cast<float>(x) + 0.5f, static_cast<float>(y) + 0.5f, mask_vertices)) {
         check(containing(source.bounds(), Point{ sx + x, sy + y }));
         check(containing(dest.bounds(), Point{ dx + x, dy + y }));
         dest.rgba_at({ dx + x, dy + y }) = source.rgba_at({ sx + x, sy + y });
@@ -342,7 +347,7 @@ void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& d
   const auto [sx, sy, w, h] = source_rect;
   for (auto y = 0; y < w; ++y)
     for (auto x = 0; x < h; ++x)
-      if (point_in_polygon(static_cast<float>(x), static_cast<float>(y), mask_vertices)) {
+      if (point_in_polygon(static_cast<float>(x) + 0.5f, static_cast<float>(y) + 0.5f, mask_vertices)) {
         check(containing(source.bounds(), Point{ sx + y, sy + x }));
         check(containing(dest.bounds(), Point{ dx + x, dy + y }));
         dest.rgba_at({ dx + x, dy + y }) = source.rgba_at({ sx + y, sy + x });
@@ -388,12 +393,12 @@ void draw_rect(Image& image, const Rect& rect, const RGBA& color) {
   }
 }
 
-void draw_line(Image& image, int x0, int y0, int x1, int y1, const RGBA& color) {
+void draw_line(Image& image, int x0, int y0, int x1, int y1, const RGBA& color, bool omit_last) {
   const auto checked_blend = [&](int x, int y) {
     if (x >= 0 && x < image.width() && y >= 0 && y < image.height())
       blend(image, x, y, color);
   };
-  bresenham_line(x0, y0, x1, y1, checked_blend);
+  bresenham_line(x0, y0, x1, y1, checked_blend, omit_last);
 }
 
 void fill_rect(Image& image, const Rect& rect, const RGBA& color) {

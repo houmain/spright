@@ -62,7 +62,7 @@ void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx
 void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy, const std::vector<PointF>& mask_vertices);
 void extrude_rect(Image& image, const Rect& rect, bool left, bool top, bool right, bool bottom);
 void draw_rect(Image& image, const Rect& rect, const RGBA& color);
-void draw_line(Image& image, int x0, int y0, int x1, int y1, const RGBA& color);
+void draw_line(Image& image, int x0, int y0, int x1, int y1, const RGBA& color, bool omit_last = false);
 void fill_rect(Image& image, const Rect& rect, const RGBA& color);
 bool is_opaque(const Image& image, const Rect& rect = { });
 bool is_fully_transparent(const Image& image, int threshold = 1, const Rect& rect = { });

@@ -49,7 +49,6 @@ set(SOURCES ${SOURCES}
     libs/stb/stb_impl.cpp
     libs/miniz/miniz.c
     libs/texpack/bleeding.cpp
-    libs/humus/humus.cpp
     ${CHIPMUNK_SOURCES}
 )
 
