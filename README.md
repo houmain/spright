@@ -10,10 +10,9 @@ spright
 <a href="https://github.com/houmain/spright/issues">
 <img alt="Issues" src="https://img.shields.io/github/issues-raw/houmain/spright.svg"/></a>
 
+<a href="https://github.com/houmain/spright/releases/latest">Download</a> |
 <a href="#command-line-arguments">Command line arguments</a> |
-<a href="#installation">Installation</a> |
-<a href="#building">Building</a> |
-<a href="https://github.com/houmain/gpupad/blob/main/CHANGELOG.md">Changelog</a>
+<a href="#building">Building</a>
 </p>
 
 __spright__ is more than a simple sprite sheet packer, it can be [used as one](#simple-sheet-packing) though. Its key ideas are:
@@ -334,11 +333,6 @@ C++     | [cpp.template](cpp.template)
 The C++ template is just an example for how the sprite description can be directly embedded in code. This [spright.h](docs/spright.h) was generated from the [sample](#advanced-usage-example), using the [cpp.template](cpp.template) template.
 
 ---
-
-Installation
-------------
-
-No packages are provided yet, please follow the instructions for [building manually](#Building) or download a portable build from the [latest release](https://github.com/houmain/spright/releases/latest) page.
 
 Building
 --------
