@@ -31,10 +31,9 @@ namespace {
       pos += line->count;
     }
 #else
-    const auto empty = cpPolyline{ };
-    auto line = &empty;
+    auto line = std::add_pointer_t<cpPolyline>{ };
     for (auto i = 0; i < polyline_set.count; ++i)
-      if (polyline_set.lines[i]->count > line->count)
+      if (!line || polyline_set.lines[i]->count > line->count)
         line = polyline_set.lines[i];
 
     auto merged = PolylinePtr(static_cast<cpPolyline*>(cpcalloc(1,
