@@ -1,9 +1,23 @@
 spright
 =======
+<p>
+<a href="https://ci.appveyor.com/project/houmain/spright-windows-x64">
+<img alt="AppVeyor" src="https://img.shields.io/appveyor/build/houmain/spright-windows-x64?label=build%20Windows-x64"></a>
+<a href="https://ci.appveyor.com/project/houmain/spright-ubuntu-x64">
+<img alt="AppVeyor" src="https://img.shields.io/appveyor/build/houmain/spright-ubuntu-x64?label=build%20Linux-x64"></a>
+<a href="https://ci.appveyor.com/project/houmain/spright-macos-x64">
+<img alt="AppVeyor" src="https://img.shields.io/appveyor/build/houmain/spright-macos-x64?label=build%20macOS-x64"></a>
+<a href="https://github.com/houmain/spright/issues">
+<img alt="Issues" src="https://img.shields.io/github/issues-raw/houmain/spright.svg"/></a>
 
-__spright__ is more than a simple sprite sheet packer, it can be [used as one](#simple-sheet-packing) though.
+<a href="#command-line-arguments">Command line arguments</a> |
+<a href="#installation">Installation</a> |
+<a href="#building">Building</a> |
+<a href="https://github.com/houmain/gpupad/blob/main/CHANGELOG.md">Changelog</a>
+</p>
 
-Its key ideas are:
+__spright__ is more than a simple sprite sheet packer, it can be [used as one](#simple-sheet-packing) though. Its key ideas are:
+
 - Keep all the information about the sprites and tiles, required for being efficiently consumable by the game engine, in a plain text file.
 - Instead of forcing one to split each sprite in a separate file and later address them using the filename, it should be possible to keep them in whatever format they are most conveniently to handle.
 - It should be possible to give each sprite an ID, group them (e.g. for animations) or further annotate them for game specific purposes.
@@ -11,10 +25,20 @@ Its key ideas are:
 
 No graphical user interface is required, a text editor is enough. A program like [GIMP](https://www.gimp.org), which can [overlay a grid](https://docs.gimp.org/2.10/en/gimp-concepts-image-grid-and-guides.html) over the input sheets one wants to annotate, may be useful though.
 
+__Introduction:__
+* [Simple sheet packing](#simple-sheet-packing)
+* [Advanced usage example](#advanced-usage-example)
+
+__Reference:__
+* [Input definition scopes](#input-definition-scopes)
+* [Input definition reference](#input-definition-reference)
+* [Output description](#output-description)
+* [Output template engine](#output-template-engine)
+
 ---
 
 Command line arguments
----------------------
+----------------------
 ```
 Usage: spright [-options]
   -i, --input <file>     input definition file (default: spright.conf).
@@ -214,7 +238,7 @@ The following table contains a list of all definitions, with the subject each af
 | pivot          |sprite | pivot-x, pivot-y | Sets the horizontal (_left, center, right_) and vertical (_top, middle, bottom_) alignment of a sprite's pivot point. Alternatively the coordinates of the pivot point can be specified.
 | tag            |sprite | key, [value] | Adds a tag to a sprite (_value_ defaults to an empty string).
 | trim           |sprite | trim-mode    | Enables trimming, which reduces the sprite to the non-transparent region:<br/>- _none_ : Do not trim.<br/>- _rect_ : Trim to rectangular region (default).<br/>- _convex_ : Trim to convex region (_vertices_ are set in output description).
-| trim-channel   |sprite | channel      | Sets the channel which should be considered during trimming:<br/>- _alpha_ : The alpha channel of a pixel (default).<br/>-_gray_ : The gray level of the pixel.
+| trim-channel   |sprite | channel      | Sets the channel which should be considered during trimming:<br/>- _alpha_ : The alpha channel of a pixel (default).<br/>- _gray_ : The gray level of the pixel.
 | trim-threshold |sprite | value        | Sets the value which should be considered non-transparent during trimming (1 - 255).
 | trim-margin    |sprite | [pixels]     | Sets a number of transparent pixel rows around the sprite, which should not be removed by trimming.
 | crop           |sprite | [boolean]    | Sets whether the sprite's rectangle should be reduced to the trimmed bounds.
