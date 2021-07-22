@@ -6,6 +6,7 @@
 #include <cctype>
 #include <cmath>
 #include <future>
+#include <algorithm>
 
 struct Size {
   int x;

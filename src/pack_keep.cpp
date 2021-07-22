@@ -1,7 +1,7 @@
 
 #include "packing.h"
 
-void pack_keep(const Texture& texture, std::span<Sprite> sprites,
+void pack_keep(const Texture& texture, SpriteSpan sprites,
     std::vector<PackedTexture>& packed_textures) {
 
   auto max_width = 0;

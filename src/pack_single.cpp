@@ -1,7 +1,7 @@
 
 #include "packing.h"
 
-void pack_single(const Texture& texture, std::span<Sprite> sprites,
+void pack_single(const Texture& texture, SpriteSpan sprites,
     std::vector<PackedTexture>& packed_textures) {
 
   auto indices = std::map<FilenameSequence, int>();

@@ -2,7 +2,7 @@
 #include "packing.h"
 #include "rect_pack/rect_pack.h"
 
-void pack_binpack(const Texture& texture, std::span<Sprite> sprites,
+void pack_binpack(const Texture& texture, SpriteSpan sprites,
     bool fast, std::vector<PackedTexture>& packed_textures) {
   // pack rects
   auto pack_sizes = std::vector<rect_pack::Size>();
@@ -57,7 +57,7 @@ void pack_binpack(const Texture& texture, std::span<Sprite> sprites,
 
   // sort sprites by texture index
   if (pack_sheets.size() > 1)
-    std::sort(begin(sprites), end(sprites),
+    std::sort(std::begin(sprites), std::end(sprites),
       [](const Sprite& a, const Sprite& b) {
         return std::tie(a.texture_index, a.index) <
                std::tie(b.texture_index, b.index);
@@ -69,7 +69,7 @@ void pack_binpack(const Texture& texture, std::span<Sprite> sprites,
   for (auto it = texture_begin;; ++it)
     if (it == end || it->texture_index != texture_begin->texture_index) {
       const auto sheet_index = texture_begin->texture_index;
-      const auto sheet_sprites = std::span(texture_begin, it);
+      const auto sheet_sprites = SpriteSpan(texture_begin, it);
       const auto& pack_sheet = pack_sheets[static_cast<size_t>(sheet_index)];
       packed_textures.push_back(PackedTexture{
         .filename = texture.filename.get_nth_filename(sheet_index),

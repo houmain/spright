@@ -1,13 +1,20 @@
 #pragma once
 
 #include "input.h"
-#include <span>
+
+#if __cplusplus > 201703L && __has_include(<span>)
+# include <span>
+using SpriteSpan = std::span<Sprite>;
+#else
+# include "libs/nonstd/span.hpp"
+using SpriteSpan = nonstd::span<Sprite>;
+#endif
 
 struct PackedTexture {
   std::filesystem::path filename;
   int width{ };
   int height{ };
-  std::span<Sprite> sprites;
+  SpriteSpan sprites;
   Alpha alpha{ };
   RGBA colorkey{ };
 };
@@ -18,11 +25,11 @@ Size get_sprite_indent(const Sprite& sprite);
 
 std::vector<PackedTexture> pack_sprites(std::vector<Sprite>& sprites);
 
-void pack_binpack(const Texture& texture, std::span<Sprite> sprites,
+void pack_binpack(const Texture& texture, SpriteSpan sprites,
   bool fast, std::vector<PackedTexture>& packed_textures);
-void pack_compact(const Texture& texture, std::span<Sprite> sprites,
+void pack_compact(const Texture& texture, SpriteSpan sprites,
   std::vector<PackedTexture>& packed_textures);
-void pack_single(const Texture& texture, std::span<Sprite> sprites,
+void pack_single(const Texture& texture, SpriteSpan sprites,
   std::vector<PackedTexture>& packed_textures);
-void pack_keep(const Texture& texture, std::span<Sprite> sprites,
+void pack_keep(const Texture& texture, SpriteSpan sprites,
   std::vector<PackedTexture>& packed_textures);

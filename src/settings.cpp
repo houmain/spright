@@ -3,6 +3,7 @@
 #include "common.h"
 #include <algorithm>
 #include <sstream>
+#include <iterator>
 
 namespace {
   // replace comma with newline (not within string)

@@ -70,7 +70,7 @@ namespace {
   }
 
   void pack_texture(const Texture& texture,
-      std::span<Sprite> sprites, std::vector<PackedTexture>& packed_textures) {
+      SpriteSpan sprites, std::vector<PackedTexture>& packed_textures) {
     assert(!sprites.empty());
 
     switch (texture.pack) {
@@ -82,7 +82,7 @@ namespace {
   }
 
   void pack_texture_deduplicate(const Texture& texture,
-      std::span<Sprite> sprites, std::vector<PackedTexture>& packed_textures) {
+      SpriteSpan sprites, std::vector<PackedTexture>& packed_textures) {
     assert(!sprites.empty());
 
     // sort duplicates to back
@@ -115,12 +115,12 @@ namespace {
     }
   }
 
-  void pack_sprites_by_texture(std::span<Sprite> sprites, std::vector<PackedTexture>& packed_textures) {
+  void pack_sprites_by_texture(SpriteSpan sprites, std::vector<PackedTexture>& packed_textures) {
     if (sprites.empty())
       return;
 
     // sort sprites by texture
-    std::sort(begin(sprites), end(sprites),
+    std::sort(std::begin(sprites), std::end(sprites),
       [](const Sprite& a, const Sprite& b) {
         return std::tie(a.texture->filename, a.index) <
                std::tie(b.texture->filename, b.index);

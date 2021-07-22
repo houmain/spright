@@ -69,7 +69,7 @@ namespace {
   }
 } // namespace
 
-void pack_compact(const Texture& texture, std::span<Sprite> sprites,
+void pack_compact(const Texture& texture, SpriteSpan sprites,
     std::vector<PackedTexture>& packed_textures) {
   pack_binpack(texture, sprites, true, packed_textures);
   for (auto& packed_texture : packed_textures) {

@@ -10,7 +10,7 @@ spright
 <a href="https://github.com/houmain/spright/issues">
 <img alt="Issues" src="https://img.shields.io/github/issues-raw/houmain/spright.svg"/></a>
 
-<a href="https://github.com/houmain/spright/releases/latest">Download</a> |
+<a href="https://github.com/houmain/spright/releases/latest">Downloads</a> |
 <a href="#command-line-arguments">Command line arguments</a> |
 <a href="#building">Building</a>
 </p>
@@ -337,7 +337,7 @@ The C++ template is just an example for how the sprite description can be direct
 Building
 --------
 
-A C++20 conforming compiler is required. A script for the
+A C++17 conforming compiler is required. A script for the
 [CMake](https://cmake.org) build system is provided.
 
 **Installing dependencies on Debian Linux and derivatives:**
@@ -347,7 +347,7 @@ sudo apt install build-essential git cmake
 
 **Checking out the source:**
 ```
-git clone https://github.com/houmain/spright
+git clone --recurse-submodules https://github.com/houmain/spright
 ```
 
 **Building:**

@@ -46,8 +46,8 @@ Rect combine(const Rect& a, const Rect& b) {
 }
 
 std::filesystem::path utf8_to_path(std::string_view utf8_string) {
-  static_assert(sizeof(char) == sizeof(char8_t));
 #if defined(__cpp_char8_t)
+  static_assert(sizeof(char) == sizeof(char8_t));
   return std::filesystem::path(
     reinterpret_cast<const char8_t*>(utf8_string.data()),
     reinterpret_cast<const char8_t*>(utf8_string.data() + utf8_string.size()));
@@ -61,7 +61,9 @@ std::filesystem::path utf8_to_path(const std::string& utf8_string) {
 }
 
 std::string path_to_utf8(const std::filesystem::path& path) {
+#if defined(__cpp_char8_t)
   static_assert(sizeof(char) == sizeof(char8_t));
+#endif
   const auto u8string = path.generic_u8string();
   return std::string(
     reinterpret_cast<const char*>(u8string.data()),
