@@ -466,12 +466,12 @@ Rect get_used_bounds(const Image& image, bool gray_levels, int threshold, const 
 
   auto min_x = rect.x;
   for (; min_x < x1; ++min_x)
-    if (!check(image, threshold, { min_x, min_y, 1, max_y - min_y }))
+    if (!check(image, threshold, { min_x, min_y, 1, max_y - min_y + 1 }))
       break;
 
   auto max_x = x1;
   for (; max_x > min_x; --max_x)
-    if (!check(image, threshold, { max_x, min_y, 1, max_y - min_y }))
+    if (!check(image, threshold, { max_x, min_y, 1, max_y - min_y + 1 }))
       break;
 
   return { min_x, min_y, max_x - min_x + 1, max_y - min_y + 1 };
