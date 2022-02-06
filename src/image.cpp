@@ -7,15 +7,9 @@
 #include <stdexcept>
 #include <cstring>
 
-#if __has_builtin(__builtin_expect)
-# define UNLIKELY( exp )  (__builtin_expect( !!(exp), false ))
-#else
-# define UNLIKELY( exp )  (!!(exp))
-#endif
-
 namespace {
   inline void check(bool inside) {
-    if UNLIKELY(!inside)
+    if (!inside)
       throw std::logic_error("access outside image bounds");
   }
 
