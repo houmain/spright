@@ -1,12 +1,8 @@
 spright
 =======
 <p>
-<a href="https://ci.appveyor.com/project/houmain/spright-windows-x64">
-<img alt="AppVeyor" src="https://img.shields.io/appveyor/build/houmain/spright-windows-x64?label=build%20Windows-x64"></a>
-<a href="https://ci.appveyor.com/project/houmain/spright-ubuntu-x64">
-<img alt="AppVeyor" src="https://img.shields.io/appveyor/build/houmain/spright-ubuntu-x64?label=build%20Linux-x64"></a>
-<a href="https://ci.appveyor.com/project/houmain/spright-macos-x64">
-<img alt="AppVeyor" src="https://img.shields.io/appveyor/build/houmain/spright-macos-x64?label=build%20macOS-x64"></a>
+<a href="https://github.com/houmain/spright/actions/workflows/build.yml">
+<img alt="Build" src="https://github.com/houmain/spright/actions/workflows/build.yml/badge.svg"/></a>
 <a href="https://github.com/houmain/spright/issues">
 <img alt="Issues" src="https://img.shields.io/github/issues-raw/houmain/spright.svg"/></a>
 
@@ -353,10 +349,8 @@ git clone --recurse-submodules https://github.com/houmain/spright
 **Building:**
 ```
 cd spright
-mkdir build
-cd build
-cmake ..
-cmake --build . --config Release
+cmake -B build
+cmake --build build
 ```
 
 License

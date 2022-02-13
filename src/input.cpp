@@ -6,6 +6,8 @@
 #include <iostream>
 #include <variant>
 
+namespace spright {
+
 std::vector<Sprite> parse_definition(const Settings& settings) {
   auto parser = InputParser(settings);
 
@@ -41,3 +43,5 @@ std::vector<Sprite> parse_definition(const Settings& settings) {
 
   return std::move(parser).sprites();
 }
+
+} // namespace

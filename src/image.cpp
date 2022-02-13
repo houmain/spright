@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <cstring>
 
+namespace spright {
+
 namespace {
   inline void check(bool inside) {
     if (!inside)
@@ -598,3 +600,5 @@ MonoImage get_gray_levels(const Image& image, const Rect& rect) {
   for_each_pixel(image, rect, [&](const RGBA& color) { *dest++ = color.gray(); });
   return result;
 }
+
+} // namespace

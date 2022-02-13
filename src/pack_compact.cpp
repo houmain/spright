@@ -2,6 +2,8 @@
 #include "packing.h"
 #include "chipmunk/chipmunk.h"
 
+namespace spright {
+
 namespace {
   struct FreeSpace { void operator()(cpSpace* space) { cpSpaceFree(space); } };
   using SpacePtr = std::unique_ptr<cpSpace, FreeSpace>;
@@ -81,3 +83,5 @@ void pack_compact(const Texture& texture, SpriteSpan sprites,
     packed_texture.height = max_y + texture.border_padding;
   }
 }
+
+} // namespace

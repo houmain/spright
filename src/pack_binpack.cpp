@@ -2,6 +2,8 @@
 #include "packing.h"
 #include "rect_pack/rect_pack.h"
 
+namespace spright {
+
 void pack_binpack(const Texture& texture, SpriteSpan sprites,
     bool fast, std::vector<PackedTexture>& packed_textures) {
   // pack rects
@@ -17,18 +19,18 @@ void pack_binpack(const Texture& texture, SpriteSpan sprites,
   const auto [max_texture_width, max_texture_height] = get_texture_max_size(texture);
   const auto pack_sheets = pack(
     rect_pack::Settings{
-      .method = (fast ? rect_pack::Method::Best_Skyline : rect_pack::Method::Best),
-      .max_sheets = texture.filename.count(),
-      .power_of_two = texture.power_of_two,
-      .square = texture.square,
-      .allow_rotate = texture.allow_rotate,
-      .align_width = texture.align_width,
-      .border_padding = texture.border_padding,
-      .over_allocate = texture.shape_padding,
-      .min_width = texture.width,
-      .min_height = texture.height,
-      .max_width = max_texture_width,
-      .max_height = max_texture_height,
+      (fast ? rect_pack::Method::Best_Skyline : rect_pack::Method::Best),
+      texture.filename.count(),
+      texture.power_of_two,
+      texture.square,
+      texture.allow_rotate,
+      texture.align_width,
+      texture.border_padding,
+      texture.shape_padding,
+      texture.width,
+      texture.height,
+      max_texture_width,
+      max_texture_height,
     },
     std::move(pack_sizes));
 
@@ -72,12 +74,12 @@ void pack_binpack(const Texture& texture, SpriteSpan sprites,
       const auto sheet_sprites = SpriteSpan(texture_begin, it);
       const auto& pack_sheet = pack_sheets[static_cast<size_t>(sheet_index)];
       packed_textures.push_back(PackedTexture{
-        .filename = texture.filename.get_nth_filename(sheet_index),
-        .width = pack_sheet.width,
-        .height = pack_sheet.height,
-        .sprites = sheet_sprites,
-        .alpha = texture.alpha,
-        .colorkey = texture.colorkey,
+        texture.filename.get_nth_filename(sheet_index),
+        pack_sheet.width,
+        pack_sheet.height,
+        sheet_sprites,
+        texture.alpha,
+        texture.colorkey,
       });
 
       texture_begin = it;
@@ -85,3 +87,5 @@ void pack_binpack(const Texture& texture, SpriteSpan sprites,
         break;
     }
 }
+
+} // namespace

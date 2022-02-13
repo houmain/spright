@@ -2,6 +2,8 @@
 #include "catch.hpp"
 #include "src/globbing.h"
 
+using namespace spright;
+
 TEST_CASE("globbing - Match") {
   CHECK(match("", ""));
   CHECK(!match("a", "b"));

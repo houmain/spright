@@ -4,6 +4,8 @@
 #include "FilenameSequence.h"
 #include <sstream>
 
+namespace spright {
+
 enum class Definition {
   none,
   group,
@@ -134,3 +136,5 @@ private:
   int m_current_grid_cell_y{ };
   int m_current_sequence_index{ };
 };
+
+} // namespace

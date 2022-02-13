@@ -3,6 +3,8 @@
 #include "src/InputParser.h"
 #include <sstream>
 
+using namespace spright;
+
 TEST_CASE("autocompletion - Grid") {
   auto input = std::stringstream(R"(
 input "test/Items.png"

@@ -5,6 +5,8 @@
 #include "rect_pack/rect_pack.h"
 #include <random>
 
+using namespace spright;
+
 namespace {
   struct GeneratePackSizes {
     int count;

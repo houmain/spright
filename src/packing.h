@@ -4,9 +4,15 @@
 
 #if __cplusplus > 201703L && __has_include(<span>)
 # include <span>
-using SpriteSpan = std::span<Sprite>;
 #else
 # include "libs/nonstd/span.hpp"
+#endif
+
+namespace spright {
+
+#if !defined(NONSTD_SPAN_HPP_INCLUDED)
+using SpriteSpan = std::span<Sprite>;
+#else
 using SpriteSpan = nonstd::span<Sprite>;
 #endif
 
@@ -33,3 +39,5 @@ void pack_single(const Texture& texture, SpriteSpan sprites,
   std::vector<PackedTexture>& packed_textures);
 void pack_keep(const Texture& texture, SpriteSpan sprites,
   std::vector<PackedTexture>& packed_textures);
+
+} // namespace

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(spright)
 
-set(GIT_COMMIT_LAST_TAG "unknown")
+set(GIT_COMMIT_LAST_TAG "0.0.0")
 find_package(Git)
 if(GIT_FOUND)
     execute_process(COMMAND ${GIT_EXECUTABLE} describe --tags
@@ -35,10 +35,6 @@ set(SOURCES
 if(NOT MSVC)
     set_source_files_properties(${SOURCES}
        PROPERTIES COMPILE_FLAGS  "-Wall -Wextra -Wsign-conversion -Wconversion -Wno-missing-field-initializers")
-    link_libraries(stdc++fs pthread)
-else()
-    add_compile_options(/GR- /W1)
-    set(MSVC_SHARED_RUNTIME OFF)
 endif()
 
 file(GLOB CHIPMUNK_SOURCES libs/chipmunk/src/*.c)
@@ -56,34 +52,28 @@ set(INCLUDES ${INCLUDES}
     libs
     libs/chipmunk/include
 )
-
 file(GLOB_RECURSE HEADERS include src/**.h libs/*.hpp libs/**.h )
 
-option(ENABLE_PORTABLE "Enable portable build")
-if(ENABLE_PORTABLE)
-    if(NOT MSVC)
-        add_compile_options(-flto -ffunction-sections -fdata-sections)
-        set(CMAKE_EXE_LINKER_FLAGS " -static -s -Wl,--gc-sections")
-        link_libraries(-static-libgcc -static-libstdc++)
-    endif()
-endif()
+if(UNIX AND NOT APPLE)
+    link_libraries(stdc++fs pthread)
 
-if (WIN32)
+    add_compile_options(-flto -ffunction-sections -fdata-sections)
+    set(CMAKE_EXE_LINKER_FLAGS " -static -s -Wl,--gc-sections")
+    link_libraries(-static-libgcc -static-libstdc++)
+elseif(WIN32)
     add_compile_definitions(UNICODE _WIN32_WINNT=0x0501)
-
     set(SOURCES ${SOURCES}
         libs/utf8_console/utf8_console.cpp
     )
+
+    add_compile_options(/GR- /W1)
+    set(MSVC_SHARED_RUNTIME OFF)
 endif()
 
 include_directories(.)
 include_directories(SYSTEM ${INCLUDES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
-
-if(WIN32 AND NOT MSVC)
-  target_link_options(${PROJECT_NAME} BEFORE PUBLIC -municode)
-endif()
 
 option(ENABLE_TEST "Enable tests")
 if(ENABLE_TEST)
@@ -101,8 +91,21 @@ if(ENABLE_TEST)
     add_compile_definitions(EMBED_TEST_FILES)
 endif()
 
-if(NOT WIN32)
-    install(TARGETS ${PROJECT_NAME} DESTINATION "bin")
-else()
-    install(TARGETS ${PROJECT_NAME} DESTINATION .)
-endif()
+# install
+install(TARGETS ${PROJECT_NAME} DESTINATION .)
+
+# package
+set(CPACK_PACKAGE_NAME "spright")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "spright")
+set(CPACK_PACKAGE_VENDOR "Albert Kalchmair")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "spright")
+set(CPACK_PACKAGE_EXECUTABLES "spright;spright")
+set(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/houmain/spright")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
+string(REGEX MATCHALL "[0-9]+" VERSION_LIST "${GIT_COMMIT_LAST_TAG}")
+list(GET VERSION_LIST 0 CPACK_PACKAGE_VERSION_MAJOR)
+list(GET VERSION_LIST 1 CPACK_PACKAGE_VERSION_MINOR)
+list(GET VERSION_LIST 2 CPACK_PACKAGE_VERSION_PATCH)
+include(CPack)
+

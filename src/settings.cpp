@@ -5,6 +5,8 @@
 #include <sstream>
 #include <iterator>
 
+namespace spright {
+
 namespace {
   // replace comma with newline (not within string)
   // skip spaces after newline
@@ -118,3 +120,5 @@ void print_help_message(const char* argv0) {
     defaults.default_input_file,
     defaults.default_output_file);
 }
+
+} // namespace

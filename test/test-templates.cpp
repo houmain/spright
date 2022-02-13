@@ -5,6 +5,8 @@
 #include "src/packing.h"
 #include "src/output.h"
 
+using namespace spright;
+
 namespace {
   std::pair<std::vector<Sprite>, std::vector<PackedTexture>> pack(const char* definition) {
     auto input = std::stringstream(definition);

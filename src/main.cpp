@@ -6,6 +6,7 @@
 #include <chrono>
 
 int main(int argc, const char* argv[]) try {
+  using namespace spright;
 
 #if defined(_WIN32)
   setlocale(LC_ALL, ".UTF-8");
