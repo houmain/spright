@@ -43,7 +43,7 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
     }
     else if (argument == "--") {
       auto ss = std::stringstream();
-      std::copy(&argv[i + 1], &argv[i + argc],
+      std::copy(&argv[i + 1], &argv[argc],
         std::ostream_iterator<const char*>(ss, " "));
       settings.input = arglist_to_input(ss.str());
       break;
@@ -100,7 +100,7 @@ void print_help_message(const char* argv0) {
 
   const auto defaults = Settings{ };
   printf(
-    "spright %s(c) 2020-2021 by Albert Kalchmair\n"
+    "spright %s(c) 2020-2022 by Albert Kalchmair\n"
     "\n"
     "Usage: %s [-options]\n"
     "  -i, --input <file>     input definition file (default: %s).\n"
