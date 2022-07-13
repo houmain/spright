@@ -7,6 +7,7 @@
 #include <cmath>
 #include <future>
 #include <algorithm>
+#include <utility>
 
 namespace spright {
 

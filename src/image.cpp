@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <cstring>
+#include <utility>
 
 namespace spright {
 
