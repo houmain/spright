@@ -2,6 +2,8 @@
 #include "FilenameSequence.h"
 #include "common.h"
 
+namespace spright {
+
 namespace {
   class SequenceMerger {
   private:
@@ -141,3 +143,5 @@ std::vector<FilenameSequence> glob_sequences(
 
   return sequences;
 }
+
+} // namespace

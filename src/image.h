@@ -3,6 +3,8 @@
 #include "common.h"
 #include <filesystem>
 
+namespace spright {
+
 class Image {
 public:
   Image(int width, int height);
@@ -78,3 +80,5 @@ void premultiply_alpha(Image& image);
 void bleed_alpha(Image& image);
 MonoImage get_alpha_levels(const Image& image, const Rect& rect = { });
 MonoImage get_gray_levels(const Image& image, const Rect& rect = { });
+
+} // namespace

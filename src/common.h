@@ -8,6 +8,8 @@
 #include <future>
 #include <algorithm>
 
+namespace spright {
+
 struct Size {
   int x;
   int y;
@@ -128,3 +130,5 @@ void for_each_parallel(It begin, It end, F&& func) {
   for (const auto& result : results)
     result.wait();
 }
+
+} // namespace

@@ -6,6 +6,8 @@
 #include <memory>
 #include <map>
 
+namespace spright {
+
 using ImagePtr = std::shared_ptr<const Image>;
 using TexturePtr = std::shared_ptr<const struct Texture>;
 
@@ -66,3 +68,5 @@ struct Sprite {
 };
 
 std::vector<Sprite> parse_definition(const Settings& settings);
+
+} // namespace

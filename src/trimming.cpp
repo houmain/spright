@@ -6,6 +6,8 @@ extern "C" {
 #include "chipmunk/cpMarch.h"
 }
 
+namespace spright {
+
 namespace {
   struct FreePolyline { void operator()(cpPolyline* line) { cpPolylineFree(line); }; };
   using PolylinePtr = std::unique_ptr<cpPolyline, FreePolyline>;
@@ -83,7 +85,7 @@ namespace {
   }
 
   cpVect normal(const cpVect& v) {
-    if (auto f = v.x * v.x + v.y * v.y) {
+    if (auto f = v.x * v.x + v.y * v.y; f != 0.0f) {
       f = 1.0f / std::sqrt(f);
       return { v.y * f, -v.x * f, };
     }
@@ -159,3 +161,4 @@ void trim_sprite(Sprite& sprite) {
   }
 }
 
+} // namespace

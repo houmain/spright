@@ -6,6 +6,8 @@
 #include <sstream>
 #include <cstring>
 
+namespace spright {
+
 namespace {
   const auto default_texture_name = "spright{0-}.png";
 
@@ -91,21 +93,21 @@ TexturePtr InputParser::get_texture(const State& state) {
   auto& texture = m_textures[std::filesystem::weakly_canonical(state.texture)];
   if (!texture) {
     texture = std::make_shared<Texture>(Texture{
-      .filename = FilenameSequence(path_to_utf8(state.texture)),
-      .width = state.width,
-      .height = state.height,
-      .max_width = state.max_width,
-      .max_height = state.max_height,
-      .power_of_two = state.power_of_two,
-      .square = state.square,
-      .align_width = state.align_width,
-      .allow_rotate = state.allow_rotate,
-      .border_padding = state.border_padding,
-      .shape_padding = state.shape_padding,
-      .duplicates = state.duplicates,
-      .alpha = state.alpha,
-      .colorkey = state.alpha_colorkey,
-      .pack = state.pack,
+      FilenameSequence(path_to_utf8(state.texture)),
+      state.width,
+      state.height,
+      state.max_width,
+      state.max_height,
+      state.power_of_two,
+      state.square,
+      state.align_width,
+      state.allow_rotate,
+      state.border_padding,
+      state.shape_padding,
+      state.duplicates,
+      state.alpha,
+      state.alpha_colorkey,
+      state.pack,
     });
   }
   return texture;
@@ -713,3 +715,5 @@ void InputParser::parse(std::istream& input) {
   pop_scope_stack(-1);
   m_line_number = 0;
 }
+
+} // namespace

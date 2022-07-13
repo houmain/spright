@@ -4,6 +4,8 @@
 #include <limits>
 #include <cassert>
 
+namespace spright {
+
 // format: '{'FIRST['-'[LAST]]'}'
 //   e.g.: "filename{0}.png"           -> "filename0.png" to "filename0.png"
 //         "filename{10-100}.png"      -> "filename10.png" to "filename100.png"
@@ -179,3 +181,5 @@ inline FilenameSequence try_make_sequence(const std::string& first_filename,
     { pattern_begin1, pattern_end1 },
     { pattern_end0, end0 });
 }
+
+} // namespace

@@ -1,6 +1,8 @@
 
 #include "packing.h"
 
+namespace spright {
+
 namespace {
   int get_max_size(int size, int max_size, bool power_of_two) {
     if (power_of_two && size)
@@ -175,3 +177,5 @@ std::vector<PackedTexture> pack_sprites(std::vector<Sprite>& sprites) {
 
   return packed_textures;
 }
+
+} // namespace

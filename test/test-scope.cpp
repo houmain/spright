@@ -3,6 +3,8 @@
 #include "src/InputParser.h"
 #include <sstream>
 
+using namespace spright;
+
 TEST_CASE("scope - Tags") {
   auto input = std::stringstream(R"(
     input "test/Items.png"

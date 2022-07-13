@@ -7,15 +7,11 @@
 #include <stdexcept>
 #include <cstring>
 
-#if __has_builtin(__builtin_expect)
-# define UNLIKELY( exp )  (__builtin_expect( !!(exp), false ))
-#else
-# define UNLIKELY( exp )  (!!(exp))
-#endif
+namespace spright {
 
 namespace {
   inline void check(bool inside) {
-    if UNLIKELY(!inside)
+    if (!inside)
       throw std::logic_error("access outside image bounds");
   }
 
@@ -604,3 +600,5 @@ MonoImage get_gray_levels(const Image& image, const Rect& rect) {
   for_each_pixel(image, rect, [&](const RGBA& color) { *dest++ = color.gray(); });
   return result;
 }
+
+} // namespace

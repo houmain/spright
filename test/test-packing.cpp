@@ -6,6 +6,8 @@
 #include "src/output.h"
 #include <sstream>
 
+using namespace spright;
+
 namespace {
   template<typename T>
   bool le_size(const T& texture, int w, int h) {

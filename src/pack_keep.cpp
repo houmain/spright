@@ -1,6 +1,8 @@
 
 #include "packing.h"
 
+namespace spright {
+
 void pack_keep(const Texture& texture, SpriteSpan sprites,
     std::vector<PackedTexture>& packed_textures) {
 
@@ -15,11 +17,13 @@ void pack_keep(const Texture& texture, SpriteSpan sprites,
   }
 
   packed_textures.push_back(PackedTexture{
-    .filename = utf8_to_path(texture.filename.get_nth_filename(0)),
-    .width = max_width,
-    .height = max_height,
-    .sprites = sprites,
-    .alpha = texture.alpha,
-    .colorkey = texture.colorkey,
+    utf8_to_path(texture.filename.get_nth_filename(0)),
+    max_width,
+    max_height,
+    sprites,
+    texture.alpha,
+    texture.colorkey,
   });
 }
+
+} // namespace

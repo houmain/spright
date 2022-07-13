@@ -3,6 +3,8 @@
 #include <filesystem>
 #include <vector>
 
+namespace spright {
+
 struct Settings {
   const char* default_input_file{ "spright.conf" };
   const char* default_output_file{ "spright.json" };
@@ -17,3 +19,5 @@ struct Settings {
 
 bool interpret_commandline(Settings& settings, int argc, const char* argv[]);
 void print_help_message(const char* argv0);
+
+} // namespace

@@ -3,6 +3,8 @@
 #include "inja/inja.hpp"
 #include <fstream>
 
+namespace spright {
+
 namespace {
   nlohmann::json json_point(const PointF& point) {
     auto json_point = nlohmann::json::object();
@@ -285,3 +287,5 @@ Image get_output_texture(const Settings& settings, const PackedTexture& texture)
 
   return target;
 }
+
+} // namespace

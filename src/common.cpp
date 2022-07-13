@@ -4,6 +4,8 @@
 #include <charconv>
 #include <algorithm>
 
+namespace spright {
+
 Rect expand(const Rect& rect, int value) {
   return { rect.x - value, rect.y - value, rect.w + value * 2, rect.h + value * 2 };
 }
@@ -158,3 +160,5 @@ std::pair<std::string_view, int> split_name_number(LStringView str) {
   }
   return { str, 0 };
 }
+
+} // namespace
