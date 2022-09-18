@@ -32,4 +32,14 @@ TEST_CASE("globbing - Match") {
   CHECK(!match("a/**/b", "a/ccc/ddd/bbb"));
   CHECK(match("a/**/*b", "a/ccc/ddd/bbb"));
   CHECK(!match("a/**/b", "ab"));
+
+  CHECK(replace_suffix("test-abc.png", "-abc", "-xyz") == "test-xyz.png");
+  CHECK(replace_suffix("test-abc.png", "-efg", "-xyz") == "test-abc-xyz.png");
+  CHECK(replace_suffix("test.png", "", "-xyz") == "test-xyz.png");
+  CHECK(replace_suffix("test-abc-efg.png", "-abc", "-xyz") == "test-xyz-efg.png");
+
+  CHECK(replace_suffix("test-abc", "-abc", "-xyz") == "test-xyz");
+  CHECK(replace_suffix("test-abc", "-efg", "-xyz") == "test-abc-xyz");
+  CHECK(replace_suffix("test", "", "-xyz") == "test-xyz");
+  CHECK(replace_suffix("test-abc-efg", "-abc", "-xyz") == "test-xyz-efg");
 }

@@ -2,6 +2,7 @@
 #include "trimming.h"
 #include "packing.h"
 #include "output.h"
+#include "globbing.h"
 #include <iostream>
 #include <chrono>
 
@@ -38,10 +39,16 @@ int main(int argc, const char* argv[]) try {
 
   for_each_parallel(begin(textures), end(textures),
     [&](const Texture& texture) {
-      const auto filename = 
-        utf8_to_path(texture.output->filename.get_nth_filename(texture.index));
-      save_image(get_output_texture(settings, texture),
-        settings.output_path / filename);
+      const auto filename = utf8_to_path(
+        texture.output->filename.get_nth_filename(texture.index));
+      if (auto image = get_output_texture(settings, texture))
+        save_image(image, filename);
+      
+      auto i = 0;
+      for (const auto& layer_suffix : texture.output->layer_suffixes)
+        if (auto image = get_output_texture(settings, texture, i++))
+          save_image(image, replace_suffix(filename, 
+            texture.output->default_layer_suffix, layer_suffix));
     });
   add_time_point();
 

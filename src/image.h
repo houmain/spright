@@ -7,6 +7,7 @@ namespace spright {
 
 class Image {
 public:
+  Image() = default;
   Image(int width, int height);
   Image(int width, int height, const RGBA& background);
   Image(std::filesystem::path path, std::filesystem::path filename);
@@ -14,6 +15,7 @@ public:
   Image& operator=(Image&& rhs);
   ~Image();
   Image clone(const Rect& rect = {}) const;
+  explicit operator bool() const { return m_data != nullptr; }
 
   const std::filesystem::path& path() const { return m_path; }
   const std::filesystem::path& filename() const { return m_filename; }

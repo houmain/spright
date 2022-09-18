@@ -130,25 +130,36 @@ namespace {
     return env;
   }
 
-  void copy_sprite(Image& target, const Sprite& sprite) try {
+  const Image* get_source(const Sprite& sprite, int layer_index) {
+    if (layer_index < 0)
+      return sprite.source.get();
+    if (sprite.layers && layer_index < sprite.layers->size())
+      return sprite.layers->at(layer_index).get();
+    return nullptr;
+  }
+
+  bool copy_sprite(Image& target, const Sprite& sprite, int layer_index) try {
+    const auto source = get_source(sprite, layer_index);
+    if (!source)
+      return false;
 
     if (sprite.rotated) {
       if (sprite.vertices.empty()) {
-        copy_rect_rotated_cw(*sprite.source, sprite.trimmed_source_rect,
+        copy_rect_rotated_cw(*source, sprite.trimmed_source_rect,
           target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
       }
       else {
-        copy_rect_rotated_cw(*sprite.source, sprite.trimmed_source_rect,
+        copy_rect_rotated_cw(*source, sprite.trimmed_source_rect,
           target, sprite.trimmed_rect.x, sprite.trimmed_rect.y, sprite.vertices);
       }
     }
     else {
       if (sprite.vertices.empty()) {
-        copy_rect(*sprite.source, sprite.trimmed_source_rect,
+        copy_rect(*source, sprite.trimmed_source_rect,
           target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
       }
       else {
-        copy_rect(*sprite.source, sprite.trimmed_source_rect,
+        copy_rect(*source, sprite.trimmed_source_rect,
           target, sprite.trimmed_rect.x, sprite.trimmed_rect.y, sprite.vertices);
       }
     }
@@ -168,6 +179,7 @@ namespace {
         }
       }
     }
+    return true;
   }
   catch (const std::exception& ex) {
 #if defined(NDEBUG)
@@ -175,6 +187,7 @@ namespace {
 #else
     std::fprintf(stderr, "copying sprite failed: %s\n", ex.what());
 #endif
+    return false;
   }
 
   void process_alpha(Image& target, const Texture& texture) {
@@ -276,10 +289,15 @@ void write_output_description(const Settings& settings,
   }
 }
 
-Image get_output_texture(const Settings& settings, const Texture& texture) {
+Image get_output_texture(const Settings& settings, 
+    const Texture& texture, int layer_index) {
   auto target = Image(texture.width, texture.height, RGBA{ });
+
+  auto copied_sprite = false;
   for (const auto& sprite : texture.sprites)
-    copy_sprite(target, sprite);
+    copied_sprite |= copy_sprite(target, sprite, layer_index);
+  if (!copied_sprite)
+    return { };
 
   process_alpha(target, texture);
 

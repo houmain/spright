@@ -34,6 +34,7 @@ enum class Definition {
   skip,
   span,
   atlas,
+  layers,
 
   sprite,
   id,
@@ -73,6 +74,8 @@ struct State {
 
   std::filesystem::path path;
   FilenameSequence sheet;
+  std::string default_layer_suffix;
+  std::vector<std::string> layer_suffixes;
   RGBA colorkey{ };
   std::map<std::string, std::string> tags;
   std::string sprite_id;
@@ -110,6 +113,7 @@ private:
   ImagePtr get_sheet(const State& state, int index);
   ImagePtr get_sheet(const std::filesystem::path& path,
     const std::filesystem::path& filename, RGBA colorkey);
+  LayerVectorPtr get_layers(const State& state, const ImagePtr& sheet);
   void sprite_ends(State& state);
   void deduce_globbing_sheets(State& state);
   void deduce_sequence_sprites(State& state);
@@ -130,6 +134,7 @@ private:
   int m_line_number{ };
   std::map<std::filesystem::path, OutputPtr> m_outputs;
   std::map<std::filesystem::path, ImagePtr> m_sheets;
+  std::map<ImagePtr, LayerVectorPtr> m_layers;
   std::vector<Sprite> m_sprites;
   int m_sprites_in_current_sheet{ };
   int m_current_grid_cell_x{ };

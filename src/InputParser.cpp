@@ -67,6 +67,18 @@ namespace {
     }
     return -1;
   }
+
+  ImagePtr try_get_layer(const ImagePtr& sheet, 
+      const std::string& default_layer_suffix, 
+      const std::string& layer_suffix) {
+
+    auto layer_filename = replace_suffix(sheet->filename(), 
+      default_layer_suffix, layer_suffix);
+
+    if (std::filesystem::exists(layer_filename))
+      return std::make_shared<Image>(sheet->path(), layer_filename);
+    return { };
+  }
 } // namespace
 
 [[noreturn]] void InputParser::error(std::string message) {
@@ -92,8 +104,8 @@ OutputPtr InputParser::get_output(const State& state) {
   if (!output) {
     output = std::make_shared<Output>(Output{
       FilenameSequence(path_to_utf8(state.output)),
-      state.width,
-      state.height,
+      state.default_layer_suffix,
+      state.layer_suffixes,
       state.width,
       state.height,
       state.max_width,
@@ -140,6 +152,22 @@ ImagePtr InputParser::get_sheet(const State& state) {
   return get_sheet(state, m_current_sequence_index);
 }
 
+LayerVectorPtr InputParser::get_layers(const State& state, const ImagePtr& sheet) {
+  if (state.layer_suffixes.empty())
+    return { };
+
+  auto it = m_layers.find(sheet);
+  if (it == m_layers.end()) {
+    auto layers = std::vector<ImagePtr>();
+    for (const auto& layer_suffix : state.layer_suffixes)
+      layers.push_back(try_get_layer(sheet, 
+        state.default_layer_suffix, layer_suffix));
+    it = m_layers.emplace(sheet, 
+      std::make_shared<decltype(layers)>(std::move(layers))).first;
+  }
+  return it->second;
+}
+
 void InputParser::sprite_ends(State& state) {
   check(!state.sheet.empty(), "sprite not on sheet");
 
@@ -159,6 +187,7 @@ void InputParser::sprite_ends(State& state) {
   sprite.id = get_sprite_id(state);
   sprite.output = get_output(state);
   sprite.source = get_sheet(state);
+  sprite.layers = get_layers(state, sprite.source);
   sprite.source_rect = (!empty(state.rect) ?
     state.rect : sprite.source->bounds());
   sprite.pivot = state.pivot;
@@ -510,6 +539,13 @@ void InputParser::apply_definition(State& state,
 
     case Definition::atlas:
       state.atlas_merge_distance = (arguments_left() ? check_uint() : 0);
+      break;
+
+    case Definition::layers:
+      state.default_layer_suffix = check_string();
+      state.layer_suffixes.clear();
+      while (arguments_left())
+        state.layer_suffixes.emplace_back(check_string());
       break;
 
     case Definition::sprite:

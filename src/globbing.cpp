@@ -144,4 +144,17 @@ std::vector<FilenameSequence> glob_sequences(
   return sequences;
 }
 
+std::filesystem::path replace_suffix(const std::filesystem::path& filename_, 
+    const std::string& old_suffix, const std::string& new_suffix) {
+  auto filename = path_to_utf8(filename_);
+  if (!old_suffix.empty())
+    if (auto it = filename.find(old_suffix); it != std::string::npos)
+      return utf8_to_path(filename.replace(it, old_suffix.size(), new_suffix));
+  
+  auto extension = filename.find_last_of('.');
+  if (extension == std::string::npos)
+    extension = filename.size();
+  return utf8_to_path(filename.insert(extension, new_suffix));
+}
+
 } // namespace

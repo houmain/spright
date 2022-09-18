@@ -10,6 +10,7 @@ namespace spright {
 
 using ImagePtr = std::shared_ptr<const Image>;
 using OutputPtr = std::shared_ptr<const struct Output>;
+using LayerVectorPtr = std::shared_ptr<const std::vector<ImagePtr>>;
 
 enum class PivotX { left, center, right, custom };
 enum class PivotY { top, middle, bottom, custom };
@@ -25,6 +26,8 @@ enum class Duplicates { keep, share, drop };
 
 struct Output {
   FilenameSequence filename;
+  std::string default_layer_suffix;
+  std::vector<std::string> layer_suffixes;
   int width{ };
   int height{ };
   int max_width{ };
@@ -46,6 +49,7 @@ struct Sprite {
   std::string id;
   OutputPtr output;
   ImagePtr source;
+  LayerVectorPtr layers;
   Rect source_rect{ };
   Rect trimmed_source_rect{ };
   Rect rect{ };
