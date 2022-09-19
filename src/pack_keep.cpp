@@ -4,7 +4,7 @@
 namespace spright {
 
 void pack_keep(const OutputPtr& output, SpriteSpan sprites,
-    std::vector<PackedTexture>& packed_textures) {
+    std::vector<Texture>& textures) {
 
   auto max_width = 0;
   auto max_height = 0;
@@ -16,7 +16,7 @@ void pack_keep(const OutputPtr& output, SpriteSpan sprites,
     max_height = std::max(max_height, sprite.source->height());
   }
 
-  packed_textures.push_back(PackedTexture{
+  textures.push_back(Texture{
     output,
     0,
     max_width,

@@ -16,7 +16,7 @@ using SpriteSpan = std::span<Sprite>;
 using SpriteSpan = nonstd::span<Sprite>;
 #endif
 
-struct PackedTexture {
+struct Texture {
   OutputPtr output;
   int index;
   int width{ };
@@ -28,15 +28,15 @@ std::pair<int, int> get_texture_max_size(const Output& output);
 Size get_sprite_size(const Sprite& sprite);
 Size get_sprite_indent(const Sprite& sprite);
 
-std::vector<PackedTexture> pack_sprites(std::vector<Sprite>& sprites);
+std::vector<Texture> pack_sprites(std::vector<Sprite>& sprites);
 
 void pack_binpack(const OutputPtr& output, SpriteSpan sprites,
-  bool fast, std::vector<PackedTexture>& packed_textures);
+  bool fast, std::vector<Texture>& textures);
 void pack_compact(const OutputPtr& output, SpriteSpan sprites,
-  std::vector<PackedTexture>& packed_textures);
+  std::vector<Texture>& textures);
 void pack_single(const OutputPtr& output, SpriteSpan sprites,
-  std::vector<PackedTexture>& packed_textures);
+  std::vector<Texture>& textures);
 void pack_keep(const OutputPtr& output, SpriteSpan sprites,
-  std::vector<PackedTexture>& packed_textures);
+  std::vector<Texture>& textures);
 
 } // namespace

@@ -60,32 +60,32 @@ TEST_CASE("scope - Tags") {
 TEST_CASE("scope - Texture") {
   auto input = std::stringstream(R"(
     width 256
-    texture "tex1"
+    output "tex1"
       padding 1
-    texture "tex2"
+    output "tex2"
       padding 2
     width 128
-    texture "tex3"
+    output "tex3"
       padding 3
     width 64
     input "test/Items.png"
       grid 16 16
       sprite
       sprite
-        texture "tex1"
+        output "tex1"
       sprite
-        texture "tex2"
+        output "tex2"
       sprite
   )");
   auto parser = InputParser(Settings{ });
   REQUIRE_NOTHROW(parser.parse(input));
   const auto& sprites = parser.sprites();
   REQUIRE(sprites.size() == 4);
-  CHECK(sprites[0].texture->border_padding == 3);
-  CHECK(sprites[1].texture->border_padding == 1);
-  CHECK(sprites[2].texture->border_padding == 2);
-  CHECK(sprites[0].texture == sprites[3].texture);
-  CHECK(sprites[0].texture->width == 128);
-  CHECK(sprites[1].texture->width == 256);
-  CHECK(sprites[2].texture->width == 256);
+  CHECK(sprites[0].output->border_padding == 3);
+  CHECK(sprites[1].output->border_padding == 1);
+  CHECK(sprites[2].output->border_padding == 2);
+  CHECK(sprites[0].output == sprites[3].output);
+  CHECK(sprites[0].output->width == 128);
+  CHECK(sprites[1].output->width == 256);
+  CHECK(sprites[2].output->width == 256);
 }

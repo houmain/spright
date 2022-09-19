@@ -4,7 +4,7 @@
 namespace spright {
 
 void pack_single(const OutputPtr& output, SpriteSpan sprites,
-    std::vector<PackedTexture>& packed_textures) {
+    std::vector<Texture>& textures) {
 
   auto indices = std::map<FilenameSequence, int>();
   for (auto& sprite : sprites) {
@@ -27,7 +27,7 @@ void pack_single(const OutputPtr& output, SpriteSpan sprites,
     if (index > output->filename.count())
       throw std::runtime_error("not all sprites could be packed");
 
-    packed_textures.push_back(PackedTexture{
+    textures.push_back(Texture{
       output,
       index,
       sprite.rect.w + padding * 2,

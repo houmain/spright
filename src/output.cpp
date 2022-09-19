@@ -30,7 +30,7 @@ namespace {
   };
 
   nlohmann::json get_json_description(const std::vector<Sprite>& sprites,
-      const std::vector<PackedTexture>& textures) {
+      const std::vector<Texture>& textures) {
     auto json = nlohmann::json{ };
     auto& json_sprites = json["sprites"];
     json_sprites = nlohmann::json::array();
@@ -177,7 +177,7 @@ namespace {
 #endif
   }
 
-  void process_alpha(Image& target, const PackedTexture& texture) {
+  void process_alpha(Image& target, const Texture& texture) {
     switch (texture.output->alpha) {
       case Alpha::keep:
         break;
@@ -241,7 +241,7 @@ namespace {
 } // namespace
 
 std::string get_description(const std::string& template_source,
-    const std::vector<Sprite>& sprites, const std::vector<PackedTexture>& textures) {
+    const std::vector<Sprite>& sprites, const std::vector<Texture>& textures) {
   auto ss = std::stringstream();
   const auto json = get_json_description(sprites, textures);
   auto env = setup_inja_environment();
@@ -250,7 +250,7 @@ std::string get_description(const std::string& template_source,
 }
 
 void write_output_description(const Settings& settings,
-    const std::vector<Sprite>& sprites, const std::vector<PackedTexture>& textures) {
+    const std::vector<Sprite>& sprites, const std::vector<Texture>& textures) {
   if (settings.output_file.empty())
     return;
 
@@ -276,7 +276,7 @@ void write_output_description(const Settings& settings,
   }
 }
 
-Image get_output_texture(const Settings& settings, const PackedTexture& texture) {
+Image get_output_texture(const Settings& settings, const Texture& texture) {
   auto target = Image(texture.width, texture.height, RGBA{ });
   for (const auto& sprite : texture.sprites)
     copy_sprite(target, sprite);

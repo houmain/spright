@@ -4,8 +4,8 @@
 
 namespace spright {
 
-void pack_binpack(const Output& output, SpriteSpan sprites,
-    bool fast, std::vector<PackedTexture>& packed_textures) {
+void pack_binpack(const OutputPtr& output_ptr, SpriteSpan sprites,
+    bool fast, std::vector<Texture>& textures) {
   const auto& output = *output_ptr;
 
   // pack rects
@@ -75,7 +75,7 @@ void pack_binpack(const Output& output, SpriteSpan sprites,
       const auto sheet_index = texture_begin->texture_index;
       const auto sheet_sprites = SpriteSpan(texture_begin, it);
       const auto& pack_sheet = pack_sheets[static_cast<size_t>(sheet_index)];
-      packed_textures.push_back(PackedTexture{
+      textures.push_back(Texture{
         output_ptr,
         sheet_index,
         pack_sheet.width,

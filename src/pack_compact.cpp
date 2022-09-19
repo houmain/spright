@@ -12,7 +12,7 @@ namespace {
   struct FreeBody { void operator()(cpBody* body) { cpBodyFree(body); } };
   using BodyPtr = std::unique_ptr<cpBody, FreeBody>;
 
-  void compact_sprites(const PackedTexture& texture, int border_padding, int shape_padding) {
+  void compact_sprites(const Texture& texture, int border_padding, int shape_padding) {
     const auto space_ptr = SpacePtr(cpSpaceNew());
     const auto space = space_ptr.get();
 
@@ -72,15 +72,15 @@ namespace {
 } // namespace
 
 void pack_compact(const OutputPtr& output, SpriteSpan sprites,
-    std::vector<PackedTexture>& packed_textures) {
-  pack_binpack(output, sprites, true, packed_textures);
-  for (auto& packed_texture : packed_textures) {
-    compact_sprites(packed_texture, output->border_padding, output->shape_padding);
+    std::vector<Texture>& textures) {
+  pack_binpack(output, sprites, true, textures);
+  for (auto& texture : textures) {
+    compact_sprites(texture, output->border_padding, output->shape_padding);
 
     auto max_y = 0;
-    for (const auto& sprite : packed_texture.sprites)
+    for (const auto& sprite : texture.sprites)
       max_y = std::max(max_y, sprite.trimmed_rect.y + sprite.trimmed_rect.h);
-    packed_texture.height = max_y + output->border_padding;
+    texture.height = max_y + output->border_padding;
   }
 }
 

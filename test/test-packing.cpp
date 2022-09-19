@@ -21,7 +21,7 @@ namespace {
     return true;
   }
 
-  std::vector<PackedTexture> pack(const char* definition) {
+  std::vector<Texture> pack(const char* definition) {
     auto input = std::stringstream(definition);
     auto parser = InputParser(Settings{ });
     parser.parse(input);
@@ -32,14 +32,14 @@ namespace {
     return pack_sprites(s_sprites);
   }
 
-  [[maybe_unused]] void dump(PackedTexture texture) {
+  [[maybe_unused]] void dump(Texture texture) {
     static auto i = 0;
     const auto filename = FilenameSequence("dump-{000-}.png").get_nth_filename(i++);
     save_image(get_output_texture({ .debug = true }, texture), filename);
   }
 
-  PackedTexture pack_single_sheet(const char* definition) {
-    auto textures = std::vector<PackedTexture>();
+  Texture pack_single_sheet(const char* definition) {
+    auto textures = std::vector<Texture>();
     REQUIRE_NOTHROW(textures = pack(definition));
     CHECK(textures.size() == 1);
     if (textures.size() != 1)

@@ -72,19 +72,19 @@ namespace {
   }
 
   void pack_texture(const OutputPtr& output,
-      SpriteSpan sprites, std::vector<PackedTexture>& packed_textures) {
+      SpriteSpan sprites, std::vector<Texture>& textures) {
     assert(!sprites.empty());
 
     switch (output->pack) {
-      case Pack::binpack: return pack_binpack(output, sprites, sprites.size() > 1000, packed_textures);
-      case Pack::compact: return pack_compact(output, sprites, packed_textures);
-      case Pack::single: return pack_single(output, sprites, packed_textures);
-      case Pack::keep: return pack_keep(output, sprites, packed_textures);
+      case Pack::binpack: return pack_binpack(output, sprites, sprites.size() > 1000, textures);
+      case Pack::compact: return pack_compact(output, sprites, textures);
+      case Pack::single: return pack_single(output, sprites, textures);
+      case Pack::keep: return pack_keep(output, sprites, textures);
     }
   }
 
   void pack_texture_deduplicate(const OutputPtr& output,
-      SpriteSpan sprites, std::vector<PackedTexture>& packed_textures) {
+      SpriteSpan sprites, std::vector<Texture>& textures) {
     assert(!sprites.empty());
 
     // sort duplicates to back
@@ -101,7 +101,7 @@ namespace {
         }
        }
 
-    pack_texture(output, unique_sprites, packed_textures);
+    pack_texture(output, unique_sprites, textures);
 
     for (auto i = size_t{ }; i < duplicates.size(); ++i) {
       auto& duplicate = sprites[sprites.size() - 1 - i];
@@ -117,7 +117,7 @@ namespace {
     }
   }
 
-  void pack_sprites_by_texture(SpriteSpan sprites, std::vector<PackedTexture>& packed_textures) {
+  void pack_sprites_by_texture(SpriteSpan sprites, std::vector<Texture>& textures) {
     if (sprites.empty())
       return;
 
@@ -133,9 +133,9 @@ namespace {
           it->output->filename != begin->output->filename) {
         const auto& output = begin->output;
         if (output->duplicates != Duplicates::keep)
-          pack_texture_deduplicate(output, { begin, it }, packed_textures);
+          pack_texture_deduplicate(output, { begin, it }, textures);
         else
-          pack_texture(output, { begin, it }, packed_textures);
+          pack_texture(output, { begin, it }, textures);
 
         if (it == sprites.end())
           break;
@@ -165,17 +165,17 @@ Size get_sprite_indent(const Sprite& sprite) {
   };
 }
 
-std::vector<PackedTexture> pack_sprites(std::vector<Sprite>& sprites) {
+std::vector<Texture> pack_sprites(std::vector<Sprite>& sprites) {
   for (auto& sprite : sprites)
     prepare_sprite(sprite);
 
-  auto packed_textures = std::vector<PackedTexture>();
-  pack_sprites_by_texture(sprites, packed_textures);
+  auto textures = std::vector<Texture>();
+  pack_sprites_by_texture(sprites, textures);
 
   for (auto& sprite : sprites)
     complete_sprite(sprite);
 
-  return packed_textures;
+  return textures;
 }
 
 } // namespace

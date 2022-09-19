@@ -8,7 +8,7 @@
 using namespace spright;
 
 namespace {
-  std::pair<std::vector<Sprite>, std::vector<PackedTexture>> pack(const char* definition) {
+  std::pair<std::vector<Sprite>, std::vector<Texture>> pack(const char* definition) {
     auto input = std::stringstream(definition);
     auto parser = InputParser(Settings{ });
     parser.parse(input);

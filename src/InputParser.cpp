@@ -41,6 +41,7 @@ namespace {
       { "skip", Definition::skip },
       { "span", Definition::span },
       { "atlas", Definition::atlas },
+      { "layers", Definition::layers },
       { "rect", Definition::rect },
       { "pivot", Definition::pivot },
       { "trim", Definition::trim },
@@ -91,6 +92,8 @@ OutputPtr InputParser::get_output(const State& state) {
   if (!output) {
     output = std::make_shared<Output>(Output{
       FilenameSequence(path_to_utf8(state.output)),
+      state.width,
+      state.height,
       state.width,
       state.height,
       state.max_width,

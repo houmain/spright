@@ -37,7 +37,7 @@ int main(int argc, const char* argv[]) try {
   add_time_point();
 
   for_each_parallel(begin(textures), end(textures),
-    [&](const PackedTexture& texture) {
+    [&](const Texture& texture) {
       const auto filename = 
         utf8_to_path(texture.output->filename.get_nth_filename(texture.index));
       save_image(get_output_texture(settings, texture),
