@@ -41,13 +41,13 @@ namespace {
     auto texture_sprites = std::map<std::filesystem::path, std::vector<SpriteIndex>>();
 
     for (const auto& sprite : sprites) {
-      if (!sprite.texture || !sprite.source)
+      if (!sprite.output || !sprite.source)
         continue;
 
       auto& json_sprite = json_sprites.emplace_back();
       const auto index = json_sprites.size() - 1;
       const auto texture_filename = utf8_to_path(
-        sprite.texture->filename.get_nth_filename(sprite.texture_index));
+        sprite.output->filename.get_nth_filename(sprite.texture_index));
       json_sprite["index"] = sprite.index;
       json_sprite["id"] = sprite.id;
       json_sprite["rect"] = json_rect(sprite.rect);

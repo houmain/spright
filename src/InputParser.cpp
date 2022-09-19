@@ -10,11 +10,11 @@
 namespace spright {
 
 namespace {
-  const auto default_texture_name = "spright{0-}.png";
+  const auto default_output_name = "spright{0-}.png";
 
   Definition get_definition(std::string_view command) {
     static const auto s_map = std::map<std::string, Definition, std::less<>>{
-      { "output", Definition::texture },
+      { "output", Definition::output },
       { "width", Definition::width },
       { "height", Definition::height },
       { "max-width", Definition::max_width },
@@ -86,11 +86,11 @@ std::string InputParser::get_sprite_id(const State& state) const {
   return id;
 }
 
-TexturePtr InputParser::get_texture(const State& state) {
-  auto& texture = m_textures[std::filesystem::weakly_canonical(state.texture)];
-  if (!texture) {
-    texture = std::make_shared<Texture>(Texture{
-      FilenameSequence(path_to_utf8(state.texture)),
+OutputPtr InputParser::get_output(const State& state) {
+  auto& output = m_outputs[std::filesystem::weakly_canonical(state.output)];
+  if (!output) {
+    output = std::make_shared<Output>(Output{
+      FilenameSequence(path_to_utf8(state.output)),
       state.width,
       state.height,
       state.max_width,
@@ -107,7 +107,7 @@ TexturePtr InputParser::get_texture(const State& state) {
       state.pack,
     });
   }
-  return texture;
+  return output;
 }
 
 ImagePtr InputParser::get_sheet(const std::filesystem::path& path,
@@ -154,7 +154,7 @@ void InputParser::sprite_ends(State& state) {
   auto sprite = Sprite{ };
   sprite.index = static_cast<int>(m_sprites.size());
   sprite.id = get_sprite_id(state);
-  sprite.texture = get_texture(state);
+  sprite.output = get_output(state);
   sprite.source = get_sheet(state);
   sprite.source_rect = (!empty(state.rect) ?
     state.rect : sprite.source->bounds());
@@ -294,8 +294,8 @@ void InputParser::deduce_single_sprite(State& state) {
   sprite_ends(state);
 }
 
-void InputParser::texture_ends(State& state) {
-  get_texture(state);
+void InputParser::output_ends(State& state) {
+  get_output(state);
 }
 
 void InputParser::sheet_ends(State& state) {
@@ -382,8 +382,8 @@ void InputParser::apply_definition(State& state,
       // just for opening scopes, useful for additive definitions (e.g. tags)
       break;
 
-    case Definition::texture:
-      state.texture = check_path();
+    case Definition::output:
+      state.output = check_path();
       break;
 
     case Definition::width:
@@ -586,15 +586,15 @@ void InputParser::apply_definition(State& state,
 }
 
 bool InputParser::has_implicit_scope(Definition definition) {
-  return (definition == Definition::texture ||
+  return (definition == Definition::output ||
           definition == Definition::sheet ||
           definition == Definition::sprite);
 }
 
 void InputParser::scope_ends(State& state) {
   switch (state.definition) {
-    case Definition::texture:
-      texture_ends(state);
+    case Definition::output:
+      output_ends(state);
       break;
     case Definition::sheet:
       sheet_ends(state);
@@ -622,7 +622,7 @@ void InputParser::parse(std::istream& input) {
   auto scope_stack = std::vector<State>();
   scope_stack.emplace_back();
   scope_stack.back().level = -1;
-  scope_stack.back().texture = default_texture_name;
+  scope_stack.back().output = default_output_name;
   scope_stack.back().detected_indentation = "  ";
 
   auto autocomplete_space = std::stringstream();
@@ -644,8 +644,8 @@ void InputParser::parse(std::istream& input) {
         // keep texture set on same level
         if (top != scope_stack.end() &&
             top != scope_stack.begin() &&
-            top->definition == Definition::texture)
-          std::prev(top)->texture = top->texture;
+            top->definition == Definition::output)
+          std::prev(top)->output = top->output;
 
         scope_stack.erase(top, scope_stack.end());
         return;

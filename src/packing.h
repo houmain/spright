@@ -25,19 +25,19 @@ struct PackedTexture {
   RGBA colorkey{ };
 };
 
-std::pair<int, int> get_texture_max_size(const Texture& texture);
+std::pair<int, int> get_texture_max_size(const Output& output);
 Size get_sprite_size(const Sprite& sprite);
 Size get_sprite_indent(const Sprite& sprite);
 
 std::vector<PackedTexture> pack_sprites(std::vector<Sprite>& sprites);
 
-void pack_binpack(const Texture& texture, SpriteSpan sprites,
+void pack_binpack(const Output& output, SpriteSpan sprites,
   bool fast, std::vector<PackedTexture>& packed_textures);
-void pack_compact(const Texture& texture, SpriteSpan sprites,
+void pack_compact(const Output& output, SpriteSpan sprites,
   std::vector<PackedTexture>& packed_textures);
-void pack_single(const Texture& texture, SpriteSpan sprites,
+void pack_single(const Output& output, SpriteSpan sprites,
   std::vector<PackedTexture>& packed_textures);
-void pack_keep(const Texture& texture, SpriteSpan sprites,
+void pack_keep(const Output& output, SpriteSpan sprites,
   std::vector<PackedTexture>& packed_textures);
 
 } // namespace

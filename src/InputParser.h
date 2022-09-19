@@ -10,7 +10,7 @@ enum class Definition {
   none,
   group,
 
-  texture,
+  output,
   width,
   height,
   max_width,
@@ -55,7 +55,7 @@ struct State {
   std::string indent;
   std::string detected_indentation;
 
-  std::filesystem::path texture;
+  std::filesystem::path output;
   int width{ };
   int height{};
   int max_width{ };
@@ -105,7 +105,7 @@ private:
   [[noreturn]] void error(std::string message);
   void check(bool condition, std::string_view message);
   std::string get_sprite_id(const State& state) const;
-  TexturePtr get_texture(const State& state);
+  OutputPtr get_output(const State& state);
   ImagePtr get_sheet(const State& state);
   ImagePtr get_sheet(const State& state, int index);
   ImagePtr get_sheet(const std::filesystem::path& path,
@@ -116,7 +116,7 @@ private:
   void deduce_grid_sprites(State& state);
   void deduce_atlas_sprites(State& state);
   void deduce_single_sprite(State& state);
-  void texture_ends(State& state);
+  void output_ends(State& state);
   void sheet_ends(State& state);
   void apply_definition(State& state,
       Definition definition,
@@ -128,7 +128,7 @@ private:
   const Settings& m_settings;
   std::stringstream m_autocomplete_output;
   int m_line_number{ };
-  std::map<std::filesystem::path, TexturePtr> m_textures;
+  std::map<std::filesystem::path, OutputPtr> m_outputs;
   std::map<std::filesystem::path, ImagePtr> m_sheets;
   std::vector<Sprite> m_sprites;
   int m_sprites_in_current_sheet{ };

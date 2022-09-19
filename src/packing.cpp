@@ -71,19 +71,19 @@ namespace {
         std::swap(vertex.x, vertex.y);
   }
 
-  void pack_texture(const Texture& texture,
+  void pack_texture(const Output& output,
       SpriteSpan sprites, std::vector<PackedTexture>& packed_textures) {
     assert(!sprites.empty());
 
-    switch (texture.pack) {
-      case Pack::binpack: return pack_binpack(texture, sprites, sprites.size() > 1000, packed_textures);
-      case Pack::compact: return pack_compact(texture, sprites, packed_textures);
-      case Pack::single: return pack_single(texture, sprites, packed_textures);
-      case Pack::keep: return pack_keep(texture, sprites, packed_textures);
+    switch (output.pack) {
+      case Pack::binpack: return pack_binpack(output, sprites, sprites.size() > 1000, packed_textures);
+      case Pack::compact: return pack_compact(output, sprites, packed_textures);
+      case Pack::single: return pack_single(output, sprites, packed_textures);
+      case Pack::keep: return pack_keep(output, sprites, packed_textures);
     }
   }
 
-  void pack_texture_deduplicate(const Texture& texture,
+  void pack_texture_deduplicate(const Output& output,
       SpriteSpan sprites, std::vector<PackedTexture>& packed_textures) {
     assert(!sprites.empty());
 
@@ -101,11 +101,11 @@ namespace {
         }
        }
 
-    pack_texture(texture, unique_sprites, packed_textures);
+    pack_texture(output, unique_sprites, packed_textures);
 
     for (auto i = size_t{ }; i < duplicates.size(); ++i) {
       auto& duplicate = sprites[sprites.size() - 1 - i];
-      if (texture.duplicates == Duplicates::share) {
+      if (output.duplicates == Duplicates::share) {
         const auto& sprite = unique_sprites[duplicates[i]];
         duplicate.texture_index = sprite.texture_index;
         duplicate.trimmed_rect = sprite.trimmed_rect;
@@ -121,21 +121,21 @@ namespace {
     if (sprites.empty())
       return;
 
-    // sort sprites by texture
+    // sort sprites by output
     std::sort(std::begin(sprites), std::end(sprites),
       [](const Sprite& a, const Sprite& b) {
-        return std::tie(a.texture->filename, a.index) <
-               std::tie(b.texture->filename, b.index);
+        return std::tie(a.output->filename, a.index) <
+               std::tie(b.output->filename, b.index);
       });
 
     for (auto begin = sprites.begin(), it = begin; ; ++it)
       if (it == sprites.end() ||
-          it->texture->filename != begin->texture->filename) {
-        auto& texture = *begin->texture;
-        if (texture.duplicates != Duplicates::keep)
-          pack_texture_deduplicate(texture, { begin, it }, packed_textures);
+          it->output->filename != begin->output->filename) {
+        auto& output = *begin->output;
+        if (output.duplicates != Duplicates::keep)
+          pack_texture_deduplicate(output, { begin, it }, packed_textures);
         else
-          pack_texture(texture, { begin, it }, packed_textures);
+          pack_texture(output, { begin, it }, packed_textures);
 
         if (it == sprites.end())
           break;
@@ -144,10 +144,10 @@ namespace {
   }
 } // namespace
 
-std::pair<int, int> get_texture_max_size(const Texture& texture) {
+std::pair<int, int> get_texture_max_size(const Output& output) {
   return {
-    get_max_size(texture.width, texture.max_width, texture.power_of_two),
-    get_max_size(texture.height, texture.max_height, texture.power_of_two)
+    get_max_size(output.width, output.max_width, output.power_of_two),
+    get_max_size(output.height, output.max_height, output.power_of_two)
   };
 }
 

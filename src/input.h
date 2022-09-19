@@ -9,7 +9,7 @@
 namespace spright {
 
 using ImagePtr = std::shared_ptr<const Image>;
-using TexturePtr = std::shared_ptr<const struct Texture>;
+using OutputPtr = std::shared_ptr<const struct Output>;
 
 enum class PivotX { left, center, right, custom };
 enum class PivotY { top, middle, bottom, custom };
@@ -23,7 +23,7 @@ enum class Pack { binpack, compact, single, keep };
 
 enum class Duplicates { keep, share, drop };
 
-struct Texture {
+struct Output {
   FilenameSequence filename;
   int width{ };
   int height{ };
@@ -44,7 +44,7 @@ struct Texture {
 struct Sprite {
   int index{ };
   std::string id;
-  TexturePtr texture;
+  OutputPtr output;
   ImagePtr source;
   Rect source_rect{ };
   Rect trimmed_source_rect{ };

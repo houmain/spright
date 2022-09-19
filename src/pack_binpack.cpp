@@ -4,31 +4,31 @@
 
 namespace spright {
 
-void pack_binpack(const Texture& texture, SpriteSpan sprites,
+void pack_binpack(const Output& output, std::span<Sprite> sprites,
     bool fast, std::vector<PackedTexture>& packed_textures) {
   // pack rects
   auto pack_sizes = std::vector<rect_pack::Size>();
   pack_sizes.reserve(sprites.size());
   for (const auto& sprite : sprites) {
     auto size = get_sprite_size(sprite);
-    size.x += texture.shape_padding;
-    size.y += texture.shape_padding;
+    size.x += output.shape_padding;
+    size.y += output.shape_padding;
     pack_sizes.push_back({ static_cast<int>(pack_sizes.size()), size.x, size.y });
   }
 
-  const auto [max_texture_width, max_texture_height] = get_texture_max_size(texture);
+  const auto [max_texture_width, max_texture_height] = get_texture_max_size(output);
   const auto pack_sheets = pack(
     rect_pack::Settings{
       (fast ? rect_pack::Method::Best_Skyline : rect_pack::Method::Best),
-      texture.filename.count(),
-      texture.power_of_two,
-      texture.square,
-      texture.allow_rotate,
-      texture.align_width,
-      texture.border_padding,
-      texture.shape_padding,
-      texture.width,
-      texture.height,
+      output.filename.count(),
+      output.power_of_two,
+      output.square,
+      output.allow_rotate,
+      output.align_width,
+      output.border_padding,
+      output.shape_padding,
+      output.width,
+      output.height,
       max_texture_width,
       max_texture_height,
     },
@@ -57,7 +57,7 @@ void pack_binpack(const Texture& texture, SpriteSpan sprites,
   if (packed_sprites < sprites.size())
     throw std::runtime_error("not all sprites could be packed");
 
-  // sort sprites by texture index
+  // sort sprites by output index
   if (pack_sheets.size() > 1)
     std::sort(std::begin(sprites), std::end(sprites),
       [](const Sprite& a, const Sprite& b) {
@@ -74,12 +74,12 @@ void pack_binpack(const Texture& texture, SpriteSpan sprites,
       const auto sheet_sprites = SpriteSpan(texture_begin, it);
       const auto& pack_sheet = pack_sheets[static_cast<size_t>(sheet_index)];
       packed_textures.push_back(PackedTexture{
-        texture.filename.get_nth_filename(sheet_index),
+        output.filename.get_nth_filename(sheet_index),
         pack_sheet.width,
         pack_sheet.height,
         sheet_sprites,
-        texture.alpha,
-        texture.colorkey,
+        output.alpha,
+        output.colorkey,
       });
 
       texture_begin = it;
