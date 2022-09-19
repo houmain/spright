@@ -3,7 +3,7 @@
 
 namespace spright {
 
-void pack_keep(const Output& output, SpriteSpan sprites,
+void pack_keep(const OutputPtr& output, SpriteSpan sprites,
     std::vector<PackedTexture>& packed_textures) {
 
   auto max_width = 0;
@@ -17,12 +17,11 @@ void pack_keep(const Output& output, SpriteSpan sprites,
   }
 
   packed_textures.push_back(PackedTexture{
-    utf8_to_path(output.filename.get_nth_filename(0)),
+    output,
+    0,
     max_width,
     max_height,
     sprites,
-    output.alpha,
-    output.colorkey,
   });
 }
 

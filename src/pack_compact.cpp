@@ -71,16 +71,16 @@ namespace {
   }
 } // namespace
 
-void pack_compact(const Output& output, SpriteSpan sprites,
+void pack_compact(const OutputPtr& output, SpriteSpan sprites,
     std::vector<PackedTexture>& packed_textures) {
   pack_binpack(output, sprites, true, packed_textures);
   for (auto& packed_texture : packed_textures) {
-    compact_sprites(packed_texture, output.border_padding, output.shape_padding);
+    compact_sprites(packed_texture, output->border_padding, output->shape_padding);
 
     auto max_y = 0;
     for (const auto& sprite : packed_texture.sprites)
       max_y = std::max(max_y, sprite.trimmed_rect.y + sprite.trimmed_rect.h);
-    packed_texture.height = max_y + output.border_padding;
+    packed_texture.height = max_y + output->border_padding;
   }
 }
 

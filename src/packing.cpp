@@ -71,11 +71,11 @@ namespace {
         std::swap(vertex.x, vertex.y);
   }
 
-  void pack_texture(const Output& output,
+  void pack_texture(const OutputPtr& output,
       SpriteSpan sprites, std::vector<PackedTexture>& packed_textures) {
     assert(!sprites.empty());
 
-    switch (output.pack) {
+    switch (output->pack) {
       case Pack::binpack: return pack_binpack(output, sprites, sprites.size() > 1000, packed_textures);
       case Pack::compact: return pack_compact(output, sprites, packed_textures);
       case Pack::single: return pack_single(output, sprites, packed_textures);
@@ -83,7 +83,7 @@ namespace {
     }
   }
 
-  void pack_texture_deduplicate(const Output& output,
+  void pack_texture_deduplicate(const OutputPtr& output,
       SpriteSpan sprites, std::vector<PackedTexture>& packed_textures) {
     assert(!sprites.empty());
 
@@ -105,7 +105,7 @@ namespace {
 
     for (auto i = size_t{ }; i < duplicates.size(); ++i) {
       auto& duplicate = sprites[sprites.size() - 1 - i];
-      if (output.duplicates == Duplicates::share) {
+      if (output->duplicates == Duplicates::share) {
         const auto& sprite = unique_sprites[duplicates[i]];
         duplicate.texture_index = sprite.texture_index;
         duplicate.trimmed_rect = sprite.trimmed_rect;
@@ -131,8 +131,8 @@ namespace {
     for (auto begin = sprites.begin(), it = begin; ; ++it)
       if (it == sprites.end() ||
           it->output->filename != begin->output->filename) {
-        auto& output = *begin->output;
-        if (output.duplicates != Duplicates::keep)
+        const auto& output = begin->output;
+        if (output->duplicates != Duplicates::keep)
           pack_texture_deduplicate(output, { begin, it }, packed_textures);
         else
           pack_texture(output, { begin, it }, packed_textures);

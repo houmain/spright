@@ -3,14 +3,14 @@
 
 namespace spright {
 
-void pack_single(const Output& output, SpriteSpan sprites,
+void pack_single(const OutputPtr& output, SpriteSpan sprites,
     std::vector<PackedTexture>& packed_textures) {
 
   auto indices = std::map<FilenameSequence, int>();
   for (auto& sprite : sprites) {
     const auto indent = get_sprite_indent(sprite);
     const auto size = get_sprite_size(sprite);
-    const auto padding = output.border_padding;
+    const auto padding = output->border_padding;
     sprite.trimmed_rect = {
       indent.x + padding,
       indent.y + padding,
@@ -23,17 +23,16 @@ void pack_single(const Output& output, SpriteSpan sprites,
       size.x,
       size.y,
     };
-    const auto index = indices[output.filename]++;
-    if (index > output.filename.count())
+    const auto index = indices[output->filename]++;
+    if (index > output->filename.count())
       throw std::runtime_error("not all sprites could be packed");
 
     packed_textures.push_back(PackedTexture{
-      utf8_to_path(output.filename.get_nth_filename(index)),
+      output,
+      index,
       sprite.rect.w + padding * 2,
       sprite.rect.h + padding * 2,
       { &sprite, 1 },
-      output.alpha,
-      output.colorkey,
     });
   }
 }

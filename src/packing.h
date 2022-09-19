@@ -17,12 +17,11 @@ using SpriteSpan = nonstd::span<Sprite>;
 #endif
 
 struct PackedTexture {
-  std::filesystem::path filename;
+  OutputPtr output;
+  int index;
   int width{ };
   int height{ };
   SpriteSpan sprites;
-  Alpha alpha{ };
-  RGBA colorkey{ };
 };
 
 std::pair<int, int> get_texture_max_size(const Output& output);
@@ -31,13 +30,13 @@ Size get_sprite_indent(const Sprite& sprite);
 
 std::vector<PackedTexture> pack_sprites(std::vector<Sprite>& sprites);
 
-void pack_binpack(const Output& output, SpriteSpan sprites,
+void pack_binpack(const OutputPtr& output, SpriteSpan sprites,
   bool fast, std::vector<PackedTexture>& packed_textures);
-void pack_compact(const Output& output, SpriteSpan sprites,
+void pack_compact(const OutputPtr& output, SpriteSpan sprites,
   std::vector<PackedTexture>& packed_textures);
-void pack_single(const Output& output, SpriteSpan sprites,
+void pack_single(const OutputPtr& output, SpriteSpan sprites,
   std::vector<PackedTexture>& packed_textures);
-void pack_keep(const Output& output, SpriteSpan sprites,
+void pack_keep(const OutputPtr& output, SpriteSpan sprites,
   std::vector<PackedTexture>& packed_textures);
 
 } // namespace

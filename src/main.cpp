@@ -38,8 +38,10 @@ int main(int argc, const char* argv[]) try {
 
   for_each_parallel(begin(textures), end(textures),
     [&](const PackedTexture& texture) {
+      const auto filename = 
+        utf8_to_path(texture.output->filename.get_nth_filename(texture.index));
       save_image(get_output_texture(settings, texture),
-        settings.output_path / texture.filename);
+        settings.output_path / filename);
     });
   add_time_point();
 
