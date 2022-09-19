@@ -14,7 +14,7 @@ namespace {
 
   Definition get_definition(std::string_view command) {
     static const auto s_map = std::map<std::string, Definition, std::less<>>{
-      { "texture", Definition::texture },
+      { "output", Definition::texture },
       { "width", Definition::width },
       { "height", Definition::height },
       { "max-width", Definition::max_width },
@@ -29,7 +29,7 @@ namespace {
       { "pack", Definition::pack },
       { "group", Definition::group },
       { "path", Definition::path },
-      { "sheet", Definition::sheet },
+      { "input", Definition::sheet },
       { "colorkey", Definition::colorkey },
       { "tag", Definition::tag },
       { "grid", Definition::grid },
@@ -50,10 +50,6 @@ namespace {
       { "crop", Definition::crop },
       { "extrude", Definition::extrude },
       { "common-divisor", Definition::common_divisor },
-
-      // aliases
-      { "input", Definition::sheet },
-      { "output", Definition::texture },
     };
     const auto it = s_map.find(command);
     if (it == s_map.end())
