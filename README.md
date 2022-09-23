@@ -217,6 +217,20 @@ The following table contains a list of all definitions, with the subject each af
 
 | Definition     |Subject| Arguments    | Description |
 | -------------- |-------| -------------| ----------- |
+| **output**     |input  | path         | Sets the output texture's _path_. It can describe an un-/bounded sequence of files (e.g. "sheet{0-}.png").
+| pack           |output | pack-method  | Sets the method, which is used for placing the sprites on the output textures:<br/>- _binpack_ : Tries to reduce the texture size, while keeping the sprites' (trimmed) rectangles apart (default).<br/>- _compact_ : Tries to reduce the texture size, while keeping the sprites' convex outlines apart.<br/>- _single_ : Put each sprite on its own texture.<br/>
+| width          |output | width        | Sets a fixed output texture width.
+| height         |output | height       | Sets a fixed output texture height.
+| max-width      |output | width        | Sets a maximum output texture width.
+| max-height     |output | height       | Sets a maximum output texture height.
+| power-of-two   |output | [boolean]    | Restricts the output texture's size to be a power of two.
+| square         |output | [boolean]    | Restricts the output texture's size to be square.
+| align-width    |output | pixels       | Restricts the output texture's width to be divisible by a certain number of _pixels_.
+| allow-rotate   |output | [boolean]    | Allows to rotate sprites by 90 degrees for improved packing performance.
+| padding        |output | [pixels], [pixels] | Sets the space between two sprites / the space between a sprite and the texture's border.
+| duplicates     |output | dedupe-mode  | Sets how identical sprites should be processed:<br/>- _keep_ : Disable duplicate detection (default).<br/>- _share_ : Identical sprites should share pixels on the output texture.<br/>- _drop_ : Duplicates should be dropped.
+| alpha          |output | alpha-mode<br/>[color] | Sets an operation depending on the pixels' alpha values:<br/>- _keep_ : Keep source color and alpha.<br/>- _clear_ : Set color of fully transparent pixels to black.<br/>- _bleed_ : Set color of fully transparent pixels to their nearest non-fully transparent pixel's color.<br/>- _premultiply_ : Premultiply colors with alpha values.<br/>- _colorkey_ : Replace fully transparent pixels with the specified _color_ and make all others opaque.
+| layers         |output/input|suffixes+| Specifies the number of layers and their filename suffixes (e.g. "-diffuse", "-normals", ...). Only the first layer is considered when packing, others get identical _rects_.
 | **input**      |-      | path         | Adds a new input file at _path_. It can contain wildcards (e.g. "sprites/**/*.png") or it can describe an un-/bounded sequence of files (e.g. "frames_{0-}.png, frames_{0001-0013}.png").
 | path           |input  | path         | A _path_ which should be prepended to the input's path.
 | colorkey       |input  | [color]      | Specifies that the input has a color, which should be considered transparent (in hex notation e.g. _FF00FF_).
@@ -239,19 +253,6 @@ The following table contains a list of all definitions, with the subject each af
 | crop           |sprite | [boolean]    | Sets whether the sprite's rectangle should be reduced to the trimmed bounds.
 | extrude        |sprite | [pixels]     | Adds a padding around the sprite and fills it with the sprite's border pixel color.
 | common-divisor |sprite | x, [y]       | Restricts the sprite's size to be divisible by a certain number of pixels. Smaller sprites are filled up with transparency.
-| **output**     |input  | path         | Sets the output texture's _path_. It can describe an un-/bounded sequence of files (e.g. "sheet{0-}.png").
-| pack           |output | pack-method  | Sets the method, which is used for placing the sprites on the output textures:<br/>- _binpack_ : Tries to reduce the texture size, while keeping the sprites' (trimmed) rectangles apart (default).<br/>- _compact_ : Tries to reduce the texture size, while keeping the sprites' convex outlines apart.<br/>- _single_ : Put each sprite on its own texture.<br/>
-| width          |output | width        | Sets a fixed output texture width.
-| height         |output | height       | Sets a fixed output texture height.
-| max-width      |output | width        | Sets a maximum output texture width.
-| max-height     |output | height       | Sets a maximum output texture height.
-| power-of-two   |output | [boolean]    | Restricts the output texture's size to be a power of two.
-| square         |output | [boolean]    | Restricts the output texture's size to be square.
-| align-width    |output | pixels       | Restricts the output texture's width to be divisible by a certain number of _pixels_.
-| allow-rotate   |output | [boolean]    | Allows to rotate sprites by 90 degrees for improved packing performance.
-| padding        |output | [pixels], [pixels] | Sets the space between two sprites / the space between a sprite and the texture's border.
-| duplicates     |output | dedupe-mode  | Sets how identical sprites should be processed:<br/>- _keep_ : Disable duplicate detection (default).<br/>- _share_ : Identical sprites should share pixels on the output texture.<br/>- _drop_ : Duplicates should be dropped.
-| alpha          |output | alpha-mode<br/>[color] | Sets an operation depending on the pixels' alpha values:<br/>- _keep_ : Keep source color and alpha.<br/>- _clear_ : Set color of fully transparent pixels to black.<br/>- _bleed_ : Set color of fully transparent pixels to their nearest non-fully transparent pixel's color.<br/>- _premultiply_ : Premultiply colors with alpha values.<br/>- _colorkey_ : Replace fully transparent pixels with the specified _color_ and make all others opaque.
 | group          |-      | -            | Can be used for opening a new scope, to limit for example the effect of a tag.
 
 Output description
