@@ -211,7 +211,7 @@ Image::Image(std::filesystem::path path, std::filesystem::path filename)
   }
 #endif
 
-  const auto full_path = path_to_utf8(m_path / m_filename);
+  const auto full_path = (m_path / m_filename).string();
   if (auto file = std::fopen(full_path.c_str(), "rb")) {
     auto channels = 0;
     m_data = reinterpret_cast<RGBA*>(stbi_load_from_file(
@@ -290,9 +290,9 @@ Image Image::clone(const Rect& rect) const {
 void save_image(const Image& image, const std::filesystem::path& filename) {
   auto error = std::error_code{ };
   std::filesystem::create_directories(filename.parent_path(), error);
-  if (!stbi_write_png(path_to_utf8(filename).c_str(), image.width(), image.height(), sizeof(RGBA),
-      image.rgba(), image.width() * static_cast<int>(sizeof(RGBA))))
-    throw std::runtime_error("writing file '" + path_to_utf8(filename) + "' failed");
+  if (!stbi_write_png(filename.string().c_str(), image.width(), image.height(), 
+      sizeof(RGBA), image.rgba(), image.width() * static_cast<int>(sizeof(RGBA))))
+    throw std::runtime_error("writing file '" + filename.string() + "' failed");
 }
 
 void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy) {

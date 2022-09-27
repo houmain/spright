@@ -2,12 +2,12 @@
 
 #include <string>
 #include <vector>
-#include <filesystem>
 #include <cctype>
 #include <cmath>
 #include <future>
 #include <algorithm>
 #include <utility>
+#include <iterator>
 
 namespace spright {
 
@@ -71,11 +71,6 @@ union RGBA {
 inline bool operator==(const RGBA& a, const RGBA& b) { return (a.rgba == b.rgba); }
 inline bool operator!=(const RGBA& a, const RGBA& b) { return (a.rgba != b.rgba); }
 
-std::filesystem::path utf8_to_path(std::string_view utf8_string);
-std::filesystem::path utf8_to_path(const std::string& utf8_string);
-std::filesystem::path utf8_to_path(const std::filesystem::path&) = delete;
-std::string path_to_utf8(const std::filesystem::path& path);
-std::string path_to_utf8(const std::string&) = delete;
 bool is_space(char c);
 bool is_punct(char c);
 char to_lower(char c);
