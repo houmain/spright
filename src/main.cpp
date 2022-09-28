@@ -5,6 +5,7 @@
 #include "globbing.h"
 #include <iostream>
 #include <chrono>
+#include <locale>
 
 int main(int argc, const char* argv[]) try {
   using namespace spright;
@@ -18,27 +19,25 @@ int main(int argc, const char* argv[]) try {
   }
 
   using Clock = std::chrono::high_resolution_clock;
-  auto time_points = std::vector<Clock::time_point>();
-  const auto add_time_point = [&]() { time_points.push_back(Clock::now()); };
-  add_time_point();
+  auto time_points = std::vector<std::pair<Clock::time_point, const char*>>();
+  time_points.emplace_back(Clock::now(), "begin");
 
   auto sprites = parse_definition(settings);  
-  add_time_point();
+  time_points.emplace_back(Clock::now(), "input");
 
   for (auto& sprite : sprites)
     trim_sprite(sprite);
-  add_time_point();
+  time_points.emplace_back(Clock::now(), "trimming");
 
   const auto textures = pack_sprites(sprites);
-  add_time_point();
+  time_points.emplace_back(Clock::now(), "packing");
 
   write_output_description(settings, sprites, textures);
-  add_time_point();
+  time_points.emplace_back(Clock::now(), "output description");
 
   for_each_parallel(begin(textures), end(textures),
     [&](const Texture& texture) {
-      const auto filename = 
-        texture.output->filename.get_nth_filename(texture.index);
+      const auto filename = texture.output->filename.get_nth_filename(texture.index);
       if (auto image = get_output_texture(settings, texture))
         save_image(image, filename);
       
@@ -48,22 +47,14 @@ int main(int argc, const char* argv[]) try {
           save_image(image, replace_suffix(filename, 
             texture.output->default_layer_suffix, layer_suffix));
     });
-  add_time_point();
+  time_points.emplace_back(Clock::now(), "output textures");
 
   if (settings.debug) {
-    auto time_it = time_points.begin();
-    const auto time_elapsed = [&]() {
-      const auto start = *time_it++;
-      const auto stop = *time_it;
-      return std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count();
-    };
-    std::cout <<
-      "input: " << time_elapsed() << "ms, " <<
-      "trimming: " << time_elapsed() << "ms, " <<
-      "packing: " << time_elapsed() << "ms, " <<
-      "output description: " << time_elapsed() << "ms, " <<
-      "output textures: " << time_elapsed() << "ms" <<
-      std::endl;
+    for (auto i = 1u; i < time_points.size(); ++i)
+      std::cout << (i > 1 ? ", " : "") << time_points[i].second << ": " << 
+        std::chrono::duration_cast<std::chrono::milliseconds>(
+          time_points[i].first - time_points[i - 1].first).count() << "ms";
+    std::cout << std::endl;
   }
   return 0;
 }
