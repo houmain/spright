@@ -75,6 +75,7 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 option(ENABLE_TEST "Enable tests")
 if(ENABLE_TEST)
     set(TEST_SOURCES ${SOURCES}
+        test/catch.cpp
         test/test-main.cpp
         test/test-scope.cpp
         test/test-autocompletion.cpp
