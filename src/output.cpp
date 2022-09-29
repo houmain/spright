@@ -52,8 +52,8 @@ namespace {
       json_sprite["id"] = sprite.id;
       json_sprite["rect"] = json_rect(sprite.rect);
       json_sprite["trimmedRect"] = json_rect(sprite.trimmed_rect);
-      json_sprite["sourceFilename"] = sprite.source->filename().string();
-      json_sprite["sourcePath"] = sprite.source->path().string();
+      json_sprite["sourceFilename"] = path_to_utf8(sprite.source->filename());
+      json_sprite["sourcePath"] = path_to_utf8(sprite.source->path());
       json_sprite["sourceRect"] = json_rect(sprite.source_rect);
       if (sprite.source->width() != sprite.source_rect.w ||
           sprite.source->height() != sprite.source_rect.h)
@@ -282,7 +282,7 @@ void write_output_description(const Settings& settings,
   const auto json = get_json_description(sprites, textures);
   if (!settings.template_file.empty()) {
     auto env = setup_inja_environment();
-    env.render_to(os, env.parse_template(settings.template_file.string()), json);
+    env.render_to(os, env.parse_template(path_to_utf8(settings.template_file)), json);
   }
   else {
     os << json.dump(2);

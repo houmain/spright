@@ -5,12 +5,9 @@
 #include "globbing.h"
 #include <iostream>
 #include <chrono>
-#include <locale>
 
 int main(int argc, const char* argv[]) try {
   using namespace spright;
-
-  std::setlocale(LC_ALL, "en_US.UTF-8");
 
   auto settings = Settings{ };
   if (!interpret_commandline(settings, argc, argv)) {
@@ -37,7 +34,8 @@ int main(int argc, const char* argv[]) try {
 
   for_each_parallel(begin(textures), end(textures),
     [&](const Texture& texture) {
-      const auto filename = texture.output->filename.get_nth_filename(texture.index);
+      const auto filename = utf8_to_path(
+        texture.output->filename.get_nth_filename(texture.index));
       if (auto image = get_output_texture(settings, texture))
         save_image(image, filename);
       

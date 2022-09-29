@@ -102,12 +102,12 @@ bool match(std::string_view pattern, std::string_view string) {
 std::vector<std::string> glob(
     const std::filesystem::path& path, const std::string& pattern) {
   auto root = (path.empty() ? "." : path) / "";
-  const auto path_size = root.string().size();
-  for (const auto& part : std::filesystem::path(pattern)) {
-    if (part.string().find_first_of("*?") != std::string::npos) {
+  const auto path_size = path_to_utf8(root).size();
+  for (const auto& part : utf8_to_path(pattern)) {
+    if (path_to_utf8(part).find_first_of("*?") != std::string::npos) {
       auto files = std::vector<std::string>();
       for_each_file(root, [&](const std::filesystem::path& file) {
-        auto file_string = file.string();
+        auto file_string = path_to_utf8(file);
         file_string.erase(0, path_size);
         if (match(pattern, file_string))
           files.emplace_back(std::move(file_string));
@@ -147,15 +147,15 @@ std::vector<FilenameSequence> glob_sequences(
 
 std::filesystem::path replace_suffix(const std::filesystem::path& filename_, 
     const std::string& old_suffix, const std::string& new_suffix) {
-  auto filename = filename_.string();
+  auto filename = path_to_utf8(filename_);
   if (!old_suffix.empty())
     if (auto it = filename.find(old_suffix); it != std::string::npos)
-      return filename.replace(it, old_suffix.size(), new_suffix);
+      return utf8_to_path(filename.replace(it, old_suffix.size(), new_suffix));
   
   auto extension = filename.find_last_of('.');
   if (extension == std::string::npos)
     extension = filename.size();
-  return filename.insert(extension, new_suffix);
+  return utf8_to_path(filename.insert(extension, new_suffix));
 }
 
 } // namespace

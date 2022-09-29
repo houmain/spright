@@ -47,6 +47,31 @@ Rect combine(const Rect& a, const Rect& b) {
   return { x0, y0, x1 - x0, y1 - y0 };
 }
 
+std::filesystem::path utf8_to_path(std::string_view utf8_string) {
+#if defined(__cpp_char8_t)
+  static_assert(sizeof(char) == sizeof(char8_t));
+  return std::filesystem::path(
+    reinterpret_cast<const char8_t*>(utf8_string.data()),
+    reinterpret_cast<const char8_t*>(utf8_string.data() + utf8_string.size()));
+#else
+  return std::filesystem::u8path(utf8_string);
+#endif
+}
+
+std::filesystem::path utf8_to_path(const std::string& utf8_string) {
+  return utf8_to_path(std::string_view(utf8_string));
+}
+
+std::string path_to_utf8(const std::filesystem::path& path) {
+#if defined(__cpp_char8_t)
+  static_assert(sizeof(char) == sizeof(char8_t));
+#endif
+  const auto u8string = path.generic_u8string();
+  return std::string(
+    reinterpret_cast<const char*>(u8string.data()),
+    reinterpret_cast<const char*>(u8string.data() + u8string.size()));
+}
+
 bool is_space(char c) {
   return std::isspace(static_cast<unsigned char>(c));
 }

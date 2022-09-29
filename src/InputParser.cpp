@@ -81,22 +81,15 @@ namespace {
   }
 } // namespace
 
-[[noreturn]] void InputParser::error(std::stringstream&& ss) {
+[[noreturn]] void InputParser::error(std::string message) {
   if (m_line_number)
-    ss << " in line " << m_line_number;
-  throw std::runtime_error(std::move(ss).str());
-}
-
-template<typename... T>
-[[noreturn]] void InputParser::error(T&&... args) {
-  auto ss = std::stringstream();
-  (ss << ... << std::forward<T&&>(args));
-  error(std::move(ss));
+    message += " in line " + std::to_string(m_line_number);
+  throw std::runtime_error(message);
 }
 
 void InputParser::check(bool condition, std::string_view message) {
   if (!condition)
-    error(message);
+    error(std::string(message));
 }
 
 std::string InputParser::get_sprite_id(const State& state) const {
@@ -110,7 +103,7 @@ OutputPtr InputParser::get_output(const State& state) {
   auto& output = m_outputs[std::filesystem::weakly_canonical(state.output)];
   if (!output) {
     output = std::make_shared<Output>(Output{
-      FilenameSequence(state.output.string()),
+      FilenameSequence(path_to_utf8(state.output)),
       state.default_layer_suffix,
       state.layer_suffixes,
       state.width,
@@ -151,7 +144,7 @@ ImagePtr InputParser::get_sheet(const std::filesystem::path& path,
 
 ImagePtr InputParser::get_sheet(const State& state, int index) {
   return get_sheet(state.path,
-    state.sheet.get_nth_filename(index),
+    utf8_to_path(state.sheet.get_nth_filename(index)),
     state.colorkey);
 }
 
@@ -225,8 +218,8 @@ void InputParser::validate_sprite(const Sprite& sprite) {
       sprite.source_rect.x << ", " <<
       sprite.source_rect.y << ", " <<
       sprite.source_rect.w << ", " <<
-      sprite.source_rect.h << ") outside '" << sprite.source->filename().string() << "' bounds";
-    error(std::move(message));
+      sprite.source_rect.h << ") outside '" << path_to_utf8(sprite.source->filename()) << "' bounds";
+    error(message.str());
   }
 }
 
@@ -371,6 +364,9 @@ void InputParser::apply_definition(State& state,
     check(arguments_left(), "invalid argument count");
     return arguments[argument_index++];
   };
+  const auto check_path = [&]() {
+    return utf8_to_path(check_string());
+  };
   const auto is_number_following = [&]() {
     if (!arguments_left())
       return false;
@@ -380,7 +376,7 @@ void InputParser::apply_definition(State& state,
   };
   const auto check_uint = [&]() {
     auto result = 0;
-    const auto str = check_string();
+    auto str = check_string();
     const auto [p, ec] = std::from_chars(str.data(), str.data() + str.size(), result);
     check(ec == std::errc() && result >= 0, "invalid number");
     return result;
@@ -391,15 +387,10 @@ void InputParser::apply_definition(State& state,
     const auto str = check_string();
     if (str == "true") return true;
     if (str == "false") return false;
-    error("invalid boolean value '", str, "'");
+    error("invalid boolean value '" + std::string(str) + "'");
   };
   const auto check_float = [&]() {
-    auto result = 0.0f;
-    const auto str = check_string();
-    const auto [p, ec] = std::from_chars(str.data(), str.data() + str.size(), 
-      result, std::chars_format::fixed);
-    check(ec == std::errc() && result >= 0, "invalid number");
-    return result;
+    return std::stof(std::string(check_string()));
   };
   const auto check_size = [&](bool default_to_square) {
     const auto x = check_uint();
@@ -424,7 +415,7 @@ void InputParser::apply_definition(State& state,
       break;
 
     case Definition::output:
-      state.output = check_string();
+      state.output = check_path();
       break;
 
     case Definition::width:
@@ -471,7 +462,7 @@ void InputParser::apply_definition(State& state,
       if (const auto index = index_of(string, { "keep", "share", "drop" }); index >= 0)
         state.duplicates = static_cast<Duplicates>(index);
       else
-        error("invalid duplicates value '", string, "'");
+        error("invalid duplicates value '" + std::string(string) + "'");
       break;
     }
 
@@ -480,7 +471,7 @@ void InputParser::apply_definition(State& state,
       if (const auto index = index_of(string, { "keep", "clear", "bleed", "premultiply", "colorkey" }); index >= 0)
         state.alpha = static_cast<Alpha>(index);
       else
-        error("invalid alpha value '", string, "'");
+        error("invalid alpha value '" + std::string(string) + "'");
 
       if (state.alpha == Alpha::colorkey)
         state.alpha_colorkey = check_color();
@@ -492,16 +483,16 @@ void InputParser::apply_definition(State& state,
       if (const auto index = index_of(string, { "binpack", "compact", "single", "keep" }); index >= 0)
         state.pack = static_cast<Pack>(index);
       else
-        error("invalid pack method '", string, "'");
+        error("invalid pack method '" + std::string(string) + "'");
       break;
     }
 
     case Definition::path:
-      state.path = check_string();
+      state.path = check_path();
       break;
 
     case Definition::sheet:
-      state.sheet = FilenameSequence(std::string(check_string()));
+      state.sheet = path_to_utf8(check_path());
       m_current_grid_cell_x = { };
       m_current_grid_cell_y = { };
       break;
@@ -584,7 +575,7 @@ void InputParser::apply_definition(State& state,
           else if (const auto index = index_of(string, { "top", "middle", "bottom" }); index >= 0)
             state.pivot.y = static_cast<PivotY>(index);
           else
-            error("invalid pivot value '", string, "'");
+            error("invalid pivot value '" + std::string(string) + "'");
         }
       }
       break;
@@ -594,7 +585,7 @@ void InputParser::apply_definition(State& state,
       if (const auto index = index_of(string, { "none", "rect", "convex" }); index >= 0)
         state.trim = static_cast<Trim>(index);
       else
-        error("invalid trim value '", string, "'");
+        error("invalid trim value '" + std::string(string) + "'");
       break;
     }
 
@@ -608,7 +599,7 @@ void InputParser::apply_definition(State& state,
       break;
 
     case Definition::trim_channel: {
-      const auto channel = check_string();
+      auto channel = check_string();
       check(channel == "alpha" || channel == "gray", "invalid trim channel");
       state.trim_gray_levels = (channel == "gray");
       break;
