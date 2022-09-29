@@ -199,8 +199,10 @@ Image::Image(std::filesystem::path path, std::filesystem::path filename)
   : m_path(std::move(path)),
     m_filename(std::move(filename)) {
 
+  const auto full_path = m_path / m_filename;
+
 #if defined(EMBED_TEST_FILES)
-  if (m_path / m_filename == "test/Items.png") {
+  if (full_path == "test/Items.png") {
     unsigned char file[] {
 #include "test/Items.png.inc"
     };
@@ -211,15 +213,19 @@ Image::Image(std::filesystem::path path, std::filesystem::path filename)
   }
 #endif
 
-  const auto full_path = path_to_utf8(m_path / m_filename);
-  if (auto file = std::fopen(full_path.c_str(), "rb")) {
+#if defined(_WIN32)
+  if (auto file = _wfopen(full_path.wstring().c_str(), L"rb")) {
+#else
+  if (auto file = std::fopen(path_to_utf8(full_path).c_str(), "rb")) {
+#endif
     auto channels = 0;
     m_data = reinterpret_cast<RGBA*>(stbi_load_from_file(
         file, &m_width, &m_height, &channels, sizeof(RGBA)));
     std::fclose(file);
   }
   if (!m_data)
-    throw std::runtime_error("loading file '" + full_path + "' failed");
+    throw std::runtime_error("loading file '" + 
+      path_to_utf8(full_path) + "' failed");
 }
 
 Image::Image(Image&& rhs)
