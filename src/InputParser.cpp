@@ -573,24 +573,45 @@ void InputParser::apply_definition(State& state,
       state.rect = check_rect();
       break;
 
-    case Definition::pivot:
-      if (is_number_following()) {
-        state.pivot = { PivotX::custom, PivotY::custom };
-        state.pivot_point.x = check_float();
-        state.pivot_point.y = check_float();
-      }
-      else {
-        for (auto i = 0; i < 2; ++i) {
+    case Definition::pivot: {
+      float numbers[2]; // {x, _}, {y, _}, or {x, y} depending on which words we see
+      size_t numbers_count = 0;
+      state.pivot = { PivotX::custom, PivotY::custom };
+      for (auto i = 0; i < 2; ++i) {
+        if (is_number_following()) {
+          numbers[numbers_count++] = check_float();
+        }
+        else {
           const auto string = check_string();
-          if (const auto index = index_of(string, { "left", "center", "right" }); index >= 0)
+          if (const auto index = index_of(string, { "left", "center", "right" }); index >= 0) {
+            if (state.pivot.x != PivotX::custom)
+              error("multiple X pivot values specified");
             state.pivot.x = static_cast<PivotX>(index);
-          else if (const auto index = index_of(string, { "top", "middle", "bottom" }); index >= 0)
+          }
+          else if (const auto index = index_of(string, { "top", "middle", "bottom" }); index >= 0) {
+            if (state.pivot.y != PivotY::custom)
+              error("multiple Y pivot values specified");
             state.pivot.y = static_cast<PivotY>(index);
-          else
+          }
+          else {
             error("invalid pivot value '", string, "'");
+          }
         }
       }
+      
+      if (state.pivot.x == PivotX::custom && state.pivot.y == PivotY::custom) {
+        state.pivot_point.x = numbers[0];
+        state.pivot_point.y = numbers[1];
+      }
+      else if (state.pivot.x == PivotX::custom) {
+        state.pivot_point.x = numbers[0];
+      }
+      else if (state.pivot.y == PivotY::custom) {
+        state.pivot_point.y = numbers[0];
+      }
+
       break;
+    }
 
     case Definition::trim: {
       const auto string = check_string();
