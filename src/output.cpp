@@ -133,8 +133,9 @@ namespace {
   const Image* get_source(const Sprite& sprite, int layer_index) {
     if (layer_index < 0)
       return sprite.source.get();
-    if (sprite.layers && layer_index < sprite.layers->size())
-      return sprite.layers->at(layer_index).get();
+    const auto index = static_cast<size_t>(layer_index);
+    if (sprite.layers && index < sprite.layers->size())
+      return sprite.layers->at(index).get();
     return nullptr;
   }
 

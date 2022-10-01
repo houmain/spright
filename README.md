@@ -62,7 +62,7 @@ output "sheet{0-}.png"
 input "characters/**/*.png"
 input "scenery/**/*.png"
 ```
-Unless specified on the [command line](#command-line-arguments) spright reads the input definition from ```spright.conf``` in the current directory. To pack the sheets and generate an output description consumable by e.g. [Phaser](https://github.com/photonstorm/phaser) using the [phaser.template](phaser.template), call:
+Unless specified on the [command line](#command-line-arguments) spright reads the input definition from ```spright.conf``` in the current directory. To pack the sheets and generate an output description consumable by e.g. [Phaser](https://github.com/photonstorm/phaser) using the [phaser.template](templates/phaser.template), call:
 ```
 spright -t phaser.template
 ```
@@ -73,13 +73,13 @@ Advanced usage example
 ----------------------
 Say you got some nice sprites you would like to use in your next game:
 
-| "Decorations (32x32).png" | "Old enemies 2.png" | "misc_scenery.png" | "Orc Attack/Frame{01-04}.png" |
+| "Decorations (32x32).png" | "Old enemies 2.png" | "misc_scenery.png" | "OrcAttack/Frame01.png" to <br/> "OrcAttack/Frame04.png" |
 |:---:|:---:|:---:|:---:|
-| <img src="docs/Decorations (32x32).png" style="background-color:gray; padding:2px; image-rendering:crisp-edges; image-rendering: pixelated; border:1px solid black"> | <img src="docs/Old enemies 2.png" style="background-color:gray; image-rendering:crisp-edges; image-rendering: pixelated; border:1px solid black"> | <img src="docs/misc_scenery.png" style="background-color:fuchsia; image-rendering:crisp-edges; image-rendering: pixelated; border:1px solid black"> | <img src="docs/Orc Attack/Frame01.png" style="background-color:gray; image-rendering:crisp-edges; image-rendering: pixelated; border:1px solid black; width:30px"> <img src="docs/Orc Attack/Frame02.png" style="background-color:gray; image-rendering:crisp-edges; image-rendering: pixelated; border:1px solid black; width:30px"><br><img src="docs/Orc Attack/Frame03.png" style="background-color:gray; image-rendering:crisp-edges; image-rendering: pixelated; border:1px solid black; width:30px"> <img src="docs/Orc Attack/Frame04.png" style="background-color:gray; image-rendering:crisp-edges; image-rendering: pixelated; border:1px solid black; width:30px">
+| <kbd><img src="docs/Decorations (32x32).png"/></kbd> | <img src="docs/Old enemies 2.png"/> | <kbd><img src="docs/misc_scenery.png"/></kbd> | <kbd><img src="docs/Orc Attack/Frame01.png"/></kbd> <kbd><img src="docs/Orc Attack/Frame02.png"/></kbd> <kbd><img src="docs/Orc Attack/Frame03.png"/></kbd> <kbd><img src="docs/Orc Attack/Frame04.png"/></kbd>
 
 And your game engine supports efficiently packed sprite sheets like this:
 
-<img src="docs/spright0.png" style="background-color:dimgray; image-rendering:crisp-edges; image-rendering: pixelated; border:1px solid black; margin:10px">
+<kbd><img src="docs/spright0.png"/></kbd>
 
 Then you may want to use spright to define the sprites within their original sources and directly pack the sheet from there.
 
@@ -323,11 +323,11 @@ For information about the functionality of the template engine, please see the [
 
 Target  | Template
 --------|--------
-C++     | [cpp.template](cpp.template)
-[Phaser 3](https://github.com/photonstorm/phaser) | [phaser.template](phaser.template)
-[Phaser 2](https://github.com/photonstorm/phaser) | [phaser2.template](phaser2.template)
+C++     | [cpp.template](templates/cpp.template)
+[Phaser 3](https://github.com/photonstorm/phaser) | [phaser.template](templates/phaser.template)
+[Phaser 2](https://github.com/photonstorm/phaser) | [phaser2.template](templates/phaser2.template)
 
-The C++ template is just an example for how the sprite description can be directly embedded in code. This [spright.h](docs/spright.h) was generated from the [sample](#advanced-usage-example), using the [cpp.template](cpp.template) template.
+The C++ template is just an example for how the sprite description can be directly embedded in code. This [spright.h](docs/spright.h) was generated from the [sample](#advanced-usage-example), using the [cpp.template](templates/cpp.template) template.
 
 ---
 
