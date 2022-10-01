@@ -105,7 +105,8 @@ public:
   std::string autocomplete_output() const { return m_autocomplete_output.str(); }
 
 private:
-  [[noreturn]] void error(std::string message);
+  [[noreturn]] void error(std::stringstream&& message);
+  template<typename... T> [[noreturn]] void error(T&&... args);
   void check(bool condition, std::string_view message);
   std::string get_sprite_id(const State& state) const;
   OutputPtr get_output(const State& state);
