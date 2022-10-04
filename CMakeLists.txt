@@ -86,6 +86,7 @@ if(ENABLE_TEST)
         test/test-pivot.cpp
     )
     list(REMOVE_ITEM TEST_SOURCES src/main.cpp)
+    set(CMAKE_CXX_STANDARD 20)
     add_executable(spright-tests ${TEST_SOURCES})
     add_compile_definitions(EMBED_TEST_FILES)
 endif()

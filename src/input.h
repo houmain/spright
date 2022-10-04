@@ -12,8 +12,8 @@ using ImagePtr = std::shared_ptr<const Image>;
 using OutputPtr = std::shared_ptr<const struct Output>;
 using LayerVectorPtr = std::shared_ptr<const std::vector<ImagePtr>>;
 
-enum class PivotX { left, center, right, custom };
-enum class PivotY { top, middle, bottom, custom };
+enum class PivotX { left, center, right };
+enum class PivotY { top, middle, bottom };
 struct Pivot { PivotX x; PivotY y; };
 
 enum class Trim { none, rect, convex };

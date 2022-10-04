@@ -54,16 +54,14 @@ namespace {
     sprite.rect.h += sprite.common_divisor_margin.y;
 
     switch (sprite.pivot.x) {
-      case PivotX::left: pivot_point.x = 0; break;
-      case PivotX::center: pivot_point.x = static_cast<float>(rect.w) / 2; break;
-      case PivotX::right: pivot_point.x = static_cast<float>(rect.w); break;
-      case PivotX::custom: pivot_point.x = sprite.pivot_point.x;
+      case PivotX::left: pivot_point.x += 0; break;
+      case PivotX::center: pivot_point.x += static_cast<float>(rect.w) / 2; break;
+      case PivotX::right: pivot_point.x += static_cast<float>(rect.w); break;
     }
     switch (sprite.pivot.y) {
-      case PivotY::top: pivot_point.y = 0; break;
-      case PivotY::middle: pivot_point.y = static_cast<float>(rect.h) / 2; break;
-      case PivotY::bottom: pivot_point.y = static_cast<float>(rect.h); break;
-      case PivotY::custom: pivot_point.y = sprite.pivot_point.y;
+      case PivotY::top: pivot_point.y += 0; break;
+      case PivotY::middle: pivot_point.y += static_cast<float>(rect.h) / 2; break;
+      case PivotY::bottom: pivot_point.y += static_cast<float>(rect.h); break;
     }
 
     if (sprite.rotated)

@@ -374,13 +374,6 @@ void InputParser::apply_definition(State& state,
   const auto check_path = [&]() {
     return utf8_to_path(check_string());
   };
-  const auto is_number_following = [&]() {
-    if (!arguments_left())
-      return false;
-    auto result = 0;
-    const auto str = arguments[argument_index];
-    return (std::from_chars(str.data(), str.data() + str.size(), result).ec == std::errc());
-  };
   const auto check_uint = [&]() {
     auto result = 0;
     const auto str = check_string();
@@ -395,14 +388,6 @@ void InputParser::apply_definition(State& state,
     if (str == "true") return true;
     if (str == "false") return false;
     error("invalid boolean value '", str, "'");
-  };
-  const auto check_float = [&]() {
-    auto result = 0.0f;
-    const auto str = check_string();
-    const auto [p, ec] = std::from_chars(str.data(), str.data() + str.size(), 
-      result, std::chars_format::fixed);
-    check(ec == std::errc() && result >= 0, "invalid number");
-    return result;
   };
   const auto check_size = [&](bool default_to_square) {
     const auto x = check_uint();
@@ -574,42 +559,51 @@ void InputParser::apply_definition(State& state,
       break;
 
     case Definition::pivot: {
-      float numbers[2]; // {x, _}, {y, _}, or {x, y} depending on which words we see
-      size_t numbers_count = 0;
-      state.pivot = { PivotX::custom, PivotY::custom };
-      for (auto i = 0; i < 2; ++i) {
-        if (is_number_following()) {
-          numbers[numbers_count++] = check_float();
-        }
-        else {
-          const auto string = check_string();
-          if (const auto index = index_of(string, { "left", "center", "right" }); index >= 0) {
-            if (state.pivot.x != PivotX::custom)
-              error("multiple X pivot values specified");
-            state.pivot.x = static_cast<PivotX>(index);
-          }
-          else if (const auto index = index_of(string, { "top", "middle", "bottom" }); index >= 0) {
-            if (state.pivot.y != PivotY::custom)
-              error("multiple Y pivot values specified");
-            state.pivot.y = static_cast<PivotY>(index);
-          }
-          else {
-            error("invalid pivot value '", string, "'");
-          }
-        }
-      }
-      
-      if (state.pivot.x == PivotX::custom && state.pivot.y == PivotY::custom) {
-        state.pivot_point.x = numbers[0];
-        state.pivot_point.y = numbers[1];
-      }
-      else if (state.pivot.x == PivotX::custom) {
-        state.pivot_point.x = numbers[0];
-      }
-      else if (state.pivot.y == PivotY::custom) {
-        state.pivot_point.y = numbers[0];
-      }
+      // join expressions (e.g. middle - 7 top + 2)
+      if (!std::all_of(arguments.begin(), arguments.end(), to_float))
+        join_expressions(&arguments);
 
+      state.pivot = { PivotX::left, PivotY::top };
+      auto current_coord = &state.pivot_point.x;
+      auto prev_coord = std::add_pointer_t<float>{ };
+      auto expr = std::vector<std::string_view>();
+      for (auto i = 0; i < 2; ++i) {
+        split_expression(check_string(), &expr);
+        if (const auto index = index_of(expr.front(), 
+            { "left", "center", "right" }); index >= 0) {
+          state.pivot.x = static_cast<PivotX>(index);
+          current_coord = &state.pivot_point.x;
+        }
+        else if (const auto index = index_of(expr.front(), 
+            { "top", "middle", "bottom" }); index >= 0) {
+          state.pivot.y = static_cast<PivotY>(index);
+          current_coord = &state.pivot_point.y;
+        }
+        else if (auto value = to_float(expr.front())) {
+          *current_coord = *value;
+        }
+        else if (!expr.front().empty()) {
+          error("invalid pivot value '", expr.front(), "'");
+        }
+
+        if (expr.size() % 2 != 1)
+          error("invalid pivot expression");
+        for (auto j = 1; j < expr.size(); j += 2) {
+          const auto value = to_float(expr[j + 1]);
+          if (value && expr[j] == "+")
+            *current_coord += *value;
+          else if (value && expr[j] == "-")
+            *current_coord -= *value;
+          else
+            error("invalid pivot expression");
+        }
+
+        if (prev_coord == current_coord)
+          error("duplicate pivot coordinate specified");
+        prev_coord = current_coord;
+        current_coord = (current_coord == &state.pivot_point.x ? 
+          &state.pivot_point.y : &state.pivot_point.x);
+      }
       break;
     }
 

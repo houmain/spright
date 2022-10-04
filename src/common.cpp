@@ -88,6 +88,14 @@ bool is_digit(char c) {
   return std::isdigit(static_cast<unsigned char>(c));
 }
 
+std::optional<float> to_float(std::string_view str) {
+  auto result = 0.0f;
+  if (std::from_chars(str.data(), 
+        str.data() + str.size(), result).ec == std::errc())
+    return result;
+  return { };
+}
+
 bool starts_with(std::string_view str, std::string_view with) {
   return (str.size() >= with.size() &&
     std::strncmp(str.data(), with.data(), with.size()) == 0);
@@ -97,6 +105,14 @@ bool ends_with(std::string_view str, std::string_view with) {
   return (str.size() >= with.size() &&
     std::strncmp(str.data() + (str.size() - with.size()),
       with.data(), with.size()) == 0);
+}
+
+bool starts_with_any(std::string_view str, std::string_view with) {
+  return str.find_first_of(with) == 0;
+}
+
+bool ends_with_any(std::string_view str, std::string_view with) {
+  return str.find_last_of(with) == str.size() - 1;
 }
 
 std::string_view ltrim(LStringView str) {
@@ -159,6 +175,41 @@ std::pair<std::string_view, int> split_name_number(LStringView str) {
       };
   }
   return { str, 0 };
+}
+
+void join_expressions(std::vector<std::string_view>* arguments_) {
+  auto& arguments = *arguments_;
+  for (auto i = 0u; i + 1 < arguments.size(); ) {
+    if (ends_with_any(arguments[i], "+-") ||
+        starts_with_any(arguments[i + 1], "+-")) {
+      arguments[i] = { 
+        arguments[i].data(),
+        std::distance(arguments[i].data(), arguments[i + 1].data()) + 
+          arguments[i + 1].size()
+      };
+      arguments.erase(arguments.begin() + i + 1);
+    }
+    else {
+      ++i;
+    }
+  }
+}
+
+void split_expression(std::string_view str, std::vector<std::string_view>* result) {
+  result->clear();
+  for (;;) {
+    auto i = 0u;
+    while (i < str.size() && std::string_view("+-").find(str[i]) == std::string::npos)
+      ++i;
+    result->push_back(trim(str.substr(0, i)));
+    str = str.substr(i);
+
+    if (str.empty())
+      break;
+
+    result->emplace_back(str.data(), 1);
+    str = str.substr(1);
+  }
 }
 
 } // namespace
