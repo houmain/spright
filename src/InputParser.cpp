@@ -588,7 +588,7 @@ void InputParser::apply_definition(State& state,
 
         if (expr.size() % 2 != 1)
           error("invalid pivot expression");
-        for (auto j = 1; j < expr.size(); j += 2) {
+        for (auto j = 1u; j < expr.size(); j += 2) {
           const auto value = to_float(expr[j + 1]);
           if (value && expr[j] == "+")
             *current_coord += *value;

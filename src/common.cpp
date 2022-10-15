@@ -89,10 +89,18 @@ bool is_digit(char c) {
 }
 
 std::optional<float> to_float(std::string_view str) {
+#if !defined(__GNUC__) || __GNUC__ >= 11
   auto result = 0.0f;
   if (std::from_chars(str.data(), 
         str.data() + str.size(), result).ec == std::errc())
     return result;
+#else
+  try {
+    return std::stof(std::string(str));
+  }
+  catch (...) {
+  }
+#endif
   return { };
 }
 
@@ -177,17 +185,18 @@ std::pair<std::string_view, int> split_name_number(LStringView str) {
   return { str, 0 };
 }
 
-void join_expressions(std::vector<std::string_view>* arguments_) {
-  auto& arguments = *arguments_;
-  for (auto i = 0u; i + 1 < arguments.size(); ) {
-    if (ends_with_any(arguments[i], "+-") ||
-        starts_with_any(arguments[i + 1], "+-")) {
-      arguments[i] = { 
-        arguments[i].data(),
-        std::distance(arguments[i].data(), arguments[i + 1].data()) + 
-          arguments[i + 1].size()
+void join_expressions(std::vector<std::string_view>* arguments) {
+  auto& args = *arguments;
+  for (auto i = 0u; i + 1 < args.size(); ) {
+    if (ends_with_any(args[i], "+-") ||
+        starts_with_any(args[i + 1], "+-")) {
+      args[i] = {
+        args[i].data(),
+        static_cast<std::string_view::size_type>(
+          std::distance(args[i].data(), args[i + 1].data())) +
+            args[i + 1].size()
       };
-      arguments.erase(arguments.begin() + i + 1);
+      args.erase(args.begin() + i + 1);
     }
     else {
       ++i;
