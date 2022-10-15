@@ -58,4 +58,4 @@ jobs:
       with:
         file: "*.zip;*.tar.gz"
         tags: true
-        draft: true
+        draft: false
