@@ -8,7 +8,8 @@ spright
 
 <a href="https://github.com/houmain/spright/releases/latest">Downloads</a> |
 <a href="#command-line-arguments">Command line arguments</a> |
-<a href="#building">Building</a>
+<a href="#building">Building</a> |
+<a href="https://github.com/houmain/spright/blob/main/CHANGELOG.md">Changelog</a>
 </p>
 
 __spright__ is more than a simple sprite sheet packer, it can be [used as one](#simple-sheet-packing) though. Its key ideas are:
