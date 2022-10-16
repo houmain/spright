@@ -13,7 +13,7 @@
 			},
 			"scale": 1,
 			"frames": [
-{% for sprite in texture.sprites %}
+{% for index in texture.spriteIndices %}{% set sprite=at(sprites, index) %}
 				{
 					"filename": "{{ getIdOrFilename(sprite) }}",
 					"rotated": {{ sprite.rotated }},

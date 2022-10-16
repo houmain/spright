@@ -262,45 +262,40 @@ By default a [JSON](https://www.json.org) file containing all the information ab
 ```json
 {
   "sprites": [
-    SPRITE
+    {
+      "index": 0,
+      "id": "sprite_0",
+      "pivot": { "x": 8, "y": 8 },
+      "rect": { "x": 0, "y": 0, "w": 16, "h": 16 },
+      "rotated": false,
+      "sourceFilename": "source.png",
+      "sourcePath": "path",
+      "sourceRect":  { "x": 0, "y": 0, "w": 16, "h": 16 },
+      "trimmedRect": { "x": 0, "y": 0, "w": 16, "h": 16 },
+      "trimmedSourceRect": { "x": 0, "y": 0, "w": 16, "h": 16 },
+      "textureFilename": "spright0.png",
+      "textureSpriteIndex": 0,
+      "vertices": [ { "x": 0, "y": 0 } ],
+      "tags": { "key": "value" }
+    }
   ],
   "tags": [
     {
       "key": "key",
       "value": "value",
-      "sprites": [
-        SPRITE
-      ]
+      "spriteIndices": [ 0 ]
     }
   ],
   "textures": [
     {
-      "filename": "path/source.png",
+      "filename": "path/spright0.png",
       "width": 256,
       "height": 256,
-      "sprites": [
-        SPRITE
-      ]
+      "spriteIndices": [ 0 ]
     }
   ]
 }
-```
-So each sprite can appear in multiple contexts. SPRITE represents objects with the following structure:
-```json
-{
-  "filename": "spright0.png",
-  "id": "sprite_0",
-  "pivot": { "x": 0, "y": 0 },
-  "rect": { "x": 0, "y": 0, "w": 16, "h": 16 },
-  "rotated": false,
-  "sourceFilename": "source.png",
-  "sourcePath": "path",
-  "sourceRect":  { "x": 0, "y": 0, "w": 16, "h": 16 },
-  "trimmedRect": { "x": 0, "y": 0, "w": 16, "h": 16 },
-  "trimmedSourceRect": { "x": 0, "y": 0, "w": 16, "h": 16 },
-  "vertices": [ { "x": 0, "y": 0 }, ... ],
-  "tags": { "key": "value" }
-}
+
 ```
 For example, [spright.json](docs/spright.json) was generated from the [sample](#advanced-usage-example) above. As you can see, it is very verbose and only intended as an intermediate file, which should be transformed using the [template engine](#output-template-engine).
 

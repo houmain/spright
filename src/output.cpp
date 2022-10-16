@@ -55,18 +55,15 @@ namespace {
       json_sprite["sourceFilename"] = path_to_utf8(sprite.source->filename());
       json_sprite["sourcePath"] = path_to_utf8(sprite.source->path());
       json_sprite["sourceRect"] = json_rect(sprite.source_rect);
-      if (sprite.source->width() != sprite.source_rect.w ||
-          sprite.source->height() != sprite.source_rect.h)
-        json_sprite["sourceSpriteIndex"] = texture_sprites[texture_filename].size();
       json_sprite["trimmedSourceRect"] = json_rect(sprite.trimmed_source_rect);
       json_sprite["pivot"] = json_point(sprite.pivot_point);
-      json_sprite["filename"] = texture_filename;
+      json_sprite["textureFilename"] = texture_filename;
+      json_sprite["textureSpriteIndex"] = texture_sprites[texture_filename].size();
       json_sprite["rotated"] = sprite.rotated;
       json_sprite["tags"] = sprite.tags;
+      json_sprite["vertices"] = json_point_list(sprite.vertices);
       for (const auto& tag_key : sprite.tags)
         tags[tag_key].push_back(index);
-      if (!sprite.vertices.empty())
-        json_sprite["vertices"] = json_point_list(sprite.vertices);
       texture_sprites[texture_filename].push_back(index);
     }
 
@@ -77,9 +74,7 @@ namespace {
       json_tag["key"] = tag_key.first;
       if (!tag_key.second.empty())
         json_tag["value"] = tag_key.second;
-      auto& json_tag_sprites = json_tag["sprites"];
-      for (auto index : sprite_indices)
-        json_tag_sprites.push_back(json_sprites[index]);
+      json_tag["spriteIndices"] = sprite_indices;
     }
 
     auto& json_textures = json["textures"];
@@ -91,9 +86,7 @@ namespace {
       json_texture["filename"] = filename;
       json_texture["width"] = texture.width;
       json_texture["height"] = texture.height;
-      auto& json_texture_sprites = json_texture["sprites"];
-      for (auto index : texture_sprites[filename])
-        json_texture_sprites.push_back(json_sprites[index]);
+      json_texture["spriteIndices"] = texture_sprites[filename];
     }
     return json;
   }
