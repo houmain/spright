@@ -13,7 +13,7 @@ namespace {
   using BodyPtr = std::unique_ptr<cpBody, FreeBody>;
 
   void compact_sprites(const Texture& texture, int border_padding, int shape_padding) {
-    const auto space_ptr = SpacePtr(cpSpaceNew());
+    auto space_ptr = SpacePtr(cpSpaceNew());
     const auto space = space_ptr.get();
 
     const auto padding = static_cast<cpFloat>(shape_padding) / 2.0;
@@ -68,6 +68,9 @@ namespace {
       sprite.rect.x += dx;
       sprite.rect.y += dy;
     }
+
+    // destroy space before shapes
+    space_ptr.reset();
   }
 } // namespace
 
