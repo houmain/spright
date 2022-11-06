@@ -236,7 +236,8 @@ The following table contains a list of all definitions, with the subject each af
 | path           |input  | path         | A _path_ which should be prepended to the input's path.
 | colorkey       |input  | [color]      | Specifies that the input has a color, which should be considered transparent (in hex notation e.g. _FF00FF_).
 | grid           |input  | x, [y]       | Specifies that the input contains multiple sprites, arranged in a grid of a certain cell size. In this mode the _rect_ of each _sprite_ is deduced from the grid. Each _sprite_ automatically advances the current cell horizontally.
-| grid-offset    |input  | x, [y]       | Offsets the grid from the top-left corner.
+| grid-cells     |input  | x, y         | As _grid_, but specifies the number of cells instead of their size. When the cells are squares, one dimension is allowed to be _0_, so it is automatically deduced.
+| grid-offset    |input  | x, [y]       | Offsets the grid from the top-left corner by a number of pixels.
 | grid-spacing   |input  | x, [y]       | Sets a spacing between the grid cells.
 | row            |input  | row          | Sets a sprite's vertical offset within a grid (starting with 0).
 | skip           |input  | [columns]    | Skips one or more horizontal grid cells.

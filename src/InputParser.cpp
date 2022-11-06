@@ -33,6 +33,7 @@ namespace {
       { "colorkey", Definition::colorkey },
       { "tag", Definition::tag },
       { "grid", Definition::grid },
+      { "grid-cells", Definition::grid_cells },
       { "grid-offset", Definition::grid_offset },
       { "grid-spacing", Definition::grid_spacing },
       { "row", Definition::row },
@@ -78,6 +79,10 @@ namespace {
     if (std::filesystem::exists(layer_filename))
       return std::make_shared<Image>(sheet->path(), layer_filename);
     return { };
+  }
+
+  bool has_grid(const State& state) {
+    return !empty(state.grid) || !empty(state.grid_cells);
   }
 } // namespace
 
@@ -179,7 +184,8 @@ void InputParser::sprite_ends(State& state) {
   check(!state.sheet.empty(), "sprite not on sheet");
 
   // generate rect from grid
-  if (empty(state.rect) && !empty(state.grid)) {
+  if (empty(state.rect) && has_grid(state)) {
+    deduce_grid_size(state);
     state.rect = {
       state.grid_offset.x + (state.grid.x + state.grid_spacing.x) * m_current_grid_cell_x,
       state.grid_offset.y + (state.grid.y + state.grid_spacing.y) * m_current_grid_cell_y,
@@ -256,7 +262,22 @@ void InputParser::deduce_sequence_sprites(State& state) {
   }
 }
 
+void InputParser::deduce_grid_size(State& state) {
+  if (empty(state.grid_cells))
+    return;
+
+  const auto sheet = get_sheet(state);
+  const auto sx = (state.grid_cells.x > 0 ? 
+    div_ceil(sheet->width() - state.grid_offset.x, state.grid_cells.x) : 0);
+  const auto sy = (state.grid_cells.y > 0 ? 
+    div_ceil(sheet->height() - state.grid_offset.y, state.grid_cells.y) : 0);
+  state.grid.x = (sx ? sx : sy);
+  state.grid.y = (sy ? sy : sx);
+  check(state.grid.x > 0 && state.grid.y > 0, "invalid grid");
+}
+
 void InputParser::deduce_grid_sprites(State& state) {
+  deduce_grid_size(state);
   const auto sheet = get_sheet(state);
   const auto bounds = get_used_bounds(*sheet, state.trim_gray_levels);
 
@@ -345,7 +366,7 @@ void InputParser::sheet_ends(State& state) {
     else if (state.sheet.is_sequence()) {
       deduce_sequence_sprites(state);
     }
-    else if (!empty(state.grid)) {
+    else if (has_grid(state)) {
       deduce_grid_sprites(state);
     }
     else if (state.atlas_merge_distance >= 0) {
@@ -509,6 +530,14 @@ void InputParser::apply_definition(State& state,
       check(state.grid.x > 0 && state.grid.y > 0, "invalid grid");
       break;
 
+
+    case Definition::grid_cells:
+      // allow cell count in one dimension to be zero
+      state.grid_cells = check_size(false);
+      check((state.grid_cells.x >= 0 && state.grid_cells.y >= 0) &&
+            (state.grid_cells.x > 0 || state.grid_cells.y > 0), "invalid grid");
+      break;
+
     case Definition::grid_offset:
       state.grid_offset = check_size(true);
       break;
@@ -518,18 +547,18 @@ void InputParser::apply_definition(State& state,
       break;
 
     case Definition::row:
-      check(!empty(state.grid), "offset is only valid in grid");
+      check(has_grid(state), "offset is only valid in grid");
       m_current_grid_cell_x = 0;
       m_current_grid_cell_y = check_uint();
       break;
 
     case Definition::skip:
-      check(!empty(state.grid), "skip is only valid in grid");
+      check(has_grid(state), "skip is only valid in grid");
       m_current_grid_cell_x += (arguments_left() ? check_uint() : 1);
       break;
 
     case Definition::span:
-      check(!empty(state.grid), "span is only valid in grid");
+      check(has_grid(state), "span is only valid in grid");
       state.span = check_size(false);
       check(state.span.x > 0 && state.span.y > 0, "invalid span");
       break;

@@ -28,6 +28,7 @@ enum class Definition {
   sheet,
   colorkey,
   grid,
+  grid_cells,
   grid_offset,
   grid_spacing,
   row,
@@ -80,6 +81,7 @@ struct State {
   std::map<std::string, std::string> tags;
   std::string sprite_id;
   Size grid{ };
+  Size grid_cells{ };
   Size grid_offset{ };
   Size grid_spacing{ };
   Size span{ 1, 1 };
@@ -116,6 +118,7 @@ private:
     const std::filesystem::path& filename, RGBA colorkey);
   LayerVectorPtr get_layers(const State& state, const ImagePtr& sheet);
   void sprite_ends(State& state);
+  void deduce_grid_size(State& state);
   void deduce_globbing_sheets(State& state);
   void deduce_sequence_sprites(State& state);
   void deduce_grid_sprites(State& state);
