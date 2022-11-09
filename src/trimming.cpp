@@ -159,6 +159,14 @@ void trim_sprite(Sprite& sprite) {
     expand_polygon(*outline, static_cast<float>(sprite.trim_margin));
     sprite.vertices = to_point_list(*outline);
   }
+  else {
+    const auto w = static_cast<float>(sprite.trimmed_source_rect.w);
+    const auto h = static_cast<float>(sprite.trimmed_source_rect.h);
+    sprite.vertices.push_back({ 0, 0 });
+    sprite.vertices.push_back({ w, 0 });
+    sprite.vertices.push_back({ w, h });
+    sprite.vertices.push_back({ 0, h });
+  }
 }
 
 } // namespace

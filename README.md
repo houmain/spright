@@ -274,7 +274,7 @@ By default a [JSON](https://www.json.org) file containing all the information ab
       "sourceRect":  { "x": 0, "y": 0, "w": 16, "h": 16 },
       "trimmedRect": { "x": 0, "y": 0, "w": 16, "h": 16 },
       "trimmedSourceRect": { "x": 0, "y": 0, "w": 16, "h": 16 },
-      "textureFilename": "spright0.png",
+      "textureFilename": "path/spright0.png",
       "textureSpriteIndex": 0,
       "vertices": [ { "x": 0, "y": 0 } ],
       "tags": { "key": "value" }

@@ -32,13 +32,6 @@ namespace {
     auto bodies = std::vector<BodyPtr>();
     auto vertices = std::vector<cpVect>();
     for (const auto& sprite : texture.sprites) {
-      if (sprite.vertices.empty())
-        continue;
-
-      vertices.clear();
-      std::transform(begin(sprite.vertices), end(sprite.vertices),
-        std::back_inserter(vertices), [&](const PointF& a) { return cpVect{ a.x, a.y }; });
-
       const auto mass = 1;
       const auto moment = INFINITY;
       auto body = bodies.emplace_back(cpSpaceAddBody(space, cpBodyNew(mass, moment))).get();
@@ -47,6 +40,14 @@ namespace {
         static_cast<float>(sprite.trimmed_rect.y),
       });
 
+      assert(!sprite.vertices.empty());
+      vertices.clear();
+      std::transform(begin(sprite.vertices), end(sprite.vertices),
+        std::back_inserter(vertices), [&](const PointF& vertex) { 
+          return (sprite.rotated ? 
+            cpVect{ vertex.y, vertex.x } : 
+            cpVect{ vertex.x, vertex.y });
+        });
       shapes.emplace_back(cpSpaceAddShape(space, cpPolyShapeNew(body,
         static_cast<int>(vertices.size()), vertices.data(), cpTransformIdentity, padding)));
     }
@@ -76,7 +77,8 @@ namespace {
 
 void pack_compact(const OutputPtr& output, SpriteSpan sprites,
     std::vector<Texture>& textures) {
-  pack_binpack(output, sprites, true, textures);
+  const auto fast = (output->allow_rotate == false);
+  pack_binpack(output, sprites, fast, textures);
   for (auto& texture : textures) {
     compact_sprites(texture, output->border_padding, output->shape_padding);
 
