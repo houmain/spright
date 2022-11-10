@@ -63,7 +63,7 @@ elseif(WIN32)
         libs/utf8_console/utf8_console.cpp
     )
 
-    add_compile_options(/GR- /W1)
+    add_compile_options(/GR- /W1 /permissive- /Zc:hiddenFriend-)
     set(MSVC_SHARED_RUNTIME OFF)
 endif()
 
