@@ -227,7 +227,7 @@ The following table contains a list of all definitions, with the subject each af
 | power-of-two   |output | [boolean]    | Restricts the output texture's size to be a power of two.
 | square         |output | [boolean]    | Restricts the output texture's size to be square.
 | align-width    |output | pixels       | Restricts the output texture's width to be divisible by a certain number of _pixels_.
-| allow-rotate   |output | [boolean]    | Allows to rotate sprites by 90 degrees for improved packing performance.
+| allow-rotate   |output | [boolean]    | Allows to rotate sprites clockwise by 90 degrees for improved packing performance.
 | padding        |output | [pixels], [pixels] | Sets the space between two sprites / the space between a sprite and the texture's border.
 | duplicates     |output | dedupe-mode  | Sets how identical sprites should be processed:<br/>- _keep_ : Disable duplicate detection (default).<br/>- _share_ : Identical sprites should share pixels on the output texture.<br/>- _drop_ : Duplicates should be dropped.
 | alpha          |output | alpha-mode<br/>[color] | Sets an operation depending on the pixels' alpha values:<br/>- _keep_ : Keep source color and alpha.<br/>- _clear_ : Set color of fully transparent pixels to black.<br/>- _bleed_ : Set color of fully transparent pixels to their nearest non-fully transparent pixel's color.<br/>- _premultiply_ : Premultiply colors with alpha values.<br/>- _colorkey_ : Replace fully transparent pixels with the specified _color_ and make all others opaque.

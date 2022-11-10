@@ -221,4 +221,8 @@ void split_expression(std::string_view str, std::vector<std::string_view>* resul
   }
 }
 
+PointF rotate_cw(const PointF& point, int width) {
+  return { static_cast<float>(width) - point.y, point.x };
+}
+
 } // namespace

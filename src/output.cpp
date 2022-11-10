@@ -214,8 +214,7 @@ namespace {
     if (sprite.rotated) {
       std::swap(rect.w, rect.h);
       std::swap(trimmed_rect.w, trimmed_rect.h);
-      std::swap(pivot_point.x, pivot_point.y);
-      pivot_point.x = (static_cast<float>(rect.w-1) - pivot_point.x);
+      pivot_point = rotate_cw(pivot_point, rect.w - 1);
     }
     const auto pivot_rect = Rect{
       rect.x + static_cast<int>(pivot_point.x - 0.25f),
@@ -233,8 +232,12 @@ namespace {
       const auto x = static_cast<float>(sprite.trimmed_rect.x);
       const auto y = static_cast<float>(sprite.trimmed_rect.y);
       for (auto i = 0u; i < sprite.vertices.size(); i++) {
-        const auto& v0 = sprite.vertices[i];
-        const auto& v1 = sprite.vertices[(i + 1) % sprite.vertices.size()];
+        auto v0 = sprite.vertices[i];
+        auto v1 = sprite.vertices[(i + 1) % sprite.vertices.size()];
+        if (sprite.rotated) {
+          v0 = rotate_cw(v0, trimmed_rect.w);
+          v1 = rotate_cw(v1, trimmed_rect.w);
+        }
         draw_line(target,
           static_cast<int>(x + v0.x),
           static_cast<int>(y + v0.y),

@@ -39,4 +39,6 @@ void pack_single(const OutputPtr& output, SpriteSpan sprites,
 void pack_keep(const OutputPtr& output, SpriteSpan sprites,
   std::vector<Texture>& textures);
 
+void recompute_texture_size(Texture& texture);
+
 } // namespace

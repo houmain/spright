@@ -91,6 +91,7 @@ void split_arguments(LStringView str, std::vector<std::string_view>* result);
 std::pair<std::string_view, int> split_name_number(LStringView str);
 void join_expressions(std::vector<std::string_view>* arguments);
 void split_expression(std::string_view str, std::vector<std::string_view>* result);
+PointF rotate_cw(const PointF& point, int width);
 
 inline int floor(int v, int q) { return (v / q) * q; };
 inline int ceil(int v, int q) { return ((v + q - 1) / q) * q; };

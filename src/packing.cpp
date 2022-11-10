@@ -63,10 +63,6 @@ namespace {
       case PivotY::middle: pivot_point.y += static_cast<float>(rect.h) / 2; break;
       case PivotY::bottom: pivot_point.y += static_cast<float>(rect.h); break;
     }
-
-    if (sprite.rotated)
-      for (auto& vertex : sprite.vertices)
-        std::swap(vertex.x, vertex.y);
   }
 
   void pack_texture(const OutputPtr& output,
@@ -174,6 +170,31 @@ std::vector<Texture> pack_sprites(std::vector<Sprite>& sprites) {
     complete_sprite(sprite);
 
   return textures;
+}
+
+void recompute_texture_size(Texture& texture) {
+  const auto& output = *texture.output;
+
+  auto max_x = 0;
+  auto max_y = 0;
+  for (const auto& sprite : texture.sprites) {
+    max_x = std::max(max_x, sprite.trimmed_rect.x + 
+      (sprite.rotated ? sprite.trimmed_rect.h : sprite.trimmed_rect.w));
+    max_y = std::max(max_y, sprite.trimmed_rect.y + 
+      (sprite.rotated ? sprite.trimmed_rect.w : sprite.trimmed_rect.h));
+  }
+  texture.width = max_x + output.border_padding;
+  texture.height = max_y + output.border_padding;
+
+  if (output.align_width)
+    texture.width = ceil(texture.width, output.align_width);
+
+  if (output.power_of_two) {
+    texture.width = ceil_to_pot(texture.width);
+    texture.height = ceil_to_pot(texture.height);
+  }
+  if (output.square)
+    texture.width = texture.height = std::max(texture.width, texture.height);
 }
 
 } // namespace

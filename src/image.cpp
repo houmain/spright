@@ -16,8 +16,18 @@ namespace {
       throw std::logic_error("access outside image bounds");
   }
 
-  void check_rect(const Image& image, const Rect& rect) {
+  inline void check_rect(const Image& image, const Rect& rect) {
     check(containing(image.bounds(), rect));
+  }
+
+  inline const RGBA& checked_rgba_at(const Image& image, const Point& p) {
+    check(containing(image.bounds(), p));
+    return image.rgba_at(p);
+  }
+
+  inline RGBA& checked_rgba_at(Image& image, const Point& p) {
+    check(containing(image.bounds(), p));
+    return image.rgba_at(p);
   }
 
   template <typename P>
@@ -338,23 +348,17 @@ void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx
   const auto [sx, sy, w, h] = source_rect;
   for (auto y = 0; y < h; ++y)
     for (auto x = 0; x < w; ++x)
-      if (point_in_polygon(static_cast<float>(x) + 0.5f, static_cast<float>(y) + 0.5f, mask_vertices)) {
-        check(containing(source.bounds(), Point{ sx + x, sy + y }));
-        check(containing(dest.bounds(), Point{ dx + x, dy + y }));
-        dest.rgba_at({ dx + x, dy + y }) = source.rgba_at({ sx + x, sy + y });
-      }
+      if (point_in_polygon(static_cast<float>(x) + 0.5f, static_cast<float>(y) + 0.5f, mask_vertices))
+        checked_rgba_at(dest, { dx + x, dy + y }) = checked_rgba_at(source, { sx + x, sy + y });
 }
 
 void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy,
     const std::vector<PointF>& mask_vertices) {
   const auto [sx, sy, w, h] = source_rect;
-  for (auto y = 0; y < w; ++y)
-    for (auto x = 0; x < h; ++x)
-      if (point_in_polygon(static_cast<float>(x) + 0.5f, static_cast<float>(y) + 0.5f, mask_vertices)) {
-        check(containing(source.bounds(), Point{ sx + y, sy + x }));
-        check(containing(dest.bounds(), Point{ dx + x, dy + y }));
-        dest.rgba_at({ dx + x, dy + y }) = source.rgba_at({ sx + y, sy + x });
-      }
+  for (auto y = 0; y < h; ++y)
+    for (auto x = 0; x < w; ++x)
+      if (point_in_polygon(static_cast<float>(x) + 0.5f, static_cast<float>(y) + 0.5f, mask_vertices))
+        checked_rgba_at(dest, { dx + (h-1 - y), dy + x }) = checked_rgba_at(source, { sx + x, sy + y });
 }
 
 void extrude_rect(Image& image, const Rect& rect, bool left, bool top, bool right, bool bottom) {

@@ -40,13 +40,12 @@ namespace {
         static_cast<float>(sprite.trimmed_rect.y),
       });
 
-      assert(!sprite.vertices.empty());
       vertices.clear();
       std::transform(begin(sprite.vertices), end(sprite.vertices),
-        std::back_inserter(vertices), [&](const PointF& vertex) { 
-          return (sprite.rotated ? 
-            cpVect{ vertex.y, vertex.x } : 
-            cpVect{ vertex.x, vertex.y });
+        std::back_inserter(vertices), [&](PointF vertex) {
+          if (sprite.rotated)
+            vertex = rotate_cw(vertex, sprite.trimmed_rect.h);
+          return cpVect{ vertex.x, vertex.y };
         });
       shapes.emplace_back(cpSpaceAddShape(space, cpPolyShapeNew(body,
         static_cast<int>(vertices.size()), vertices.data(), cpTransformIdentity, padding)));
@@ -81,11 +80,7 @@ void pack_compact(const OutputPtr& output, SpriteSpan sprites,
   pack_binpack(output, sprites, fast, textures);
   for (auto& texture : textures) {
     compact_sprites(texture, output->border_padding, output->shape_padding);
-
-    auto max_y = 0;
-    for (const auto& sprite : texture.sprites)
-      max_y = std::max(max_y, sprite.trimmed_rect.y + sprite.trimmed_rect.h);
-    texture.height = max_y + output->border_padding;
+    recompute_texture_size(texture);
   }
 }
 
