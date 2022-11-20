@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+#include <sstream>
 #include <cctype>
 #include <cmath>
 #include <future>
@@ -71,6 +72,16 @@ union RGBA {
 
 inline bool operator==(const RGBA& a, const RGBA& b) { return (a.rgba == b.rgba); }
 inline bool operator!=(const RGBA& a, const RGBA& b) { return (a.rgba != b.rgba); }
+
+[[noreturn]] void error(std::string s);
+void check(bool condition, std::string_view message);
+
+template<typename... T>
+[[noreturn]] void error(T&&... args) {
+  auto ss = std::stringstream();
+  (ss << ... << std::forward<T&&>(args));
+  error(ss.str());
+}
 
 std::filesystem::path utf8_to_path(std::string_view utf8_string);
 std::filesystem::path utf8_to_path(const std::string& utf8_string);

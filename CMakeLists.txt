@@ -20,6 +20,7 @@ set(SOURCES
     src/image.cpp
     src/input.cpp
     src/InputParser.cpp
+    src/Definition.cpp
     src/trimming.cpp
     src/packing.cpp
     src/pack_binpack.cpp
