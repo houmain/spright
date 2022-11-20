@@ -25,7 +25,7 @@ enum class Definition {
   pack,
 
   path,
-  sheet,
+  input,
   colorkey,
   grid,
   grid_cells,

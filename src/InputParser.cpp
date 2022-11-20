@@ -29,7 +29,7 @@ namespace {
       { "pack", Definition::pack },
       { "group", Definition::group },
       { "path", Definition::path },
-      { "input", Definition::sheet },
+      { "input", Definition::input },
       { "colorkey", Definition::colorkey },
       { "tag", Definition::tag },
       { "grid", Definition::grid },
@@ -509,7 +509,7 @@ void InputParser::apply_definition(State& state,
       state.path = check_string();
       break;
 
-    case Definition::sheet:
+    case Definition::input:
       state.sheet = path_to_utf8(check_path());
       m_current_grid_cell_x = { };
       m_current_grid_cell_y = { };
@@ -682,7 +682,7 @@ void InputParser::apply_definition(State& state,
 
 bool InputParser::has_implicit_scope(Definition definition) {
   return (definition == Definition::output ||
-          definition == Definition::sheet ||
+          definition == Definition::input ||
           definition == Definition::sprite);
 }
 
@@ -691,7 +691,7 @@ void InputParser::scope_ends(State& state) {
     case Definition::output:
       output_ends(state);
       break;
-    case Definition::sheet:
+    case Definition::input:
       sheet_ends(state);
       break;
     case Definition::sprite:
