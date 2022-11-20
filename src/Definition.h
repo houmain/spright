@@ -54,7 +54,6 @@ struct State {
   Definition definition{ };
   int level;
   std::string indent;
-  std::string detected_indentation;
   int current_grid_cell_x{ };
   int current_grid_cell_y{ };
   int current_sequence_index{ };

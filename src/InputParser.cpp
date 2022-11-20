@@ -242,14 +242,14 @@ void InputParser::deduce_grid_sprites(State& state) {
         }
 
         if (skipped > 0) {
-          os << state.indent << state.detected_indentation << "skip";
+          os << state.indent << m_detected_indentation << "skip";
           if (skipped > 1)
             os << " " << skipped;
           os << "\n";
           skipped = 0;
         }
 
-        os << state.indent << state.detected_indentation << "sprite\n";
+        os << state.indent << m_detected_indentation << "sprite\n";
       }
 
       sprite_ends(state);
@@ -329,13 +329,13 @@ InputParser::InputParser(const Settings& settings)
 void InputParser::parse(std::istream& input) try {
   m_autocomplete_output = { };
   m_sprites_in_current_sheet = { };
+  m_detected_indentation = "  ";
 
   auto indentation_detected = false;
   auto scope_stack = std::vector<State>();
   scope_stack.emplace_back();
   scope_stack.back().level = -1;
   scope_stack.back().output = default_output_name;
-  scope_stack.back().detected_indentation = "  ";
 
   auto autocomplete_space = std::stringstream();
   const auto pop_scope_stack = [&](int level) {
@@ -346,7 +346,7 @@ void InputParser::parse(std::istream& input) try {
 
         // add indentation before autocompleting in implicit scope
         if (&*last == &scope_stack.back())
-          state.indent += state.detected_indentation;
+          state.indent += m_detected_indentation;
 
         scope_ends(state);
       }
@@ -409,7 +409,7 @@ void InputParser::parse(std::istream& input) try {
     state.indent = std::string(begin(buffer), begin(buffer) + level);
 
     if (!indentation_detected && !state.indent.empty()) {
-      state.detected_indentation = state.indent;
+      m_detected_indentation = state.indent;
       indentation_detected = true;
     }
 

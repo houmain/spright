@@ -40,6 +40,7 @@ private:
   std::map<ImagePtr, LayerVectorPtr> m_layers;
   std::vector<Sprite> m_sprites;
   int m_sprites_in_current_sheet{ };
+  std::string m_detected_indentation;
 };
 
 } // namespace
