@@ -23,50 +23,120 @@ bool has_grid(const State& state) {
 }
 
 Definition get_definition(std::string_view command) {
-  static const auto s_map = std::map<std::string, Definition, std::less<>>{
-    { "output", Definition::output },
-    { "width", Definition::width },
-    { "height", Definition::height },
-    { "max-width", Definition::max_width },
-    { "max-height", Definition::max_height },
-    { "power-of-two", Definition::power_of_two },
-    { "square", Definition::square },
-    { "align-width", Definition::align_width },
-    { "allow-rotate", Definition::allow_rotate },
-    { "padding", Definition::padding },
-    { "duplicates", Definition::duplicates },
-    { "alpha", Definition::alpha },
-    { "pack", Definition::pack },
-    { "group", Definition::group },
-    { "path", Definition::path },
-    { "input", Definition::input },
-    { "colorkey", Definition::colorkey },
-    { "tag", Definition::tag },
-    { "grid", Definition::grid },
-    { "grid-cells", Definition::grid_cells },
-    { "grid-offset", Definition::grid_offset },
-    { "grid-spacing", Definition::grid_spacing },
-    { "row", Definition::row },
-    { "sprite", Definition::sprite },
-    { "id", Definition::id },
-    { "skip", Definition::skip },
-    { "span", Definition::span },
-    { "atlas", Definition::atlas },
-    { "layers", Definition::layers },
-    { "rect", Definition::rect },
-    { "pivot", Definition::pivot },
-    { "trim", Definition::trim },
-    { "trim-threshold", Definition::trim_threshold },
-    { "trim-margin", Definition::trim_margin },
-    { "trim-channel", Definition::trim_channel },
-    { "crop", Definition::crop },
-    { "extrude", Definition::extrude },
-    { "common-divisor", Definition::common_divisor },
-  };
+  static const auto s_map = []() {
+    auto map = std::map<std::string, Definition, std::less<>>{ };
+    const auto begin = static_cast<int>(Definition::none);
+    const auto end = static_cast<int>(Definition::MAX);
+    for (auto d = begin; d != end; ++d) {
+      const auto definition = static_cast<Definition>(d);
+      map[std::string(get_definition_name(definition))] = definition;
+    }
+    return map;
+  }();
   const auto it = s_map.find(command);
   if (it == s_map.end())
     return Definition::none;
   return it->second;
+}
+
+std::string_view get_definition_name(Definition definition) {
+  switch (definition) {
+    case Definition::none:
+    case Definition::MAX:
+      break;
+
+    case Definition::group: return "group";
+    case Definition::output: return "output";
+    case Definition::width: return "width";
+    case Definition::height: return "height";
+    case Definition::max_width: return "max-width";
+    case Definition::max_height: return "max-height";
+    case Definition::power_of_two: return "power-of-two";
+    case Definition::square: return "square";
+    case Definition::align_width: return "align-width";
+    case Definition::allow_rotate: return "allow-rotate";
+    case Definition::padding: return "padding";
+    case Definition::duplicates: return "duplicates";
+    case Definition::alpha: return "alpha";
+    case Definition::pack: return "pack";
+    case Definition::path: return "path";
+    case Definition::input: return "input";
+    case Definition::colorkey: return "colorkey";
+    case Definition::grid: return "grid";
+    case Definition::grid_cells: return "grid-cells";
+    case Definition::grid_offset: return "grid-offset";
+    case Definition::grid_spacing: return "grid-spacing";
+    case Definition::row: return "row";
+    case Definition::skip: return "skip";
+    case Definition::span: return "span";
+    case Definition::atlas: return "atlas";
+    case Definition::layers: return "layers";
+    case Definition::sprite: return "sprite";
+    case Definition::id: return "id";
+    case Definition::rect: return "rect";
+    case Definition::pivot: return "pivot";
+    case Definition::tag: return "tag";
+    case Definition::trim: return "trim";
+    case Definition::trim_threshold: return "trim-threshold";
+    case Definition::trim_margin: return "trim-margin";
+    case Definition::trim_channel: return "trim-channel";
+    case Definition::crop: return "crop";
+    case Definition::extrude: return "extrude";
+    case Definition::common_divisor: return "common-divisor";
+  }
+  return "-";
+}
+
+Definition get_affected_definition(Definition definition) {
+  switch (definition) {
+    case Definition::none:
+    case Definition::group:
+    case Definition::layers:
+    case Definition::input:
+    case Definition::sprite:
+      return Definition::none;
+
+    case Definition::width:
+    case Definition::height:
+    case Definition::max_width:
+    case Definition::max_height:
+    case Definition::power_of_two:
+    case Definition::square:
+    case Definition::align_width:
+    case Definition::allow_rotate:
+    case Definition::padding:
+    case Definition::duplicates:
+    case Definition::alpha:
+    case Definition::pack:
+      return Definition::output;
+
+    case Definition::path:
+    case Definition::colorkey:
+    case Definition::grid:
+    case Definition::grid_cells:
+    case Definition::grid_offset:
+    case Definition::grid_spacing:
+    case Definition::row:
+    case Definition::skip:
+    case Definition::span:
+    case Definition::atlas:
+      return Definition::input;
+
+    case Definition::output:
+    case Definition::id:
+    case Definition::rect:
+    case Definition::pivot:
+    case Definition::tag:
+    case Definition::trim:
+    case Definition::trim_threshold:
+    case Definition::trim_margin:
+    case Definition::trim_channel:
+    case Definition::crop:
+    case Definition::extrude:
+    case Definition::common_divisor:
+      return Definition::sprite;
+  }
+  return Definition::none;
 }
 
 void apply_definition(State& state,

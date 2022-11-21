@@ -218,7 +218,7 @@ The following table contains a list of all definitions, with the subject each af
 
 | Definition     |Subject| Arguments    | Description |
 | -------------- |-------| -------------| ----------- |
-| **output**     |input  | path         | Sets the output texture's _path_. It can describe an un-/bounded sequence of files (e.g. "sheet{0-}.png").
+| **output**     |sprite | path         | Sets the output texture's _path_. It can describe an un-/bounded sequence of files (e.g. "sheet{0-}.png").
 | pack           |output | pack-method  | Sets the method, which is used for placing the sprites on the output textures:<br/>- _binpack_ : Tries to reduce the texture size, while keeping the sprites' (trimmed) rectangles apart (default).<br/>- _compact_ : Tries to reduce the texture size, while keeping the sprites' convex outlines apart.<br/>- _single_ : Put each sprite on its own texture.<br/>
 | width          |output | width        | Sets a fixed output texture width.
 | height         |output | height       | Sets a fixed output texture height.

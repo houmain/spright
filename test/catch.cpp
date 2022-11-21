@@ -8399,7 +8399,7 @@ void ConsoleReporter::testRunStarting(TestRunInfo const& _testInfo) {
         m_stream << m_colour->guardColour( Colour::BrightYellow ) << "Filters: "
                  << serializeFilters( m_config->getTestsOrTags() ) << '\n';
     }
-    m_stream << "Randomness seeded to: " << m_config->rngSeed() << '\n';
+    //m_stream << "Randomness seeded to: " << m_config->rngSeed() << '\n';
 }
 
 void ConsoleReporter::lazyPrint() {

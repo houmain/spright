@@ -337,8 +337,7 @@ TEST_CASE("packing - Multiple sheets") {
   textures = pack("");
   CHECK(textures.size() == 0);
 
-  textures = pack("padding 1");
-  CHECK(textures.size() == 0);
+  CHECK_THROWS(pack("padding 1"));
 
   CHECK_NOTHROW(textures = pack(R"(
     max-width 16

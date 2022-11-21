@@ -2,6 +2,7 @@
 
 #include "Definition.h"
 #include <sstream>
+#include <map>
 
 namespace spright {
 
@@ -14,6 +15,11 @@ public:
   std::string autocomplete_output() const { return m_autocomplete_output.str(); }
 
 private:
+  struct NotAppliedDefinition {
+    Definition definition;
+    int line_number;
+  };
+
   std::string get_sprite_id(const State& state) const;
   OutputPtr get_output(const State& state);
   ImagePtr get_sheet(const State& state);
@@ -31,6 +37,9 @@ private:
   void output_ends(State& state);
   void sheet_ends(State& state);
   void scope_ends(State& state);
+  void update_applied_definitions(Definition definition);
+  void update_not_applied_definitions(Definition definition);
+  void check_not_applied_definitions();
 
   const Settings& m_settings;
   std::stringstream m_autocomplete_output;
@@ -41,6 +50,7 @@ private:
   std::vector<Sprite> m_sprites;
   int m_sprites_in_current_sheet{ };
   std::string m_detected_indentation;
+  std::vector<std::map<Definition, NotAppliedDefinition>> m_not_applied_definitions;
 };
 
 } // namespace

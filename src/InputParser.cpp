@@ -55,6 +55,7 @@ std::string InputParser::get_sprite_id(const State& state) const {
 OutputPtr InputParser::get_output(const State& state) {
   auto& output = m_outputs[std::filesystem::weakly_canonical(state.output)];
   if (!output) {
+    update_applied_definitions(Definition::output);
     output = std::make_shared<Output>(Output{
       FilenameSequence(path_to_utf8(state.output)),
       state.default_layer_suffix,
@@ -123,6 +124,7 @@ LayerVectorPtr InputParser::get_layers(const State& state, const ImagePtr& sheet
 
 void InputParser::sprite_ends(State& state) {
   check(!state.sheet.empty(), "sprite not on sheet");
+  update_applied_definitions(Definition::sprite);
 
   // generate rect from grid
   if (empty(state.rect) && has_grid(state)) {
@@ -285,6 +287,7 @@ void InputParser::output_ends(State& state) {
 }
 
 void InputParser::sheet_ends(State& state) {
+  update_applied_definitions(Definition::input);
   if (!m_sprites_in_current_sheet) {
     if (is_globbing_pattern(state.sheet.filename())) {
       deduce_globbing_sheets(state);
@@ -359,6 +362,10 @@ void InputParser::parse(std::istream& input) try {
             top->definition == Definition::output)
           std::prev(top)->output = top->output;
 
+        for (auto i = 0u; i < std::distance(top, scope_stack.end()); ++i) {
+          check_not_applied_definitions();
+          m_not_applied_definitions.pop_back();
+        }
         scope_stack.erase(top, scope_stack.end());
         return;
       }
@@ -395,13 +402,15 @@ void InputParser::parse(std::istream& input) try {
     split_arguments(line, &arguments);
     const auto definition = get_definition(arguments[0]);
     if (definition == Definition::none)
-      error("invalid definition '" + std::string(arguments[0]) + "'");
+      error("invalid definition '", arguments[0], "'");
     arguments.erase(arguments.begin());
 
     pop_scope_stack(level);
 
-    if (level > scope_stack.back().level || has_implicit_scope(definition))
+    if (level > scope_stack.back().level || has_implicit_scope(definition)) {
       scope_stack.push_back(scope_stack.back());
+      m_not_applied_definitions.emplace_back();
+    }
 
     auto& state = scope_stack.back();
     state.definition = definition;
@@ -414,6 +423,7 @@ void InputParser::parse(std::istream& input) try {
     }
 
     apply_definition(state, definition, arguments);
+    update_not_applied_definitions(definition);
 
     if (m_settings.autocomplete) {
       const auto space = autocomplete_space.str();
@@ -422,11 +432,37 @@ void InputParser::parse(std::istream& input) try {
     }
   }
   pop_scope_stack(-1);
+  assert(m_not_applied_definitions.empty());
 }
 catch (const std::exception& ex) {
   auto ss = std::stringstream();
   ss << ex.what() << " in line " << m_line_number;
   throw std::runtime_error(ss.str());
+}
+
+void InputParser::update_applied_definitions(Definition definition) {
+  for (auto& not_applied_definitions : m_not_applied_definitions)
+    not_applied_definitions.erase(definition);
+}
+
+void InputParser::update_not_applied_definitions(Definition definition) {
+  // outputs can also be explicitly assigned, tolerate when it is not at all
+  if (definition == Definition::output)
+    return;
+
+  assert(!m_not_applied_definitions.empty());
+  if (auto affected = get_affected_definition(definition); affected != Definition::none)
+    m_not_applied_definitions.back().try_emplace(affected, 
+      NotAppliedDefinition{ definition, m_line_number });
+}
+
+void InputParser::check_not_applied_definitions() {
+  assert(!m_not_applied_definitions.empty());
+  for (const auto& [affected, not_applied] : m_not_applied_definitions.back()) {
+    m_line_number = not_applied.line_number;
+    error("no ", get_definition_name(affected), " is affected by ", 
+      get_definition_name(not_applied.definition));
+  }
 }
 
 } // namespace

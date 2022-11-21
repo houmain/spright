@@ -6,15 +6,6 @@
 
 namespace spright {
 
-[[noreturn]] void error(std::string s) {
-  throw std::runtime_error(s);
-}
-
-void check(bool condition, std::string_view message) {
-  if (!condition)
-    error(std::string(message));
-}
-
 Rect expand(const Rect& rect, int value) {
   return { rect.x - value, rect.y - value, rect.w + value * 2, rect.h + value * 2 };
 }

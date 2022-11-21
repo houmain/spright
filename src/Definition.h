@@ -48,6 +48,8 @@ enum class Definition {
   crop,
   extrude,
   common_divisor,
+
+  MAX
 };
 
 struct State {
@@ -100,6 +102,8 @@ struct State {
 };
 
 Definition get_definition(std::string_view command);
+Definition get_affected_definition(Definition definition);
+std::string_view get_definition_name(Definition definition);
 
 void apply_definition(State& state,
     Definition definition,
