@@ -303,12 +303,21 @@ Image Image::clone(const Rect& rect) const {
   return clone;
 }
 
-void save_image(const Image& image, const std::filesystem::path& filename) {
-  auto error = std::error_code{ };
-  std::filesystem::create_directories(filename.parent_path(), error);
-  if (!stbi_write_png(path_to_utf8(filename).c_str(), image.width(), image.height(), sizeof(RGBA),
-      image.rgba(), image.width() * static_cast<int>(sizeof(RGBA))))
-    throw std::runtime_error("writing file '" + path_to_utf8(filename) + "' failed");
+void save_image(const Image& image, const std::filesystem::path& path) {
+  if (!path.parent_path().empty())
+    std::filesystem::create_directories(path.parent_path());
+  const auto filename = path_to_utf8(path);
+  const auto extension = path_to_utf8(path.extension());
+  const auto w = image.width();
+  const auto h = image.height();
+  const auto comp = sizeof(RGBA);
+  const auto data = image.rgba();
+  const auto stride = image.width() * static_cast<int>(sizeof(RGBA));
+
+  stbi_write_tga_with_rle = 1;
+  if (!(extension == ".png" && stbi_write_png(filename.c_str(), w, h, comp, data, stride)) &&
+      !(extension == ".tga" && stbi_write_tga(filename.c_str(), w, h, comp, data)))
+    error("writing file '", filename, "' failed");
 }
 
 void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy) {
