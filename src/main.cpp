@@ -34,7 +34,7 @@ int main(int argc, const char* argv[]) try {
 
   for_each_parallel(begin(textures), end(textures),
     [&](const Texture& texture) {
-      const auto filename = utf8_to_path(
+      const auto filename = settings.output_path / utf8_to_path(
         texture.output->filename.get_nth_filename(texture.index));
       if (auto image = get_output_texture(settings, texture))
         save_image(image, filename);
@@ -57,6 +57,6 @@ int main(int argc, const char* argv[]) try {
   return 0;
 }
 catch (const std::exception& ex) {
-  std::cerr << ex.what() << std::endl;
+  std::cerr << "spright: " << ex.what() << std::endl;
   return 1;
 }

@@ -248,7 +248,7 @@ The following table contains a list of all definitions, with the subject each af
 | rect           |sprite | x, y, width, height | Sets a sprite's rectangle in the input sheet.
 | pivot          |sprite | pivot-x, pivot-y | Sets the coordinates of the sprite's pivot point. Optionally the horizontal (_left, center, right_) and vertical (_top, middle, bottom_) origin of the coordinates can be set (e.g. 10 20, right - 5 top + 3, bottom left).
 | tag            |sprite | key, [value] | Adds a tag to a sprite (_value_ defaults to an empty string).
-| trim           |sprite | trim-mode    | Enables trimming, which reduces the sprite to the non-transparent region:<br/>- _none_ : Do not trim.<br/>- _rect_ : Trim to rectangular region (default).<br/>- _convex_ : Trim to convex region (_vertices_ are set in output description).
+| trim           |sprite | trim-mode    | Sets a mode for trimming, which reduces the sprite to the non-transparent region:<br/>- _none_ : Do not trim.<br/>- _rect_ : Trim to rectangular region (default).<br/>- _convex_ : Trim to convex region (_vertices_ are set in output description).
 | trim-channel   |sprite | channel      | Sets the channel which should be considered during trimming:<br/>- _alpha_ : The alpha channel of a pixel (default).<br/>- _gray_ : The gray level of the pixel.
 | trim-threshold |sprite | value        | Sets the value which should be considered non-transparent during trimming (1 - 255).
 | trim-margin    |sprite | [pixels]     | Sets a number of transparent pixel rows around the sprite, which should not be removed by trimming.
