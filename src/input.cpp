@@ -20,7 +20,7 @@ std::vector<Sprite> parse_definition(const Settings& settings) {
 
     if (input_file == "stdin") {
       parser.parse(std::cin);
-      continue;;
+      continue;
     }
 
     auto input = std::fstream(input_file, std::ios::in | std::ios::binary);

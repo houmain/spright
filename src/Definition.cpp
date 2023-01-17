@@ -90,6 +90,7 @@ std::string_view get_definition_name(Definition definition) {
 Definition get_affected_definition(Definition definition) {
   switch (definition) {
     case Definition::none:
+    case Definition::MAX:
     case Definition::group:
     case Definition::layers:
     case Definition::input:
@@ -433,7 +434,9 @@ void apply_definition(State& state,
       check(state.common_divisor.x >= 1 && state.common_divisor.y >= 1, "invalid divisor");
       break;
 
-    case Definition::none: break;
+    case Definition::MAX:
+    case Definition::none:
+      break;
   }
 
   check(!arguments_left(), "invalid argument count");
