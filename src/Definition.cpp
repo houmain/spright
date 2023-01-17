@@ -119,7 +119,6 @@ Definition get_affected_definition(Definition definition) {
     case Definition::grid_spacing:
     case Definition::row:
     case Definition::skip:
-    case Definition::span:
     case Definition::atlas:
       return Definition::input;
 
@@ -135,6 +134,7 @@ Definition get_affected_definition(Definition definition) {
     case Definition::crop:
     case Definition::extrude:
     case Definition::common_divisor:
+    case Definition::span:
       return Definition::sprite;
   }
   return Definition::none;

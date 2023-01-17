@@ -241,10 +241,10 @@ The following table contains a list of all definitions, with the subject each af
 | grid-spacing   |input  | x, [y]       | Sets a spacing between the grid cells.
 | row            |input  | row          | Sets a sprite's vertical offset within a grid (starting with 0).
 | skip           |input  | [columns]    | Skips one or more horizontal grid cells.
-| span           |input  | columns, rows| Sets the number of grid cells a sprite spans.
 | atlas          |input  | [pixels]     | Specifies that the input contains multiple unaligned sprites, separated by more than a specific number of transparent pixel rows.
 | **sprite**     |input  | [id]         | Adds a new sprite to an input sheet (_id_ defaults to an empty string).
 | id             |sprite | id           | Sets the sprite's id. Can contain the placeholder _%i_, which is replaced by the sprite index.
+| span           |sprite | columns, rows| Sets the number of grid cells a sprite spans.
 | rect           |sprite | x, y, width, height | Sets a sprite's rectangle in the input sheet.
 | pivot          |sprite | pivot-x, pivot-y | Sets the coordinates of the sprite's pivot point. Optionally the horizontal (_left, center, right_) and vertical (_top, middle, bottom_) origin of the coordinates can be set (e.g. 10 20, right - 5 top + 3, bottom left).
 | tag            |sprite | key, [value] | Adds a tag to a sprite (_value_ defaults to an empty string).
