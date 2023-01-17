@@ -262,17 +262,8 @@ void write_output_description(const Settings& settings,
   if (settings.output_file.empty())
     return;
 
-  auto file = std::ofstream();
-  auto& os = [&]() -> std::ostream& {
-    if (settings.output_file == "stdout")
-      return std::cout;
-    const auto filename = settings.output_path / settings.output_file;
-    auto error = std::error_code{ };
-    std::filesystem::create_directories(filename.parent_path(), error);
-    file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-    file.open(filename, std::ios::out | std::ios::binary);
-    return file;
-  }();
+  auto ss = std::stringstream();
+  auto& os = (settings.output_file == "stdout" ? std::cout : ss);
 
   const auto json = get_json_description(sprites, textures);
   if (!settings.template_file.empty()) {
@@ -282,6 +273,9 @@ void write_output_description(const Settings& settings,
   else {
     os << json.dump(2);
   }
+
+  if (settings.output_file != "stdout")
+    update_textfile(settings.output_file, ss.str());
 }
 
 Image get_output_texture(const Settings& settings, 

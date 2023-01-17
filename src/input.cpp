@@ -26,19 +26,11 @@ std::vector<Sprite> parse_definition(const Settings& settings) {
     auto input = std::fstream(input_file, std::ios::in | std::ios::binary);
     if (!input.good())
       throw std::runtime_error("opening file '" + path_to_utf8(input_file) + "' failed");
-
     parser.parse(input);
+    input.close();
 
-    if (settings.autocomplete) {
-      const auto output = parser.autocomplete_output();
-      if (static_cast<int>(output.size()) != input.tellg()) {
-        input.close();
-        input = std::fstream(input_file, std::ios::out);
-        if (!input.good())
-          throw std::runtime_error("writing file '" + path_to_utf8(input_file) + "' failed");
-        input << output;
-      }
-    }
+    if (settings.autocomplete)
+      update_textfile(input_file, parser.autocomplete_output());
   }
 
   return std::move(parser).sprites();

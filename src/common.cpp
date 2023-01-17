@@ -3,6 +3,7 @@
 #include <cstring>
 #include <charconv>
 #include <algorithm>
+#include <fstream>
 
 namespace spright {
 
@@ -223,6 +224,30 @@ void split_expression(std::string_view str, std::vector<std::string_view>* resul
 
 PointF rotate_cw(const PointF& point, int width) {
   return { static_cast<float>(width) - point.y, point.x };
+}
+
+std::string read_textfile(const std::filesystem::path& filename) {
+  auto file = std::ifstream(filename, std::ios::in | std::ios::binary);
+  if (!file.good())
+    throw std::runtime_error("reading file '" + path_to_utf8(filename) + "' failed");
+  return std::string(std::istreambuf_iterator<char>{ file }, { });
+}
+
+void write_textfile(const std::filesystem::path& filename, std::string_view text) {
+  auto error = std::error_code{ };
+  std::filesystem::create_directories(filename.parent_path(), error);
+  auto file = std::ofstream(filename, std::ios::out | std::ios::binary);
+  if (!file.good())
+    throw std::runtime_error("writing file '" + path_to_utf8(filename) + "' failed");
+  file.write(text.data(), static_cast<std::streamsize>(text.size()));
+}
+
+void update_textfile(const std::filesystem::path& filename, std::string_view text) {
+  auto error = std::error_code{ };
+  if (std::filesystem::exists(filename, error))
+    if (const auto current = read_textfile(filename); current == text)
+      return;
+  write_textfile(filename, text);
 }
 
 } // namespace
