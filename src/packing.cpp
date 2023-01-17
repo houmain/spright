@@ -55,14 +55,16 @@ namespace {
 
     switch (sprite.pivot.x) {
       case PivotX::left: pivot_point.x += 0; break;
-      case PivotX::center: pivot_point.x += static_cast<float>(rect.w) / 2; break;
-      case PivotX::right: pivot_point.x += static_cast<float>(rect.w); break;
+      case PivotX::center: pivot_point.x += static_cast<float>(sprite.source_rect.w) / 2; break;
+      case PivotX::right: pivot_point.x += static_cast<float>(sprite.source_rect.w); break;
     }
     switch (sprite.pivot.y) {
       case PivotY::top: pivot_point.y += 0; break;
-      case PivotY::middle: pivot_point.y += static_cast<float>(rect.h) / 2; break;
-      case PivotY::bottom: pivot_point.y += static_cast<float>(rect.h); break;
+      case PivotY::middle: pivot_point.y += static_cast<float>(sprite.source_rect.h) / 2; break;
+      case PivotY::bottom: pivot_point.y += static_cast<float>(sprite.source_rect.h); break;
     }
+    pivot_point.x -= static_cast<float>(sprite.trimmed_source_rect.x - sprite.source_rect.x);
+    pivot_point.y -= static_cast<float>(sprite.trimmed_source_rect.y - sprite.source_rect.y);
   }
 
   void pack_texture(const OutputPtr& output,

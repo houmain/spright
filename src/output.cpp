@@ -225,8 +225,6 @@ namespace {
     draw_rect(target, rect, RGBA{ { 255, 0, 255, 128 } });
     draw_rect(target, trimmed_rect, RGBA{ { 255, 255, 0, 128 } });
     draw_rect(target, pivot_rect, RGBA{ { 255, 0, 0, 255 } });
-    // draw_rect(target, expand(rect, -1), RGBA{ { 255, 255, 0, 128 } });
-    // draw_rect(target, expand(pivot_rect, 1), RGBA{ { 255, 255, 0, 128 } });
 
     if (!sprite.vertices.empty()) {
       const auto x = static_cast<float>(sprite.trimmed_rect.x);
