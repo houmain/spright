@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Version 1.6.0] - 2023-01-19
+
+### Added
+
+- Detecting definitions without effects.
+- Updating output files only when they change.
+- Displaying input filename in error message.
+- Support writing TGA.
+
+### Changed
+
+- Made pivot point input relative to untrimmed source.
+- Changed span's scope from input to sprite.
+- Removed support for reading JPEG, PSD and HDR.
+
+### Fixed
+
+- Fixed texture output path.
+
 ## [Version 1.5.0] - 2022-11-14
 
 ### Added
@@ -38,5 +57,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fixed -- commandline arguments.
 - Fixed sample cpp.template.
 
+[version 1.6.0]: https://github.com/houmain/spright/compare/1.5.0...1.6.0
 [version 1.5.0]: https://github.com/houmain/spright/compare/1.4.0...1.5.0
 [version 1.4.0]: https://github.com/houmain/spright/compare/1.3.1...1.4.0
