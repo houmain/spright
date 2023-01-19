@@ -95,6 +95,8 @@ Definition get_affected_definition(Definition definition) {
     case Definition::layers:
     case Definition::input:
     case Definition::sprite:
+    case Definition::row:
+    case Definition::skip:
       return Definition::none;
 
     case Definition::width:
@@ -117,8 +119,6 @@ Definition get_affected_definition(Definition definition) {
     case Definition::grid_cells:
     case Definition::grid_offset:
     case Definition::grid_spacing:
-    case Definition::row:
-    case Definition::skip:
     case Definition::atlas:
       return Definition::input;
 

@@ -94,6 +94,13 @@ TEST_CASE("scope - Output/Sprite") {
 }
 
 TEST_CASE("scope - Problems") {
+  // sprite not on input
+  CHECK_THROWS(parse(R"(
+    output "tex1"
+    input "test/Items.png"
+    sprite "text"
+  )"));
+
   // definition without effect
   CHECK_NOTHROW(parse(R"(
     output "tex1"
@@ -113,6 +120,62 @@ TEST_CASE("scope - Problems") {
     output "tex1"
     width 100
     input "test/Items.png"
+      sprite "text"
+  )"));
+
+  // row, skip, span without grid
+  CHECK_THROWS(parse(R"(
+    output "tex1"
+    input "test/Items.png"
+      row 1
+      sprite "text"
+  )"));
+
+  CHECK_THROWS(parse(R"(
+    output "tex1"
+    input "test/Items.png"
+      sprite "text"
+      skip
+  )"));
+
+  CHECK_THROWS(parse(R"(
+    output "tex1"
+    input "test/Items.png"
+      sprite "text"
+        span 2 2
+  )"));
+
+  // extra scopes are allowed
+  CHECK_NOTHROW(parse(R"(
+    output "tex1"
+    input "test/Items.png"
+      tag anim "anim"
+        sprite "text"
+  )"));
+
+  CHECK_NOTHROW(parse(R"(
+    output "tex1"
+    input "test/Items.png"
+      grid 16 16
+      tag anim "anim"
+        row 0
+          sprite "text"
+          skip
+          sprite "text"
+
+      tag anim "anim2"
+        row 1
+          skip
+          sprite "text"
+  )"));
+
+  CHECK_NOTHROW(parse(R"(
+    output "tex1"
+    input "test/Items.png"
+      group
+        tag anim "anim"
+        sprite "text"
+        sprite "text"
       sprite "text"
   )"));
 

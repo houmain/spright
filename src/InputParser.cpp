@@ -123,7 +123,7 @@ LayerVectorPtr InputParser::get_layers(const State& state, const ImagePtr& sheet
 }
 
 void InputParser::sprite_ends(State& state) {
-  check(!state.sheet.empty(), "sprite not on sheet");
+  check(!state.sheet.empty(), "sprite not on input");
   update_applied_definitions(Definition::sprite);
 
   // generate rect from grid
