@@ -92,9 +92,11 @@ Definition get_affected_definition(Definition definition) {
     case Definition::none:
     case Definition::MAX:
     case Definition::group:
-    case Definition::layers:
     case Definition::input:
     case Definition::sprite:
+    // affect input and output
+    case Definition::layers:
+    // directly change state
     case Definition::row:
     case Definition::skip:
       return Definition::none;

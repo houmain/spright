@@ -100,7 +100,7 @@ void print_help_message(const char* argv0) {
 
   const auto defaults = Settings{ };
   printf(
-    "spright %s(c) 2020-2022 by Albert Kalchmair\n"
+    "spright %s(c) 2020-2023 by Albert Kalchmair\n"
     "\n"
     "Usage: %s [-options]\n"
     "  -i, --input <file>     input definition file (default: %s).\n"

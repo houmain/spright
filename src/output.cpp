@@ -275,7 +275,7 @@ void write_output_description(const Settings& settings,
   }
 
   if (settings.output_file != "stdout")
-    update_textfile(settings.output_file, ss.str());
+    update_textfile(settings.output_path / settings.output_file, ss.str());
 }
 
 Image get_output_texture(const Settings& settings, 
