@@ -56,9 +56,6 @@ struct State {
   Definition definition{ };
   int level;
   std::string indent;
-  int current_grid_cell_x{ };
-  int current_grid_cell_y{ };
-  int current_sequence_index{ };
 
   std::filesystem::path output;
   int width{ };
@@ -105,9 +102,10 @@ Definition get_definition(std::string_view command);
 Definition get_affected_definition(Definition definition);
 std::string_view get_definition_name(Definition definition);
 
-void apply_definition(State& state,
-    Definition definition,
-    std::vector<std::string_view>& arguments);
+void apply_definition(Definition definition,
+    std::vector<std::string_view>& arguments,
+    State& state,
+    Point& current_grid_cell);
 
 bool has_grid(const State& state);
 

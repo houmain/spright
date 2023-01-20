@@ -142,9 +142,9 @@ Definition get_affected_definition(Definition definition) {
   return Definition::none;
 }
 
-void apply_definition(State& state,
-    Definition definition,
-    std::vector<std::string_view>& arguments) {
+void apply_definition(Definition definition,
+    std::vector<std::string_view>& arguments,
+    State& state, Point& current_grid_cell) {
 
   auto argument_index = 0u;
   const auto arguments_left = [&]() {
@@ -273,8 +273,7 @@ void apply_definition(State& state,
 
     case Definition::input:
       state.sheet = path_to_utf8(check_path());
-      state.current_grid_cell_x = { };
-      state.current_grid_cell_y = { };
+      current_grid_cell = { };
       break;
 
     case Definition::colorkey: {
@@ -310,13 +309,13 @@ void apply_definition(State& state,
 
     case Definition::row:
       check(has_grid(state), "offset is only valid in grid");
-      state.current_grid_cell_x = 0;
-      state.current_grid_cell_y = check_uint();
+      current_grid_cell.x = 0;
+      current_grid_cell.y = check_uint();
       break;
 
     case Definition::skip:
       check(has_grid(state), "skip is only valid in grid");
-      state.current_grid_cell_x += (arguments_left() ? check_uint() : 1);
+      current_grid_cell.x += (arguments_left() ? check_uint() : 1);
       break;
 
     case Definition::span:

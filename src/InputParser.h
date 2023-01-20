@@ -49,6 +49,8 @@ private:
   std::map<ImagePtr, LayerVectorPtr> m_layers;
   std::vector<Sprite> m_sprites;
   int m_sprites_in_current_sheet{ };
+  Point m_current_grid_cell{ };
+  int m_current_sequence_index{ };
   std::string m_detected_indentation;
   std::vector<std::map<Definition, NotAppliedDefinition>> m_not_applied_definitions;
 };

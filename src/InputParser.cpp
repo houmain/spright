@@ -103,7 +103,7 @@ ImagePtr InputParser::get_sheet(const State& state, int index) {
 }
 
 ImagePtr InputParser::get_sheet(const State& state) {
-  return get_sheet(state, state.current_sequence_index);
+  return get_sheet(state, m_current_sequence_index);
 }
 
 LayerVectorPtr InputParser::get_layers(const State& state, const ImagePtr& sheet) {
@@ -130,12 +130,12 @@ void InputParser::sprite_ends(State& state) {
   if (empty(state.rect) && has_grid(state)) {
     deduce_grid_size(state);
     state.rect = {
-      state.grid_offset.x + (state.grid.x + state.grid_spacing.x) * state.current_grid_cell_x,
-      state.grid_offset.y + (state.grid.y + state.grid_spacing.y) * state.current_grid_cell_y,
+      state.grid_offset.x + (state.grid.x + state.grid_spacing.x) * m_current_grid_cell.x,
+      state.grid_offset.y + (state.grid.y + state.grid_spacing.y) * m_current_grid_cell.y,
       state.grid.x * state.span.x,
       state.grid.y * state.span.y
     };
-    state.current_grid_cell_x += state.span.x;
+    m_current_grid_cell.x += state.span.x;
   }
 
   auto sprite = Sprite{ };
@@ -160,7 +160,7 @@ void InputParser::sprite_ends(State& state) {
   m_sprites.push_back(std::move(sprite));
 
   if (state.sheet.is_sequence())
-    ++state.current_sequence_index;
+    ++m_current_sequence_index;
   ++m_sprites_in_current_sheet;
 }
 
@@ -306,7 +306,7 @@ void InputParser::sheet_ends(State& state) {
     }
   }
   m_sprites_in_current_sheet = { };
-  state.current_sequence_index = { };
+  m_current_sequence_index = { };
 }
 
 void InputParser::scope_ends(State& state) {
@@ -422,7 +422,8 @@ void InputParser::parse(std::istream& input) try {
       indentation_detected = true;
     }
 
-    apply_definition(state, definition, arguments);
+    apply_definition(definition, arguments,
+        state, m_current_grid_cell);
     update_not_applied_definitions(definition);
 
     if (m_settings.autocomplete) {
