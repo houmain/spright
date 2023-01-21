@@ -16,6 +16,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(SOURCES
     src/common.cpp
+    src/Rect.cpp
     src/settings.cpp
     src/image.cpp
     src/input.cpp

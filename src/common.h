@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Rect.h"
 #include <string>
 #include <vector>
 #include <filesystem>
@@ -12,45 +13,6 @@
 #include <optional>
 
 namespace spright {
-
-struct Size {
-  int x;
-  int y;
-};
-
-struct Point {
-  int x;
-  int y;
-};
-
-struct PointF {
-  float x;
-  float y;
-};
-
-struct Rect {
-  int x;
-  int y;
-  int w;
-  int h;
-
-  int x0() const { return x; }
-  int y0() const { return y; }
-  int x1() const { return x + w; }
-  int y1() const { return y + h; }
-  Point center() const { return { x + w / 2, y + h / 2 }; }
-};
-
-inline bool empty(const Size& size) { return (size.x == 0 || size.y == 0); }
-inline bool empty(const Rect& rect) { return (rect.w == 0 || rect.h == 0); }
-inline bool operator==(const Rect& a, const Rect& b) { return std::tie(a.x, a.y, a.w, a.h) == std::tie(b.x, b.y, b.w, b.h); }
-inline bool operator!=(const Rect& a, const Rect& b) { return !(a == b); }
-Rect expand(const Rect& rect, int value);
-Rect intersect(const Rect& a, const Rect& b);
-bool containing(const Rect& a, const Rect& b);
-bool containing(const Rect& a, const Point& p);
-bool overlapping(const Rect& a, const Rect& b);
-Rect combine(const Rect& a, const Rect& b);
 
 struct LStringView : std::string_view {
   LStringView(std::string_view s) : std::string_view(s) { }
