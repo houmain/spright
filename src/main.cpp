@@ -32,18 +32,27 @@ int main(int argc, const char* argv[]) try {
   write_output_description(settings, sprites, textures);
   time_points.emplace_back(Clock::now(), "output description");
 
-  for_each_parallel(begin(textures), end(textures),
-    [&](const Texture& texture) {
-      const auto filename = settings.output_path / utf8_to_path(
+  struct OutputLayer {
+    const Texture* texture;
+    std::filesystem::path filename;
+    int layer_index;
+  };
+  auto output_layers = std::vector<OutputLayer>();
+  for (const auto& texture : textures) {
+    const auto filename = settings.output_path / utf8_to_path(
         texture.output->filename.get_nth_filename(texture.index));
-      if (auto image = get_output_texture(settings, texture))
-        save_image(image, filename);
-      
-      auto i = 0;
-      for (const auto& layer_suffix : texture.output->layer_suffixes)
-        if (auto image = get_output_texture(settings, texture, i++))
-          save_image(image, replace_suffix(filename, 
-            texture.output->default_layer_suffix, layer_suffix));
+    output_layers.push_back({ &texture, filename, -1 });
+
+    auto i = 0;
+    for (const auto& layer_suffix : texture.output->layer_suffixes)
+      output_layers.push_back({ &texture, replace_suffix(filename,
+          texture.output->default_layer_suffix, layer_suffix), i++ });
+  }
+  for_each_parallel(begin(output_layers), end(output_layers),
+    [&](const OutputLayer& output_layers) {
+      if (auto image = get_output_texture(settings,
+            *output_layers.texture, output_layers.layer_index))
+        save_image(image, output_layers.filename);
     });
   time_points.emplace_back(Clock::now(), "output textures");
 
