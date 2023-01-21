@@ -23,6 +23,14 @@ namespace {
     return { };
   }
 
+  bool has_layer_suffix(const std::string& filename,
+      const std::vector<std::string>& layer_suffixes) {
+    for (const auto& suffix : layer_suffixes)
+      if (has_suffix(filename, suffix))
+        return true;
+    return false;
+  }
+
   bool has_implicit_scope(Definition definition) {
     return (definition == Definition::output ||
             definition == Definition::input ||
@@ -166,8 +174,11 @@ void InputParser::sprite_ends(State& state) {
 }
 
 void InputParser::deduce_globbing_sheets(State& state) {
-  for (const auto& filename : glob_sequences(state.path, state.sheet.filename())) {
-    state.sheet = filename;
+  for (const auto& sequence : glob_sequences(state.path, state.sheet.filename())) {
+    if (has_layer_suffix(sequence.filename(), state.layer_suffixes))
+      continue;
+
+    state.sheet = sequence;
     sheet_ends(state);
   }
 }

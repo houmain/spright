@@ -145,6 +145,14 @@ std::vector<FilenameSequence> glob_sequences(
   return sequences;
 }
 
+bool has_suffix(const std::string& filename, const std::string& suffix) {
+  const auto index = filename.find(suffix);
+  if (index == std::string::npos)
+    return false;
+  const auto extension = filename[index + suffix.length()];
+  return (extension == '.' || extension == '\0');
+}
+
 std::filesystem::path replace_suffix(const std::filesystem::path& filename_, 
     const std::string& old_suffix, const std::string& new_suffix) {
   auto filename = path_to_utf8(filename_);

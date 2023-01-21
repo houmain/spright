@@ -42,4 +42,9 @@ TEST_CASE("globbing - Match") {
   CHECK(replace_suffix("test-abc", "-efg", "-xyz") == "test-abc-xyz");
   CHECK(replace_suffix("test", "", "-xyz") == "test-xyz");
   CHECK(replace_suffix("test-abc-efg", "-abc", "-xyz") == "test-xyz-efg");
+
+  CHECK(has_suffix("test-abc.png", "-abc"));
+  CHECK(!has_suffix("test-abcd.png", "-abc"));
+  CHECK(has_suffix("test-abc", "-abc"));
+  CHECK(!has_suffix("test-abcd", "-abc"));
 }
