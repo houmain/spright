@@ -153,6 +153,7 @@ void InputParser::sprite_ends(State& state) {
   sprite.trim_threshold = state.trim_threshold;
   sprite.trim_gray_levels = state.trim_gray_levels;
   sprite.crop = state.crop;
+  sprite.crop_pivot = state.crop_pivot;
   sprite.extrude = state.extrude;
   sprite.common_divisor = state.common_divisor;
   sprite.tags = state.tags;

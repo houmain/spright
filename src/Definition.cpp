@@ -81,6 +81,7 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::trim_margin: return "trim-margin";
     case Definition::trim_channel: return "trim-channel";
     case Definition::crop: return "crop";
+    case Definition::crop_pivot: return "crop-pivot";
     case Definition::extrude: return "extrude";
     case Definition::common_divisor: return "common-divisor";
   }
@@ -134,6 +135,7 @@ Definition get_affected_definition(Definition definition) {
     case Definition::trim_margin:
     case Definition::trim_channel:
     case Definition::crop:
+    case Definition::crop_pivot:
     case Definition::extrude:
     case Definition::common_divisor:
     case Definition::span:
@@ -424,6 +426,10 @@ void apply_definition(Definition definition,
 
     case Definition::crop:
       state.crop = check_bool(true);
+      break;
+
+    case Definition::crop_pivot:
+      state.crop_pivot = check_bool(true);
       break;
 
     case Definition::extrude:

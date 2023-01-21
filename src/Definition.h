@@ -46,6 +46,7 @@ enum class Definition {
   trim_margin,
   trim_channel,
   crop,
+  crop_pivot,
   extrude,
   common_divisor,
 
@@ -94,6 +95,7 @@ struct State {
   int trim_margin{ };
   bool trim_gray_levels{ };
   bool crop{ };
+  bool crop_pivot{ };
   int extrude{ };
   Size common_divisor{ 1, 1 };
 };

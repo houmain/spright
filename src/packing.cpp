@@ -35,8 +35,6 @@ namespace {
 
   void complete_sprite(Sprite& sprite) {
     auto& rect = sprite.rect;
-    auto& pivot_point = sprite.pivot_point;
-
     if (sprite.crop) {
       rect = sprite.trimmed_rect;
     }
@@ -48,23 +46,26 @@ namespace {
         sprite.source_rect.h,
       };
     }
-    sprite.rect.x -= sprite.common_divisor_offset.x;
-    sprite.rect.y -= sprite.common_divisor_offset.y;
-    sprite.rect.w += sprite.common_divisor_margin.x;
-    sprite.rect.h += sprite.common_divisor_margin.y;
+    rect.x -= sprite.common_divisor_offset.x;
+    rect.y -= sprite.common_divisor_offset.y;
+    rect.w += sprite.common_divisor_margin.x;
+    rect.h += sprite.common_divisor_margin.y;
 
+    auto& pivot_point = sprite.pivot_point;
+    const auto pivot_rect = RectF(sprite.crop_pivot ?
+      sprite.trimmed_source_rect : sprite.source_rect);
     switch (sprite.pivot.x) {
       case PivotX::left: pivot_point.x += 0; break;
-      case PivotX::center: pivot_point.x += static_cast<float>(sprite.source_rect.w) / 2; break;
-      case PivotX::right: pivot_point.x += static_cast<float>(sprite.source_rect.w); break;
+      case PivotX::center: pivot_point.x += pivot_rect.w / 2; break;
+      case PivotX::right: pivot_point.x += pivot_rect.w; break;
     }
     switch (sprite.pivot.y) {
       case PivotY::top: pivot_point.y += 0; break;
-      case PivotY::middle: pivot_point.y += static_cast<float>(sprite.source_rect.h) / 2; break;
-      case PivotY::bottom: pivot_point.y += static_cast<float>(sprite.source_rect.h); break;
+      case PivotY::middle: pivot_point.y += pivot_rect.h / 2; break;
+      case PivotY::bottom: pivot_point.y += pivot_rect.h; break;
     }
-    pivot_point.x -= static_cast<float>(sprite.trimmed_source_rect.x - sprite.source_rect.x);
-    pivot_point.y -= static_cast<float>(sprite.trimmed_source_rect.y - sprite.source_rect.y);
+    pivot_point.x += (pivot_rect.x - static_cast<float>(sprite.trimmed_source_rect.x));
+    pivot_point.y += (pivot_rect.y - static_cast<float>(sprite.trimmed_source_rect.y));
   }
 
   void pack_texture(const OutputPtr& output,

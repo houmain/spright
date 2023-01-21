@@ -61,6 +61,7 @@ struct Sprite {
   int trim_threshold{ };
   bool trim_gray_levels{ };
   bool crop{ };
+  bool crop_pivot{ };
   int extrude{ };
   std::map<std::string, std::string> tags;
   bool rotated{ };

@@ -88,6 +88,8 @@ To do so, start by creating a ```spright.conf``` containing the essential inform
 ```perl
 colorkey
 padding 1
+crop
+crop-pivot
 
 input "Decorations (32x32).png"
   grid 32 32
@@ -253,6 +255,7 @@ The following table contains a list of all definitions, with the subject each af
 | trim-threshold |sprite | value        | Sets the value which should be considered non-transparent during trimming (1 - 255).
 | trim-margin    |sprite | [pixels]     | Sets a number of transparent pixel rows around the sprite, which should not be removed by trimming.
 | crop           |sprite | [boolean]    | Sets whether the sprite's rectangle should be reduced to the trimmed bounds.
+| crop-pivot     |sprite | [boolean]    | Sets whether the sprite's pivot point should be relative to the trimmed bounds.
 | extrude        |sprite | [pixels]     | Adds a padding around the sprite and fills it with the sprite's border pixel color.
 | common-divisor |sprite | x, [y]       | Restricts the sprite's size to be divisible by a certain number of pixels. Smaller sprites are filled up with transparency.
 | group          |-      | -            | Can be used for opening a new scope, to limit for example the effect of a tag.
