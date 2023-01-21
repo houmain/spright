@@ -3,24 +3,27 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [Version 1.6.0] - 2023-01-19
+## [Version 1.6.0] - 2023-01-21
 
 ### Added
 
+- Created github.com/houmain/spright-test-suite.
 - Detecting definitions without effects.
 - Updating output files only when they change.
 - Displaying input filename in error message.
 - Support writing TGA.
+- Added crop-pivot.
 
 ### Changed
 
-- Made pivot point input relative to untrimmed source.
 - Changed span's scope from input to sprite.
 - Removed support for reading JPEG, PSD and HDR.
+- Outputting layers in parallel.
 
 ### Fixed
 
-- Fixed texture output path.
+- Ignore layers during file globbing.
+- Fixed appending output path to output files.
 
 ## [Version 1.5.0] - 2022-11-14
 
