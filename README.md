@@ -21,6 +21,8 @@ __spright__ is more than a simple sprite sheet packer, it can be [used as one](#
 
 No graphical user interface is required, a text editor is enough. A program like [GIMP](https://www.gimp.org), which can [overlay a grid](https://docs.gimp.org/2.10/en/gimp-concepts-image-grid-and-guides.html) over the input sheets one wants to annotate, may be useful though.
 
+Also have a look at the [spright test suite](https://github.com/houmain/spright-test-suite) to get an impression of the functionality.
+
 __Introduction:__
 * [Simple sheet packing](#simple-sheet-packing)
 * [Advanced usage example](#advanced-usage-example)
@@ -72,7 +74,7 @@ See the [output template engine](#output-template-engine) section on how to gene
 
 Advanced usage example
 ----------------------
-Say you got some nice sprites you would like to use in your next game:
+Say you got some [nice](https://itch.io/game-assets/tag-sprites) [sprites](https://opengameart.org/art-search-advanced?field_art_type_tid[]=9&sort_by=count) you would like to use in your next game:
 
 | "Decorations (32x32).png" | "Old enemies 2.png" | "misc_scenery.png" | "OrcAttack/Frame01.png" to <br/> "OrcAttack/Frame04.png" |
 |:---:|:---:|:---:|:---:|
@@ -357,4 +359,6 @@ cmake --build build
 License
 -------
 
-It is released under the GNU GPLv3. It comes with absolutely no warranty. Please see `LICENSE` for license details.
+__spright__ is released under the GNU GPLv3. It comes with absolutely no warranty. Please see `LICENSE` for license details.
+
+All image files are derived from files released as [CC0](https://creativecommons.org/publicdomain/zero/1.0/) on [OpenGameArt](https://opengameart.org).

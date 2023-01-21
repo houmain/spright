@@ -64,6 +64,8 @@ namespace {
       case PivotY::middle: pivot_point.y += pivot_rect.h / 2; break;
       case PivotY::bottom: pivot_point.y += pivot_rect.h; break;
     }
+    pivot_point.x -= static_cast<float>(rect.x - sprite.trimmed_rect.x);
+    pivot_point.y -= static_cast<float>(rect.y - sprite.trimmed_rect.y);
     pivot_point.x += (pivot_rect.x - static_cast<float>(sprite.trimmed_source_rect.x));
     pivot_point.y += (pivot_rect.y - static_cast<float>(sprite.trimmed_source_rect.y));
   }
