@@ -307,7 +307,7 @@ void save_image(const Image& image, const std::filesystem::path& path) {
   if (!path.parent_path().empty())
     std::filesystem::create_directories(path.parent_path());
   const auto filename = path_to_utf8(path);
-  const auto extension = path_to_utf8(path.extension());
+  const auto extension = to_lower(path_to_utf8(path.extension()));
   const auto w = image.width();
   const auto h = image.height();
   const auto comp = sizeof(RGBA);
@@ -316,6 +316,7 @@ void save_image(const Image& image, const std::filesystem::path& path) {
 
   stbi_write_tga_with_rle = 1;
   if (!(extension == ".png" && stbi_write_png(filename.c_str(), w, h, comp, data, stride)) &&
+      !(extension == ".bmp" && stbi_write_bmp(filename.c_str(), w, h, comp, data)) &&
       !(extension == ".tga" && stbi_write_tga(filename.c_str(), w, h, comp, data)))
     error("writing file '", filename, "' failed");
 }

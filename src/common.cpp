@@ -44,6 +44,12 @@ char to_lower(char c) {
   return static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
 }
 
+std::string to_lower(std::string string) {
+  for (auto& c : string)
+    c = to_lower(c);
+  return string;
+}
+
 bool is_digit(char c) {
   return std::isdigit(static_cast<unsigned char>(c));
 }
