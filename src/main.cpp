@@ -3,6 +3,7 @@
 #include "packing.h"
 #include "output.h"
 #include "globbing.h"
+#include "debug.h"
 #include <iostream>
 #include <chrono>
 
@@ -50,9 +51,12 @@ int main(int argc, const char* argv[]) try {
   }
   for_each_parallel(begin(output_layers), end(output_layers),
     [&](const OutputLayer& output_layers) {
-      if (auto image = get_output_texture(settings,
-            *output_layers.texture, output_layers.layer_index))
-        save_image(image, output_layers.filename);
+      const auto [texture, filename, layer_index] = output_layers;
+      if (auto image = get_output_texture(settings, *texture, layer_index)) {
+        if (settings.debug)
+          draw_debug_info(image, *texture);
+        save_image(image, filename);
+      }
     });
   time_points.emplace_back(Clock::now(), "output textures");
 

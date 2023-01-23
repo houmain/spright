@@ -30,6 +30,7 @@ set(SOURCES
     src/pack_keep.cpp
     src/output.cpp
     src/globbing.cpp
+    src/debug.cpp
     src/main.cpp
     libs/rect_pack/rect_pack.cpp
 )
