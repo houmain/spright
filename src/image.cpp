@@ -2,6 +2,7 @@
 #include "image.h"
 #include "stb/stb_image.h"
 #include "stb/stb_image_write.h"
+#include "stb/stb_image_resize.h"
 #include "texpack/bleeding.h"
 #include <algorithm>
 #include <stdexcept>
@@ -620,6 +621,22 @@ MonoImage get_gray_levels(const Image& image, const Rect& rect) {
   auto dest = result.data();
   for_each_pixel(image, rect, [&](const RGBA& color) { *dest++ = color.gray(); });
   return result;
+}
+
+Image resize_image(const Image& image, float scale, ResizeFilter filter) {
+  auto output = Image(
+    static_cast<int>(image.width() * scale + 0.5f), 
+    static_cast<int>(image.height() * scale + 0.5f));
+  const auto flags = 0;
+  const auto edge_mode = STBIR_EDGE_CLAMP;
+  const auto color_space = STBIR_COLORSPACE_SRGB;
+  if (!stbir_resize(image.rgba(), image.width(), image.height(), image.width() * sizeof(RGBA), 
+        output.rgba(), output.width(), output.height(), output.width() * sizeof(RGBA), 
+        STBIR_TYPE_UINT8, 4, 3, flags, edge_mode, edge_mode, 
+        static_cast<stbir_filter>(filter), static_cast<stbir_filter>(filter), 
+        color_space, nullptr))
+    throw std::runtime_error("resizing image failed");
+  return output;
 }
 
 } // namespace

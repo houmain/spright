@@ -41,3 +41,7 @@ my_stbi_zlib_compress( unsigned char *data, int data_len,
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
+
+
+#define STB_IMAGE_RESIZE_IMPLEMENTATION
+#include "stb_image_resize.h"
