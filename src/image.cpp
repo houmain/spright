@@ -411,12 +411,24 @@ void draw_rect(Image& image, const Rect& rect, const RGBA& color) {
   }
 }
 
-void draw_line(Image& image, int x0, int y0, int x1, int y1, const RGBA& color, bool omit_last) {
+void draw_line(Image& image, const Point& p0, const Point& p1, const RGBA& color, bool omit_last) {
   const auto checked_blend = [&](int x, int y) {
     if (x >= 0 && x < image.width() && y >= 0 && y < image.height())
       blend(image, x, y, color);
   };
-  bresenham_line(x0, y0, x1, y1, checked_blend, omit_last);
+  bresenham_line(p0.x, p0.y, p1.x, p1.y, checked_blend, omit_last);
+}
+
+void draw_line_stipple(Image& image, const Point& p0, const Point& p1, const RGBA& color, int stipple, bool omit_last) {
+  int i = 0;
+  const auto checked_blend = [&](int x, int y) {
+    if (Point(x, y) == p0 || Point(x, y) == p1)
+      i = 0;
+    if ((i++ / stipple) % 2 == 0)
+      if (x >= 0 && x < image.width() && y >= 0 && y < image.height())
+        blend(image, x, y, color);
+  };
+  bresenham_line(p0.x, p0.y, p1.x, p1.y, checked_blend, omit_last);
 }
 
 void fill_rect(Image& image, const Rect& rect, const RGBA& color) {

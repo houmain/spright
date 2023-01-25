@@ -18,6 +18,10 @@ struct SizeT {
     : x(static_cast<T>(s.x)),
       y(static_cast<T>(s.y)) {
   }
+
+  friend bool operator==(const SizeT& a, const SizeT& b) {
+    return (a.x == b.x && a.y == b.y);
+  }
 };
 
 template<typename T>
@@ -30,9 +34,16 @@ struct PointT {
     : x(x), y(y) {
   }
   template<typename S>
-  explicit PointT(const SizeT<S>& s)
+  explicit PointT(const PointT<S>& s)
     : x(static_cast<T>(s.x)),
       y(static_cast<T>(s.y)) {
+  }
+
+  friend bool operator==(const PointT& a, const PointT& b) {
+    return (a.x == b.x && a.y == b.y);
+  }
+  friend PointT operator+(const PointT& a, const PointT& b) {
+    return { a.x + b.x, a.y + b.y };
   }
 };
 

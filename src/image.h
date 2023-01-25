@@ -72,11 +72,16 @@ void save_image(const Image& image, const std::filesystem::path& filename);
 Image resize_image(const Image& image, float scale, ResizeFilter filter);
 void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy);
 void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy);
-void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy, const std::vector<PointF>& mask_vertices);
-void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy, const std::vector<PointF>& mask_vertices);
+void copy_rect(const Image& source, const Rect& source_rect, Image& dest, 
+  int dx, int dy, const std::vector<PointF>& mask_vertices);
+void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& dest, 
+  int dx, int dy, const std::vector<PointF>& mask_vertices);
 void extrude_rect(Image& image, const Rect& rect, bool left, bool top, bool right, bool bottom);
 void draw_rect(Image& image, const Rect& rect, const RGBA& color);
-void draw_line(Image& image, int x0, int y0, int x1, int y1, const RGBA& color, bool omit_last = false);
+void draw_line(Image& image, const Point& p0, const Point& p1, 
+  const RGBA& color, bool omit_last = false);
+void draw_line_stipple(Image& image, const Point& p0, const Point& p1, 
+  const RGBA& color, int stipple, bool omit_last = false);
 void fill_rect(Image& image, const Rect& rect, const RGBA& color);
 bool is_opaque(const Image& image, const Rect& rect = { });
 bool is_fully_transparent(const Image& image, int threshold = 1, const Rect& rect = { });
@@ -85,7 +90,8 @@ bool is_identical(const Image& image_a, const Rect& rect_a, const Image& image_b
 Rect get_used_bounds(const Image& image, bool gray_levels, int threshold = 1, const Rect& rect = { });
 RGBA guess_colorkey(const Image& image);
 void replace_color(Image& image, RGBA original, RGBA color);
-std::vector<Rect> find_islands(const Image& image, int merge_distance, bool gray_levels, const Rect& rect = { });
+std::vector<Rect> find_islands(const Image& image, int merge_distance, 
+  bool gray_levels, const Rect& rect = { });
 void clear_alpha(Image& image);
 void make_opaque(Image& image, RGBA background);
 void premultiply_alpha(Image& image);
