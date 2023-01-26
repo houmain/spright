@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Version 1.7.0] - 2023-01-26
+
+### Added
+
+- Allow to set grid and grid-cells at once.
+- Improved debug overlay.
+- Support writing BMP.
+
 ## [Version 1.6.0] - 2023-01-21
 
 ### Added
@@ -60,6 +68,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fixed -- commandline arguments.
 - Fixed sample cpp.template.
 
+[version 1.7.0]: https://github.com/houmain/spright/compare/1.6.0...1.7.0
 [version 1.6.0]: https://github.com/houmain/spright/compare/1.5.0...1.6.0
 [version 1.5.0]: https://github.com/houmain/spright/compare/1.4.0...1.5.0
 [version 1.4.0]: https://github.com/houmain/spright/compare/1.3.1...1.4.0
