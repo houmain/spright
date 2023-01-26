@@ -65,7 +65,6 @@ namespace {
       std::swap(trimmed_rect.w, trimmed_rect.h);
       pivot_point = rotate_cw(pivot_point, rect.w - 1);
     }
-    draw_rect(target, round(rect), RGBA{ { 255, 0, 255, 128 } });
     draw_rect(target, round(trimmed_rect), RGBA{ { 255, 255, 0, 128 } });
     
     // scale point coordinates, so bottom right is inside sprite
@@ -87,15 +86,15 @@ namespace {
         v0.y *= scale_point_coord.y;
         v1.x *= scale_point_coord.x;
         v1.y *= scale_point_coord.y;
-        draw_line_stipple(target,
+        draw_line(target,
           round(origin + v0),
           round(origin + v1),
-          RGBA{ { 0, 255, 255, 196 } },
-          2,
+          RGBA{ { 0, 255, 255, 128 } },
           true);
       }
     }
 
+    draw_rect_stipple(target, round(rect), RGBA{ { 255, 0, 0, 128 } }, 2);
     draw_point(target, rect.xy() + pivot_point, RGBA{ { 255, 0, 0, 255 } });
   }
 } // namespace

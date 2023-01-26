@@ -80,6 +80,7 @@ if(ENABLE_TEST)
     set(TEST_SOURCES ${SOURCES}
         test/catch.cpp
         test/test-main.cpp
+        test/test-common.cpp
         test/test-scope.cpp
         test/test-autocompletion.cpp
         test/test-packing.cpp

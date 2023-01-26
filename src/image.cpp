@@ -4,6 +4,7 @@
 #include "stb/stb_image_write.h"
 #include "stb/stb_image_resize.h"
 #include "texpack/bleeding.h"
+#include <array>
 #include <algorithm>
 #include <stdexcept>
 #include <cstring>
@@ -58,7 +59,7 @@ namespace {
     a.g = static_cast<uint8_t>((a.g * (255 - b.a) + b.g * b.a) / 255);
     a.b = static_cast<uint8_t>((a.b * (255 - b.a) + b.b * b.a) / 255);
     a.a = std::max(a.a, b.a);
-  };
+  }
 
   template <int sides, // 4 or 8
     typename Color,
@@ -429,6 +430,17 @@ void draw_line_stipple(Image& image, const Point& p0, const Point& p1, const RGB
         blend(image, x, y, color);
   };
   bresenham_line(p0.x, p0.y, p1.x, p1.y, checked_blend, omit_last);
+}
+
+void draw_rect_stipple(Image& image, const Rect& rect, const RGBA& color, int stipple) {
+  const auto points = std::array{
+    Point(rect.x0(), rect.y0()),
+    Point(rect.x1() - 1, rect.y0()),
+    Point(rect.x1() - 1, rect.y1() - 1),
+    Point(rect.x0(), rect.y1() - 1)
+  };
+  for (auto i = size_t{ }; i < 4; ++i)
+    draw_line_stipple(image, points[i], points[(i + 1) % 4], color, stipple, true);
 }
 
 void fill_rect(Image& image, const Rect& rect, const RGBA& color) {

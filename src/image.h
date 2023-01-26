@@ -82,6 +82,7 @@ void draw_line(Image& image, const Point& p0, const Point& p1,
   const RGBA& color, bool omit_last = false);
 void draw_line_stipple(Image& image, const Point& p0, const Point& p1, 
   const RGBA& color, int stipple, bool omit_last = false);
+void draw_rect_stipple(Image& image, const Rect& rect, const RGBA& color, int stipple);
 void fill_rect(Image& image, const Rect& rect, const RGBA& color);
 bool is_opaque(const Image& image, const Rect& rect = { });
 bool is_fully_transparent(const Image& image, int threshold = 1, const Rect& rect = { });

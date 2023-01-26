@@ -47,3 +47,6 @@ TEST_CASE("split_expression") {
   CHECK(arguments.size() == 1);
 }
 
+TEST_CASE("Rect") {
+  CHECK(combine(Rect(0, 0, 4, 4), Rect(4, 0, 4, 4)) == Rect(0, 0, 8, 4));
+}
