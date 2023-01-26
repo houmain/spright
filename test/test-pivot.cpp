@@ -113,9 +113,9 @@ TEST_CASE("pivot - expressions") {
 
   CHECK(sprites[3].id == "expr4");
   CHECK(sprites[3].pivot.x == PivotX::center);
-  CHECK(sprites[3].pivot_point.x == 3.5f - 1.1f);
+  CHECK(sprites[3].pivot_point.x == 3.5 - 1.1);
   CHECK(sprites[3].pivot.y == PivotY::middle);
-  CHECK(sprites[3].pivot_point.y == -4.2f + 2.5f);
+  CHECK(sprites[3].pivot_point.y == -4.2 + 2.5);
 
   // not allowed combination (use: middle left - 3)
   input = std::stringstream(R"(

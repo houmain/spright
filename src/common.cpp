@@ -54,9 +54,9 @@ bool is_digit(char c) {
   return std::isdigit(static_cast<unsigned char>(c));
 }
 
-std::optional<float> to_float(std::string_view str) {
+std::optional<real> to_float(std::string_view str) {
 #if !defined(__GNUC__) || __GNUC__ >= 11
-  auto result = 0.0f;
+  auto result = real{ };
   if (std::from_chars(str.data(), 
         str.data() + str.size(), result).ec == std::errc())
     return result;

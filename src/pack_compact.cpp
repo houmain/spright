@@ -36,8 +36,8 @@ namespace {
       const auto moment = INFINITY;
       auto body = bodies.emplace_back(cpSpaceAddBody(space, cpBodyNew(mass, moment))).get();
       cpBodySetPosition(body, {
-        static_cast<float>(sprite.trimmed_rect.x),
-        static_cast<float>(sprite.trimmed_rect.y),
+        static_cast<cpFloat>(sprite.trimmed_rect.x),
+        static_cast<cpFloat>(sprite.trimmed_rect.y),
       });
 
       vertices.clear();

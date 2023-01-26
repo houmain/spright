@@ -178,7 +178,7 @@ namespace {
   }
 
   // http://paulbourke.net/geometry/polygonmesh/
-  bool point_in_polygon(float x, float y, const std::vector<PointF>& p) {
+  bool point_in_polygon(real x, real y, const std::vector<PointF>& p) {
     auto c = false;
     for (auto i = size_t{ }, j = p.size() - 1; i < p.size(); j = i++) {
       if ((((p[i].y <= y) && (y < p[j].y)) ||
@@ -359,7 +359,7 @@ void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx
   const auto [sx, sy, w, h] = source_rect;
   for (auto y = 0; y < h; ++y)
     for (auto x = 0; x < w; ++x)
-      if (point_in_polygon(static_cast<float>(x) + 0.5f, static_cast<float>(y) + 0.5f, mask_vertices))
+      if (point_in_polygon(x + 0.5, y + 0.5, mask_vertices))
         checked_rgba_at(dest, { dx + x, dy + y }) = checked_rgba_at(source, { sx + x, sy + y });
 }
 
@@ -368,7 +368,7 @@ void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& d
   const auto [sx, sy, w, h] = source_rect;
   for (auto y = 0; y < h; ++y)
     for (auto x = 0; x < w; ++x)
-      if (point_in_polygon(static_cast<float>(x) + 0.5f, static_cast<float>(y) + 0.5f, mask_vertices))
+      if (point_in_polygon(x + 0.5, y + 0.5, mask_vertices))
         checked_rgba_at(dest, { dx + (h-1 - y), dy + x }) = checked_rgba_at(source, { sx + x, sy + y });
 }
 
@@ -635,10 +635,10 @@ MonoImage get_gray_levels(const Image& image, const Rect& rect) {
   return result;
 }
 
-Image resize_image(const Image& image, float scale, ResizeFilter filter) {
+Image resize_image(const Image& image, real scale, ResizeFilter filter) {
   auto output = Image(
-    static_cast<int>(static_cast<float>(image.width()) * scale + 0.5f),
-    static_cast<int>(static_cast<float>(image.height()) * scale + 0.5f));
+    static_cast<int>(image.width() * scale + 0.5),
+    static_cast<int>(image.height() * scale + 0.5));
   const auto flags = 0;
   const auto edge_mode = STBIR_EDGE_CLAMP;
   const auto color_space = STBIR_COLORSPACE_SRGB;

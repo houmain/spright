@@ -6,17 +6,17 @@ namespace spright {
 namespace {
   Rect round(const RectF& rect) {
     return Rect{ 
-      static_cast<int>(rect.x + 0.5f), 
-      static_cast<int>(rect.y + 0.5f), 
-      std::max(static_cast<int>(rect.w + 0.5f), 1), 
-      std::max(static_cast<int>(rect.h + 0.5f), 1)
+      static_cast<int>(rect.x + 0.5),
+      static_cast<int>(rect.y + 0.5),
+      std::max(static_cast<int>(rect.w + 0.5), 1),
+      std::max(static_cast<int>(rect.h + 0.5), 1)
     };
   }
 
   Point round(const PointF& point) {
     return Point{
-      static_cast<int>(point.x + 0.5f), 
-      static_cast<int>(point.y + 0.5f), 
+      static_cast<int>(point.x + 0.5),
+      static_cast<int>(point.y + 0.5),
     };
   }
 
@@ -41,19 +41,19 @@ namespace {
                       Point(r, b) + Point( 0, 1), color);
   }
 
-  void draw_sprite_info(Image& target, const Sprite& sprite, float scale) {
+  void draw_sprite_info(Image& target, const Sprite& sprite, real scale) {
     const auto scale_rect = [&](const auto& rect) {
       return RectF{ 
-        static_cast<float>(rect.x) * scale,
-        static_cast<float>(rect.y) * scale,
-        static_cast<float>(rect.w) * scale,
-        static_cast<float>(rect.h) * scale
+        rect.x * scale,
+        rect.y * scale,
+        rect.w * scale,
+        rect.h * scale
       };
     };
     const auto scale_point = [&](const auto& point) {
       return PointF{
-        static_cast<float>(point.x) * scale,
-        static_cast<float>(point.y) * scale
+        point.x * scale,
+        point.y * scale
       };
     };
 
@@ -63,7 +63,7 @@ namespace {
     if (sprite.rotated) {
       std::swap(rect.w, rect.h);
       std::swap(trimmed_rect.w, trimmed_rect.h);
-      pivot_point = rotate_cw(pivot_point, rect.w - 1.0f);
+      pivot_point = rotate_cw(pivot_point, rect.w - 1);
     }
     draw_rect(target, round(rect), RGBA{ { 255, 0, 255, 128 } });
     draw_rect(target, round(trimmed_rect), RGBA{ { 255, 255, 0, 128 } });
@@ -100,7 +100,7 @@ namespace {
   }
 } // namespace
 
-void draw_debug_info(Image& image, const Texture &texture, float scale) {
+void draw_debug_info(Image& image, const Texture &texture, real scale) {
   for (const auto& sprite : texture.sprites)
     draw_sprite_info(image, sprite, scale);
 }

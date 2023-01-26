@@ -60,10 +60,10 @@ namespace {
 
     const auto outlines = cpPolylineSetNew();
     cpMarchHard(
-      { -1, -1, static_cast<float>(image.width() + 1), static_cast<float>(image.height() + 1) },
+      { -1, -1, static_cast<cpFloat>(image.width() + 1), static_cast<cpFloat>(image.height() + 1) },
       static_cast<unsigned long>(image.width() + 3),
       static_cast<unsigned long>(image.height() + 3),
-      static_cast<float>(threshold - 1),
+      threshold - 1,
       reinterpret_cast<cpMarchSegmentFunc>(cpPolylineSetCollectSegment), outlines,
       sample, const_cast<MonoImage*>(&image));
 
@@ -85,14 +85,14 @@ namespace {
   }
 
   cpVect normal(const cpVect& v) {
-    if (auto f = v.x * v.x + v.y * v.y; f != 0.0f) {
-      f = 1.0f / std::sqrt(f);
+    if (auto f = v.x * v.x + v.y * v.y; f != 0.0) {
+      f = 1.0 / std::sqrt(f);
       return { v.y * f, -v.x * f, };
     }
     return { 0, 0 };
   }
 
-  void expand_polygon(cpPolyline& polyline, float distance) {
+  void expand_polygon(cpPolyline& polyline, real distance) {
     if (distance == 0)
       return;
     distance /= 2;
@@ -112,12 +112,12 @@ namespace {
     }
   }
 
-  PolylinePtr to_convex_polygon(const cpPolyline& polyline, float tolerance) {
+  PolylinePtr to_convex_polygon(const cpPolyline& polyline, real tolerance) {
     return PolylinePtr(cpPolylineToConvexHull(
       const_cast<cpPolyline*>(&polyline), tolerance));
   }
 
-  PolylinePtr simplify_polygon(const cpPolyline& polyline, float tolerance) {
+  PolylinePtr simplify_polygon(const cpPolyline& polyline, real tolerance) {
     return PolylinePtr(cpPolylineSimplifyCurves(
       const_cast<cpPolyline*>(&polyline), tolerance));
   }
@@ -127,8 +127,8 @@ namespace {
     vertices.reserve(static_cast<size_t>(polyline.count));
     for (auto i = 0; i < polyline.count; ++i)
       vertices.push_back({
-        static_cast<float>(polyline.verts[i].x),
-        static_cast<float>(polyline.verts[i].y)
+        polyline.verts[i].x,
+        polyline.verts[i].y
       });
     return vertices;
   }
@@ -156,12 +156,12 @@ void trim_sprite(Sprite& sprite) {
     auto outline = get_polygon_outline(levels, sprite.trim_threshold);
     outline = to_convex_polygon(*outline, 0);
     outline = simplify_polygon(*outline, 3);
-    expand_polygon(*outline, static_cast<float>(sprite.trim_margin));
+    expand_polygon(*outline, sprite.trim_margin);
     sprite.vertices = to_point_list(*outline);
   }
   else {
-    const auto w = static_cast<float>(sprite.trimmed_source_rect.w);
-    const auto h = static_cast<float>(sprite.trimmed_source_rect.h);
+    const auto w = static_cast<real>(sprite.trimmed_source_rect.w);
+    const auto h = static_cast<real>(sprite.trimmed_source_rect.h);
     sprite.vertices.push_back({ 0, 0 });
     sprite.vertices.push_back({ w, 0 });
     sprite.vertices.push_back({ w, h });

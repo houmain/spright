@@ -4,6 +4,8 @@
 
 namespace spright {
 
+using real = double;
+
 template<typename T>
 struct SizeT {
   T x{ };
@@ -84,16 +86,16 @@ struct RectT {
 };
 
 using Size = SizeT<int>;
-using SizeF = SizeT<float>;
+using SizeF = SizeT<real>;
 using Point = PointT<int>;
-using PointF = PointT<float>;
+using PointF = PointT<real>;
 using Rect = RectT<int>;
-using RectF = RectT<float>;
+using RectF = RectT<real>;
 
 inline bool empty(const Size& size) { return (size.x == 0 || size.y == 0); }
 inline bool empty(const Rect& rect) { return (rect.w == 0 || rect.h == 0); }
 
-PointF rotate_cw(const PointF& point, float width);
+PointF rotate_cw(const PointF& point, real width);
 Rect expand(const Rect& rect, int value);
 Rect intersect(const Rect& a, const Rect& b);
 bool containing(const Rect& a, const Rect& b);

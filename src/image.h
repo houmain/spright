@@ -69,7 +69,7 @@ enum class ResizeFilter {
 };
 
 void save_image(const Image& image, const std::filesystem::path& filename);
-Image resize_image(const Image& image, float scale, ResizeFilter filter);
+Image resize_image(const Image& image, real scale, ResizeFilter filter);
 void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy);
 void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy);
 void copy_rect(const Image& source, const Rect& source_rect, Image& dest, 

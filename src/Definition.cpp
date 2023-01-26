@@ -357,7 +357,7 @@ void apply_definition(Definition definition,
 
       state.pivot = { PivotX::left, PivotY::top };
       auto current_coord = &state.pivot_point.x;
-      auto prev_coord = std::add_pointer_t<float>{ };
+      auto prev_coord = std::add_pointer_t<real>{ };
       auto expr = std::vector<std::string_view>();
       for (auto i = 0; i < 2; ++i) {
         split_expression(check_string(), &expr);
