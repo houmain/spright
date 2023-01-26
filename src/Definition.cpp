@@ -293,7 +293,6 @@ void apply_definition(Definition definition,
       check(state.grid.x > 0 && state.grid.y > 0, "invalid grid");
       break;
 
-
     case Definition::grid_cells:
       // allow cell count in one dimension to be zero
       state.grid_cells = check_size(false);

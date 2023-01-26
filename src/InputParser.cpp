@@ -203,7 +203,8 @@ void InputParser::deduce_sequence_sprites(State& state) {
 }
 
 void InputParser::deduce_grid_size(State& state) {
-  if (empty(state.grid_cells))
+  if (!empty(state.grid) ||
+      empty(state.grid_cells))
     return;
 
   const auto sheet = get_sheet(state);
@@ -219,27 +220,37 @@ void InputParser::deduce_grid_size(State& state) {
 void InputParser::deduce_grid_sprites(State& state) {
   deduce_grid_size(state);
   const auto sheet = get_sheet(state);
-  const auto bounds = get_used_bounds(*sheet, state.trim_gray_levels);
 
-  auto grid = state.grid;
-  grid.x += state.grid_spacing.x;
-  grid.y += state.grid_spacing.y;
+  auto stride = state.grid;
+  stride.x += state.grid_spacing.x;
+  stride.y += state.grid_spacing.y;
 
-  const auto x0 = 0;
-  const auto y0 = floor(bounds.y, grid.y) / grid.y;
-  const auto x1 = std::min(ceil(bounds.x1(), grid.x), sheet->width()) / grid.x;
-  const auto y1 = std::min(ceil(bounds.y1(), grid.y), sheet->height()) / grid.y;
+  auto bounds = sheet->bounds();
+  bounds.x += state.grid_offset.x;
+  bounds.w -= state.grid_offset.x;
+  bounds.y += state.grid_offset.y;
+  bounds.h -= state.grid_offset.y;
 
-  for (auto y = y0; y < y1; ++y) {
+  auto cells_x = state.grid_cells.x;
+  auto cells_y = state.grid_cells.y;
+  if (!cells_x)
+    cells_x = ceil(bounds.w, stride.x) / stride.x;
+  if (!cells_y)
+    cells_y = ceil(bounds.h, stride.y) / stride.y;
+
+  for (auto y = 0; y < cells_y; ++y) {
     auto output_offset = false;
     auto skipped = 0;
-    for (auto x = x0; x < x1; ++x) {
+    for (auto x = 0; x < cells_x; ++x) {
 
-      state.rect = {
-        state.grid_offset.x + x * grid.x,
-        state.grid_offset.y + y * grid.y,
+      state.rect = intersect({
+        bounds.x + x * stride.x,
+        bounds.y + y * stride.y,
         state.grid.x, state.grid.y
-      };
+      }, bounds);
+
+      if (empty(state.rect))
+        continue;
 
       if (state.trim_gray_levels ?
           is_fully_black(*sheet, state.trim_threshold, state.rect) :
