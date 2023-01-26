@@ -44,16 +44,16 @@ namespace {
   void draw_sprite_info(Image& target, const Sprite& sprite, float scale) {
     const auto scale_rect = [&](const auto& rect) {
       return RectF{ 
-        rect.x * scale, 
-        rect.y * scale, 
-        rect.w * scale, 
-        rect.h * scale
+        static_cast<float>(rect.x) * scale,
+        static_cast<float>(rect.y) * scale,
+        static_cast<float>(rect.w) * scale,
+        static_cast<float>(rect.h) * scale
       };
     };
     const auto scale_point = [&](const auto& point) {
       return PointF{
-        point.x * scale,
-        point.y * scale
+        static_cast<float>(point.x) * scale,
+        static_cast<float>(point.y) * scale
       };
     };
 
@@ -63,7 +63,7 @@ namespace {
     if (sprite.rotated) {
       std::swap(rect.w, rect.h);
       std::swap(trimmed_rect.w, trimmed_rect.h);
-      pivot_point = rotate_cw(pivot_point, rect.w - 1);
+      pivot_point = rotate_cw(pivot_point, rect.w - 1.0f);
     }
     draw_rect(target, round(rect), RGBA{ { 255, 0, 255, 128 } });
     draw_rect(target, round(trimmed_rect), RGBA{ { 255, 255, 0, 128 } });

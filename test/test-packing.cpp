@@ -4,6 +4,7 @@
 #include "src/trimming.h"
 #include "src/packing.h"
 #include "src/output.h"
+#include "src/debug.h"
 #include <sstream>
 
 using namespace spright;
@@ -35,7 +36,9 @@ namespace {
   [[maybe_unused]] void dump(Texture texture) {
     static auto i = 0;
     const auto filename = FilenameSequence("dump-{000-}.png").get_nth_filename(i++);
-    save_image(get_output_texture({ .debug = true }, texture), filename);
+    auto image = get_output_texture(texture);
+    draw_debug_info(image, texture);
+    save_image(image, filename);
   }
 
   Texture pack_single_sheet(const char* definition) {

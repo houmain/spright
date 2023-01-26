@@ -93,6 +93,7 @@ using RectF = RectT<float>;
 inline bool empty(const Size& size) { return (size.x == 0 || size.y == 0); }
 inline bool empty(const Rect& rect) { return (rect.w == 0 || rect.h == 0); }
 
+PointF rotate_cw(const PointF& point, float width);
 Rect expand(const Rect& rect, int value);
 Rect intersect(const Rect& a, const Rect& b);
 bool containing(const Rect& a, const Rect& b);

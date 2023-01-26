@@ -4,6 +4,10 @@
 
 namespace spright {
 
+PointF rotate_cw(const PointF& point, float width) {
+  return { static_cast<float>(width) - point.y, point.x };
+}
+
 Rect expand(const Rect& rect, int value) {
   return { rect.x - value, rect.y - value, rect.w + value * 2, rect.h + value * 2 };
 }

@@ -238,8 +238,7 @@ void write_output_description(const Settings& settings,
     update_textfile(settings.output_path / settings.output_file, ss.str());
 }
 
-Image get_output_texture(const Settings& settings, 
-    const Texture& texture, int layer_index) {
+Image get_output_texture(const Texture& texture, int layer_index) {
   auto target = Image(texture.width, texture.height, RGBA{ });
 
   auto copied_sprite = false;

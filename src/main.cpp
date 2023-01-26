@@ -52,7 +52,7 @@ int main(int argc, const char* argv[]) try {
   for_each_parallel(begin(output_layers), end(output_layers),
     [&](const OutputLayer& output_layers) {
       const auto [texture, filename, layer_index] = output_layers;
-      if (auto image = get_output_texture(settings, *texture, layer_index)) {
+      if (auto image = get_output_texture(*texture, layer_index)) {
         if (settings.debug)
           draw_debug_info(image, *texture);
         save_image(image, filename);
