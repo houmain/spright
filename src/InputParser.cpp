@@ -455,12 +455,15 @@ void InputParser::parse(std::istream& input) try {
       autocomplete_space = { };
     }
   }
+  m_line_number = 0;
   pop_scope_stack(-1);
   assert(m_not_applied_definitions.empty());
 }
 catch (const std::exception& ex) {
   auto ss = std::stringstream();
-  ss << ex.what() << " in line " << m_line_number;
+  ss << ex.what();
+  if (m_line_number > 0)
+    ss << " in line " << m_line_number;
   throw std::runtime_error(ss.str());
 }
 
