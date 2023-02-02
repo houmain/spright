@@ -4,6 +4,7 @@
 #include "output.h"
 #include "globbing.h"
 #include "debug.h"
+#include "Scheduler.h"
 #include <iostream>
 #include <chrono>
 
@@ -33,6 +34,8 @@ int main(int argc, const char* argv[]) try {
   write_output_description(settings, sprites, textures);
   time_points.emplace_back(Clock::now(), "output description");
 
+  auto scheduler = Scheduler();
+
   struct OutputLayer {
     const Texture* texture;
     std::filesystem::path filename;
@@ -49,8 +52,8 @@ int main(int argc, const char* argv[]) try {
       output_layers.push_back({ &texture, replace_suffix(filename,
           texture.output->default_layer_suffix, layer_suffix), i++ });
   }
-  for_each_parallel(begin(output_layers), end(output_layers),
-    [&](const OutputLayer& output_layers) {
+  scheduler.for_each_parallel(begin(output_layers), end(output_layers),
+    [&](const OutputLayer& output_layers) noexcept {
       const auto [texture, filename, layer_index] = output_layers;
       if (auto image = get_output_texture(*texture, layer_index)) {
         if (settings.debug)

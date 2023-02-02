@@ -104,16 +104,4 @@ static_assert(floor_to_pot(6) == 4);
 static_assert(floor_to_pot(7) == 4);
 static_assert(floor_to_pot(8) == 8);
 
-template<typename It, typename F>
-void for_each_parallel(It begin, It end, F&& func) {
-  if (begin == end)
-    return;
-  auto results = std::vector<std::future<void>>();
-  std::transform(std::next(begin), end, std::back_inserter(results),
-    [&func](auto& e) { return std::async(std::launch::async, func, e); });
-  func(*begin);
-  for (const auto& result : results)
-    result.wait();
-}
-
 } // namespace
