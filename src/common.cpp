@@ -54,7 +54,7 @@ bool is_digit(char c) {
   return std::isdigit(static_cast<unsigned char>(c));
 }
 
-std::optional<real> to_float(std::string_view str) {
+std::optional<real> to_real(std::string_view str) {
 #if !defined(__GNUC__) || __GNUC__ >= 11
   auto result = real{ };
   if (std::from_chars(str.data(), 
@@ -68,6 +68,12 @@ std::optional<real> to_float(std::string_view str) {
   }
 #endif
   return { };
+}
+
+std::string to_string(real value) {
+  auto string = std::string(8, ' ');
+  string.resize(std::snprintf(string.data(), string.size(), "%.2f", value));
+  return string;
 }
 
 bool starts_with(std::string_view str, std::string_view with) {

@@ -82,6 +82,7 @@ OutputPtr InputParser::get_output(const State& state) {
       state.alpha,
       state.alpha_colorkey,
       state.pack,
+      state.scalings,
     });
   }
   return output;

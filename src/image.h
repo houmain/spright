@@ -61,11 +61,11 @@ private:
 
 enum class ResizeFilter {
   Default,
-  Box,
-  Triangle,
-  CubicSplite,
-  CatmussRom,
-  Mitchell
+  Box,         // A trapezoid w/1-pixel wide ramps, same result as box for integer scale ratios
+  Triangle,    // On upsampling, produces same results as bilinear texture filtering
+  CubicSplite, // The cubic b-spline (aka Mitchell-Netrevalli with B=1,C=0), gaussian-esque
+  CatmullRom,  // An interpolating cubic spline
+  Mitchell     // Mitchell-Netrevalli filter with B=1/3, C=1/3
 };
 
 void save_image(const Image& image, const std::filesystem::path& filename);

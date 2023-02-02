@@ -648,15 +648,17 @@ MonoImage get_gray_levels(const Image& image, const Rect& rect) {
 }
 
 Image resize_image(const Image& image, real scale, ResizeFilter filter) {
-  auto output = Image(
-    static_cast<int>(image.width() * scale + 0.5),
-    static_cast<int>(image.height() * scale + 0.5));
+  const auto width = static_cast<int>(image.width() * scale + 0.5);
+  const auto height = static_cast<int>(image.height() * scale + 0.5);
+  if (width == image.width() && height == image.height())
+    return image.clone();
+  auto output = Image(width, height);
   const auto flags = 0;
   const auto edge_mode = STBIR_EDGE_CLAMP;
   const auto color_space = STBIR_COLORSPACE_SRGB;
   const auto bytes_per_pixel = int{ sizeof(RGBA) };
   if (!stbir_resize(image.rgba(), image.width(), image.height(), image.width() * bytes_per_pixel,
-        output.rgba(), output.width(), output.height(), output.width() * bytes_per_pixel,
+        output.rgba(), width, height, width * bytes_per_pixel,
         STBIR_TYPE_UINT8, 4, 3, flags, edge_mode, edge_mode, 
         static_cast<stbir_filter>(filter), static_cast<stbir_filter>(filter), 
         color_space, nullptr))

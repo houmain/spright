@@ -37,11 +37,15 @@ TEST_CASE("globbing - Match") {
   CHECK(replace_suffix("test-abc.png", "-efg", "-xyz") == "test-abc-xyz.png");
   CHECK(replace_suffix("test.png", "", "-xyz") == "test-xyz.png");
   CHECK(replace_suffix("test-abc-efg.png", "-abc", "-xyz") == "test-xyz-efg.png");
+  CHECK(replace_suffix("test.png", "", "") == "test.png");
+  CHECK(replace_suffix("test-abc.png", "-abc", "") == "test.png");
 
   CHECK(replace_suffix("test-abc", "-abc", "-xyz") == "test-xyz");
   CHECK(replace_suffix("test-abc", "-efg", "-xyz") == "test-abc-xyz");
   CHECK(replace_suffix("test", "", "-xyz") == "test-xyz");
   CHECK(replace_suffix("test-abc-efg", "-abc", "-xyz") == "test-xyz-efg");
+  CHECK(replace_suffix("test", "", "") == "test");
+  CHECK(replace_suffix("test-abc", "-abc", "") == "test");
 
   CHECK(has_suffix("test-abc.png", "-abc"));
   CHECK(!has_suffix("test-abcd.png", "-abc"));

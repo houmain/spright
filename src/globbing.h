@@ -16,6 +16,9 @@ std::vector<FilenameSequence> glob_sequences(
 
 bool has_suffix(const std::string& filename, const std::string& suffix);
 
+std::filesystem::path add_suffix(const std::filesystem::path& filename, 
+  const std::string& suffix);
+
 std::filesystem::path replace_suffix(const std::filesystem::path& filename, 
   const std::string& old_suffix, const std::string& new_suffix);
 

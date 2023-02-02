@@ -54,11 +54,28 @@ int main(int argc, const char* argv[]) try {
   }
   scheduler.for_each_parallel(begin(output_layers), end(output_layers),
     [&](const OutputLayer& output_layers) noexcept {
-      const auto [texture, filename, layer_index] = output_layers;
-      if (auto image = get_output_texture(*texture, layer_index)) {
+      const auto& texture = *output_layers.texture;
+      const auto& filename = output_layers.filename;
+      auto image = get_output_texture(texture, output_layers.layer_index);
+      if (!image)
+        return;
+
+      const auto& output = *texture.output;
+      const auto& scalings = output.scalings;
+      if (scalings.empty()) {
         if (settings.debug)
-          draw_debug_info(image, *texture);
+          draw_debug_info(image, texture);
         save_image(image, filename);
+      }
+      else {
+        scheduler.for_each_parallel(begin(scalings), end(scalings),
+          [&](const Scaling& scaling) {
+            const auto scale = scaling.scale;
+            auto resized = resize_image(image, scale, scaling.resize_filter);
+            if (settings.debug)
+              draw_debug_info(resized, texture, scale);
+            save_image(resized, add_suffix(filename, scaling.filename_suffix));
+          });
       }
     });
   time_points.emplace_back(Clock::now(), "output textures");

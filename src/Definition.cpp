@@ -59,6 +59,7 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::duplicates: return "duplicates";
     case Definition::alpha: return "alpha";
     case Definition::pack: return "pack";
+    case Definition::scalings: return "scalings";
     case Definition::path: return "path";
     case Definition::input: return "input";
     case Definition::colorkey: return "colorkey";
@@ -114,6 +115,7 @@ Definition get_affected_definition(Definition definition) {
     case Definition::duplicates:
     case Definition::alpha:
     case Definition::pack:
+    case Definition::scalings:
       return Definition::output;
 
     case Definition::path:
@@ -155,6 +157,11 @@ void apply_definition(Definition definition,
   const auto check_string = [&]() {
     check(arguments_left(), "invalid argument count");
     return arguments[argument_index++];
+  };
+  const auto check_real = [&]() {
+    auto value = to_real(check_string());
+    check(value.has_value(), "invalid real number");
+    return value.value();
   };
   const auto check_path = [&]() {
     return utf8_to_path(check_string());
@@ -269,6 +276,28 @@ void apply_definition(Definition definition,
       break;
     }
 
+    case Definition::scalings: {
+      auto resize_filter = ResizeFilter::Default;
+      state.scalings.clear();
+      while (arguments_left()) {
+        const auto string = check_string();
+        if (const auto scale = to_real(string)) {
+          check(scale > 0.01 && scale <= 8, "invalid scale");
+          state.scalings.push_back({ *scale, resize_filter });
+        }
+        else if (const auto index = index_of(string, { "default", "box", "bilinear", "cubicspline", "catmullrom", "mitchell" }); index >= 0) {
+          resize_filter = static_cast<ResizeFilter>(index);
+        }
+        else {
+          error("invalid scale filter '", string, "'");
+        }
+      }
+      if (state.scalings.size() > 1)
+        for (auto& scaling : state.scalings)
+         scaling.filename_suffix = to_string(-scaling.scale);
+      break;
+    }
+
     case Definition::path:
       state.path = check_string();
       break;
@@ -351,7 +380,7 @@ void apply_definition(Definition definition,
 
     case Definition::pivot: {
       // join expressions (e.g. middle - 7 top + 2)
-      if (!std::all_of(arguments.begin(), arguments.end(), to_float))
+      if (!std::all_of(arguments.begin(), arguments.end(), to_real))
         join_expressions(&arguments);
 
       state.pivot = { PivotX::left, PivotY::top };
@@ -370,7 +399,7 @@ void apply_definition(Definition definition,
           state.pivot.y = static_cast<PivotY>(index);
           current_coord = &state.pivot_point.y;
         }
-        else if (auto value = to_float(expr.front())) {
+        else if (auto value = to_real(expr.front())) {
           *current_coord = *value;
         }
         else if (!expr.front().empty()) {
@@ -380,7 +409,7 @@ void apply_definition(Definition definition,
         if (expr.size() % 2 != 1)
           error("invalid pivot expression");
         for (auto j = 1u; j < expr.size(); j += 2) {
-          const auto value = to_float(expr[j + 1]);
+          const auto value = to_real(expr[j + 1]);
           if (value && expr[j] == "+")
             *current_coord += *value;
           else if (value && expr[j] == "-")

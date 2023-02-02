@@ -24,6 +24,12 @@ enum class Pack { binpack, compact, single, keep };
 
 enum class Duplicates { keep, share, drop };
 
+struct Scaling {
+  real scale;
+  ResizeFilter resize_filter;
+  std::string filename_suffix;
+};
+
 struct Output {
   FilenameSequence filename;
   std::string default_layer_suffix;
@@ -42,6 +48,7 @@ struct Output {
   Alpha alpha{ Alpha::keep };
   RGBA colorkey{ };
   Pack pack{ Pack::binpack };
+  std::vector<Scaling> scalings;
 };
 
 struct Sprite {

@@ -7,7 +7,6 @@
 #include <sstream>
 #include <cctype>
 #include <cmath>
-#include <future>
 #include <algorithm>
 #include <utility>
 #include <optional>
@@ -57,7 +56,8 @@ bool is_space(char c);
 bool is_punct(char c);
 char to_lower(char c);
 std::string to_lower(std::string string);
-std::optional<real> to_float(std::string_view string);
+std::optional<real> to_real(std::string_view string);
+std::string to_string(real value);
 bool starts_with(std::string_view str, std::string_view with);
 bool ends_with(std::string_view str, std::string_view with);
 std::string_view ltrim(LStringView str);
