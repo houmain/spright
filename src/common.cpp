@@ -71,8 +71,17 @@ std::optional<real> to_real(std::string_view str) {
 }
 
 std::string to_string(real value) {
-  auto string = std::string(8, ' ');
-  string.resize(std::snprintf(string.data(), string.size(), "%.2f", value));
+  const auto max_size = 20;
+  auto string = std::string(max_size, ' ');
+  const auto result = std::snprintf(string.data(), max_size + 1, "%.5f", value);
+  if (result < 0 || result > max_size)
+    throw std::runtime_error("formatting number failed");
+  string.resize(static_cast<size_t>(result));
+  // remove zeroes after the dot but keep one digit
+  if (auto dot = string.find('.'); dot != std::string::npos)
+    while (string.back() == '0' &&
+           string.size() > dot + 2)
+      string.pop_back();
   return string;
 }
 
