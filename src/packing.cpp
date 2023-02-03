@@ -152,15 +152,17 @@ std::pair<int, int> get_texture_max_size(const Output& output) {
 
 Size get_sprite_size(const Sprite& sprite) {
   return {
-    sprite.trimmed_source_rect.w + sprite.common_divisor_margin.x + sprite.extrude * 2,
-    sprite.trimmed_source_rect.h + sprite.common_divisor_margin.y + sprite.extrude * 2
+    sprite.trimmed_source_rect.w + sprite.common_divisor_margin.x + 
+      sprite.extrude.count * 2,
+    sprite.trimmed_source_rect.h + sprite.common_divisor_margin.y + 
+      sprite.extrude.count * 2
   };
 }
 
 Size get_sprite_indent(const Sprite& sprite) {
   return {
-    sprite.common_divisor_offset.x + sprite.extrude,
-    sprite.common_divisor_offset.y + sprite.extrude,
+    sprite.common_divisor_offset.x + sprite.extrude.count,
+    sprite.common_divisor_offset.y + sprite.extrude.count,
   };
 }
 

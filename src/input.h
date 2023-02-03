@@ -24,6 +24,11 @@ enum class Pack { binpack, compact, single, keep };
 
 enum class Duplicates { keep, share, drop };
 
+struct Extrude {
+  int count;
+  WrapMode mode;
+};
+
 struct Scaling {
   real scale;
   ResizeFilter resize_filter;
@@ -69,7 +74,7 @@ struct Sprite {
   bool trim_gray_levels{ };
   bool crop{ };
   bool crop_pivot{ };
-  int extrude{ };
+  Extrude extrude{ };
   std::map<std::string, std::string> tags;
   bool rotated{ };
   int texture_index{ };

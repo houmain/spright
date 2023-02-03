@@ -259,7 +259,7 @@ The following table contains a list of all definitions, with the subject each af
 | trim-margin    |sprite | [pixels]     | Sets a number of transparent pixel rows around the sprite, which should not be removed by trimming.
 | crop           |sprite | [boolean]    | Sets whether the sprite's rectangle should be reduced to the trimmed bounds.
 | crop-pivot     |sprite | [boolean]    | Sets whether the sprite's pivot point should be relative to the trimmed bounds.
-| extrude        |sprite | [pixels]     | Adds a padding around the sprite and fills it with the sprite's border pixel color.
+| extrude        |sprite | [pixels],<br/>[wrap-mode] | Adds a padding around the sprite and fills it depending on the _wrap-mode_:<br/>- _clamp_ (default)<br/>- _mirror_:<br/>- _repeat_: .
 | common-divisor |sprite | x, [y]       | Restricts the sprite's size to be divisible by a certain number of pixels. Smaller sprites are filled up with transparency.
 | group          |-      | -            | Can be used for opening a new scope, to limit for example the effect of a tag.
 

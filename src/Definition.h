@@ -98,7 +98,7 @@ struct State {
   bool trim_gray_levels{ };
   bool crop{ };
   bool crop_pivot{ };
-  int extrude{ };
+  Extrude extrude{ };
   Size common_divisor{ 1, 1 };
 };
 

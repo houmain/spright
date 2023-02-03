@@ -59,13 +59,17 @@ private:
   int m_height{ };
 };
 
+enum class WrapMode { 
+  clamp, mirror, repeat 
+};
+
 enum class ResizeFilter {
-  Default,
-  Box,         // A trapezoid w/1-pixel wide ramps, same result as box for integer scale ratios
-  Triangle,    // On upsampling, produces same results as bilinear texture filtering
-  CubicSplite, // The cubic b-spline (aka Mitchell-Netrevalli with B=1,C=0), gaussian-esque
-  CatmullRom,  // An interpolating cubic spline
-  Mitchell     // Mitchell-Netrevalli filter with B=1/3, C=1/3
+  undefined,
+  box,          // A trapezoid w/1-pixel wide ramps, same result as box for integer scale ratios
+  triangle,     // On upsampling, produces same results as bilinear texture filtering
+  cubic_spline, // The cubic b-spline (aka Mitchell-Netrevalli with B=1,C=0), gaussian-esque
+  catmull_rom,  // An interpolating cubic spline
+  mitchell      // Mitchell-Netrevalli filter with B=1/3, C=1/3
 };
 
 void save_image(const Image& image, const std::filesystem::path& filename);
@@ -76,7 +80,8 @@ void copy_rect(const Image& source, const Rect& source_rect, Image& dest,
   int dx, int dy, const std::vector<PointF>& mask_vertices);
 void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& dest, 
   int dx, int dy, const std::vector<PointF>& mask_vertices);
-void extrude_rect(Image& image, const Rect& rect, bool left, bool top, bool right, bool bottom);
+void extrude_rect(Image& image, const Rect& rect, int count, WrapMode mode, 
+  bool left, bool top, bool right, bool bottom);
 void draw_rect(Image& image, const Rect& rect, const RGBA& color);
 void draw_line(Image& image, const Point& p0, const Point& p1, 
   const RGBA& color, bool omit_last = false);

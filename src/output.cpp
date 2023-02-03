@@ -158,7 +158,7 @@ namespace {
       }
     }
 
-    if (sprite.extrude) {
+    if (sprite.extrude.count) {
       const auto left = (sprite.source_rect.x0() == sprite.trimmed_source_rect.x0());
       const auto top = (sprite.source_rect.y0() == sprite.trimmed_source_rect.y0());
       const auto right = (sprite.source_rect.x1() == sprite.trimmed_source_rect.x1());
@@ -167,10 +167,9 @@ namespace {
         auto rect = sprite.trimmed_rect;
         if (sprite.rotated)
           std::swap(rect.w, rect.h);
-        for (auto i = 0; i < sprite.extrude; i++) {
-          rect = expand(rect, 1);
-          extrude_rect(target, rect, left, top, right, bottom);
-        }
+        extrude_rect(target, rect, 
+          sprite.extrude.count, sprite.extrude.mode, 
+          left, top, right, bottom);
       }
     }
     return true;

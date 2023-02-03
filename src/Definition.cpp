@@ -248,7 +248,8 @@ void apply_definition(Definition definition,
 
     case Definition::duplicates: {
       const auto string = check_string();
-      if (const auto index = index_of(string, { "keep", "share", "drop" }); index >= 0)
+      if (const auto index = index_of(string, 
+          { "keep", "share", "drop" }); index >= 0)
         state.duplicates = static_cast<Duplicates>(index);
       else
         error("invalid duplicates value '", string, "'");
@@ -257,7 +258,8 @@ void apply_definition(Definition definition,
 
     case Definition::alpha: {
       const auto string = check_string();
-      if (const auto index = index_of(string, { "keep", "clear", "bleed", "premultiply", "colorkey" }); index >= 0)
+      if (const auto index = index_of(string, 
+          { "keep", "clear", "bleed", "premultiply", "colorkey" }); index >= 0)
         state.alpha = static_cast<Alpha>(index);
       else
         error("invalid alpha value '", string, "'");
@@ -269,7 +271,8 @@ void apply_definition(Definition definition,
 
     case Definition::pack: {
       const auto string = check_string();
-      if (const auto index = index_of(string, { "binpack", "compact", "single", "keep" }); index >= 0)
+      if (const auto index = index_of(string, 
+          { "binpack", "compact", "single", "keep" }); index >= 0)
         state.pack = static_cast<Pack>(index);
       else
         error("invalid pack method '", string, "'");
@@ -277,7 +280,7 @@ void apply_definition(Definition definition,
     }
 
     case Definition::scalings: {
-      auto resize_filter = ResizeFilter::Default;
+      auto resize_filter = ResizeFilter::undefined;
       state.scalings.clear();
       while (arguments_left()) {
         const auto string = check_string();
@@ -285,7 +288,9 @@ void apply_definition(Definition definition,
           check(scale > 0.01 && scale <= 8, "invalid scale");
           state.scalings.push_back({ *scale, resize_filter });
         }
-        else if (const auto index = index_of(string, { "default", "box", "bilinear", "cubicspline", "catmullrom", "mitchell" }); index >= 0) {
+        else if (const auto index = index_of(string, 
+            { "default", "box", "bilinear", "cubicspline", 
+              "catmullrom", "mitchell" }); index >= 0) {
           resize_filter = static_cast<ResizeFilter>(index);
         }
         else {
@@ -429,7 +434,8 @@ void apply_definition(Definition definition,
 
     case Definition::trim: {
       const auto string = check_string();
-      if (const auto index = index_of(string, { "none", "rect", "convex" }); index >= 0)
+      if (const auto index = index_of(string, 
+          { "none", "rect", "convex" }); index >= 0)
         state.trim = static_cast<Trim>(index);
       else
         error("invalid trim value '", string, "'");
@@ -461,7 +467,16 @@ void apply_definition(Definition definition,
       break;
 
     case Definition::extrude:
-      state.extrude = (arguments_left() ? check_uint() : 1);
+      state.extrude = {};
+      state.extrude.count = (arguments_left() ? check_uint() : 1);
+      if (arguments_left()) {
+        const auto string = check_string();
+        if (const auto index = index_of(string, 
+            { "clamp", "mirror", "repeat" }); index >= 0)
+          state.extrude.mode = static_cast<WrapMode>(index);
+        else
+          error("invalid extrude mode '", string, "'");
+      }
       break;
 
     case Definition::common_divisor:
