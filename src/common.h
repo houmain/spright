@@ -52,6 +52,7 @@ std::filesystem::path utf8_to_path(const std::string& utf8_string);
 std::filesystem::path utf8_to_path(const std::filesystem::path&) = delete;
 std::string path_to_utf8(const std::filesystem::path& path);
 std::string path_to_utf8(const std::string&) = delete;
+bool is_digit(char c);
 bool is_space(char c);
 bool is_punct(char c);
 char to_lower(char c);

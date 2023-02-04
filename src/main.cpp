@@ -8,9 +8,64 @@
 #include <iostream>
 #include <chrono>
 
-int main(int argc, const char* argv[]) try {
+namespace {
   using namespace spright;
 
+  struct OutputLayer {
+    const Texture* texture;
+    std::filesystem::path filename;
+    int layer_index;
+  };
+
+  std::vector<OutputLayer> get_output_layers(const Settings& settings,
+      const std::vector<Texture>& textures) {
+    auto output_layers = std::vector<OutputLayer>();
+    for (const auto& texture : textures) {
+      const auto filename = settings.output_path / utf8_to_path(
+          texture.output->filename.get_nth_filename(texture.index));
+      output_layers.push_back({ &texture, filename, -1 });
+
+      auto i = 0;
+      for (const auto& layer_suffix : texture.output->layer_suffixes)
+        output_layers.push_back({ &texture, replace_suffix(filename,
+            texture.output->default_layer_suffix, layer_suffix), i++ });
+    }
+    return output_layers;
+  }
+
+  void output_textures(const Settings& settings,
+      const std::vector<OutputLayer>& output_layers) {
+    auto scheduler = Scheduler();
+    scheduler.for_each_parallel(begin(output_layers), end(output_layers),
+      [&](const OutputLayer& output_layers) noexcept {
+        const auto& texture = *output_layers.texture;
+        const auto& filename = output_layers.filename;
+        auto image = get_output_texture(texture, output_layers.layer_index);
+        if (!image)
+          return;
+
+        const auto& output = *texture.output;
+        const auto& scalings = output.scalings;
+        if (scalings.empty()) {
+          if (settings.debug)
+            draw_debug_info(image, texture);
+          save_image(image, filename);
+        }
+        else {
+          scheduler.for_each_parallel(begin(scalings), end(scalings),
+            [&](const Scaling& scaling) {
+              const auto scale = scaling.scale;
+              auto resized = resize_image(image, scale, scaling.resize_filter);
+              if (settings.debug)
+                draw_debug_info(resized, texture, scale);
+              save_image(resized, add_suffix(filename, scaling.filename_suffix));
+            });
+        }
+      });
+  }
+} // namespace
+
+int main(int argc, const char* argv[]) try {
   auto settings = Settings{ };
   if (!interpret_commandline(settings, argc, argv)) {
     print_help_message(argv[0]);
@@ -34,50 +89,7 @@ int main(int argc, const char* argv[]) try {
   write_output_description(settings, sprites, textures);
   time_points.emplace_back(Clock::now(), "output description");
 
-  auto scheduler = Scheduler();
-
-  struct OutputLayer {
-    const Texture* texture;
-    std::filesystem::path filename;
-    int layer_index;
-  };
-  auto output_layers = std::vector<OutputLayer>();
-  for (const auto& texture : textures) {
-    const auto filename = settings.output_path / utf8_to_path(
-        texture.output->filename.get_nth_filename(texture.index));
-    output_layers.push_back({ &texture, filename, -1 });
-
-    auto i = 0;
-    for (const auto& layer_suffix : texture.output->layer_suffixes)
-      output_layers.push_back({ &texture, replace_suffix(filename,
-          texture.output->default_layer_suffix, layer_suffix), i++ });
-  }
-  scheduler.for_each_parallel(begin(output_layers), end(output_layers),
-    [&](const OutputLayer& output_layers) noexcept {
-      const auto& texture = *output_layers.texture;
-      const auto& filename = output_layers.filename;
-      auto image = get_output_texture(texture, output_layers.layer_index);
-      if (!image)
-        return;
-
-      const auto& output = *texture.output;
-      const auto& scalings = output.scalings;
-      if (scalings.empty()) {
-        if (settings.debug)
-          draw_debug_info(image, texture);
-        save_image(image, filename);
-      }
-      else {
-        scheduler.for_each_parallel(begin(scalings), end(scalings),
-          [&](const Scaling& scaling) {
-            const auto scale = scaling.scale;
-            auto resized = resize_image(image, scale, scaling.resize_filter);
-            if (settings.debug)
-              draw_debug_info(resized, texture, scale);
-            save_image(resized, add_suffix(filename, scaling.filename_suffix));
-          });
-      }
-    });
+  output_textures(settings, get_output_layers(settings, textures));
   time_points.emplace_back(Clock::now(), "output textures");
 
   if (settings.debug) {

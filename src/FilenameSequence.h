@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "common.h"
 #include <limits>
 #include <cassert>
 
@@ -50,14 +50,13 @@ public:
       m_format_size, to_digit_string(m_first + index));
   }
 
-
 private:
   static const auto infinite = std::numeric_limits<int>::max();
 
   template<typename InputIt>
   bool skip_space(InputIt& it, InputIt end) {
     auto skipped = false;
-    while (it != end && isspace(*it)) {
+    while (it != end && is_space(*it)) {
       skipped = true;
       ++it;
     }
@@ -95,7 +94,7 @@ private:
       ++it;
     }
     auto value = 0;
-    while (it != end && std::isdigit(*it)) {
+    while (it != end && is_digit(*it)) {
       value = value * 10 + (*it - '0');
       ++it;
     }
@@ -162,12 +161,12 @@ inline FilenameSequence try_make_sequence(const std::string& first_filename,
   if (it0 == end0)
     return { first_filename };
   // revert to begin of digit
-  for (; it0 != begin(first_filename) && std::isdigit(*std::prev(it0)); --it0, --it1) ;
+  for (; it0 != begin(first_filename) && is_digit(*std::prev(it0)); --it0, --it1) ;
   // advance to end of digit
   const auto pattern_begin0 = it0;
   const auto pattern_begin1 = it1;
-  for (; it0 != end0 && std::isdigit(*it0); ++it0) ;
-  for (; it1 != end1 && std::isdigit(*it1); ++it1) ;
+  for (; it0 != end0 && is_digit(*it0); ++it0) ;
+  for (; it1 != end1 && is_digit(*it1); ++it1) ;
   const auto pattern_end0 = it0;
   const auto pattern_end1 = it1;
   // advance to end
