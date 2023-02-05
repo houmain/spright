@@ -11,13 +11,7 @@ namespace spright {
 std::vector<Sprite> parse_definition(const Settings& settings) {
   auto parser = InputParser(settings);
 
-  if (!settings.input.empty()) {
-    auto input = std::stringstream(settings.input);
-    parser.parse(input);
-  }
-
   for (const auto& input_file : settings.input_files) {
-
     if (input_file == "stdin") {
       parser.parse(std::cin);
       continue;

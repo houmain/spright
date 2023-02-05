@@ -7,32 +7,6 @@
 
 namespace spright {
 
-namespace {
-  // replace comma with newline (not within string)
-  // skip spaces after newline
-  std::string arglist_to_input(std::string string) {
-    auto pos = begin(string);
-    auto in_string = false;
-    auto after_newline = false;
-    for (auto it = begin(string); it != end(string); ++it) {
-      auto c = *it;
-      if (c == '"') {
-        in_string = !in_string;
-      }
-      else if (!in_string && c == ',') {
-        c = '\n';
-      }
-      else if (after_newline && c == ' ') {
-        continue;
-      }
-      *pos++ = c;
-      after_newline = (c == '\n');
-    }
-    string.erase(pos, end(string));
-    return string;
-  }
-} // namespace
-
 bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
   for (auto i = 1; i < argc; i++) {
     const auto argument = std::string_view(argv[i]);
@@ -40,13 +14,6 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
       if (++i >= argc)
         return false;
       settings.input_files.push_back(std::filesystem::u8path(unquote(argv[i])));
-    }
-    else if (argument == "--") {
-      auto ss = std::stringstream();
-      std::copy(&argv[i + 1], &argv[argc],
-        std::ostream_iterator<const char*>(ss, " "));
-      settings.input = arglist_to_input(ss.str());
-      break;
     }
     else if (argument == "-t" || argument == "--template") {
       if (++i >= argc)
@@ -74,7 +41,7 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
     }
   }
 
-  if (settings.input_files.empty() && settings.input.empty())
+  if (settings.input_files.empty())
     settings.input_files.emplace_back(settings.default_input_file);
 
   if (settings.output_file.empty())
@@ -110,8 +77,6 @@ void print_help_message(const char* argv0) {
     "  -a, --autocomplete     autocomplete input definition.\n"
     "  -d, --debug            draw sprite boundaries and pivot points on output.\n"
     "  -h, --help             print this help.\n"
-    "  -- <args>              interpret remaining arguments as a comma separated\n"
-    "                         list of input definitions.\n"
     "\n"
     "All Rights Reserved.\n"
     "This program comes with absolutely no warranty.\n"

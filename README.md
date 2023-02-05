@@ -46,8 +46,6 @@ Usage: spright [-options]
   -a, --autocomplete     autocomplete input sheet definition.
   -d, --debug            draw sprite boundaries and pivot points on output.
   -h, --help             print this help.
-  -- <args>              interpret remaining arguments as a comma separated
-                         list of input definitions.
 ```
 The special identifiers _stdin_ and _stdout_ can be passed to _input_ and _output_ to enable console redirection.
 
