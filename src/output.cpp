@@ -83,6 +83,7 @@ namespace {
       auto& json_texture = json_textures.emplace_back();
       const auto filename = 
         texture.output->filename.get_nth_filename(texture.index);
+      json_texture["inputFilename"] = path_to_utf8(texture.output->input_file);
       json_texture["filename"] = filename;
       json_texture["width"] = texture.width;
       json_texture["height"] = texture.height;

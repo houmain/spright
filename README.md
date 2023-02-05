@@ -293,6 +293,7 @@ By default a [JSON](https://www.json.org) file containing all the information ab
   ],
   "textures": [
     {
+      "inputFilename": "spright.conf",
       "filename": "path/spright0.png",
       "width": 256,
       "height": 256,

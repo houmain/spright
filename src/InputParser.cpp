@@ -65,6 +65,7 @@ OutputPtr InputParser::get_output(const State& state) {
   if (!output) {
     update_applied_definitions(Definition::output);
     output = std::make_shared<Output>(Output{
+      m_input_file,
       FilenameSequence(path_to_utf8(state.output)),
       state.default_layer_suffix,
       state.layer_suffixes,
@@ -353,10 +354,13 @@ InputParser::InputParser(const Settings& settings)
   : m_settings(settings) {
 }
 
-void InputParser::parse(std::istream& input) try {
+void InputParser::parse(std::istream& input, 
+    const std::filesystem::path& input_file) try {
   m_autocomplete_output = { };
   m_sprites_in_current_sheet = { };
   m_detected_indentation = "  ";
+  m_input_file = input_file;
+  m_line_number = { };
 
   auto indentation_detected = false;
   auto scope_stack = std::vector<State>();
@@ -462,6 +466,8 @@ void InputParser::parse(std::istream& input) try {
 }
 catch (const std::exception& ex) {
   auto ss = std::stringstream();
+  if (!m_input_file.empty())
+    ss << "'" << path_to_utf8(m_input_file) << "' ";
   ss << ex.what();
   if (m_line_number > 0)
     ss << " in line " << m_line_number;

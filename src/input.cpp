@@ -20,13 +20,7 @@ std::vector<Sprite> parse_definition(const Settings& settings) {
     auto input = std::fstream(input_file, std::ios::in | std::ios::binary);
     if (!input.good())
       throw std::runtime_error("opening file '" + path_to_utf8(input_file) + "' failed");
-    try {
-      parser.parse(input);
-    }
-    catch (const std::exception& ex) {
-      throw std::runtime_error(
-        "'" + path_to_utf8(input_file) + "' " + ex.what());
-    }
+    parser.parse(input, input_file);
     input.close();
 
     if (settings.autocomplete)

@@ -9,7 +9,7 @@ namespace spright {
 class InputParser {
 public:
   explicit InputParser(const Settings& settings);
-  void parse(std::istream& input);
+  void parse(std::istream& input, const std::filesystem::path& input_file = { });
   const std::vector<Sprite>& sprites() const & { return m_sprites; }
   std::vector<Sprite> sprites() && { return std::move(m_sprites); }
   std::string autocomplete_output() const { return m_autocomplete_output.str(); }
@@ -43,6 +43,7 @@ private:
 
   const Settings& m_settings;
   std::stringstream m_autocomplete_output;
+  std::filesystem::path m_input_file;
   int m_line_number{ };
   std::map<std::filesystem::path, OutputPtr> m_outputs;
   std::map<std::filesystem::path, ImagePtr> m_sheets;

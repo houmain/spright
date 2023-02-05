@@ -36,6 +36,7 @@ struct Scaling {
 };
 
 struct Output {
+  std::filesystem::path input_file;
   FilenameSequence filename;
   std::string default_layer_suffix;
   std::vector<std::string> layer_suffixes;
