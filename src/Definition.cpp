@@ -158,11 +158,6 @@ void apply_definition(Definition definition,
     check(arguments_left(), "invalid argument count");
     return arguments[argument_index++];
   };
-  const auto check_real = [&]() {
-    auto value = to_real(check_string());
-    check(value.has_value(), "invalid real number");
-    return value.value();
-  };
   const auto check_path = [&]() {
     return utf8_to_path(check_string());
   };

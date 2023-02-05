@@ -79,8 +79,8 @@ namespace {
         auto v0 = sprite.vertices[i];
         auto v1 = sprite.vertices[(i + 1) % sprite.vertices.size()];
         if (sprite.rotated) {
-          v0 = rotate_cw(v0, sprite.trimmed_rect.w);
-          v1 = rotate_cw(v1, sprite.trimmed_rect.w);
+          v0 = rotate_cw(v0, sprite.trimmed_rect.h);
+          v1 = rotate_cw(v1, sprite.trimmed_rect.h);
         }
         v0.x *= scale_point_coord.x;
         v0.y *= scale_point_coord.y;
