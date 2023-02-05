@@ -32,6 +32,19 @@ std::string path_to_utf8(const std::filesystem::path& path) {
     reinterpret_cast<const char*>(u8string.data() + u8string.size()));
 }
 
+std::optional<std::filesystem::file_time_type> try_get_last_write_time(
+    const std::filesystem::path& path) {
+  auto error = std::error_code{ };
+  auto result = std::filesystem::last_write_time(path, error);
+  return (error ? std::nullopt : std::make_optional(result));
+}
+
+std::filesystem::file_time_type get_last_write_time(
+    const std::filesystem::path& path) {
+  auto error = std::error_code{ };
+  return std::filesystem::last_write_time(path, error);
+}
+
 bool is_space(char c) {
   return std::isspace(static_cast<unsigned char>(c));
 }
@@ -218,12 +231,13 @@ void write_textfile(const std::filesystem::path& filename, std::string_view text
   file.write(text.data(), static_cast<std::streamsize>(text.size()));
 }
 
-void update_textfile(const std::filesystem::path& filename, std::string_view text) {
+bool update_textfile(const std::filesystem::path& filename, std::string_view text) {
   auto error = std::error_code{ };
   if (std::filesystem::exists(filename, error))
     if (const auto current = read_textfile(filename); current == text)
-      return;
+      return false;
   write_textfile(filename, text);
+  return true;
 }
 
 } // namespace

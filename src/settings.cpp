@@ -33,6 +33,9 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
     else if (argument == "-a" || argument == "--autocomplete") {
       settings.autocomplete = true;
     }
+    else if (argument == "-r" || argument == "--rebuild") {
+      settings.rebuild = true;
+    }
     else if (argument == "-d" || argument == "--debug") {
       settings.debug = true;
     }
@@ -75,6 +78,7 @@ void print_help_message(const char* argv0) {
     "  -t, --template <file>  template for output description.\n"
     "  -p, --path <path>      path to prepend to all output files.\n"
     "  -a, --autocomplete     autocomplete input definition.\n"
+    "  -r, --regenerate       generate output even when input did not change.\n"
     "  -d, --debug            draw sprite boundaries and pivot points on output.\n"
     "  -h, --help             print this help.\n"
     "\n"

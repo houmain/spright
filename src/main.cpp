@@ -7,6 +7,7 @@
 #include "Scheduler.h"
 #include <iostream>
 #include <chrono>
+#include <unordered_set>
 
 namespace {
   using namespace spright;
@@ -31,6 +32,27 @@ namespace {
             texture.output->default_layer_suffix, layer_suffix), i++ });
     }
     return output_layers;
+  }
+
+  void update_last_source_written_time(Texture& texture) {
+    auto last_write_time = get_last_write_time(texture.output->input_file);
+
+    auto sources = std::unordered_set<const Image*>();
+    for (const auto& sprite : texture.sprites)
+      sources.insert(sprite.source.get());
+    for (const auto& source : sources)
+      last_write_time = std::max(last_write_time,
+        get_last_write_time(source->path() / source->filename()));
+
+    texture.last_source_written_time = last_write_time;
+  }
+
+  void remove_not_updated(std::vector<OutputLayer>& output_layers) {
+    output_layers.erase(std::remove_if(output_layers.begin(), output_layers.end(), 
+      [&](const OutputLayer& output_layer) {
+        return (try_get_last_write_time(output_layer.filename) > 
+                output_layer.texture->last_source_written_time);
+      }), output_layers.end());
   }
 
   void output_textures(const Settings& settings,
@@ -83,13 +105,19 @@ int main(int argc, const char* argv[]) try {
     trim_sprite(sprite);
   time_points.emplace_back(Clock::now(), "trimming");
 
-  const auto textures = pack_sprites(sprites);
+  auto textures = pack_sprites(sprites);
   time_points.emplace_back(Clock::now(), "packing");
 
   write_output_description(settings, sprites, textures);
   time_points.emplace_back(Clock::now(), "output description");
 
-  output_textures(settings, get_output_layers(settings, textures));
+  auto output_layers = get_output_layers(settings, textures);
+  if (!settings.rebuild) {
+    for (auto& texture : textures)
+      update_last_source_written_time(texture);
+    remove_not_updated(output_layers);
+  }
+  output_textures(settings, output_layers);
   time_points.emplace_back(Clock::now(), "output textures");
 
   if (settings.debug) {

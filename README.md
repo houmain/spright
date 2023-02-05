@@ -44,6 +44,7 @@ Usage: spright [-options]
   -t, --template <file>  template for output description.
   -p, --path <path>      path to prepend to all output files.
   -a, --autocomplete     autocomplete input sheet definition.
+  -r, --regenerate       generate output even when input did not change.
   -d, --debug            draw sprite boundaries and pivot points on output.
   -h, --help             print this help.
 ```

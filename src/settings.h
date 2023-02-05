@@ -14,6 +14,7 @@ struct Settings {
   std::filesystem::path template_file;
   bool autocomplete{ };
   bool debug{ };
+  bool rebuild{ };
 };
 
 bool interpret_commandline(Settings& settings, int argc, const char* argv[]);

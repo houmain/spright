@@ -52,6 +52,10 @@ std::filesystem::path utf8_to_path(const std::string& utf8_string);
 std::filesystem::path utf8_to_path(const std::filesystem::path&) = delete;
 std::string path_to_utf8(const std::filesystem::path& path);
 std::string path_to_utf8(const std::string&) = delete;
+std::filesystem::file_time_type get_last_write_time(
+  const std::filesystem::path& path);
+std::optional<std::filesystem::file_time_type> try_get_last_write_time(
+  const std::filesystem::path& path);
 bool is_digit(char c);
 bool is_space(char c);
 bool is_punct(char c);
@@ -71,7 +75,7 @@ void join_expressions(std::vector<std::string_view>* arguments);
 void split_expression(std::string_view str, std::vector<std::string_view>* result);
 std::string read_textfile(const std::filesystem::path& filename);
 void write_textfile(const std::filesystem::path& filename, std::string_view text);
-void update_textfile(const std::filesystem::path& filename, std::string_view text);
+bool update_textfile(const std::filesystem::path& filename, std::string_view text);
 
 inline int floor(int v, int q) { return (v / q) * q; };
 inline int ceil(int v, int q) { return ((v + q - 1) / q) * q; };

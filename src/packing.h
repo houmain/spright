@@ -22,6 +22,7 @@ struct Texture {
   int width{ };
   int height{ };
   SpriteSpan sprites;
+  std::filesystem::file_time_type last_source_written_time{ };
 };
 
 std::pair<int, int> get_texture_max_size(const Output& output);

@@ -217,11 +217,8 @@ std::string get_description(const std::string& template_source,
   return ss.str();
 }
 
-void write_output_description(const Settings& settings,
+bool write_output_description(const Settings& settings,
     const std::vector<Sprite>& sprites, const std::vector<Texture>& textures) {
-  if (settings.output_file.empty())
-    return;
-
   auto ss = std::stringstream();
   auto& os = (settings.output_file == "stdout" ? std::cout : ss);
 
@@ -235,7 +232,10 @@ void write_output_description(const Settings& settings,
   }
 
   if (settings.output_file != "stdout")
-    update_textfile(settings.output_path / settings.output_file, ss.str());
+    if (!update_textfile(settings.output_path / settings.output_file, ss.str()))
+      return false;
+
+  return true;
 }
 
 Image get_output_texture(const Texture& texture, int layer_index) {
