@@ -79,6 +79,8 @@ namespace {
       case Pack::compact: return pack_compact(output, sprites, textures);
       case Pack::single: return pack_single(output, sprites, textures);
       case Pack::keep: return pack_keep(output, sprites, textures);
+      case Pack::rows: return pack_lines(true, output, sprites, textures);
+      case Pack::columns: return pack_lines(false, output, sprites, textures);
     }
   }
 
@@ -100,18 +102,23 @@ namespace {
         }
        }
 
+    // when dropping duplicates, restore order of sprites before packing
+    if (output->duplicates == Duplicates::drop) {
+      std::sort(unique_sprites.begin(), unique_sprites.end(),
+        [](const Sprite& a, const Sprite& b) { return (a.index < b.index); });
+      for (auto i = unique_sprites.size(); i < sprites.size(); ++i)
+        sprites[i] = { };
+    }
+
     pack_texture(output, unique_sprites, textures);
 
-    for (auto i = size_t{ }; i < duplicates.size(); ++i) {
-      auto& duplicate = sprites[sprites.size() - 1 - i];
-      if (output->duplicates == Duplicates::share) {
+    if (output->duplicates == Duplicates::share) {
+      for (auto i = size_t{ }; i < duplicates.size(); ++i) {
+        auto& duplicate = sprites[sprites.size() - 1 - i];
         const auto& sprite = unique_sprites[duplicates[i]];
         duplicate.texture_index = sprite.texture_index;
         duplicate.trimmed_rect = sprite.trimmed_rect;
         duplicate.rotated = sprite.rotated;
-      }
-      else {
-        duplicate = { };
       }
     }
   }
