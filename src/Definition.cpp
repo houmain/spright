@@ -284,7 +284,7 @@ void apply_definition(Definition definition,
           state.scalings.push_back({ *scale, resize_filter });
         }
         else if (const auto index = index_of(string, 
-            { "default", "box", "bilinear", "cubicspline", 
+            { "default", "box", "triangle", "cubicspline",
               "catmullrom", "mitchell" }); index >= 0) {
           resize_filter = static_cast<ResizeFilter>(index);
         }

@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Version 1.8.0] - 2023-02-07
+
+### Added
+
+- Not updating outputs when sources did not change.
+- Added _scalings_.
+- Added extrude modes _mirror_ and _repeat_.
+- Added pack methods _rows_ and _columns_.
+- Added output of _inputFilename_.
+
+### Changed
+
+- Removed -- commandline argument.
+
+### Fixed
+
+- Fixed debug output of vertices when rotated.
+
 ## [Version 1.7.0] - 2023-01-26
 
 ### Added
@@ -68,6 +86,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fixed -- commandline arguments.
 - Fixed sample cpp.template.
 
+[version 1.8.0]: https://github.com/houmain/spright/compare/1.7.0...1.8.0
 [version 1.7.0]: https://github.com/houmain/spright/compare/1.6.0...1.7.0
 [version 1.6.0]: https://github.com/houmain/spright/compare/1.5.0...1.6.0
 [version 1.5.0]: https://github.com/houmain/spright/compare/1.4.0...1.5.0
