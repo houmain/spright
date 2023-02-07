@@ -15,12 +15,11 @@ void pack_lines(bool horizontal, const OutputPtr& output,
     textures.push_back(std::move(texture));
   };
 
-  const auto max_width = (output->max_width ?
-    output->max_width- output->border_padding * 2 :
-    std::numeric_limits<int>::max());
-  const auto max_height = (output->max_height ?
-    output->max_height - output->border_padding * 2 :
-    std::numeric_limits<int>::max());
+  const auto default_max = 1024;
+  const auto max_width = (output->max_width ? 
+    output->max_width : default_max) - output->border_padding * 2;
+  const auto max_height = (output->max_height ? 
+    output->max_height : default_max) - output->border_padding * 2;
   const auto max_textures = static_cast<size_t>(output->filename.count());
 
   auto pos = Point{ };
