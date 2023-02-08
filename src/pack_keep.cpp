@@ -6,23 +6,20 @@ namespace spright {
 void pack_keep(const OutputPtr& output, SpriteSpan sprites,
     std::vector<Texture>& textures) {
 
-  auto max_width = 0;
-  auto max_height = 0;
-
+  auto source_indices = std::map<ImagePtr, size_t>();
   for (auto& sprite : sprites) {
+    const auto source_index = source_indices.emplace(
+      sprite.source, source_indices.size()).first->second;
+    sprite.texture_filename_index = source_index;
     sprite.trimmed_rect = sprite.trimmed_source_rect;
     sprite.rect = sprite.source_rect;
-    max_width = std::max(max_width, sprite.source->width());
-    max_height = std::max(max_height, sprite.source->height());
   }
 
-  textures.push_back(Texture{
-    output,
-    0,
-    max_width,
-    max_height,
-    sprites,
-  });
+  create_textures_from_filename_indices(
+    output, sprites, textures);
+
+  for (auto& texture : textures)
+    recompute_texture_size(texture);
 }
 
 } // namespace

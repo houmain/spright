@@ -37,14 +37,14 @@ void pack_binpack(const OutputPtr& output_ptr, SpriteSpan sprites,
     std::move(pack_sizes));
 
   // update sprite rects
-  auto texture_index = 0;
+  auto texture_filename_index = 0;
   auto packed_sprites = size_t{ };
   for (const auto& pack_sheet : pack_sheets) {
     for (const auto& pack_rect : pack_sheet.rects) {
       auto& sprite = sprites[static_cast<size_t>(pack_rect.id)];
       const auto indent = get_sprite_indent(sprite);
       sprite.rotated = pack_rect.rotated;;
-      sprite.texture_index = texture_index;
+      sprite.texture_filename_index = texture_filename_index;
       sprite.trimmed_rect = {
         pack_rect.x + indent.x,
         pack_rect.y + indent.y,
@@ -53,40 +53,20 @@ void pack_binpack(const OutputPtr& output_ptr, SpriteSpan sprites,
       };
       ++packed_sprites;
     }
-    ++texture_index;
+    ++texture_filename_index;
   }
 
   if (packed_sprites < sprites.size())
-    throw std::runtime_error("not all sprites could be packed");
+    throw_not_all_sprites_packed();
 
-  // sort sprites by output index
-  if (pack_sheets.size() > 1)
-    std::sort(std::begin(sprites), std::end(sprites),
-      [](const Sprite& a, const Sprite& b) {
-        return std::tie(a.texture_index, a.index) <
-               std::tie(b.texture_index, b.index);
-      });
+  create_textures_from_filename_indices(output_ptr, sprites, textures);
 
-  // add to output textures
-  auto texture_begin = sprites.begin();
-  const auto end = sprites.end();
-  for (auto it = texture_begin;; ++it)
-    if (it == end || it->texture_index != texture_begin->texture_index) {
-      const auto sheet_index = texture_begin->texture_index;
-      const auto sheet_sprites = SpriteSpan(texture_begin, it);
-      const auto& pack_sheet = pack_sheets[static_cast<size_t>(sheet_index)];
-      textures.push_back(Texture{
-        output_ptr,
-        sheet_index,
-        pack_sheet.width,
-        pack_sheet.height,
-        sheet_sprites,
-      });
-
-      texture_begin = it;
-      if (it == end)
-        break;
-    }
+  for (auto i = size_t{}; i < textures.size(); i++) {
+    auto& texture = textures[i];
+    const auto& pack_sheet = pack_sheets[i];
+    texture.width = pack_sheet.width;
+    texture.height = pack_sheet.height;
+  }
 }
 
 } // namespace

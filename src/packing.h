@@ -18,7 +18,7 @@ using SpriteSpan = nonstd::span<Sprite>;
 
 struct Texture {
   OutputPtr output;
-  int index;
+  int filename_index;
   int width{ };
   int height{ };
   SpriteSpan sprites;
@@ -28,6 +28,9 @@ struct Texture {
 std::pair<int, int> get_texture_max_size(const Output& output);
 Size get_sprite_size(const Sprite& sprite);
 Size get_sprite_indent(const Sprite& sprite);
+void create_textures_from_filename_indices(const OutputPtr& output_ptr, 
+    SpriteSpan sprites, std::vector<Texture>& textures);
+void recompute_texture_size(Texture& texture);
 
 std::vector<Texture> pack_sprites(std::vector<Sprite>& sprites);
 
@@ -42,6 +45,6 @@ void pack_keep(const OutputPtr& output, SpriteSpan sprites,
 void pack_lines(bool horizontal, const OutputPtr& output,
   SpriteSpan sprites, std::vector<Texture>& textures);
 
-void recompute_texture_size(Texture& texture);
+[[noreturn]] void throw_not_all_sprites_packed();
 
 } // namespace

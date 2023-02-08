@@ -23,7 +23,7 @@ namespace {
     auto output_layers = std::vector<OutputLayer>();
     for (const auto& texture : textures) {
       const auto filename = settings.output_path / utf8_to_path(
-          texture.output->filename.get_nth_filename(texture.index));
+          texture.output->filename.get_nth_filename(texture.filename_index));
       output_layers.push_back({ &texture, filename, -1 });
 
       auto i = 0;

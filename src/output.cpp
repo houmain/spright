@@ -47,7 +47,7 @@ namespace {
       auto& json_sprite = json_sprites.emplace_back();
       const auto index = json_sprites.size() - 1;
       const auto texture_filename = 
-        sprite.output->filename.get_nth_filename(sprite.texture_index);
+        sprite.output->filename.get_nth_filename(sprite.texture_filename_index);
       json_sprite["index"] = sprite.index;
       json_sprite["id"] = sprite.id;
       json_sprite["rect"] = json_rect(sprite.rect);

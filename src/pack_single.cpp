@@ -24,9 +24,6 @@ void pack_single(const OutputPtr& output, SpriteSpan sprites,
       size.y,
     };
     const auto index = indices[output->filename]++;
-    if (index > output->filename.count())
-      throw std::runtime_error("not all sprites could be packed");
-
     textures.push_back(Texture{
       output,
       index,

@@ -20,7 +20,6 @@ void pack_lines(bool horizontal, const OutputPtr& output,
     output->max_width : default_max) - output->border_padding * 2;
   const auto max_height = (output->max_height ? 
     output->max_height : default_max) - output->border_padding * 2;
-  const auto max_textures = static_cast<size_t>(output->filename.count());
 
   auto pos = Point{ };
   auto size = Size{ };
@@ -49,8 +48,6 @@ void pack_lines(bool horizontal, const OutputPtr& output,
     }
     if (pos_p + size_p > max_p) {
       add_texture({ first_sprite, it });
-      if (textures.size() >= max_textures)
-        break;
       first_sprite = it;
       pos.x = 0;
       pos.y = 0;
@@ -72,7 +69,7 @@ void pack_lines(bool horizontal, const OutputPtr& output,
     line_size = std::max(line_size, size_p);
   }
   if (it != sprites.end())
-    throw std::runtime_error("not all sprites could be packed");
+    throw_not_all_sprites_packed();
 
   add_texture({ first_sprite, it });
 }

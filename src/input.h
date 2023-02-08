@@ -78,7 +78,7 @@ struct Sprite {
   Extrude extrude{ };
   std::map<std::string, std::string> tags;
   bool rotated{ };
-  int texture_index{ };
+  int texture_filename_index{ };
   Size common_divisor{ };
   Point common_divisor_offset{ };
   Size common_divisor_margin{ };

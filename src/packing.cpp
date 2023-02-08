@@ -112,20 +112,23 @@ namespace {
 
     pack_texture(output, unique_sprites, textures);
 
+    if (static_cast<int>(textures.size()) > output->filename.count())
+      throw_not_all_sprites_packed();
+
     if (output->duplicates == Duplicates::share) {
       for (auto i = size_t{ }; i < duplicates.size(); ++i) {
         auto& duplicate = sprites[sprites.size() - 1 - i];
         const auto& sprite = unique_sprites[duplicates[i]];
-        duplicate.texture_index = sprite.texture_index;
+        duplicate.texture_filename_index = sprite.texture_filename_index;
         duplicate.trimmed_rect = sprite.trimmed_rect;
         duplicate.rotated = sprite.rotated;
       }
     }
   }
 
-  void pack_sprites_by_texture(SpriteSpan sprites, std::vector<Texture>& textures) {
+  std::vector<Texture> pack_sprites_by_output(SpriteSpan sprites) {
     if (sprites.empty())
-      return;
+      return { };
 
     // sort sprites by output
     std::sort(std::begin(sprites), std::end(sprites),
@@ -134,6 +137,7 @@ namespace {
                std::tie(b.output->filename, b.index);
       });
 
+    auto textures = std::vector<Texture>();
     for (auto begin = sprites.begin(), it = begin; ; ++it)
       if (it == sprites.end() ||
           it->output->filename != begin->output->filename) {
@@ -147,6 +151,7 @@ namespace {
           break;
         begin = it;
       }
+    return textures;
   }
 } // namespace
 
@@ -177,13 +182,41 @@ std::vector<Texture> pack_sprites(std::vector<Sprite>& sprites) {
   for (auto& sprite : sprites)
     prepare_sprite(sprite);
 
-  auto textures = std::vector<Texture>();
-  pack_sprites_by_texture(sprites, textures);
+  auto textures = pack_sprites_by_output(sprites);
 
   for (auto& sprite : sprites)
     complete_sprite(sprite);
 
   return textures;
+}
+
+void create_textures_from_filename_indices(const OutputPtr& output_ptr, 
+    SpriteSpan sprites, std::vector<Texture>& textures) {
+
+  // sort sprites by texture index
+  std::sort(std::begin(sprites), std::end(sprites),
+    [](const Sprite& a, const Sprite& b) {
+      return std::tie(a.texture_filename_index, a.index) <
+              std::tie(b.texture_filename_index, b.index);
+    });
+
+  // create textures
+  auto texture_begin = sprites.begin();
+  const auto end = sprites.end();
+  for (auto it = texture_begin;; ++it)
+    if (it == end || 
+        it->texture_filename_index != texture_begin->texture_filename_index) {
+      textures.push_back({ 
+        output_ptr, 
+        texture_begin->texture_filename_index, 
+        0, 0, 
+        SpriteSpan(texture_begin, it)
+      });
+
+      texture_begin = it;
+      if (it == end)
+        break;
+    }
 }
 
 void recompute_texture_size(Texture& texture) {
@@ -209,6 +242,10 @@ void recompute_texture_size(Texture& texture) {
   }
   if (output.square)
     texture.width = texture.height = std::max(texture.width, texture.height);
+}
+
+[[noreturn]] void throw_not_all_sprites_packed() {
+  throw std::runtime_error("not all sprites could be packed");
 }
 
 } // namespace
