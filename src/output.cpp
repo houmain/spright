@@ -37,8 +37,13 @@ namespace {
 
     using TagKey = std::pair<std::string, std::string>;
     using SpriteIndex = size_t;
+    using TextureIndex = size_t;
+    using SourceIndex = size_t;
     auto tags = std::map<TagKey, std::vector<SpriteIndex>>();
-    auto texture_sprites = std::map<std::string, std::vector<SpriteIndex>>();
+    auto texture_indices = std::map<std::string, TextureIndex>();
+    auto source_indices = std::map<ImagePtr, SourceIndex>();
+    auto texture_sprites = std::map<TextureIndex, std::vector<SpriteIndex>>();
+    auto source_sprites = std::map<SourceIndex, std::vector<SpriteIndex>>();
 
     for (const auto& sprite : sprites) {
       if (!sprite.output || !sprite.source)
@@ -48,23 +53,28 @@ namespace {
       const auto index = json_sprites.size() - 1;
       const auto texture_filename = 
         sprite.output->filename.get_nth_filename(sprite.texture_filename_index);
+      const auto texture_index = texture_indices.emplace(
+        texture_filename, texture_indices.size()).first->second;
+      const auto source_index = source_indices.emplace(
+        sprite.source, source_indices.size()).first->second;
+
       json_sprite["index"] = sprite.index;
       json_sprite["id"] = sprite.id;
       json_sprite["rect"] = json_rect(sprite.rect);
       json_sprite["trimmedRect"] = json_rect(sprite.trimmed_rect);
-      json_sprite["sourceFilename"] = path_to_utf8(sprite.source->filename());
-      json_sprite["sourcePath"] = path_to_utf8(sprite.source->path());
+      json_sprite["sourceIndex"] = source_index;
       json_sprite["sourceRect"] = json_rect(sprite.source_rect);
       json_sprite["trimmedSourceRect"] = json_rect(sprite.trimmed_source_rect);
       json_sprite["pivot"] = json_point(sprite.pivot_point);
-      json_sprite["textureFilename"] = texture_filename;
-      json_sprite["textureSpriteIndex"] = texture_sprites[texture_filename].size();
+      json_sprite["textureIndex"] = texture_index;
+      json_sprite["textureSpriteIndex"] = texture_sprites[texture_index].size();
       json_sprite["rotated"] = sprite.rotated;
       json_sprite["tags"] = sprite.tags;
       json_sprite["vertices"] = json_point_list(sprite.vertices);
       for (const auto& tag_key : sprite.tags)
         tags[tag_key].push_back(index);
-      texture_sprites[texture_filename].push_back(index);
+      source_sprites[source_index].push_back(index);
+      texture_sprites[texture_index].push_back(index);
     }
 
     auto& json_tags = json["tags"];
@@ -79,15 +89,30 @@ namespace {
 
     auto& json_textures = json["textures"];
     json_textures = nlohmann::json::array();
-    for (const auto& texture : textures) {
+    for (auto i = TextureIndex{ }; i < textures.size(); ++i) {
+      const auto& texture = textures[i];
       auto& json_texture = json_textures.emplace_back();
       const auto filename = 
-        texture.output->filename.get_nth_filename(texture.index);
+        texture.output->filename.get_nth_filename(texture.filename_index);
       json_texture["inputFilename"] = path_to_utf8(texture.output->input_file);
       json_texture["filename"] = filename;
       json_texture["width"] = texture.width;
       json_texture["height"] = texture.height;
-      json_texture["spriteIndices"] = texture_sprites[filename];
+      json_texture["spriteIndices"] = texture_sprites[i];
+    }
+
+    auto& json_sources = json["sources"];
+    json_sources = nlohmann::json::array();
+    auto sources_by_index = std::map<SourceIndex, ImagePtr>();
+    for (auto [source, index] : source_indices)
+      sources_by_index[index] = source;
+    for (auto [index, source] : sources_by_index) {
+      auto& json_source = json_sources.emplace_back();
+      json_source["path"] = path_to_utf8(source->path());
+      json_source["filename"] = path_to_utf8(source->filename());
+      json_source["width"] = source->width();
+      json_source["height"] = source->height();
+      json_source["spriteIndices"] = source_sprites[index];
     }
     return json;
   }
