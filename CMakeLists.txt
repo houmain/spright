@@ -29,7 +29,8 @@ set(SOURCES
     src/pack_single.cpp
     src/pack_keep.cpp
     src/pack_lines.cpp
-    src/output.cpp
+    src/output_texture.cpp
+    src/output_description.cpp
     src/globbing.cpp
     src/debug.cpp
     src/main.cpp
