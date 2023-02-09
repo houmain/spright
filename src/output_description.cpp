@@ -128,25 +128,33 @@ namespace {
     return "sprite_" + std::to_string(index);
   }
 
-  inja::Environment setup_inja_environment() {
+  void generate_output(std::ostream& os, 
+      const std::string& template_file, const nlohmann::json& json) {
+
     auto env = inja::Environment();
     env.set_trim_blocks(false);
     env.set_lstrip_blocks(false);
 
     env.add_callback("getId", 1, [](inja::Arguments& args) -> inja::json {
-      const auto& s = args.at(0)->get<inja::json>();
-      const auto id = std::string(s["id"]);
-      return (!id.empty() ? id : generate_sprite_id(s["index"]));
+      const auto sprite = args.at(0)->get<inja::json>();
+      const auto id = std::string(sprite["id"]);
+      return (!id.empty() ? id : generate_sprite_id(sprite["index"]));
     });
-    env.add_callback("getIdOrFilename", 1, [](inja::Arguments& args) -> inja::json {
-      const auto& s = args.at(0)->get<inja::json>();
-      const auto id = std::string(s["id"]);
-      return (!id.empty() ? id : std::string(s["sourceFilename"]));
+
+    env.add_callback("getIdOrFilename", 1, [&](inja::Arguments& args) -> inja::json {
+      const auto sprite = args.at(0)->get<inja::json>();
+      const auto id = std::string(sprite["id"]);
+      if (!id.empty())
+        return id;
+      const auto source_index = int(sprite["sourceIndex"]);
+      return json["sources"][source_index]["filename"];
     });
+
     env.add_callback("removeExtension", 1, [](inja::Arguments& args) -> inja::json {
       return remove_extension(args.at(0)->get<std::string>());
     });
-    return env;
+
+    env.render_to(os, env.parse_template(template_file), json);
   }
 } // namespace
 
@@ -157,8 +165,7 @@ bool write_output_description(const Settings& settings,
 
   const auto json = get_json_description(sprites, textures);
   if (!settings.template_file.empty()) {
-    auto env = setup_inja_environment();
-    env.render_to(os, env.parse_template(path_to_utf8(settings.template_file)), json);
+    generate_output(os, path_to_utf8(settings.template_file), json);
   }
   else {
     os << json.dump(2);
