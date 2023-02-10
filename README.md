@@ -271,18 +271,20 @@ By default a [JSON](https://www.json.org) file containing all the information ab
     {
       "index": 0,
       "id": "sprite_0",
-      "pivot": { "x": 8, "y": 8 },
+      "pivot": { "x": 8.0, "y": 8.0 },
       "rect": { "x": 0, "y": 0, "w": 16, "h": 16 },
       "rotated": false,
-      "sourceFilename": "source.png",
-      "sourcePath": "path",
+      "sourceIndex": 0,
       "sourceRect":  { "x": 0, "y": 0, "w": 16, "h": 16 },
+      "textureIndex": 0,
+      "textureSpriteIndex": 0,
       "trimmedRect": { "x": 0, "y": 0, "w": 16, "h": 16 },
       "trimmedSourceRect": { "x": 0, "y": 0, "w": 16, "h": 16 },
-      "textureFilename": "path/spright0.png",
-      "textureSpriteIndex": 0,
-      "vertices": [ { "x": 0, "y": 0 } ],
-      "tags": { "key": "value" }
+      "tags": { "key": "value" },
+      "vertices": [
+        { "x": 0.0, "y": 0.0 }, { "x": 16.0, "y": 0.0 },
+        { "x": 16.0, "y": 16.0 }, { "x": 0.0, "y": 16.0 }
+      ]
     }
   ],
   "tags": [
@@ -292,10 +294,19 @@ By default a [JSON](https://www.json.org) file containing all the information ab
       "spriteIndices": [ 0 ]
     }
   ],
+  "sources": [
+    {
+      "filename": "source.png",
+      "path": "path",
+      "width": 256,
+      "height": 256,
+      "spriteIndices": [ 0 ]
+    },
+  ],
   "textures": [
     {
-      "inputFilename": "spright.conf",
       "filename": "path/spright0.png",
+      "inputFilename": "spright.conf",
       "width": 256,
       "height": 256,
       "spriteIndices": [ 0 ]

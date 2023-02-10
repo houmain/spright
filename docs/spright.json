@@ -1,4 +1,151 @@
 {
+  "sources": [
+    {
+      "filename": "Decorations (32x32).png",
+      "height": 128,
+      "path": "",
+      "spriteIndices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "width": 160
+    },
+    {
+      "filename": "Old enemies 2.png",
+      "height": 96,
+      "path": "",
+      "spriteIndices": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42
+      ],
+      "width": 96
+    },
+    {
+      "filename": "Orc Attack/Frame01.png",
+      "height": 15,
+      "path": "",
+      "spriteIndices": [
+        43
+      ],
+      "width": 15
+    },
+    {
+      "filename": "Orc Attack/Frame02.png",
+      "height": 15,
+      "path": "",
+      "spriteIndices": [
+        44
+      ],
+      "width": 15
+    },
+    {
+      "filename": "Orc Attack/Frame03.png",
+      "height": 15,
+      "path": "",
+      "spriteIndices": [
+        45
+      ],
+      "width": 15
+    },
+    {
+      "filename": "Orc Attack/Frame04.png",
+      "height": 15,
+      "path": "",
+      "spriteIndices": [
+        46
+      ],
+      "width": 15
+    },
+    {
+      "filename": "misc_scenery.png",
+      "height": 162,
+      "path": "",
+      "spriteIndices": [
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88
+      ],
+      "width": 163
+    }
+  ],
   "sprites": [
     {
       "id": "banner_top",
@@ -14,8 +161,7 @@
         "y": 79
       },
       "rotated": false,
-      "sourceFilename": "Decorations (32x32).png",
-      "sourcePath": "",
+      "sourceIndex": 0,
       "sourceRect": {
         "h": 32,
         "w": 32,
@@ -23,7 +169,7 @@
         "y": 0
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 0,
       "trimmedRect": {
         "h": 32,
@@ -70,8 +216,7 @@
         "y": 98
       },
       "rotated": false,
-      "sourceFilename": "Decorations (32x32).png",
-      "sourcePath": "",
+      "sourceIndex": 0,
       "sourceRect": {
         "h": 32,
         "w": 32,
@@ -79,7 +224,7 @@
         "y": 0
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 1,
       "trimmedRect": {
         "h": 7,
@@ -126,8 +271,7 @@
         "y": 188
       },
       "rotated": false,
-      "sourceFilename": "Decorations (32x32).png",
-      "sourcePath": "",
+      "sourceIndex": 0,
       "sourceRect": {
         "h": 32,
         "w": 32,
@@ -135,7 +279,7 @@
         "y": 0
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 2,
       "trimmedRect": {
         "h": 6,
@@ -182,8 +326,7 @@
         "y": 114
       },
       "rotated": false,
-      "sourceFilename": "Decorations (32x32).png",
-      "sourcePath": "",
+      "sourceIndex": 0,
       "sourceRect": {
         "h": 32,
         "w": 32,
@@ -191,7 +334,7 @@
         "y": 0
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 3,
       "trimmedRect": {
         "h": 7,
@@ -238,8 +381,7 @@
         "y": 106
       },
       "rotated": false,
-      "sourceFilename": "Decorations (32x32).png",
-      "sourcePath": "",
+      "sourceIndex": 0,
       "sourceRect": {
         "h": 32,
         "w": 32,
@@ -247,7 +389,7 @@
         "y": 0
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 4,
       "trimmedRect": {
         "h": 7,
@@ -294,8 +436,7 @@
         "y": 1
       },
       "rotated": false,
-      "sourceFilename": "Decorations (32x32).png",
-      "sourcePath": "",
+      "sourceIndex": 0,
       "sourceRect": {
         "h": 32,
         "w": 32,
@@ -303,7 +444,7 @@
         "y": 32
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 5,
       "trimmedRect": {
         "h": 32,
@@ -350,8 +491,7 @@
         "y": 82
       },
       "rotated": false,
-      "sourceFilename": "Decorations (32x32).png",
-      "sourcePath": "",
+      "sourceIndex": 0,
       "sourceRect": {
         "h": 32,
         "w": 32,
@@ -359,7 +499,7 @@
         "y": 32
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 6,
       "trimmedRect": {
         "h": 15,
@@ -406,8 +546,7 @@
         "y": 38
       },
       "rotated": false,
-      "sourceFilename": "Decorations (32x32).png",
-      "sourcePath": "",
+      "sourceIndex": 0,
       "sourceRect": {
         "h": 32,
         "w": 32,
@@ -415,7 +554,7 @@
         "y": 32
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 7,
       "trimmedRect": {
         "h": 14,
@@ -462,8 +601,7 @@
         "y": 22
       },
       "rotated": false,
-      "sourceFilename": "Decorations (32x32).png",
-      "sourcePath": "",
+      "sourceIndex": 0,
       "sourceRect": {
         "h": 32,
         "w": 32,
@@ -471,7 +609,7 @@
         "y": 32
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 8,
       "trimmedRect": {
         "h": 15,
@@ -518,8 +656,7 @@
         "y": 66
       },
       "rotated": false,
-      "sourceFilename": "Decorations (32x32).png",
-      "sourcePath": "",
+      "sourceIndex": 0,
       "sourceRect": {
         "h": 32,
         "w": 32,
@@ -527,7 +664,7 @@
         "y": 32
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 9,
       "trimmedRect": {
         "h": 15,
@@ -574,8 +711,7 @@
         "y": 53
       },
       "rotated": false,
-      "sourceFilename": "Decorations (32x32).png",
-      "sourcePath": "",
+      "sourceIndex": 0,
       "sourceRect": {
         "h": 32,
         "w": 32,
@@ -583,7 +719,7 @@
         "y": 64
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 10,
       "trimmedRect": {
         "h": 25,
@@ -630,8 +766,7 @@
         "y": 79
       },
       "rotated": false,
-      "sourceFilename": "Decorations (32x32).png",
-      "sourcePath": "",
+      "sourceIndex": 0,
       "sourceRect": {
         "h": 64,
         "w": 64,
@@ -639,7 +774,7 @@
         "y": 64
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 11,
       "trimmedRect": {
         "h": 57,
@@ -686,8 +821,7 @@
         "y": 137
       },
       "rotated": false,
-      "sourceFilename": "Decorations (32x32).png",
-      "sourcePath": "",
+      "sourceIndex": 0,
       "sourceRect": {
         "h": 64,
         "w": 64,
@@ -695,7 +829,7 @@
         "y": 64
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 12,
       "trimmedRect": {
         "h": 57,
@@ -742,8 +876,7 @@
         "y": 53
       },
       "rotated": false,
-      "sourceFilename": "Decorations (32x32).png",
-      "sourcePath": "",
+      "sourceIndex": 0,
       "sourceRect": {
         "h": 32,
         "w": 32,
@@ -751,7 +884,7 @@
         "y": 96
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 13,
       "trimmedRect": {
         "h": 25,
@@ -798,8 +931,7 @@
         "y": 152
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -809,7 +941,7 @@
       "tags": {
         "anim": "blue_enemy_idle"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 14,
       "trimmedRect": {
         "h": 11,
@@ -856,8 +988,7 @@
         "y": 128
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -867,7 +998,7 @@
       "tags": {
         "anim": "blue_enemy_idle"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 15,
       "trimmedRect": {
         "h": 11,
@@ -914,8 +1045,7 @@
         "y": 112
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -925,7 +1055,7 @@
       "tags": {
         "anim": "blue_enemy_dead"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 16,
       "trimmedRect": {
         "h": 5,
@@ -972,8 +1102,7 @@
         "y": 40
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -983,7 +1112,7 @@
       "tags": {
         "anim": "blue_enemy_jump"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 17,
       "trimmedRect": {
         "h": 11,
@@ -1030,8 +1159,7 @@
         "y": 156
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -1041,7 +1169,7 @@
       "tags": {
         "anim": "blue_enemy_run"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 18,
       "trimmedRect": {
         "h": 11,
@@ -1088,8 +1216,7 @@
         "y": 53
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -1099,7 +1226,7 @@
       "tags": {
         "anim": "blue_enemy_run"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 19,
       "trimmedRect": {
         "h": 11,
@@ -1146,8 +1273,7 @@
         "y": 144
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -1157,7 +1283,7 @@
       "tags": {
         "anim": "blue_enemy_run"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 20,
       "trimmedRect": {
         "h": 11,
@@ -1204,8 +1330,7 @@
         "y": 168
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -1215,7 +1340,7 @@
       "tags": {
         "anim": "blue_enemy_run"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 21,
       "trimmedRect": {
         "h": 11,
@@ -1262,8 +1387,7 @@
         "y": 140
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -1273,7 +1397,7 @@
       "tags": {
         "anim": "blue_enemy_run"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 22,
       "trimmedRect": {
         "h": 11,
@@ -1320,8 +1444,7 @@
         "y": 164
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -1331,7 +1454,7 @@
       "tags": {
         "anim": "blue_enemy_run"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 23,
       "trimmedRect": {
         "h": 11,
@@ -1378,8 +1501,7 @@
         "y": 171
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -1389,7 +1511,7 @@
       "tags": {
         "anim": "red_enemy_idle"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 24,
       "trimmedRect": {
         "h": 14,
@@ -1436,8 +1558,7 @@
         "y": 156
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -1447,7 +1568,7 @@
       "tags": {
         "anim": "red_enemy_idle"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 25,
       "trimmedRect": {
         "h": 14,
@@ -1494,8 +1615,7 @@
         "y": 137
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -1505,7 +1625,7 @@
       "tags": {
         "anim": "red_enemy_dead"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 26,
       "trimmedRect": {
         "h": 13,
@@ -1552,8 +1672,7 @@
         "y": 99
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -1563,7 +1682,7 @@
       "tags": {
         "anim": "red_enemy_jump"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 27,
       "trimmedRect": {
         "h": 14,
@@ -1610,8 +1729,7 @@
         "y": 136
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -1621,7 +1739,7 @@
       "tags": {
         "anim": "red_enemy_run"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 28,
       "trimmedRect": {
         "h": 14,
@@ -1668,8 +1786,7 @@
         "y": 112
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -1679,7 +1796,7 @@
       "tags": {
         "anim": "red_enemy_run"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 29,
       "trimmedRect": {
         "h": 14,
@@ -1726,8 +1843,7 @@
         "y": 156
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -1737,7 +1853,7 @@
       "tags": {
         "anim": "red_enemy_run"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 30,
       "trimmedRect": {
         "h": 14,
@@ -1784,8 +1900,7 @@
         "y": 141
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -1795,7 +1910,7 @@
       "tags": {
         "anim": "red_enemy_run"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 31,
       "trimmedRect": {
         "h": 14,
@@ -1842,8 +1957,7 @@
         "y": 122
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -1853,7 +1967,7 @@
       "tags": {
         "anim": "red_enemy_run"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 32,
       "trimmedRect": {
         "h": 14,
@@ -1900,8 +2014,7 @@
         "y": 52
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -1911,7 +2024,7 @@
       "tags": {
         "anim": "green_enemy_idle"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 33,
       "trimmedRect": {
         "h": 13,
@@ -1958,8 +2071,7 @@
         "y": 67
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -1969,7 +2081,7 @@
       "tags": {
         "anim": "green_enemy_idle"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 34,
       "trimmedRect": {
         "h": 13,
@@ -2016,8 +2128,7 @@
         "y": 34
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -2027,7 +2138,7 @@
       "tags": {
         "anim": "green_enemy_dead"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 35,
       "trimmedRect": {
         "h": 5,
@@ -2074,8 +2185,7 @@
         "y": 40
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -2085,7 +2195,7 @@
       "tags": {
         "anim": "green_enemy_jump"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 36,
       "trimmedRect": {
         "h": 12,
@@ -2132,8 +2242,7 @@
         "y": 38
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -2143,7 +2252,7 @@
       "tags": {
         "anim": "green_enemy_run"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 37,
       "trimmedRect": {
         "h": 13,
@@ -2190,8 +2299,7 @@
         "y": 114
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -2201,7 +2309,7 @@
       "tags": {
         "anim": "green_enemy_run"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 38,
       "trimmedRect": {
         "h": 13,
@@ -2248,8 +2356,7 @@
         "y": 122
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -2259,7 +2366,7 @@
       "tags": {
         "anim": "green_enemy_run"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 39,
       "trimmedRect": {
         "h": 13,
@@ -2306,8 +2413,7 @@
         "y": 1
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -2317,7 +2423,7 @@
       "tags": {
         "anim": "green_enemy_run"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 40,
       "trimmedRect": {
         "h": 13,
@@ -2364,8 +2470,7 @@
         "y": 1
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -2375,7 +2480,7 @@
       "tags": {
         "anim": "green_enemy_run"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 41,
       "trimmedRect": {
         "h": 13,
@@ -2422,8 +2527,7 @@
         "y": 53
       },
       "rotated": false,
-      "sourceFilename": "Old enemies 2.png",
-      "sourcePath": "",
+      "sourceIndex": 1,
       "sourceRect": {
         "h": 16,
         "w": 16,
@@ -2433,7 +2537,7 @@
       "tags": {
         "anim": "green_enemy_run"
       },
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 42,
       "trimmedRect": {
         "h": 13,
@@ -2480,8 +2584,7 @@
         "y": 143
       },
       "rotated": false,
-      "sourceFilename": "Orc Attack/Frame01.png",
-      "sourcePath": "",
+      "sourceIndex": 2,
       "sourceRect": {
         "h": 15,
         "w": 15,
@@ -2489,7 +2592,7 @@
         "y": 0
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 43,
       "trimmedRect": {
         "h": 7,
@@ -2536,8 +2639,7 @@
         "y": 137
       },
       "rotated": false,
-      "sourceFilename": "Orc Attack/Frame02.png",
-      "sourcePath": "",
+      "sourceIndex": 3,
       "sourceRect": {
         "h": 15,
         "w": 15,
@@ -2545,7 +2647,7 @@
         "y": 0
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 44,
       "trimmedRect": {
         "h": 7,
@@ -2592,8 +2694,7 @@
         "y": 186
       },
       "rotated": false,
-      "sourceFilename": "Orc Attack/Frame03.png",
-      "sourcePath": "",
+      "sourceIndex": 4,
       "sourceRect": {
         "h": 15,
         "w": 15,
@@ -2601,7 +2702,7 @@
         "y": 0
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 45,
       "trimmedRect": {
         "h": 8,
@@ -2648,8 +2749,7 @@
         "y": 186
       },
       "rotated": false,
-      "sourceFilename": "Orc Attack/Frame04.png",
-      "sourcePath": "",
+      "sourceIndex": 5,
       "sourceRect": {
         "h": 15,
         "w": 15,
@@ -2657,7 +2757,7 @@
         "y": 0
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 46,
       "trimmedRect": {
         "h": 8,
@@ -2704,8 +2804,7 @@
         "y": 166
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 27,
         "w": 6,
@@ -2713,7 +2812,7 @@
         "y": 12
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 47,
       "trimmedRect": {
         "h": 27,
@@ -2760,8 +2859,7 @@
         "y": 118
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 24,
         "w": 4,
@@ -2769,7 +2867,7 @@
         "y": 12
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 48,
       "trimmedRect": {
         "h": 24,
@@ -2816,8 +2914,7 @@
         "y": 145
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 34,
         "w": 6,
@@ -2825,7 +2922,7 @@
         "y": 9
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 49,
       "trimmedRect": {
         "h": 34,
@@ -2872,8 +2969,7 @@
         "y": 147
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 40,
         "w": 7,
@@ -2881,7 +2977,7 @@
         "y": 8
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 50,
       "trimmedRect": {
         "h": 40,
@@ -2928,8 +3024,7 @@
         "y": 1
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 52,
         "w": 17,
@@ -2937,7 +3032,7 @@
         "y": 17
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 51,
       "trimmedRect": {
         "h": 52,
@@ -2984,8 +3079,7 @@
         "y": 1
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 51,
         "w": 17,
@@ -2993,7 +3087,7 @@
         "y": 18
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 52,
       "trimmedRect": {
         "h": 51,
@@ -3040,8 +3134,7 @@
         "y": 1
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 77,
         "w": 32,
@@ -3049,7 +3142,7 @@
         "y": 8
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 53,
       "trimmedRect": {
         "h": 77,
@@ -3096,8 +3189,7 @@
         "y": 79
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 67,
         "w": 5,
@@ -3105,7 +3197,7 @@
         "y": 5
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 54,
       "trimmedRect": {
         "h": 67,
@@ -3152,8 +3244,7 @@
         "y": 79
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 67,
         "w": 5,
@@ -3161,7 +3252,7 @@
         "y": 5
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 55,
       "trimmedRect": {
         "h": 67,
@@ -3208,8 +3299,7 @@
         "y": 79
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 67,
         "w": 11,
@@ -3217,7 +3307,7 @@
         "y": 5
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 56,
       "trimmedRect": {
         "h": 67,
@@ -3264,8 +3354,7 @@
         "y": 186
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 7,
         "w": 6,
@@ -3273,7 +3362,7 @@
         "y": 50
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 57,
       "trimmedRect": {
         "h": 7,
@@ -3320,8 +3409,7 @@
         "y": 136
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 7,
         "w": 6,
@@ -3329,7 +3417,7 @@
         "y": 50
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 58,
       "trimmedRect": {
         "h": 7,
@@ -3376,8 +3464,7 @@
         "y": 128
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 7,
         "w": 6,
@@ -3385,7 +3472,7 @@
         "y": 50
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 59,
       "trimmedRect": {
         "h": 7,
@@ -3432,8 +3519,7 @@
         "y": 180
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 7,
         "w": 6,
@@ -3441,7 +3527,7 @@
         "y": 62
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 60,
       "trimmedRect": {
         "h": 7,
@@ -3488,8 +3574,7 @@
         "y": 176
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 7,
         "w": 6,
@@ -3497,7 +3582,7 @@
         "y": 62
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 61,
       "trimmedRect": {
         "h": 7,
@@ -3544,8 +3629,7 @@
         "y": 180
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 4,
         "w": 4,
@@ -3553,7 +3637,7 @@
         "y": 66
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 62,
       "trimmedRect": {
         "h": 4,
@@ -3600,8 +3684,7 @@
         "y": 186
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 8,
         "w": 6,
@@ -3609,7 +3692,7 @@
         "y": 71
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 63,
       "trimmedRect": {
         "h": 8,
@@ -3656,8 +3739,7 @@
         "y": 184
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 7,
         "w": 6,
@@ -3665,7 +3747,7 @@
         "y": 71
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 64,
       "trimmedRect": {
         "h": 7,
@@ -3712,8 +3794,7 @@
         "y": 53
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 24,
         "w": 21,
@@ -3721,7 +3802,7 @@
         "y": 62
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 65,
       "trimmedRect": {
         "h": 24,
@@ -3768,8 +3849,7 @@
         "y": 186
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 1,
         "w": 1,
@@ -3777,7 +3857,7 @@
         "y": 79
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 66,
       "trimmedRect": {
         "h": 1,
@@ -3824,8 +3904,7 @@
         "y": 34
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 3,
         "w": 15,
@@ -3833,7 +3912,7 @@
         "y": 80
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 67,
       "trimmedRect": {
         "h": 3,
@@ -3880,8 +3959,7 @@
         "y": 95
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 3,
         "w": 15,
@@ -3889,7 +3967,7 @@
         "y": 80
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 68,
       "trimmedRect": {
         "h": 3,
@@ -3936,8 +4014,7 @@
         "y": 15
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 6,
         "w": 13,
@@ -3945,7 +4022,7 @@
         "y": 89
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 69,
       "trimmedRect": {
         "h": 6,
@@ -3992,8 +4069,7 @@
         "y": 118
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 18,
         "w": 10,
@@ -4001,7 +4077,7 @@
         "y": 90
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 70,
       "trimmedRect": {
         "h": 18,
@@ -4048,8 +4124,7 @@
         "y": 172
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 20,
         "w": 10,
@@ -4057,7 +4132,7 @@
         "y": 88
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 71,
       "trimmedRect": {
         "h": 20,
@@ -4104,8 +4179,7 @@
         "y": 118
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 18,
         "w": 10,
@@ -4113,7 +4187,7 @@
         "y": 90
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 72,
       "trimmedRect": {
         "h": 18,
@@ -4160,8 +4234,7 @@
         "y": 171
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 20,
         "w": 10,
@@ -4169,7 +4242,7 @@
         "y": 88
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 73,
       "trimmedRect": {
         "h": 20,
@@ -4216,8 +4289,7 @@
         "y": 147
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 38,
         "w": 39,
@@ -4225,7 +4297,7 @@
         "y": 75
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 74,
       "trimmedRect": {
         "h": 38,
@@ -4272,8 +4344,7 @@
         "y": 127
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 13,
         "w": 13,
@@ -4281,7 +4352,7 @@
         "y": 99
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 75,
       "trimmedRect": {
         "h": 13,
@@ -4328,8 +4399,7 @@
         "y": 79
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 38,
         "w": 27,
@@ -4337,7 +4407,7 @@
         "y": 88
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 76,
       "trimmedRect": {
         "h": 38,
@@ -4384,8 +4454,7 @@
         "y": 81
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 13,
         "w": 15,
@@ -4393,7 +4462,7 @@
         "y": 118
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 77,
       "trimmedRect": {
         "h": 13,
@@ -4440,8 +4509,7 @@
         "y": 1
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 20,
         "w": 14,
@@ -4449,7 +4517,7 @@
         "y": 111
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 78,
       "trimmedRect": {
         "h": 20,
@@ -4496,8 +4564,7 @@
         "y": 118
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 17,
         "w": 13,
@@ -4505,7 +4572,7 @@
         "y": 114
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 79,
       "trimmedRect": {
         "h": 17,
@@ -4552,8 +4619,7 @@
         "y": 40
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 12,
         "w": 9,
@@ -4561,7 +4627,7 @@
         "y": 117
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 80,
       "trimmedRect": {
         "h": 12,
@@ -4608,8 +4674,7 @@
         "y": 40
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 12,
         "w": 11,
@@ -4617,7 +4682,7 @@
         "y": 117
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 81,
       "trimmedRect": {
         "h": 12,
@@ -4664,8 +4729,7 @@
         "y": 1
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 38,
         "w": 39,
@@ -4673,7 +4737,7 @@
         "y": 115
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 82,
       "trimmedRect": {
         "h": 38,
@@ -4720,8 +4784,7 @@
         "y": 151
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 14,
         "w": 11,
@@ -4729,7 +4792,7 @@
         "y": 137
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 83,
       "trimmedRect": {
         "h": 14,
@@ -4776,8 +4839,7 @@
         "y": 40
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 12,
         "w": 11,
@@ -4785,7 +4847,7 @@
         "y": 139
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 84,
       "trimmedRect": {
         "h": 12,
@@ -4832,8 +4894,7 @@
         "y": 151
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 20,
         "w": 7,
@@ -4841,7 +4902,7 @@
         "y": 133
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 85,
       "trimmedRect": {
         "h": 20,
@@ -4888,8 +4949,7 @@
         "y": 15
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 21,
         "w": 7,
@@ -4897,7 +4957,7 @@
         "y": 132
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 86,
       "trimmedRect": {
         "h": 21,
@@ -4944,8 +5004,7 @@
         "y": 54
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 24,
         "w": 27,
@@ -4953,7 +5012,7 @@
         "y": 130
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 87,
       "trimmedRect": {
         "h": 24,
@@ -5000,8 +5059,7 @@
         "y": 137
       },
       "rotated": false,
-      "sourceFilename": "misc_scenery.png",
-      "sourcePath": "",
+      "sourceIndex": 6,
       "sourceRect": {
         "h": 9,
         "w": 17,
@@ -5009,7 +5067,7 @@
         "y": 143
       },
       "tags": {},
-      "textureFilename": "spright0.png",
+      "textureIndex": 0,
       "textureSpriteIndex": 88,
       "trimmedRect": {
         "h": 9,
@@ -5150,6 +5208,7 @@
     {
       "filename": "spright0.png",
       "height": 195,
+      "inputFilename": "spright.conf",
       "spriteIndices": [
         0,
         1,
