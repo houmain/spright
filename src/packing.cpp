@@ -112,9 +112,6 @@ namespace {
 
     pack_texture(output, unique_sprites, textures);
 
-    if (static_cast<int>(textures.size()) > output->filename.count())
-      throw_not_all_sprites_packed();
-
     if (output->duplicates == Duplicates::share) {
       for (auto i = size_t{ }; i < duplicates.size(); ++i) {
         auto& duplicate = sprites[sprites.size() - 1 - i];
@@ -183,6 +180,11 @@ std::vector<Texture> pack_sprites(std::vector<Sprite>& sprites) {
     prepare_sprite(sprite);
 
   auto textures = pack_sprites_by_output(sprites);
+
+  // check if texture filename indices exceed sequence length
+  for (const auto& texture : textures)
+    if (texture.filename_index >= texture.output->filename.count())
+      throw_not_all_sprites_packed();
 
   for (auto& sprite : sprites)
     complete_sprite(sprite);

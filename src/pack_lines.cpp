@@ -6,16 +6,19 @@ namespace spright {
 void pack_lines(bool horizontal, const OutputPtr& output,
     SpriteSpan sprites, std::vector<Texture>& textures) {
 
+  auto texture_filename_index = 0;
   const auto add_texture = [&](SpriteSpan sprites) {
-    auto texture = Texture{ output,
-      static_cast<int>(textures.size()),
-      0, 0, sprites,
+    auto texture = Texture{
+      output,
+      texture_filename_index++,
+      0, 0,
+      sprites,
     };
     recompute_texture_size(texture);
     textures.push_back(std::move(texture));
   };
 
-  const auto default_max = 1024;
+  const auto default_max = std::numeric_limits<int>::max();
   const auto max_width = (output->max_width ? 
     output->max_width : default_max) - output->border_padding * 2;
   const auto max_height = (output->max_height ? 
