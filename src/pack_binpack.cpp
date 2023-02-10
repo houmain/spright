@@ -61,9 +61,9 @@ void pack_binpack(const OutputPtr& output_ptr, SpriteSpan sprites,
 
   create_textures_from_filename_indices(output_ptr, sprites, textures);
 
-  for (auto i = size_t{}; i < textures.size(); i++) {
+  for (auto i = size_t{ }; i < textures.size(); i++) {
     auto& texture = textures[i];
-    const auto& pack_sheet = pack_sheets[i];
+    const auto& pack_sheet = pack_sheets[texture.filename_index];
     texture.width = pack_sheet.width;
     texture.height = pack_sheet.height;
   }
