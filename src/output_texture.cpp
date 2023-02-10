@@ -60,8 +60,8 @@ namespace {
     throw;
 #else
     std::fprintf(stderr, "copying sprite failed: %s\n", ex.what());
-#endif
     return false;
+#endif
   }
 
   void process_alpha(Image& target, const Texture& texture) {

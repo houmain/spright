@@ -59,7 +59,7 @@ namespace {
       const std::vector<OutputLayer>& output_layers) {
     auto scheduler = Scheduler();
     scheduler.for_each_parallel(begin(output_layers), end(output_layers),
-      [&](const OutputLayer& output_layers) noexcept {
+      [&](const OutputLayer& output_layers) {
         const auto& texture = *output_layers.texture;
         const auto& filename = output_layers.filename;
         auto image = get_output_texture(texture, output_layers.layer_index);

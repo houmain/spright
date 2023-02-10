@@ -28,7 +28,7 @@ public:
       thread.join();
   }
 
-  void async(AsyncFunction function) {
+  void async(AsyncFunction function) noexcept {
     auto lock = std::unique_lock(m_tasks_mutex);
     m_tasks.push_back({ std::move(function), 1, 1 });
     ++m_tasks_pending;
@@ -41,16 +41,21 @@ public:
     if (!count)
       return;
 
+    auto exception = std::exception_ptr();
     auto next_index = size_t{ };
     auto remaining = count;
     auto parallel_function = [&]() noexcept {
       auto lock = std::unique_lock(m_tasks_mutex);
       const auto index = next_index++;
       lock.unlock();
-
-      function(index);
-
-      lock.lock();
+      try {
+        function(index);
+        lock.lock();
+      }
+      catch (...) {
+        lock.lock();
+        exception = std::current_exception();
+      }
       --remaining;
     };
 
@@ -63,6 +68,8 @@ public:
       execute_next(lock);
     
     m_done_signal.wait(lock, [&]() { return (remaining == 0); });
+    if (exception)
+      std::rethrow_exception(exception);
   }
 
   template<typename It, typename F> // F(*It)
