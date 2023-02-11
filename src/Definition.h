@@ -43,6 +43,7 @@ enum class Definition {
   rect,
   pivot,
   tag,
+  data,
   trim,
   trim_threshold,
   trim_margin,
@@ -83,6 +84,7 @@ struct State {
   std::vector<std::string> layer_suffixes;
   RGBA colorkey{ };
   StringMap tags;
+  VariantMap data;
   std::string sprite_id;
   Size grid{ };
   Size grid_cells{ };

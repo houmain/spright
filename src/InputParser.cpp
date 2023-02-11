@@ -167,6 +167,7 @@ void InputParser::sprite_ends(State& state) {
   sprite.extrude = state.extrude;
   sprite.common_divisor = state.common_divisor;
   sprite.tags = state.tags;
+  sprite.data = state.data;
   validate_sprite(sprite);
   m_sprites.push_back(std::move(sprite));
 

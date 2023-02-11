@@ -78,6 +78,7 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::rect: return "rect";
     case Definition::pivot: return "pivot";
     case Definition::tag: return "tag";
+    case Definition::data: return "data";
     case Definition::trim: return "trim";
     case Definition::trim_threshold: return "trim-threshold";
     case Definition::trim_margin: return "trim-margin";
@@ -134,6 +135,7 @@ Definition get_affected_definition(Definition definition) {
     case Definition::rect:
     case Definition::pivot:
     case Definition::tag:
+    case Definition::data:
     case Definition::trim:
     case Definition::trim_threshold:
     case Definition::trim_margin:
@@ -206,8 +208,8 @@ void apply_definition(Definition definition,
 
   switch (definition) {
     case Definition::set: {
-      auto key = check_string();
-      variables[std::string(key)] = check_variant();
+      auto& var = variables[std::string(check_string())];
+      var = check_variant();
       break;
     }
     case Definition::group:
@@ -331,6 +333,11 @@ void apply_definition(Definition definition,
     case Definition::tag: {
       auto& tag = state.tags[std::string(check_string())];
       tag = (arguments_left() ? check_string() : "");
+      break;
+    }
+    case Definition::data: {
+      auto& data = state.data[std::string(check_string())];
+      data = check_variant();
       break;
     }
     case Definition::grid:

@@ -27,7 +27,16 @@ namespace {
     json_rect["w"] = rect.w;
     json_rect["h"] = rect.h;
     return json_rect;
-  };
+  }
+
+  nlohmann::json json_variant_map(const VariantMap& map) {
+    auto json_map = nlohmann::json::object();
+    for (const auto& [key, value] : map)
+      std::visit([&, k = &key](const auto& v) { 
+        json_map[*k] = v;
+      }, value);
+    return json_map;
+  }
 
   nlohmann::json get_json_description(
       const std::vector<Sprite>& sprites,
@@ -77,7 +86,9 @@ namespace {
       json_sprite["textureSpriteIndex"] = texture_sprites[texture_index].size();
       json_sprite["rotated"] = sprite.rotated;
       json_sprite["tags"] = sprite.tags;
+      json_sprite["data"] = json_variant_map(sprite.data);
       json_sprite["vertices"] = json_point_list(sprite.vertices);
+
       for (const auto& [key, value] : sprite.tags)
         tags[key][value].push_back(index);
       source_sprites[source_index].push_back(index);

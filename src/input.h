@@ -81,6 +81,7 @@ struct Sprite {
   bool crop_pivot{ };
   Extrude extrude{ };
   StringMap tags;
+  VariantMap data;
   bool rotated{ };
   int texture_filename_index{ };
   Size common_divisor{ };
