@@ -12,7 +12,8 @@ public:
   void parse(std::istream& input, const std::filesystem::path& input_file = { });
   const std::vector<Sprite>& sprites() const & { return m_sprites; }
   std::vector<Sprite> sprites() && { return std::move(m_sprites); }
-  std::string autocomplete_output() const { return m_autocomplete_output.str(); }
+  VariantMap variables() && { return std::move(m_variables); }
+  std::string autocomplete_output() const { return std::move(m_autocomplete_output).str(); }
 
 private:
   struct NotAppliedDefinition {
@@ -49,6 +50,7 @@ private:
   std::map<std::filesystem::path, ImagePtr> m_sheets;
   std::map<ImagePtr, LayerVectorPtr> m_layers;
   std::vector<Sprite> m_sprites;
+  VariantMap m_variables;
   int m_sprites_in_current_sheet{ };
   Point m_current_grid_cell{ };
   int m_current_sequence_index{ };

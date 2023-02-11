@@ -5,12 +5,16 @@
 #include "FilenameSequence.h"
 #include <memory>
 #include <map>
+#include <variant>
 
 namespace spright {
 
 using ImagePtr = std::shared_ptr<const Image>;
 using OutputPtr = std::shared_ptr<const struct Output>;
 using LayerVectorPtr = std::shared_ptr<const std::vector<ImagePtr>>;
+using StringMap = std::map<std::string, std::string>;
+using Variant = std::variant<bool, real, std::string>;
+using VariantMap = std::map<std::string, Variant>;
 
 enum class PivotX { left, center, right };
 enum class PivotY { top, middle, bottom };
@@ -76,7 +80,7 @@ struct Sprite {
   bool crop{ };
   bool crop_pivot{ };
   Extrude extrude{ };
-  std::map<std::string, std::string> tags;
+  StringMap tags;
   bool rotated{ };
   int texture_filename_index{ };
   Size common_divisor{ };
@@ -87,6 +91,11 @@ struct Sprite {
   int duplicate_of_index{ -1 };
 };
 
-std::vector<Sprite> parse_definition(const Settings& settings);
+struct InputDefinition {
+  std::vector<Sprite> sprites;
+  VariantMap variables;
+};
+
+InputDefinition parse_definition(const Settings& settings);
 
 } // namespace

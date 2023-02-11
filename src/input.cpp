@@ -8,7 +8,7 @@
 
 namespace spright {
 
-std::vector<Sprite> parse_definition(const Settings& settings) {
+InputDefinition parse_definition(const Settings& settings) {
   auto parser = InputParser(settings);
 
   for (const auto& input_file : settings.input_files) {
@@ -27,7 +27,10 @@ std::vector<Sprite> parse_definition(const Settings& settings) {
       update_textfile(input_file, parser.autocomplete_output());
   }
 
-  return std::move(parser).sprites();
+  return {
+    std::move(parser).sprites(),
+    std::move(parser).variables()
+  };
 }
 
 } // namespace

@@ -7,6 +7,7 @@ namespace spright {
 
 enum class Definition {
   none,
+  set,
   group,
 
   output,
@@ -81,7 +82,7 @@ struct State {
   std::string default_layer_suffix;
   std::vector<std::string> layer_suffixes;
   RGBA colorkey{ };
-  std::map<std::string, std::string> tags;
+  StringMap tags;
   std::string sprite_id;
   Size grid{ };
   Size grid_cells{ };
@@ -109,7 +110,8 @@ std::string_view get_definition_name(Definition definition);
 void apply_definition(Definition definition,
     std::vector<std::string_view>& arguments,
     State& state,
-    Point& current_grid_cell);
+    Point& current_grid_cell,
+    VariantMap& variables);
 
 bool has_grid(const State& state);
 

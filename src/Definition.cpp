@@ -45,6 +45,7 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::MAX:
       break;
 
+    case Definition::set: return "set";
     case Definition::group: return "group";
     case Definition::output: return "output";
     case Definition::width: return "width";
@@ -94,6 +95,7 @@ Definition get_affected_definition(Definition definition) {
     case Definition::none:
     case Definition::MAX:
     case Definition::group:
+    case Definition::set:
     case Definition::input:
     case Definition::sprite:
     // affect input and output
@@ -148,7 +150,8 @@ Definition get_affected_definition(Definition definition) {
 
 void apply_definition(Definition definition,
     std::vector<std::string_view>& arguments,
-    State& state, Point& current_grid_cell) {
+    State& state, Point& current_grid_cell,
+    VariantMap& variables) {
 
   auto argument_index = 0u;
   const auto arguments_left = [&]() {
@@ -172,9 +175,17 @@ void apply_definition(Definition definition,
     if (default_to_true && !arguments_left())
       return true;
     const auto str = check_string();
-    if (str == "true") return true;
-    if (str == "false") return false;
+    if (auto b = to_bool(str))
+      return b.value();
     error("invalid boolean value '", str, "'");
+  };
+  const auto check_variant = [&]() -> Variant {
+    const auto str = check_string();
+    if (auto b = to_bool(str))
+      return b.value();
+    if (auto r = to_real(str))
+      return r.value();
+    return std::string(str);
   };
   const auto check_size = [&](bool default_to_square) {
     const auto x = check_uint();
@@ -194,6 +205,11 @@ void apply_definition(Definition definition,
   };
 
   switch (definition) {
+    case Definition::set: {
+      auto key = check_string();
+      variables[std::string(key)] = check_variant();
+      break;
+    }
     case Definition::group:
       // just for opening scopes, useful for additive definitions (e.g. tags)
       break;

@@ -451,7 +451,7 @@ void InputParser::parse(std::istream& input,
     }
 
     apply_definition(definition, arguments,
-        state, m_current_grid_cell);
+        state, m_current_grid_cell, m_variables);
     update_not_applied_definitions(definition);
 
     if (m_settings.autocomplete) {

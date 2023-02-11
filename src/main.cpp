@@ -98,7 +98,7 @@ int main(int argc, const char* argv[]) try {
   auto time_points = std::vector<std::pair<Clock::time_point, const char*>>();
   time_points.emplace_back(Clock::now(), "begin");
 
-  auto sprites = parse_definition(settings);  
+  auto [sprites, variables] = parse_definition(settings);  
   time_points.emplace_back(Clock::now(), "input");
 
   for (auto& sprite : sprites)
@@ -108,7 +108,7 @@ int main(int argc, const char* argv[]) try {
   auto textures = pack_sprites(sprites);
   time_points.emplace_back(Clock::now(), "packing");
 
-  write_output_description(settings, sprites, textures);
+  write_output_description(settings, sprites, textures, variables);
   time_points.emplace_back(Clock::now(), "output description");
 
   auto output_layers = get_output_layers(settings, textures);

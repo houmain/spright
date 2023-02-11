@@ -67,6 +67,12 @@ bool is_digit(char c) {
   return std::isdigit(static_cast<unsigned char>(c));
 }
 
+std::optional<bool> to_bool(std::string_view str) {
+  if (str == "true") return true;
+  if (str == "false") return false;
+  return std::nullopt;
+}
+
 std::optional<real> to_real(std::string_view str) {
 #if !defined(__GNUC__) || __GNUC__ >= 11
   auto result = real{ };

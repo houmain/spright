@@ -29,11 +29,10 @@ namespace {
     return json_rect;
   };
 
-  nlohmann::json get_json_description(const std::vector<Sprite>& sprites,
-      const std::vector<Texture>& textures) {
-    auto json = nlohmann::json{ };
-    auto& json_sprites = json["sprites"];
-    json_sprites = nlohmann::json::array();
+  nlohmann::json get_json_description(
+      const std::vector<Sprite>& sprites,
+      const std::vector<Texture>& textures,
+      const VariantMap& variables) {
 
     using TagKey = std::string;
     using TagValue = std::string;
@@ -45,6 +44,13 @@ namespace {
     auto source_indices = std::map<ImagePtr, SourceIndex>();
     auto texture_sprites = std::map<TextureIndex, std::vector<SpriteIndex>>();
     auto source_sprites = std::map<SourceIndex, std::vector<SpriteIndex>>();
+
+    auto json = nlohmann::json{ };
+    for (const auto& [key, value] : variables)
+      std::visit([&, k = &key](const auto& v) { json[*k] = v; }, value);
+
+    auto& json_sprites = json["sprites"];
+    json_sprites = nlohmann::json::array();
 
     for (const auto& sprite : sprites) {
       if (!sprite.output || !sprite.source)
@@ -155,20 +161,23 @@ namespace {
 } // namespace
 
 std::string get_description(const std::string& template_source,
-    const std::vector<Sprite>& sprites, const std::vector<Texture>& textures) {
+    const std::vector<Sprite>& sprites, 
+    const std::vector<Texture>& textures) {
   auto ss = std::stringstream();
-  const auto json = get_json_description(sprites, textures);
+  const auto json = get_json_description(sprites, textures, { });
   auto env = setup_inja_environment(&json);
   env.render_to(ss, env.parse(template_source), json);
   return ss.str();
 }
 
 bool write_output_description(const Settings& settings,
-    const std::vector<Sprite>& sprites, const std::vector<Texture>& textures) {
+    const std::vector<Sprite>& sprites, 
+    const std::vector<Texture>& textures,
+    const VariantMap& variables) {
   auto ss = std::stringstream();
   auto& os = (settings.output_file == "stdout" ? std::cout : ss);
 
-  const auto json = get_json_description(sprites, textures);
+  const auto json = get_json_description(sprites, textures, variables);
   if (!settings.template_file.empty()) {
     auto env = setup_inja_environment(&json);
     env.render_to(os, env.parse_template(path_to_utf8(settings.template_file)), json);
