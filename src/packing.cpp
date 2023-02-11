@@ -90,36 +90,43 @@ namespace {
 
     // sort duplicates to back
     auto unique_sprites = sprites;
-    auto duplicates = std::vector<size_t>();
     for (auto i = size_t{ }; i < unique_sprites.size(); ++i) {
       for (auto j = size_t{ }; j < i; ++j)
         if (is_identical(*sprites[i].source, sprites[i].trimmed_source_rect,
                          *sprites[j].source, sprites[j].trimmed_source_rect)) {
+          sprites[i].duplicate_of_index = sprites[j].index;
           std::swap(sprites[i--], unique_sprites.back());
           unique_sprites = unique_sprites.first(unique_sprites.size() - 1);
-          duplicates.emplace_back(j);
           break;
         }
        }
 
-    // when dropping duplicates, restore order of sprites before packing
-    if (output->duplicates == Duplicates::drop) {
-      std::sort(unique_sprites.begin(), unique_sprites.end(),
-        [](const Sprite& a, const Sprite& b) { return (a.index < b.index); });
-      for (auto i = unique_sprites.size(); i < sprites.size(); ++i)
-        sprites[i] = { };
-    }
+    // restore order of unique sprites before packing
+    std::sort(unique_sprites.begin(), unique_sprites.end(),
+      [](const Sprite& a, const Sprite& b) { return (a.index < b.index); });
 
     pack_texture(output, unique_sprites, textures);
 
-    if (output->duplicates == Duplicates::share) {
-      for (auto i = size_t{ }; i < duplicates.size(); ++i) {
-        auto& duplicate = sprites[sprites.size() - 1 - i];
-        const auto& sprite = unique_sprites[duplicates[i]];
+    const auto duplicate_sprites = sprites.last(sprites.size() - unique_sprites.size());
+    if (output->duplicates == Duplicates::drop) {
+      for (auto& sprite : duplicate_sprites)
+        sprite = { };
+    }
+    else {
+      // copy rectangles from unique to duplicate sprites
+      auto sprites_by_id = std::map<int, const Sprite*>();
+      for (const auto& sprite : unique_sprites)
+        sprites_by_id[sprite.index] = &sprite;
+      for (auto& duplicate : duplicate_sprites) {
+        const auto& sprite = *sprites_by_id.find(duplicate.duplicate_of_index)->second;
         duplicate.texture_filename_index = sprite.texture_filename_index;
         duplicate.trimmed_rect = sprite.trimmed_rect;
         duplicate.rotated = sprite.rotated;
       }
+
+      // restore order of duplicate sprites
+      std::sort(std::begin(duplicate_sprites), std::end(duplicate_sprites),
+        [](const Sprite& a, const Sprite& b) { return a.index < b.index; });
     }
   }
 
@@ -199,7 +206,7 @@ void create_textures_from_filename_indices(const OutputPtr& output_ptr,
   std::sort(std::begin(sprites), std::end(sprites),
     [](const Sprite& a, const Sprite& b) {
       return std::tie(a.texture_filename_index, a.index) <
-              std::tie(b.texture_filename_index, b.index);
+             std::tie(b.texture_filename_index, b.index);
     });
 
   // create textures

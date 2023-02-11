@@ -83,6 +83,8 @@ struct Sprite {
   Point common_divisor_offset{ };
   Size common_divisor_margin{ };
   std::vector<PointF> vertices;
+
+  int duplicate_of_index{ -1 };
 };
 
 std::vector<Sprite> parse_definition(const Settings& settings);
