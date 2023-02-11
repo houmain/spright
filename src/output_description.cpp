@@ -35,11 +35,12 @@ namespace {
     auto& json_sprites = json["sprites"];
     json_sprites = nlohmann::json::array();
 
-    using TagKey = std::pair<std::string, std::string>;
+    using TagKey = std::string;
+    using TagValue = std::string;
     using SpriteIndex = size_t;
     using TextureIndex = size_t;
     using SourceIndex = size_t;
-    auto tags = std::map<TagKey, std::vector<SpriteIndex>>();
+    auto tags = std::map<TagKey, std::map<TagValue, std::vector<SpriteIndex>>>();
     auto texture_indices = std::map<std::string, TextureIndex>();
     auto source_indices = std::map<ImagePtr, SourceIndex>();
     auto texture_sprites = std::map<TextureIndex, std::vector<SpriteIndex>>();
@@ -71,20 +72,18 @@ namespace {
       json_sprite["rotated"] = sprite.rotated;
       json_sprite["tags"] = sprite.tags;
       json_sprite["vertices"] = json_point_list(sprite.vertices);
-      for (const auto& tag_key : sprite.tags)
-        tags[tag_key].push_back(index);
+      for (const auto& [key, value] : sprite.tags)
+        tags[key][value].push_back(index);
       source_sprites[source_index].push_back(index);
       texture_sprites[texture_index].push_back(index);
     }
 
     auto& json_tags = json["tags"];
-    json_tags = nlohmann::json::array();
-    for (const auto& [tag_key, sprite_indices] : tags) {
-      auto& json_tag = json_tags.emplace_back();
-      json_tag["key"] = tag_key.first;
-      if (!tag_key.second.empty())
-        json_tag["value"] = tag_key.second;
-      json_tag["spriteIndices"] = sprite_indices;
+    json_tags = nlohmann::json::object();
+    for (const auto& [key, value_sprite_indices] : tags) {
+      auto& json_tag = json_tags[key];
+      for (const auto& [value, sprite_indices] : value_sprite_indices)
+        json_tag[value] = sprite_indices;
     }
 
     auto& json_textures = json["textures"];

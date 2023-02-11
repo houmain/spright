@@ -287,13 +287,11 @@ By default a [JSON](https://www.json.org) file containing all the information ab
       ]
     }
   ],
-  "tags": [
-    {
-      "key": "key",
-      "value": "value",
-      "spriteIndices": [ 0 ]
-    }
-  ],
+  "tags": {
+    "key": {
+      "value": [ 0 ]
+    },
+  },
   "sources": [
     {
       "filename": "source.png",
