@@ -22,8 +22,7 @@ namespace {
       const std::vector<Texture>& textures) {
     auto output_layers = std::vector<OutputLayer>();
     for (const auto& texture : textures) {
-      const auto filename = settings.output_path / utf8_to_path(
-          texture.output->filename.get_nth_filename(texture.filename_index));
+      const auto filename = settings.output_path / utf8_to_path(texture.filename);
       output_layers.push_back({ &texture, filename, -1 });
 
       auto i = 0;
@@ -108,6 +107,7 @@ int main(int argc, const char* argv[]) try {
   auto textures = pack_sprites(sprites);
   time_points.emplace_back(Clock::now(), "packing");
 
+  evaluate_expressions(settings, sprites, textures, variables);
   write_output_description(settings, sprites, textures, variables);
   time_points.emplace_back(Clock::now(), "output description");
 

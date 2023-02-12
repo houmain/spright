@@ -6,12 +6,11 @@ namespace spright {
 void pack_lines(bool horizontal, const OutputPtr& output,
     SpriteSpan sprites, std::vector<Texture>& textures) {
 
-  auto texture_filename_index = 0;
+  auto texture_output_index = 0;
   const auto add_texture = [&](SpriteSpan sprites) {
     auto texture = Texture{
       output,
-      texture_filename_index++,
-      0, 0,
+      texture_output_index++,
       sprites,
     };
     recompute_texture_size(texture);

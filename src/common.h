@@ -63,6 +63,7 @@ char to_lower(char c);
 std::string to_lower(std::string string);
 std::optional<bool> to_bool(std::string_view str);
 std::optional<real> to_real(std::string_view string);
+std::string to_string(bool value);
 std::string to_string(real value);
 bool starts_with(std::string_view str, std::string_view with);
 bool ends_with(std::string_view str, std::string_view with);
@@ -77,7 +78,9 @@ void split_expression(std::string_view str, std::vector<std::string_view>* resul
 std::string read_textfile(const std::filesystem::path& filename);
 void write_textfile(const std::filesystem::path& filename, std::string_view text);
 bool update_textfile(const std::filesystem::path& filename, std::string_view text);
+std::string remove_extension(std::string filename);
 
+inline unsigned int to_unsigned(int v) { return static_cast<unsigned int>(v); }
 inline int floor(int v, int q) { return (v / q) * q; };
 inline int ceil(int v, int q) { return ((v + q - 1) / q) * q; };
 inline int sqrt(int a) { return static_cast<int>(std::sqrt(a)); }

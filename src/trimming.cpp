@@ -22,7 +22,7 @@ namespace {
       count += polyline_set.lines[i]->count;
 
     auto merged = PolylinePtr(static_cast<cpPolyline*>(cpcalloc(1,
-      sizeof(cpPolyline) + static_cast<size_t>(count) * sizeof(cpVect))));
+      sizeof(cpPolyline) + to_unsigned(count) * sizeof(cpVect))));
     merged->capacity = count;
     merged->count = count;
 
@@ -39,7 +39,7 @@ namespace {
         line = polyline_set.lines[i];
 
     auto merged = PolylinePtr(static_cast<cpPolyline*>(cpcalloc(1,
-      sizeof(cpPolyline) + static_cast<size_t>(line->count) * sizeof(cpVect))));
+      sizeof(cpPolyline) + to_unsigned(line->count) * sizeof(cpVect))));
     merged->capacity = line->count;
     merged->count = line->count;
 
@@ -98,7 +98,7 @@ namespace {
     distance /= 2;
 
     auto normals = std::vector<cpVect>();
-    normals.reserve(static_cast<size_t>(polyline.count));
+    normals.reserve(to_unsigned(polyline.count));
     for (auto i = 0; i < polyline.count; ++i) {
       const auto& p0 = polyline.verts[i];
       const auto& p1 = polyline.verts[(i + 1) %  polyline.count];
@@ -124,7 +124,7 @@ namespace {
 
   std::vector<PointF> to_point_list(const cpPolyline& polyline) {
     auto vertices = std::vector<PointF>();
-    vertices.reserve(static_cast<size_t>(polyline.count));
+    vertices.reserve(to_unsigned(polyline.count));
     for (auto i = 0; i < polyline.count; ++i)
       vertices.push_back({
         polyline.verts[i].x,

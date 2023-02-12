@@ -10,9 +10,9 @@ struct Sprite {
 };
 
 {% for sprite in sprites -%}
-const Sprite {{ getId(sprite) }} { {{ sprite.trimmedRect.x }}, {{ sprite.trimmedRect.y }}, {{ sprite.trimmedRect.w }}, {{ sprite.trimmedRect.h }}, {{ sprite.pivot.x }}, {{ sprite.pivot.y }} };
+const Sprite {{ sprite.id }} { {{ sprite.trimmedRect.x }}, {{ sprite.trimmedRect.y }}, {{ sprite.trimmedRect.w }}, {{ sprite.trimmedRect.h }}, {{ sprite.pivot.x }}, {{ sprite.pivot.y }} };
 {% endfor %}
 {% for value, indices in tags.anim -%}
-const Sprite* const {{ value }}[] { {% for index in indices %}&{{ getId(at(sprites, index)) }}, {% endfor %}};
+const Sprite* const {{ value }}[] { {% for index in indices %}&{{ at(sprites, index).id }}, {% endfor %}};
 {% endfor %}
 } // namespace

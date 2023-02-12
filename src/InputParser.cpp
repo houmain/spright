@@ -10,6 +10,7 @@ namespace spright {
 
 namespace {
   const auto default_output_name = "spright{0-}.png";
+  const auto default_sprite_id = "sprite_{{ index }}";
 
   ImagePtr try_get_layer(const ImagePtr& sheet, 
       const std::string& default_layer_suffix, 
@@ -52,13 +53,6 @@ namespace {
     }
   }
 } // namespace
-
-std::string InputParser::get_sprite_id(const State& state) const {
-  auto id = state.sprite_id;
-  if (auto pos = id.find("%i"); pos != std::string::npos)
-    id.replace(pos, pos + 2, std::to_string(m_sprites_in_current_sheet));
-  return id;
-}
 
 OutputPtr InputParser::get_output(const State& state) {
   auto& output = m_outputs[std::filesystem::weakly_canonical(state.output)];
@@ -150,7 +144,8 @@ void InputParser::sprite_ends(State& state) {
 
   auto sprite = Sprite{ };
   sprite.index = static_cast<int>(m_sprites.size());
-  sprite.id = get_sprite_id(state);
+  sprite.input_sprite_index = m_sprites_in_current_sheet;
+  sprite.id = state.sprite_id;
   sprite.output = get_output(state);
   sprite.source = get_sheet(state);
   sprite.layers = get_layers(state, sprite.source);
@@ -358,16 +353,15 @@ InputParser::InputParser(const Settings& settings)
 void InputParser::parse(std::istream& input, 
     const std::filesystem::path& input_file) try {
   m_autocomplete_output = { };
-  m_sprites_in_current_sheet = { };
   m_detected_indentation = "  ";
   m_input_file = input_file;
-  m_line_number = { };
 
   auto indentation_detected = false;
   auto scope_stack = std::vector<State>();
-  scope_stack.emplace_back();
-  scope_stack.back().level = -1;
-  scope_stack.back().output = default_output_name;
+  auto& top = scope_stack.emplace_back();
+  top.level = -1;
+  top.output = default_output_name;
+  top.sprite_id = default_sprite_id;
 
   auto autocomplete_space = std::stringstream();
   const auto pop_scope_stack = [&](int level) {

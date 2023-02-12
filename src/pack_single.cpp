@@ -27,9 +27,9 @@ void pack_single(const OutputPtr& output, SpriteSpan sprites,
     textures.push_back(Texture{
       output,
       index,
+      { &sprite, 1 },
       sprite.rect.w + padding * 2,
       sprite.rect.h + padding * 2,
-      { &sprite, 1 },
     });
   }
 }

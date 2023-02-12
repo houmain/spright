@@ -89,6 +89,10 @@ std::optional<real> to_real(std::string_view str) {
   return { };
 }
 
+std::string to_string(bool value) {
+  return (value ? "true" : "false");
+}
+
 std::string to_string(real value) {
   const auto max_size = 20;
   auto string = std::string(max_size, ' ');
@@ -244,6 +248,13 @@ bool update_textfile(const std::filesystem::path& filename, std::string_view tex
       return false;
   write_textfile(filename, text);
   return true;
+}
+
+std::string remove_extension(std::string filename) {
+  const auto dot = filename.rfind('.');
+  if (dot != std::string::npos)
+    filename.resize(dot);
+  return filename;
 }
 
 } // namespace

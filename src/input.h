@@ -12,9 +12,9 @@ namespace spright {
 using ImagePtr = std::shared_ptr<const Image>;
 using OutputPtr = std::shared_ptr<const struct Output>;
 using LayerVectorPtr = std::shared_ptr<const std::vector<ImagePtr>>;
-using StringMap = std::map<std::string, std::string>;
+using StringMap = std::map<std::string, std::string, std::less<>>;
 using Variant = std::variant<bool, real, std::string>;
-using VariantMap = std::map<std::string, Variant>;
+using VariantMap = std::map<std::string, Variant, std::less<>>;
 
 enum class PivotX { left, center, right };
 enum class PivotY { top, middle, bottom };
@@ -63,6 +63,7 @@ struct Output {
 
 struct Sprite {
   int index{ };
+  int input_sprite_index{ };
   std::string id;
   OutputPtr output;
   ImagePtr source;
@@ -83,12 +84,13 @@ struct Sprite {
   StringMap tags;
   VariantMap data;
   bool rotated{ };
-  int texture_filename_index{ };
+  int texture_output_index{ };
   Size common_divisor{ };
   Point common_divisor_offset{ };
   Size common_divisor_margin{ };
   std::vector<PointF> vertices;
 
+  // generated
   int duplicate_of_index{ -1 };
 };
 

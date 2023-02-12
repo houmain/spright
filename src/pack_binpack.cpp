@@ -37,14 +37,14 @@ void pack_binpack(const OutputPtr& output_ptr, SpriteSpan sprites,
     std::move(pack_sizes));
 
   // update sprite rects
-  auto texture_filename_index = 0;
+  auto texture_output_index = 0;
   auto packed_sprites = size_t{ };
   for (const auto& pack_sheet : pack_sheets) {
     for (const auto& pack_rect : pack_sheet.rects) {
-      auto& sprite = sprites[static_cast<size_t>(pack_rect.id)];
+      auto& sprite = sprites[to_unsigned(pack_rect.id)];
       const auto indent = get_sprite_indent(sprite);
       sprite.rotated = pack_rect.rotated;;
-      sprite.texture_filename_index = texture_filename_index;
+      sprite.texture_output_index = texture_output_index;
       sprite.trimmed_rect = {
         pack_rect.x + indent.x,
         pack_rect.y + indent.y,
@@ -53,7 +53,7 @@ void pack_binpack(const OutputPtr& output_ptr, SpriteSpan sprites,
       };
       ++packed_sprites;
     }
-    ++texture_filename_index;
+    ++texture_output_index;
   }
 
   if (packed_sprites < sprites.size())
@@ -63,7 +63,7 @@ void pack_binpack(const OutputPtr& output_ptr, SpriteSpan sprites,
 
   for (auto i = size_t{ }; i < textures.size(); i++) {
     auto& texture = textures[i];
-    const auto& pack_sheet = pack_sheets[static_cast<size_t>(texture.filename_index)];
+    const auto& pack_sheet = pack_sheets[to_unsigned(texture.output_index)];
     texture.width = pack_sheet.width;
     texture.height = pack_sheet.height;
   }

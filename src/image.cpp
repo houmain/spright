@@ -200,6 +200,8 @@ Image::Image(int width, int height)
 
   const auto size = static_cast<size_t>(m_width * m_height) * sizeof(RGBA);
   m_data = static_cast<RGBA*>(std::malloc(size));
+  if (!m_data)
+    throw std::bad_alloc();
 }
 
 Image::Image(int width, int height, const RGBA& background)
@@ -271,6 +273,8 @@ MonoImage::MonoImage(int width, int height)
 
   const auto size = static_cast<size_t>(m_width * m_height) * sizeof(uint8_t);
   m_data = static_cast<uint8_t*>(std::malloc(size));
+  if (!m_data)
+    throw std::bad_alloc();
 }
 
 MonoImage::MonoImage(int width, int height, Value background)

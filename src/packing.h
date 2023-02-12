@@ -18,10 +18,14 @@ using SpriteSpan = nonstd::span<Sprite>;
 
 struct Texture {
   OutputPtr output;
-  int filename_index;
+  int output_index{ };
+  SpriteSpan sprites;
   int width{ };
   int height{ };
-  SpriteSpan sprites;
+
+  // generated
+  int index{ };
+  std::string filename;
   std::filesystem::file_time_type last_source_written_time{ };
 };
 

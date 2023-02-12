@@ -72,7 +72,7 @@ TEST_CASE("autocompletion - ID generator") {
     input "Items.png"
       colorkey
       atlas
-      id "item_%i"
+      id "item_{{ index }}"
   )");
   auto parser = InputParser(Settings{ });
   REQUIRE_NOTHROW(parser.parse(input));

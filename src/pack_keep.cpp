@@ -10,7 +10,7 @@ void pack_keep(const OutputPtr& output, SpriteSpan sprites,
   for (auto& sprite : sprites) {
     const auto source_index = source_indices.emplace(
       sprite.source, source_indices.size()).first->second;
-    sprite.texture_filename_index = static_cast<int>(source_index);
+    sprite.texture_output_index = static_cast<int>(source_index);
     sprite.trimmed_rect = sprite.trimmed_source_rect;
     sprite.rect = sprite.source_rect;
   }

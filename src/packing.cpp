@@ -110,23 +110,19 @@ namespace {
     const auto duplicate_sprites = sprites.last(sprites.size() - unique_sprites.size());
     if (output->duplicates == Duplicates::drop) {
       for (auto& sprite : duplicate_sprites)
-        sprite = { };
+        sprite.output = { };
     }
     else {
       // copy rectangles from unique to duplicate sprites
-      auto sprites_by_id = std::map<int, const Sprite*>();
+      auto sprites_by_index = std::map<int, const Sprite*>();
       for (const auto& sprite : unique_sprites)
-        sprites_by_id[sprite.index] = &sprite;
+        sprites_by_index[sprite.index] = &sprite;
       for (auto& duplicate : duplicate_sprites) {
-        const auto& sprite = *sprites_by_id.find(duplicate.duplicate_of_index)->second;
-        duplicate.texture_filename_index = sprite.texture_filename_index;
+        const auto& sprite = *sprites_by_index.find(duplicate.duplicate_of_index)->second;
+        duplicate.texture_output_index = sprite.texture_output_index;
         duplicate.trimmed_rect = sprite.trimmed_rect;
         duplicate.rotated = sprite.rotated;
       }
-
-      // restore order of duplicate sprites
-      std::sort(std::begin(duplicate_sprites), std::end(duplicate_sprites),
-        [](const Sprite& a, const Sprite& b) { return a.index < b.index; });
     }
   }
 
@@ -188,14 +184,21 @@ std::vector<Texture> pack_sprites(std::vector<Sprite>& sprites) {
 
   auto textures = pack_sprites_by_output(sprites);
 
-  // check if texture filename indices exceed sequence length
-  for (const auto& texture : textures)
-    if (texture.filename_index >= texture.output->filename.count())
-      throw_not_all_sprites_packed();
-
   for (auto& sprite : sprites)
     complete_sprite(sprite);
 
+  // sort texture by first sprite index
+  std::sort(textures.begin(), textures.end(),
+    [&](const Texture& a, const Texture& b) {
+      return a.sprites.front().index < b.sprites.front().index;
+    });
+
+  // finish textures
+  for (auto i = size_t{ }; i < textures.size(); ++i) {
+    auto& texture = textures[i];
+    texture.index = static_cast<int>(i);
+    texture.filename = texture.output->filename.get_nth_filename(texture.output_index);
+  }
   return textures;
 }
 
@@ -205,8 +208,8 @@ void create_textures_from_filename_indices(const OutputPtr& output_ptr,
   // sort sprites by texture index
   std::sort(std::begin(sprites), std::end(sprites),
     [](const Sprite& a, const Sprite& b) {
-      return std::tie(a.texture_filename_index, a.index) <
-             std::tie(b.texture_filename_index, b.index);
+      return std::tie(a.texture_output_index, a.index) <
+             std::tie(b.texture_output_index, b.index);
     });
 
   // create textures
@@ -214,12 +217,11 @@ void create_textures_from_filename_indices(const OutputPtr& output_ptr,
   const auto end = sprites.end();
   for (auto it = texture_begin;; ++it)
     if (it == end || 
-        it->texture_filename_index != texture_begin->texture_filename_index) {
+        it->texture_output_index != texture_begin->texture_output_index) {
       textures.push_back({ 
-        output_ptr, 
-        texture_begin->texture_filename_index, 
-        0, 0, 
-        SpriteSpan(texture_begin, it)
+        output_ptr,
+        texture_begin->texture_output_index,
+        SpriteSpan(texture_begin, it),
       });
 
       texture_begin = it;
