@@ -133,14 +133,14 @@ namespace {
     // sort sprites by output
     std::sort(std::begin(sprites), std::end(sprites),
       [](const Sprite& a, const Sprite& b) {
-        return std::tie(a.output->filename, a.index) <
-               std::tie(b.output->filename, b.index);
+        return std::tie(a.output->index, a.index) <
+               std::tie(b.output->index, b.index);
       });
 
     auto textures = std::vector<Texture>();
     for (auto begin = sprites.begin(), it = begin; ; ++it)
       if (it == sprites.end() ||
-          it->output->filename != begin->output->filename) {
+          it->output != begin->output) {
         const auto& output = begin->output;
         if (output->duplicates != Duplicates::keep)
           pack_texture_deduplicate(output, { begin, it }, textures);
@@ -187,12 +187,6 @@ std::vector<Texture> pack_sprites(std::vector<Sprite>& sprites) {
   for (auto& sprite : sprites)
     complete_sprite(sprite);
 
-  // sort texture by first sprite index
-  std::sort(textures.begin(), textures.end(),
-    [&](const Texture& a, const Texture& b) {
-      return a.sprites.front().index < b.sprites.front().index;
-    });
-
   // finish textures
   for (auto i = size_t{ }; i < textures.size(); ++i) {
     auto& texture = textures[i];
@@ -213,18 +207,18 @@ void create_textures_from_filename_indices(const OutputPtr& output_ptr,
     });
 
   // create textures
-  auto texture_begin = sprites.begin();
+  auto begin = sprites.begin();
   const auto end = sprites.end();
-  for (auto it = texture_begin;; ++it)
+  for (auto it = begin;; ++it)
     if (it == end || 
-        it->texture_output_index != texture_begin->texture_output_index) {
+        it->texture_output_index != begin->texture_output_index) {
       textures.push_back({ 
         output_ptr,
-        texture_begin->texture_output_index,
-        SpriteSpan(texture_begin, it),
+        begin->texture_output_index,
+        SpriteSpan(begin, it),
       });
 
-      texture_begin = it;
+      begin = it;
       if (it == end)
         break;
     }

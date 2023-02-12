@@ -204,6 +204,8 @@ void evaluate_expressions(const Settings& settings,
         return std::to_string(sprite.index);
       if (variable == "inputSpriteIndex")
         return std::to_string(sprite.input_sprite_index);
+      if (variable == "source.filename")
+        return path_to_utf8(sprite.source->filename());
       return replace_variable(variable);
     });
   };

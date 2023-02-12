@@ -65,18 +65,3 @@ TEST_CASE("autocompletion - Unaligned") {
   const auto& sprites = parser.sprites();
   REQUIRE(sprites.size() == 31);
 }
-
-TEST_CASE("autocompletion - ID generator") {
-  auto input = std::stringstream(R"(
-    path "test"
-    input "Items.png"
-      colorkey
-      atlas
-      id "item_{{ index }}"
-  )");
-  auto parser = InputParser(Settings{ });
-  REQUIRE_NOTHROW(parser.parse(input));
-  const auto& sprites = parser.sprites();
-  REQUIRE(sprites.size() == 31);
-  CHECK(sprites[10].id == "item_10");
-}

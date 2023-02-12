@@ -43,7 +43,7 @@ void pack_binpack(const OutputPtr& output_ptr, SpriteSpan sprites,
     for (const auto& pack_rect : pack_sheet.rects) {
       auto& sprite = sprites[to_unsigned(pack_rect.id)];
       const auto indent = get_sprite_indent(sprite);
-      sprite.rotated = pack_rect.rotated;;
+      sprite.rotated = pack_rect.rotated;
       sprite.texture_output_index = texture_output_index;
       sprite.trimmed_rect = {
         pack_rect.x + indent.x,
@@ -61,11 +61,11 @@ void pack_binpack(const OutputPtr& output_ptr, SpriteSpan sprites,
 
   create_textures_from_filename_indices(output_ptr, sprites, textures);
 
-  for (auto i = size_t{ }; i < textures.size(); i++) {
-    auto& texture = textures[i];
-    const auto& pack_sheet = pack_sheets[to_unsigned(texture.output_index)];
-    texture.width = pack_sheet.width;
-    texture.height = pack_sheet.height;
+  auto texture = &textures[textures.size() - pack_sheets.size()];
+  for (const auto& pack_sheet : pack_sheets) {
+    texture->width = pack_sheet.width;
+    texture->height = pack_sheet.height;
+    ++texture;
   }
 }
 

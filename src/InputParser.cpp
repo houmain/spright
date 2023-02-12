@@ -59,6 +59,7 @@ OutputPtr InputParser::get_output(const State& state) {
   if (!output) {
     update_applied_definitions(Definition::output);
     output = std::make_shared<Output>(Output{
+      to_int(m_outputs.size() - 1),
       m_input_file,
       FilenameSequence(path_to_utf8(state.output)),
       state.default_layer_suffix,
