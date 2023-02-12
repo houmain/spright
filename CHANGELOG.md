@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Version 1.9.0] - 2023-02-12
+
+### Added
+
+- Added sources to JSON output.
+- Added set for setting variables.
+- Added data for setting per sprite data.
+- Added variable evaluation.
+
+### Changed
+
+- Improved tag output.
+- Improved output order.
+- Compacting number arrays in JSON output.
+- Compacted vertices in JSON output.
+
+### Fixed
+
+- Fixed pack method keep for multiple sources.
+- Fixed deduplication when sprites are reordered.
+
 ## [Version 1.8.0] - 2023-02-07
 
 ### Added
@@ -86,6 +107,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fixed -- commandline arguments.
 - Fixed sample cpp.template.
 
+[version 1.9.0]: https://github.com/houmain/spright/compare/1.8.0...1.9.0
 [version 1.8.0]: https://github.com/houmain/spright/compare/1.7.0...1.8.0
 [version 1.7.0]: https://github.com/houmain/spright/compare/1.6.0...1.7.0
 [version 1.6.0]: https://github.com/houmain/spright/compare/1.5.0...1.6.0
