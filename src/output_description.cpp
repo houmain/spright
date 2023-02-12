@@ -13,10 +13,12 @@ namespace {
     return json_point;
   }
 
-  nlohmann::json json_point_list(const std::vector<PointF>& points) {
+  nlohmann::json json_compact_point_list(const std::vector<PointF>& points) {
     auto list = nlohmann::json::array();
-    for (const auto& point : points)
-      list.push_back(json_point(point));
+    for (const auto& point : points) {
+      list.push_back(point.x);
+      list.push_back(point.y);
+    }
     return list;
   }
 
@@ -88,7 +90,7 @@ namespace {
       json_sprite["rotated"] = sprite->rotated;
       json_sprite["tags"] = sprite->tags;
       json_sprite["data"] = json_variant_map(sprite->data);
-      json_sprite["vertices"] = json_point_list(sprite->vertices);
+      json_sprite["vertices"] = json_compact_point_list(sprite->vertices);
 
       for (const auto& [key, value] : sprite->tags)
         tags[key][value].push_back(sprite_index);
