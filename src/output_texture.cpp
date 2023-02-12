@@ -13,13 +13,23 @@ namespace {
     return nullptr;
   }
 
+  bool has_rect_vertices(const Sprite& sprite) {
+    const auto& v = sprite.vertices;
+    const auto [w, h] = sprite.trimmed_rect.size();
+    return (v.size() == 4 &&
+      v[0] == PointF(0, 0) &&
+      v[1] == PointF(w, 0) &&
+      v[2] == PointF(w, h) &&
+      v[3] == PointF(0, h));
+  }
+
   bool copy_sprite(Image& target, const Sprite& sprite, int layer_index) try {
     const auto source = get_source(sprite, layer_index);
     if (!source)
       return false;
 
     if (sprite.rotated) {
-      if (sprite.vertices.empty()) {
+      if (has_rect_vertices(sprite)) {
         copy_rect_rotated_cw(*source, sprite.trimmed_source_rect,
           target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
       }
@@ -29,7 +39,7 @@ namespace {
       }
     }
     else {
-      if (sprite.vertices.empty()) {
+      if (has_rect_vertices(sprite)) {
         copy_rect(*source, sprite.trimmed_source_rect,
           target, sprite.trimmed_rect.x, sprite.trimmed_rect.y);
       }
@@ -59,7 +69,8 @@ namespace {
 #if defined(NDEBUG)
     throw;
 #else
-    std::fprintf(stderr, "copying sprite failed: %s\n", ex.what());
+    std::fprintf(stderr, "copying sprite '%s' failed: %s\n", 
+      sprite.id.c_str(), ex.what());
     return false;
 #endif
   }
