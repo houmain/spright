@@ -18077,7 +18077,18 @@ class serializer
                     return;
                 }
 
-                if (pretty_print)
+                if (pretty_print &&
+                    //@ disable pretty print for number arrays
+                    !std::all_of(val.m_value.array->cbegin(), val.m_value.array->cend(),
+                      [](const BasicJsonType& val) {
+                        switch (val.m_type) {
+                          case value_t::number_integer:
+                          case value_t::number_unsigned:
+                          case value_t::number_float:
+                            return true;
+                          return false;
+                        }
+                      }))
                 {
                     o->write_characters("[\n", 2);
 

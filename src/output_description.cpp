@@ -246,7 +246,7 @@ bool write_output_description(const Settings& settings,
     env.render_to(os, env.parse_template(path_to_utf8(settings.template_file)), json);
   }
   else {
-    os << json.dump(2);
+    os << json.dump(1, '\t');
   }
   if (settings.output_file != "stdout")
     if (!update_textfile(settings.output_path / settings.output_file, ss.str()))
