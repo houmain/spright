@@ -246,12 +246,13 @@ The following table contains a list of all definitions, with the subject each af
 | row            |input  | row          | Sets a sprite's vertical offset within a grid (starting with 0).
 | skip           |input  | [columns]    | Skips one or more horizontal grid cells.
 | atlas          |input  | [pixels]     | Specifies that the input contains multiple unaligned sprites, separated by more than a specific number of transparent pixel rows.
-| **sprite**     |input  | [id]         | Adds a new sprite to an input sheet (_id_ defaults to an empty string).
-| id             |sprite | id           | Sets the sprite's id. Can contain the placeholder _%i_, which is replaced by the sprite index.
+| **sprite**     |input  | [id]         | Adds a new sprite to an input sheet and optionally sets its id.
+| id             |sprite | id           | Sets the sprite's id (defaults to "sprite_{{ index }}").
 | span           |sprite | columns, rows| Sets the number of grid cells a sprite spans.
 | rect           |sprite | x, y, width, height | Sets a sprite's rectangle in the input sheet.
 | pivot          |sprite | pivot-x, pivot-y | Sets the coordinates of the sprite's pivot point. Optionally the horizontal (_left, center, right_) and vertical (_top, middle, bottom_) origin of the coordinates can be set (e.g. 10 20, right - 5 top + 3, bottom left).
 | tag            |sprite | key, [value] | Adds a tag to a sprite (_value_ defaults to an empty string).
+| data           |sprite | key, value   | Adds a user defined data entry to a sprite.
 | trim           |sprite | trim-mode    | Sets a mode for trimming, which reduces the sprite to the non-transparent region:<br/>- _none_ : Do not trim.<br/>- _rect_ : Trim to rectangular region (default).<br/>- _convex_ : Trim to convex region (_vertices_ are set in output description).
 | trim-channel   |sprite | channel      | Sets the channel which should be considered during trimming:<br/>- _alpha_ : The alpha channel of a pixel (default).<br/>- _gray_ : The gray level of the pixel.
 | trim-threshold |sprite | value        | Sets the value which should be considered non-transparent during trimming (1 - 255).
@@ -260,6 +261,7 @@ The following table contains a list of all definitions, with the subject each af
 | crop-pivot     |sprite | [boolean]    | Sets whether the sprite's pivot point should be relative to the trimmed bounds.
 | extrude        |sprite | [pixels],<br/>[wrap-mode] | Adds a padding around the sprite and fills it depending on the _wrap-mode_:<br/>- _clamp_: Clamp to border pixels (default).<br/>- _mirror_: Mirror border pixels.<br/>- _repeat_: Repeat border pixels.
 | common-divisor |sprite | x, [y]       | Restricts the sprite's size to be divisible by a certain number of pixels. Smaller sprites are filled up with transparency.
+| set            |-      | key, value   | Sets a variable value, which can be accessed in different places using `{{ key }}`.
 | group          |-      | -            | Can be used for opening a new scope, to limit for example the effect of a tag.
 
 Output description
@@ -269,22 +271,21 @@ By default a [JSON](https://www.json.org) file containing all the information ab
 {
   "sprites": [
     {
-      "index": 0,
       "id": "sprite_0",
+      "index": 0,
+      "inputSpriteIndex": 0,
       "pivot": { "x": 8.0, "y": 8.0 },
       "rect": { "x": 0, "y": 0, "w": 16, "h": 16 },
+      "trimmedRect": { "x": 0, "y": 0, "w": 16, "h": 16 },
       "rotated": false,
       "sourceIndex": 0,
       "sourceRect":  { "x": 0, "y": 0, "w": 16, "h": 16 },
+      "trimmedSourceRect": { "x": 0, "y": 0, "w": 16, "h": 16 },
       "textureIndex": 0,
       "textureSpriteIndex": 0,
-      "trimmedRect": { "x": 0, "y": 0, "w": 16, "h": 16 },
-      "trimmedSourceRect": { "x": 0, "y": 0, "w": 16, "h": 16 },
+      "data": { "key": "value" },
       "tags": { "key": "value" },
-      "vertices": [
-        { "x": 0.0, "y": 0.0 }, { "x": 16.0, "y": 0.0 },
-        { "x": 16.0, "y": 16.0 }, { "x": 0.0, "y": 16.0 }
-      ]
+      "vertices": [ 0.0, 0.0,  16.0, 0.0,  16.0, 16.0,  0.0, 16.0 ]
     }
   ],
   "tags": {
@@ -294,6 +295,7 @@ By default a [JSON](https://www.json.org) file containing all the information ab
   },
   "sources": [
     {
+      "index": 0,
       "filename": "source.png",
       "path": "path",
       "width": 256,
@@ -303,6 +305,7 @@ By default a [JSON](https://www.json.org) file containing all the information ab
   ],
   "textures": [
     {
+      "index": 0,
       "filename": "path/spright0.png",
       "inputFilename": "spright.conf",
       "width": 256,
