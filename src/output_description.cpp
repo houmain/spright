@@ -75,7 +75,7 @@ namespace {
 
       const auto texture_index = sprite_on_texture.find(sprite_index)->second;
       const auto source_index = source_indices.emplace(
-        sprite->source, source_indices.size()).first->second;
+        sprite->source, to_int(source_indices.size())).first->second;
 
       json_sprite["id"] = sprite->id;
       json_sprite["inputSpriteIndex"] = sprite->input_sprite_index;

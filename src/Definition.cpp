@@ -25,8 +25,8 @@ bool has_grid(const State& state) {
 Definition get_definition(std::string_view command) {
   static const auto s_map = []() {
     auto map = std::map<std::string, Definition, std::less<>>{ };
-    const auto begin = static_cast<int>(Definition::none);
-    const auto end = static_cast<int>(Definition::MAX);
+    const auto begin = to_int(Definition::none);
+    const auto end = to_int(Definition::MAX);
     for (auto d = begin; d != end; ++d) {
       const auto definition = static_cast<Definition>(d);
       map[std::string(get_definition_name(definition))] = definition;
@@ -403,7 +403,8 @@ void apply_definition(Definition definition,
 
     case Definition::pivot: {
       // join expressions (e.g. middle - 7 top + 2)
-      if (!std::all_of(arguments.begin(), arguments.end(), to_real))
+      if (!std::all_of(arguments.begin(), arguments.end(), 
+          [](const auto& v) { return to_real(v).has_value(); }))
         join_expressions(&arguments);
 
       state.pivot = { PivotX::left, PivotY::top };

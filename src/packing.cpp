@@ -196,7 +196,7 @@ std::vector<Texture> pack_sprites(std::vector<Sprite>& sprites) {
   // finish textures
   for (auto i = size_t{ }; i < textures.size(); ++i) {
     auto& texture = textures[i];
-    texture.index = static_cast<int>(i);
+    texture.index = to_int(i);
     texture.filename = texture.output->filename.get_nth_filename(texture.output_index);
   }
   return textures;

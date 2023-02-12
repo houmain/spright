@@ -16,12 +16,12 @@ namespace {
     auto space_ptr = SpacePtr(cpSpaceNew());
     const auto space = space_ptr.get();
 
-    const auto padding = static_cast<cpFloat>(shape_padding) / 2.0;
-    const auto border = static_cast<cpFloat>(border_padding) - padding;
-    const auto x0 = static_cast<cpFloat>(border);
-    const auto y0 = static_cast<cpFloat>(border);
-    const auto x1 = static_cast<cpFloat>(texture.width) - border - 0.5;
-    const auto y1 = static_cast<cpFloat>(texture.height) - border - 0.5;
+    const auto padding = to_real(shape_padding) / 2.0;
+    const auto border = to_real(border_padding) - padding;
+    const auto x0 = border;
+    const auto y0 = border;
+    const auto x1 = to_real(texture.width) - border - 0.5;
+    const auto y1 = to_real(texture.height) - border - 0.5;
 
     auto shapes = std::vector<ShapePtr>();
     shapes.emplace_back(cpSpaceAddShape(space, cpSegmentShapeNew(cpSpaceGetStaticBody(space), cpv(x0, y0), cpv(x1, y0), 0)));
@@ -36,8 +36,8 @@ namespace {
       const auto moment = INFINITY;
       auto body = bodies.emplace_back(cpSpaceAddBody(space, cpBodyNew(mass, moment))).get();
       cpBodySetPosition(body, {
-        static_cast<cpFloat>(sprite.trimmed_rect.x),
-        static_cast<cpFloat>(sprite.trimmed_rect.y),
+        to_real(sprite.trimmed_rect.x),
+        to_real(sprite.trimmed_rect.y),
       });
 
       vertices.clear();
@@ -48,7 +48,7 @@ namespace {
           return cpVect{ vertex.x, vertex.y };
         });
       shapes.emplace_back(cpSpaceAddShape(space, cpPolyShapeNew(body,
-        static_cast<int>(vertices.size()), vertices.data(), cpTransformIdentity, padding)));
+        to_int(vertices.size()), vertices.data(), cpTransformIdentity, padding)));
     }
 
     // TODO: improve
@@ -61,8 +61,8 @@ namespace {
     for (const auto& body : bodies) {
       auto& sprite = texture.sprites[i++];
       const auto position = cpBodyGetPosition(body.get());
-      const auto dx = static_cast<int>(position.x + 0.5) - sprite.trimmed_rect.x;
-      const auto dy = static_cast<int>(position.y + 0.5) - sprite.trimmed_rect.y;
+      const auto dx = to_int(position.x + 0.5) - sprite.trimmed_rect.x;
+      const auto dy = to_int(position.y + 0.5) - sprite.trimmed_rect.y;
       sprite.trimmed_rect.x += dx;
       sprite.trimmed_rect.y += dy;
       sprite.rect.x += dx;

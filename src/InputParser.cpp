@@ -143,7 +143,7 @@ void InputParser::sprite_ends(State& state) {
   }
 
   auto sprite = Sprite{ };
-  sprite.index = static_cast<int>(m_sprites.size());
+  sprite.index = to_int(m_sprites.size());
   sprite.input_sprite_index = m_sprites_in_current_sheet;
   sprite.id = state.sprite_id;
   sprite.output = get_output(state);
@@ -407,7 +407,7 @@ void InputParser::parse(std::istream& input,
     }
 
     auto line = ltrim(buffer);
-    const auto level = static_cast<int>(buffer.size() - line.size());
+    const auto level = to_int(buffer.size() - line.size());
 
     if (auto hash = line.find('#'); hash != std::string::npos)
       line = line.substr(0, hash);

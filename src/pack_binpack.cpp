@@ -15,7 +15,7 @@ void pack_binpack(const OutputPtr& output_ptr, SpriteSpan sprites,
     auto size = get_sprite_size(sprite);
     size.x += output.shape_padding;
     size.y += output.shape_padding;
-    pack_sizes.push_back({ static_cast<int>(pack_sizes.size()), size.x, size.y });
+    pack_sizes.push_back({ to_int(pack_sizes.size()), size.x, size.y });
   }
 
   const auto [max_texture_width, max_texture_height] = get_texture_max_size(output);

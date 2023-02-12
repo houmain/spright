@@ -47,6 +47,25 @@ void check(bool condition, T&&... args) {
     error(std::forward<T>(args)...);
 }
 
+template<typename T> 
+int to_int(const T& v) { 
+  static_assert(std::is_floating_point_v<T> || 
+    std::is_enum_v<T> || std::is_unsigned_v<T>);
+  return static_cast<int>(v); 
+}
+
+template<typename T>
+unsigned int to_unsigned(const T& v) { 
+  static_assert(std::is_integral_v<T> && std::is_signed_v<T>);
+  return static_cast<unsigned int>(v); 
+}
+
+template<typename T> 
+real to_real(const T& v) { 
+  static_assert(std::is_integral_v<T>);
+  return static_cast<real>(v); 
+}
+
 std::filesystem::path utf8_to_path(std::string_view utf8_string);
 std::filesystem::path utf8_to_path(const std::string& utf8_string);
 std::filesystem::path utf8_to_path(const std::filesystem::path&) = delete;
@@ -80,7 +99,6 @@ void write_textfile(const std::filesystem::path& filename, std::string_view text
 bool update_textfile(const std::filesystem::path& filename, std::string_view text);
 std::string remove_extension(std::string filename);
 
-inline unsigned int to_unsigned(int v) { return static_cast<unsigned int>(v); }
 inline int floor(int v, int q) { return (v / q) * q; };
 inline int ceil(int v, int q) { return ((v + q - 1) / q) * q; };
 inline int sqrt(int a) { return static_cast<int>(std::sqrt(a)); }

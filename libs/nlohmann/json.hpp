@@ -18086,8 +18086,10 @@ class serializer
                           case value_t::number_unsigned:
                           case value_t::number_float:
                             return true;
-                          return false;
+                          default:
+                            break;
                         }
+                        return false;
                       }))
                 {
                     o->write_characters("[\n", 2);

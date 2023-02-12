@@ -198,7 +198,7 @@ Image::Image(int width, int height)
   if (!width || !height)
     throw std::runtime_error("invalid image size");
 
-  const auto size = static_cast<size_t>(m_width * m_height) * sizeof(RGBA);
+  const auto size = to_unsigned(m_width * m_height) * sizeof(RGBA);
   m_data = static_cast<RGBA*>(std::malloc(size));
   if (!m_data)
     throw std::bad_alloc();
@@ -271,7 +271,7 @@ MonoImage::MonoImage(int width, int height)
   if (!width || !height)
     throw std::runtime_error("invalid image size");
 
-  const auto size = static_cast<size_t>(m_width * m_height) * sizeof(uint8_t);
+  const auto size = to_unsigned(m_width * m_height) * sizeof(uint8_t);
   m_data = static_cast<uint8_t*>(std::malloc(size));
   if (!m_data)
     throw std::bad_alloc();
@@ -318,7 +318,7 @@ void save_image(const Image& image, const std::filesystem::path& path) {
   const auto h = image.height();
   const auto comp = sizeof(RGBA);
   const auto data = image.rgba();
-  const auto stride = image.width() * static_cast<int>(sizeof(RGBA));
+  const auto stride = image.width() * to_int(sizeof(RGBA));
 
   stbi_write_tga_with_rle = 1;
   if (!(extension == ".png" && stbi_write_png(filename.c_str(), w, h, comp, data, stride)) &&
@@ -334,7 +334,7 @@ void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx
       dest_rect == dest.bounds() &&
       source_rect == dest_rect) {
     std::memcpy(dest.rgba(), source.rgba(),
-      static_cast<size_t>(w * h) * sizeof(RGBA));
+      to_unsigned(w * h) * sizeof(RGBA));
   }
   else {
     check_rect(source, source_rect);
@@ -343,7 +343,7 @@ void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx
       std::memcpy(
         dest.rgba() + ((dy + y) * dest.width() + dx),
         source.rgba() + ((sy + y) * source.width() + sx),
-        static_cast<size_t>(w) * sizeof(RGBA));
+        to_unsigned(w) * sizeof(RGBA));
   }
 }
 
@@ -408,11 +408,11 @@ void extrude_rect(Image& image, const Rect& rect, int count, WrapMode mode,
     if (top)
       std::memcpy(&image.rgba_at({ dx0 + 1, dy0 }), 
                   &image.rgba_at({ dx0 + 1, sy0 }),
-                  static_cast<size_t>(dx1 - dx0 - 1) * sizeof(RGBA));
+                  to_unsigned(dx1 - dx0 - 1) * sizeof(RGBA));
     if (bottom)
       std::memcpy(&image.rgba_at({ dx0 + 1, dy1 }), 
                   &image.rgba_at({ dx0 + 1, sy1 }), 
-                  static_cast<size_t>(dx1 - dx0 - 1) * sizeof(RGBA));
+                  to_unsigned(dx1 - dx0 - 1) * sizeof(RGBA));
     if (left)
       for (auto y = dy0; y <= dy1; ++y)
         image.rgba_at({ dx0, y }) = image.rgba_at({ sx0, y });
@@ -507,7 +507,7 @@ bool is_identical(const Image& image_a, const Rect& rect_a, const Image& image_b
     if (std::memcmp(
         image_a.rgba() + (rect_a.y + y) * image_a.width() + rect_a.x,
         image_b.rgba() + (rect_b.y + y) * image_b.width() + rect_b.x,
-        static_cast<size_t>(rect_a.w) * sizeof(RGBA)))
+        to_unsigned(rect_a.w) * sizeof(RGBA)))
       return false;
 
   return true;
@@ -674,8 +674,8 @@ MonoImage get_gray_levels(const Image& image, const Rect& rect) {
 }
 
 Image resize_image(const Image& image, real scale, ResizeFilter filter) {
-  const auto width = static_cast<int>(image.width() * scale + 0.5);
-  const auto height = static_cast<int>(image.height() * scale + 0.5);
+  const auto width = to_int(image.width() * scale + 0.5);
+  const auto height = to_int(image.height() * scale + 0.5);
   if (width == image.width() && height == image.height())
     return image.clone();
   auto output = Image(width, height);

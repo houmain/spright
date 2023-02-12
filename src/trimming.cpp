@@ -51,8 +51,8 @@ namespace {
   PolylinePtr get_polygon_outline(const MonoImage& image, int threshold) {
     const auto sample = [](cpVect point, void *data) -> cpFloat {
       const auto& image = *static_cast<const MonoImage*>(data);
-      const auto x = static_cast<int>(point.x - 0.5);
-      const auto y = static_cast<int>(point.y - 0.5);
+      const auto x = to_int(point.x - 0.5);
+      const auto y = to_int(point.y - 0.5);
       if (x < 0 || x >= image.width() || y < 0 || y >= image.height())
         return 0;
       return image.value_at({ x, y });
@@ -60,9 +60,9 @@ namespace {
 
     const auto outlines = cpPolylineSetNew();
     cpMarchHard(
-      { -1, -1, static_cast<cpFloat>(image.width() + 1), static_cast<cpFloat>(image.height() + 1) },
-      static_cast<unsigned long>(image.width() + 3),
-      static_cast<unsigned long>(image.height() + 3),
+      { -1, -1, to_real(image.width() + 1), to_real(image.height() + 1) },
+      to_unsigned(image.width() + 3),
+      to_unsigned(image.height() + 3),
       threshold - 1,
       reinterpret_cast<cpMarchSegmentFunc>(cpPolylineSetCollectSegment), outlines,
       sample, const_cast<MonoImage*>(&image));
@@ -160,8 +160,8 @@ void trim_sprite(Sprite& sprite) {
     sprite.vertices = to_point_list(*outline);
   }
   else {
-    const auto w = static_cast<real>(sprite.trimmed_source_rect.w);
-    const auto h = static_cast<real>(sprite.trimmed_source_rect.h);
+    const auto w = to_real(sprite.trimmed_source_rect.w);
+    const auto h = to_real(sprite.trimmed_source_rect.h);
     sprite.vertices.push_back({ 0, 0 });
     sprite.vertices.push_back({ w, 0 });
     sprite.vertices.push_back({ w, h });

@@ -6,11 +6,11 @@ namespace spright {
 void pack_keep(const OutputPtr& output, SpriteSpan sprites,
     std::vector<Texture>& textures) {
 
-  auto source_indices = std::map<ImagePtr, size_t>();
+  auto source_indices = std::map<ImagePtr, int>();
   for (auto& sprite : sprites) {
     const auto source_index = source_indices.emplace(
-      sprite.source, source_indices.size()).first->second;
-    sprite.texture_output_index = static_cast<int>(source_index);
+      sprite.source, to_int(source_indices.size())).first->second;
+    sprite.texture_output_index = source_index;
     sprite.trimmed_rect = sprite.trimmed_source_rect;
     sprite.rect = sprite.source_rect;
   }

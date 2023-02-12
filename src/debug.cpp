@@ -6,17 +6,17 @@ namespace spright {
 namespace {
   Rect round(const RectF& rect) {
     return Rect{ 
-      static_cast<int>(rect.x + 0.5),
-      static_cast<int>(rect.y + 0.5),
-      std::max(static_cast<int>(rect.w + 0.5), 1),
-      std::max(static_cast<int>(rect.h + 0.5), 1)
+      to_int(rect.x + 0.5),
+      to_int(rect.y + 0.5),
+      std::max(to_int(rect.w + 0.5), 1),
+      std::max(to_int(rect.h + 0.5), 1)
     };
   }
 
   Point round(const PointF& point) {
     return Point{
-      static_cast<int>(point.x + 0.5),
-      static_cast<int>(point.y + 0.5),
+      to_int(point.x + 0.5),
+      to_int(point.y + 0.5),
     };
   }
 
@@ -26,9 +26,9 @@ namespace {
     auto [r, b] = Point(point);
 
     // extend to even size when it does not round towards 0.5
-    if (static_cast<int>(point.x * 2) % 2 == 0)
+    if (to_int(point.x * 2) % 2 == 0)
       l -= 1;
-    if (static_cast<int>(point.y * 2) % 2 == 0)
+    if (to_int(point.y * 2) % 2 == 0)
       t -= 1;
 
     draw_line(target, Point(l, t) + Point(-1, 0), 
