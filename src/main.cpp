@@ -12,25 +12,25 @@
 namespace {
   using namespace spright;
 
-  struct OutputMap {
+  struct OutputTask {
     const Texture* texture;
     std::filesystem::path filename;
     int map_index;
   };
 
-  std::vector<OutputMap> get_output_maps(const Settings& settings,
+  std::vector<OutputTask> get_output_tasks(const Settings& settings,
       const std::vector<Texture>& textures) {
-    auto output_maps = std::vector<OutputMap>();
+    auto output_tasks = std::vector<OutputTask>();
     for (const auto& texture : textures) {
       const auto filename = settings.output_path / utf8_to_path(texture.filename);
-      output_maps.push_back({ &texture, filename, -1 });
+      output_tasks.push_back({ &texture, filename, -1 });
 
       auto i = 0;
       for (const auto& map_suffix : texture.output->map_suffixes)
-        output_maps.push_back({ &texture, replace_suffix(filename,
+        output_tasks.push_back({ &texture, replace_suffix(filename,
             texture.output->default_map_suffix, map_suffix), i++ });
     }
-    return output_maps;
+    return output_tasks;
   }
 
   void update_last_source_written_time(Texture& texture) {
@@ -46,22 +46,22 @@ namespace {
     texture.last_source_written_time = last_write_time;
   }
 
-  void remove_not_updated(std::vector<OutputMap>& output_maps) {
-    output_maps.erase(std::remove_if(output_maps.begin(), output_maps.end(), 
-      [&](const OutputMap& output_map) {
-        return (try_get_last_write_time(output_map.filename) > 
-                output_map.texture->last_source_written_time);
-      }), output_maps.end());
+  void remove_not_updated(std::vector<OutputTask>& output_tasks) {
+    output_tasks.erase(std::remove_if(output_tasks.begin(), output_tasks.end(), 
+      [&](const OutputTask& output_task) {
+        return (try_get_last_write_time(output_task.filename) > 
+                output_task.texture->last_source_written_time);
+      }), output_tasks.end());
   }
 
   void output_textures(const Settings& settings,
-      const std::vector<OutputMap>& output_maps) {
+      const std::vector<OutputTask>& output_tasks) {
     auto scheduler = Scheduler();
-    scheduler.for_each_parallel(begin(output_maps), end(output_maps),
-      [&](const OutputMap& output_maps) {
-        const auto& texture = *output_maps.texture;
-        const auto& filename = output_maps.filename;
-        auto image = get_output_texture(texture, output_maps.map_index);
+    scheduler.for_each_parallel(begin(output_tasks), end(output_tasks),
+      [&](const OutputTask& output_task) {
+        const auto& texture = *output_task.texture;
+        const auto& filename = output_task.filename;
+        auto image = get_output_texture(texture, output_task.map_index);
         if (!image)
           return;
 
@@ -111,13 +111,13 @@ int main(int argc, const char* argv[]) try {
   write_output_description(settings, sprites, textures, variables);
   time_points.emplace_back(Clock::now(), "output description");
 
-  auto output_maps = get_output_maps(settings, textures);
+  auto output_tasks = get_output_tasks(settings, textures);
   if (!settings.rebuild) {
     for (auto& texture : textures)
       update_last_source_written_time(texture);
-    remove_not_updated(output_maps);
+    remove_not_updated(output_tasks);
   }
-  output_textures(settings, output_maps);
+  output_textures(settings, output_tasks);
   time_points.emplace_back(Clock::now(), "output textures");
 
   if (settings.debug) {
