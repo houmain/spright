@@ -50,6 +50,7 @@ set(SOURCES ${SOURCES}
     libs/stb/stb_impl.cpp
     libs/miniz/miniz.c
     libs/texpack/bleeding.cpp
+    libs/gifenc/gifenc.c
     ${CHIPMUNK_SOURCES}
 )
 

@@ -160,7 +160,8 @@ void apply_definition(Definition definition,
     return argument_index < arguments.size();
   };
   const auto check_string = [&]() {
-    check(arguments_left(), "invalid argument count");
+    check(arguments_left(), "invalid argument count for ",
+      get_definition_name(definition));
     return arguments[argument_index++];
   };
   const auto check_path = [&]() {
