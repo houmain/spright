@@ -24,7 +24,7 @@ enum class Trim { none, rect, convex };
 
 enum class Alpha { keep, clear, bleed, premultiply, colorkey };
 
-enum class Pack { binpack, rows, columns, compact, single, keep };
+enum class Pack { binpack, rows, columns, compact, single, layers, keep };
 
 enum class Duplicates { keep, share, drop };
 

@@ -27,6 +27,7 @@ set(SOURCES
     src/pack_binpack.cpp
     src/pack_compact.cpp
     src/pack_single.cpp
+    src/pack_layers.cpp
     src/pack_keep.cpp
     src/pack_lines.cpp
     src/output_texture.cpp

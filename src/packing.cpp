@@ -81,6 +81,7 @@ namespace {
       case Pack::keep: return pack_keep(output, sprites, textures);
       case Pack::rows: return pack_lines(true, output, sprites, textures);
       case Pack::columns: return pack_lines(false, output, sprites, textures);
+      case Pack::layers: return pack_layers(output, sprites, textures);
     }
   }
 

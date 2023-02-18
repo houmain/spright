@@ -27,6 +27,7 @@ struct Texture {
   int index{ };
   std::string filename;
   std::filesystem::file_time_type last_source_written_time{ };
+  bool layered{ };
 };
 
 std::pair<int, int> get_texture_max_size(const Output& output);
@@ -48,6 +49,8 @@ void pack_keep(const OutputPtr& output, SpriteSpan sprites,
   std::vector<Texture>& textures);
 void pack_lines(bool horizontal, const OutputPtr& output,
   SpriteSpan sprites, std::vector<Texture>& textures);
+void pack_layers(const OutputPtr& output, SpriteSpan sprites,
+  std::vector<Texture>& textures);
 
 [[noreturn]] void throw_not_all_sprites_packed();
 
