@@ -36,6 +36,7 @@ Size get_sprite_indent(const Sprite& sprite);
 void create_textures_from_filename_indices(const OutputPtr& output_ptr, 
     SpriteSpan sprites, std::vector<Texture>& textures);
 void recompute_texture_size(Texture& texture);
+void update_last_source_written_time(Texture& texture);
 
 std::vector<Texture> pack_sprites(std::vector<Sprite>& sprites);
 

@@ -1,5 +1,7 @@
 
 #include "output.h"
+#include "globbing.h"
+#include "debug.h"
 
 namespace spright {
 
@@ -97,20 +99,91 @@ namespace {
         break;
     }
   }
+
+  Image compose_image(const Texture& texture, int map_index) {
+    auto target = Image(texture.width, texture.height, RGBA{ });
+
+    auto copied_sprite = false;
+    for (const auto& sprite : texture.sprites)
+      copied_sprite |= copy_sprite(target, sprite, map_index);
+    if (!copied_sprite)
+      return { };
+
+    process_alpha(target, texture);
+
+    return target;
+  }
+
+  struct OutputTask {
+    const Texture* texture;
+    std::filesystem::path filename;
+    int map_index;
+  };
+
+  std::vector<OutputTask> get_output_tasks(const Settings& settings,
+      const std::vector<Texture>& textures) {
+    auto output_tasks = std::vector<OutputTask>();
+    for (const auto& texture : textures) {
+      const auto filename = settings.output_path / utf8_to_path(texture.filename);
+      output_tasks.push_back({ &texture, filename, -1 });
+
+      auto i = 0;
+      for (const auto& map_suffix : texture.output->map_suffixes)
+        output_tasks.push_back({ &texture, replace_suffix(filename,
+            texture.output->default_map_suffix, map_suffix), i++ });
+    }
+    return output_tasks;
+  }
+
+  void remove_not_updated(std::vector<OutputTask>& output_tasks) {
+    output_tasks.erase(std::remove_if(output_tasks.begin(), output_tasks.end(), 
+      [&](const OutputTask& output_task) {
+        return (try_get_last_write_time(output_task.filename) > 
+                output_task.texture->last_source_written_time);
+      }), output_tasks.end());
+  }
+
+  void output_image(const Settings& settings, const OutputTask& output_task) {
+    const auto& texture = *output_task.texture;
+    const auto& filename = output_task.filename;
+    auto image = compose_image(texture, output_task.map_index);
+    if (!image)
+      return;
+
+    const auto& output = *texture.output;
+    const auto& scalings = output.scalings;
+    if (scalings.empty()) {
+      if (settings.debug)
+        draw_debug_info(image, texture);
+      save_image(image, filename);
+    }
+    else {
+      scheduler->for_each_parallel(begin(scalings), end(scalings),
+        [&](const Scaling& scaling) {
+          const auto scale = scaling.scale;
+          auto resized = resize_image(image, scale, scaling.resize_filter);
+          if (settings.debug)
+            draw_debug_info(resized, texture, scale);
+          save_image(resized, add_suffix(filename, scaling.filename_suffix));
+        });
+    }
+  }
 } // namespace
 
-Image get_output_texture(const Texture& texture, int map_index) {
-  auto target = Image(texture.width, texture.height, RGBA{ });
+void output_textures(const Settings& settings,
+    std::vector<Texture>& textures) {
 
-  auto copied_sprite = false;
-  for (const auto& sprite : texture.sprites)
-    copied_sprite |= copy_sprite(target, sprite, map_index);
-  if (!copied_sprite)
-    return { };
+  auto output_tasks = get_output_tasks(settings, textures);
+  if (!settings.rebuild) {
+    for (auto& texture : textures)
+      update_last_source_written_time(texture);
+    remove_not_updated(output_tasks);
+  }
 
-  process_alpha(target, texture);
-
-  return target;
+  scheduler->for_each_parallel(begin(output_tasks), end(output_tasks),
+    [&](const OutputTask& output_task) {
+      output_image(settings, output_task);
+    });
 }
 
 } // namespace

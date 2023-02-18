@@ -2,96 +2,22 @@
 #include "trimming.h"
 #include "packing.h"
 #include "output.h"
-#include "globbing.h"
-#include "debug.h"
-#include "Scheduler.h"
 #include <iostream>
 #include <chrono>
-#include <unordered_set>
 
-namespace {
-  using namespace spright;
-
-  struct OutputTask {
-    const Texture* texture;
-    std::filesystem::path filename;
-    int map_index;
-  };
-
-  std::vector<OutputTask> get_output_tasks(const Settings& settings,
-      const std::vector<Texture>& textures) {
-    auto output_tasks = std::vector<OutputTask>();
-    for (const auto& texture : textures) {
-      const auto filename = settings.output_path / utf8_to_path(texture.filename);
-      output_tasks.push_back({ &texture, filename, -1 });
-
-      auto i = 0;
-      for (const auto& map_suffix : texture.output->map_suffixes)
-        output_tasks.push_back({ &texture, replace_suffix(filename,
-            texture.output->default_map_suffix, map_suffix), i++ });
-    }
-    return output_tasks;
-  }
-
-  void update_last_source_written_time(Texture& texture) {
-    auto last_write_time = get_last_write_time(texture.output->input_file);
-
-    auto sources = std::unordered_set<const Image*>();
-    for (const auto& sprite : texture.sprites)
-      sources.insert(sprite.source.get());
-    for (const auto& source : sources)
-      last_write_time = std::max(last_write_time,
-        get_last_write_time(source->path() / source->filename()));
-
-    texture.last_source_written_time = last_write_time;
-  }
-
-  void remove_not_updated(std::vector<OutputTask>& output_tasks) {
-    output_tasks.erase(std::remove_if(output_tasks.begin(), output_tasks.end(), 
-      [&](const OutputTask& output_task) {
-        return (try_get_last_write_time(output_task.filename) > 
-                output_task.texture->last_source_written_time);
-      }), output_tasks.end());
-  }
-
-  void output_textures(const Settings& settings,
-      const std::vector<OutputTask>& output_tasks) {
-    auto scheduler = Scheduler();
-    scheduler.for_each_parallel(begin(output_tasks), end(output_tasks),
-      [&](const OutputTask& output_task) {
-        const auto& texture = *output_task.texture;
-        const auto& filename = output_task.filename;
-        auto image = get_output_texture(texture, output_task.map_index);
-        if (!image)
-          return;
-
-        const auto& output = *texture.output;
-        const auto& scalings = output.scalings;
-        if (scalings.empty()) {
-          if (settings.debug)
-            draw_debug_info(image, texture);
-          save_image(image, filename);
-        }
-        else {
-          scheduler.for_each_parallel(begin(scalings), end(scalings),
-            [&](const Scaling& scaling) {
-              const auto scale = scaling.scale;
-              auto resized = resize_image(image, scale, scaling.resize_filter);
-              if (settings.debug)
-                draw_debug_info(resized, texture, scale);
-              save_image(resized, add_suffix(filename, scaling.filename_suffix));
-            });
-        }
-      });
-  }
-} // namespace
+Scheduler* scheduler;
 
 int main(int argc, const char* argv[]) try {
+  using namespace spright;
+
   auto settings = Settings{ };
   if (!interpret_commandline(settings, argc, argv)) {
     print_help_message(argv[0]);
     return 1;
   }
+
+  auto scheduler = Scheduler();
+  ::scheduler = &scheduler;
 
   using Clock = std::chrono::high_resolution_clock;
   auto time_points = std::vector<std::pair<Clock::time_point, const char*>>();
@@ -111,13 +37,7 @@ int main(int argc, const char* argv[]) try {
   write_output_description(settings, sprites, textures, variables);
   time_points.emplace_back(Clock::now(), "output description");
 
-  auto output_tasks = get_output_tasks(settings, textures);
-  if (!settings.rebuild) {
-    for (auto& texture : textures)
-      update_last_source_written_time(texture);
-    remove_not_updated(output_tasks);
-  }
-  output_textures(settings, output_tasks);
+  output_textures(settings, textures);
   time_points.emplace_back(Clock::now(), "output textures");
 
   if (settings.debug) {

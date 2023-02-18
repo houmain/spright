@@ -13,6 +13,6 @@ std::string get_description(const std::string& template_source,
 bool write_output_description(const Settings& settings,
   const std::vector<Sprite>& sprites, const std::vector<Texture>& textures,
   const VariantMap& variables);
-Image get_output_texture(const Texture& texture, int map_index = -1);
+void output_textures(const Settings& settings, std::vector<Texture>& textures);
 
 } // namespace

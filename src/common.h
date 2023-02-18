@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Rect.h"
+#include "Scheduler.h"
 #include <string>
 #include <vector>
 #include <filesystem>
@@ -10,6 +11,8 @@
 #include <algorithm>
 #include <utility>
 #include <optional>
+
+extern Scheduler* scheduler;
 
 namespace spright {
 

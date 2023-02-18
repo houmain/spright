@@ -1,5 +1,6 @@
 
 #include "packing.h"
+#include <unordered_set>
 
 namespace spright {
 
@@ -252,6 +253,19 @@ void recompute_texture_size(Texture& texture) {
 
 [[noreturn]] void throw_not_all_sprites_packed() {
   throw std::runtime_error("not all sprites could be packed");
+}
+
+void update_last_source_written_time(Texture& texture) {
+  auto last_write_time = get_last_write_time(texture.output->input_file);
+
+  auto sources = std::unordered_set<const Image*>();
+  for (const auto& sprite : texture.sprites)
+    sources.insert(sprite.source.get());
+  for (const auto& source : sources)
+    last_write_time = std::max(last_write_time,
+      get_last_write_time(source->path() / source->filename()));
+
+  texture.last_source_written_time = last_write_time;
 }
 
 } // namespace
