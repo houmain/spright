@@ -36,7 +36,7 @@ enum class Definition {
   skip,
   span,
   atlas,
-  layers,
+  maps,
 
   sprite,
   id,
@@ -80,8 +80,8 @@ struct State {
 
   std::filesystem::path path;
   FilenameSequence sheet;
-  std::string default_layer_suffix;
-  std::vector<std::string> layer_suffixes;
+  std::string default_map_suffix;
+  std::vector<std::string> map_suffixes;
   RGBA colorkey{ };
   StringMap tags;
   VariantMap data;

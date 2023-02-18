@@ -27,7 +27,7 @@ private:
   ImagePtr get_sheet(const State& state, int index);
   ImagePtr get_sheet(const std::filesystem::path& path,
     const std::filesystem::path& filename, RGBA colorkey);
-  LayerVectorPtr get_layers(const State& state, const ImagePtr& sheet);
+  MapVectorPtr get_maps(const State& state, const ImagePtr& sheet);
   void sprite_ends(State& state);
   void deduce_grid_size(State& state);
   void deduce_globbing_sheets(State& state);
@@ -48,7 +48,7 @@ private:
   int m_line_number{ };
   std::map<std::filesystem::path, OutputPtr> m_outputs;
   std::map<std::filesystem::path, ImagePtr> m_sheets;
-  std::map<ImagePtr, LayerVectorPtr> m_layers;
+  std::map<ImagePtr, MapVectorPtr> m_maps;
   std::vector<Sprite> m_sprites;
   VariantMap m_variables;
   int m_sprites_in_current_sheet{ };

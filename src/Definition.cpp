@@ -72,7 +72,7 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::skip: return "skip";
     case Definition::span: return "span";
     case Definition::atlas: return "atlas";
-    case Definition::layers: return "layers";
+    case Definition::maps: return "maps";
     case Definition::sprite: return "sprite";
     case Definition::id: return "id";
     case Definition::rect: return "rect";
@@ -100,7 +100,7 @@ Definition get_affected_definition(Definition definition) {
     case Definition::input:
     case Definition::sprite:
     // affect input and output
-    case Definition::layers:
+    case Definition::maps:
     // directly change state
     case Definition::row:
     case Definition::skip:
@@ -381,11 +381,11 @@ void apply_definition(Definition definition,
       state.atlas_merge_distance = (arguments_left() ? check_uint() : 0);
       break;
 
-    case Definition::layers:
-      state.default_layer_suffix = check_string();
-      state.layer_suffixes.clear();
+    case Definition::maps:
+      state.default_map_suffix = check_string();
+      state.map_suffixes.clear();
       while (arguments_left())
-        state.layer_suffixes.emplace_back(check_string());
+        state.map_suffixes.emplace_back(check_string());
       break;
 
     case Definition::sprite:

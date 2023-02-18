@@ -4,12 +4,12 @@
 namespace spright {
 
 namespace {
-  const Image* get_source(const Sprite& sprite, int layer_index) {
-    if (layer_index < 0)
+  const Image* get_source(const Sprite& sprite, int map_index) {
+    if (map_index < 0)
       return sprite.source.get();
-    const auto index = to_unsigned(layer_index);
-    if (sprite.layers && index < sprite.layers->size())
-      return sprite.layers->at(index).get();
+    const auto index = to_unsigned(map_index);
+    if (sprite.maps && index < sprite.maps->size())
+      return sprite.maps->at(index).get();
     return nullptr;
   }
 
@@ -23,8 +23,8 @@ namespace {
       v[3] == PointF(0, h));
   }
 
-  bool copy_sprite(Image& target, const Sprite& sprite, int layer_index) try {
-    const auto source = get_source(sprite, layer_index);
+  bool copy_sprite(Image& target, const Sprite& sprite, int map_index) try {
+    const auto source = get_source(sprite, map_index);
     if (!source)
       return false;
 
@@ -99,12 +99,12 @@ namespace {
   }
 } // namespace
 
-Image get_output_texture(const Texture& texture, int layer_index) {
+Image get_output_texture(const Texture& texture, int map_index) {
   auto target = Image(texture.width, texture.height, RGBA{ });
 
   auto copied_sprite = false;
   for (const auto& sprite : texture.sprites)
-    copied_sprite |= copy_sprite(target, sprite, layer_index);
+    copied_sprite |= copy_sprite(target, sprite, map_index);
   if (!copied_sprite)
     return { };
 

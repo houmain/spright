@@ -12,21 +12,21 @@ namespace {
   const auto default_output_name = "spright{0-}.png";
   const auto default_sprite_id = "sprite_{{ index }}";
 
-  ImagePtr try_get_layer(const ImagePtr& sheet, 
-      const std::string& default_layer_suffix, 
-      const std::string& layer_suffix) {
+  ImagePtr try_get_map(const ImagePtr& sheet, 
+      const std::string& default_map_suffix, 
+      const std::string& map_suffix) {
 
-    auto layer_filename = replace_suffix(sheet->filename(), 
-      default_layer_suffix, layer_suffix);
+    auto map_filename = replace_suffix(sheet->filename(), 
+      default_map_suffix, map_suffix);
 
-    if (std::filesystem::exists(layer_filename))
-      return std::make_shared<Image>(sheet->path(), layer_filename);
+    if (std::filesystem::exists(map_filename))
+      return std::make_shared<Image>(sheet->path(), map_filename);
     return { };
   }
 
-  bool has_layer_suffix(const std::string& filename,
-      const std::vector<std::string>& layer_suffixes) {
-    for (const auto& suffix : layer_suffixes)
+  bool has_map_suffix(const std::string& filename,
+      const std::vector<std::string>& map_suffixes) {
+    for (const auto& suffix : map_suffixes)
       if (has_suffix(filename, suffix))
         return true;
     return false;
@@ -62,8 +62,8 @@ OutputPtr InputParser::get_output(const State& state) {
       to_int(m_outputs.size() - 1),
       m_input_file,
       FilenameSequence(path_to_utf8(state.output)),
-      state.default_layer_suffix,
-      state.layer_suffixes,
+      state.default_map_suffix,
+      state.map_suffixes,
       state.width,
       state.height,
       state.max_width,
@@ -111,18 +111,18 @@ ImagePtr InputParser::get_sheet(const State& state) {
   return get_sheet(state, m_current_sequence_index);
 }
 
-LayerVectorPtr InputParser::get_layers(const State& state, const ImagePtr& sheet) {
-  if (state.layer_suffixes.empty())
+MapVectorPtr InputParser::get_maps(const State& state, const ImagePtr& sheet) {
+  if (state.map_suffixes.empty())
     return { };
 
-  auto it = m_layers.find(sheet);
-  if (it == m_layers.end()) {
-    auto layers = std::vector<ImagePtr>();
-    for (const auto& layer_suffix : state.layer_suffixes)
-      layers.push_back(try_get_layer(sheet, 
-        state.default_layer_suffix, layer_suffix));
-    it = m_layers.emplace(sheet, 
-      std::make_shared<decltype(layers)>(std::move(layers))).first;
+  auto it = m_maps.find(sheet);
+  if (it == m_maps.end()) {
+    auto maps = std::vector<ImagePtr>();
+    for (const auto& map_suffix : state.map_suffixes)
+      maps.push_back(try_get_map(sheet, 
+        state.default_map_suffix, map_suffix));
+    it = m_maps.emplace(sheet, 
+      std::make_shared<decltype(maps)>(std::move(maps))).first;
   }
   return it->second;
 }
@@ -149,7 +149,7 @@ void InputParser::sprite_ends(State& state) {
   sprite.id = state.sprite_id;
   sprite.output = get_output(state);
   sprite.source = get_sheet(state);
-  sprite.layers = get_layers(state, sprite.source);
+  sprite.maps = get_maps(state, sprite.source);
   sprite.source_rect = (!empty(state.rect) ?
     state.rect : sprite.source->bounds());
   sprite.pivot = state.pivot;
@@ -174,7 +174,7 @@ void InputParser::sprite_ends(State& state) {
 
 void InputParser::deduce_globbing_sheets(State& state) {
   for (const auto& sequence : glob_sequences(state.path, state.sheet.filename())) {
-    if (has_layer_suffix(sequence.filename(), state.layer_suffixes))
+    if (has_map_suffix(sequence.filename(), state.map_suffixes))
       continue;
 
     state.sheet = sequence;

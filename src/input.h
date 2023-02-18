@@ -11,7 +11,7 @@ namespace spright {
 
 using ImagePtr = std::shared_ptr<const Image>;
 using OutputPtr = std::shared_ptr<const struct Output>;
-using LayerVectorPtr = std::shared_ptr<const std::vector<ImagePtr>>;
+using MapVectorPtr = std::shared_ptr<const std::vector<ImagePtr>>;
 using StringMap = std::map<std::string, std::string, std::less<>>;
 using Variant = std::variant<bool, real, std::string>;
 using VariantMap = std::map<std::string, Variant, std::less<>>;
@@ -43,8 +43,8 @@ struct Output {
   int index;
   std::filesystem::path input_file;
   FilenameSequence filename;
-  std::string default_layer_suffix;
-  std::vector<std::string> layer_suffixes;
+  std::string default_map_suffix;
+  std::vector<std::string> map_suffixes;
   int width{ };
   int height{ };
   int max_width{ };
@@ -68,7 +68,7 @@ struct Sprite {
   std::string id;
   OutputPtr output;
   ImagePtr source;
-  LayerVectorPtr layers;
+  MapVectorPtr maps;
   Rect source_rect{ };
   Rect trimmed_source_rect{ };
   Rect rect{ };
