@@ -36,6 +36,7 @@ private:
   void deduce_grid_sprites(State& state);
   void deduce_atlas_sprites(State& state);
   void deduce_single_sprite(State& state);
+  void sheet_ends(State& state);
   void output_ends(State& state);
   void source_ends(State& state);
   void scope_ends(State& state);
@@ -47,7 +48,7 @@ private:
   std::stringstream m_autocomplete_output;
   std::filesystem::path m_input_file;
   int m_line_number{ };
-  std::map<std::filesystem::path, SheetPtr> m_sheets;
+  std::map<std::string, SheetPtr> m_sheets;
   std::map<std::filesystem::path, OutputPtr> m_outputs;
   std::map<std::filesystem::path, ImagePtr> m_sources;
   std::map<ImagePtr, MapVectorPtr> m_maps;

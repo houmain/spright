@@ -11,18 +11,18 @@ using namespace spright;
 
 namespace {
   template<typename T>
-  bool le_size(const T& texture, int w, int h) {
+  bool le_size(const T& slice, int w, int h) {
     // here one can set a breakpoint to tighten the size constraints
-    if (texture.width * texture.height < w * h)
+    if (slice.width * slice.height < w * h)
       return true;
 
-    if (texture.width * texture.height > w * h)
+    if (slice.width * slice.height > w * h)
       return false;
 
     return true;
   }
 
-  std::vector<Texture> pack(const char* definition) {
+  std::vector<Slice> pack(const char* definition) {
     auto input = std::stringstream(definition);
     auto parser = InputParser(Settings{ });
     parser.parse(input);
@@ -33,150 +33,150 @@ namespace {
     return pack_sprites(s_sprites);
   }
 
-  [[maybe_unused]] void dump(Texture texture) {
+  [[maybe_unused]] void dump(Slice slice) {
     static auto i = 0;
     const auto filename = FilenameSequence("dump-{000-}.png").get_nth_filename(i++);
-    auto image = get_output_texture(texture);
-    draw_debug_info(image, texture);
+    auto image = get_slice_image(slice);
+    draw_debug_info(image, slice);
     save_image(image, filename);
   }
 
-  Texture pack_single_sheet(const char* definition) {
-    auto textures = std::vector<Texture>();
-    REQUIRE_NOTHROW(textures = pack(definition));
-    CHECK(textures.size() == 1);
-    if (textures.size() != 1)
+  Slice pack_single_sheet(const char* definition) {
+    auto slices = std::vector<Slice>();
+    REQUIRE_NOTHROW(slices = pack(definition));
+    CHECK(slices.size() == 1);
+    if (slices.size() != 1)
       return { };
   #if 0
-    dump(textures[0]);
+    dump(slices[0]);
   #endif
-    return textures[0];
+    return slices[0];
   };
 } // namespace
 
 TEST_CASE("packing - Basic") {
-  auto texture = pack_single_sheet(R"(
+  auto slice = pack_single_sheet(R"(
     input "test/Items.png"
       colorkey
       atlas
   )");
-  CHECK(le_size(texture, 59, 58));
+  CHECK(le_size(slice, 59, 58));
 
-  texture = pack_single_sheet(R"(
+  slice = pack_single_sheet(R"(
     allow-rotate true
     input "test/Items.png"
       colorkey
       atlas
   )");
-  CHECK(le_size(texture, 59, 58));
+  CHECK(le_size(slice, 59, 58));
 
-  texture = pack_single_sheet(R"(
+  slice = pack_single_sheet(R"(
     duplicates share
     input "test/Items.png"
       colorkey
       atlas
   )");
-  CHECK(le_size(texture, 55, 58));
+  CHECK(le_size(slice, 55, 58));
 
-  texture = pack_single_sheet(R"(
+  slice = pack_single_sheet(R"(
     allow-rotate true
     duplicates share
     input "test/Items.png"
       colorkey
       atlas
   )");
-  CHECK(le_size(texture, 55, 58));
+  CHECK(le_size(slice, 55, 58));
 
-  texture = pack_single_sheet(R"(
+  slice = pack_single_sheet(R"(
     max-width 128
     max-height 128
     input "test/Items.png"
       colorkey
       atlas
   )");
-  CHECK(texture.width <= 128);
-  CHECK(texture.height <= 128);
-  CHECK(le_size(texture, 59, 58));
+  CHECK(slice.width <= 128);
+  CHECK(slice.height <= 128);
+  CHECK(le_size(slice, 59, 58));
 
-  texture = pack_single_sheet(R"(
+  slice = pack_single_sheet(R"(
     width 128
     max-height 128
     input "test/Items.png"
       colorkey
       atlas
   )");
-  CHECK(texture.width == 128);
-  CHECK(texture.height <= 128);
-  CHECK(le_size(texture, 128, 32));
+  CHECK(slice.width == 128);
+  CHECK(slice.height <= 128);
+  CHECK(le_size(slice, 128, 32));
 
-  texture = pack_single_sheet(R"(
+  slice = pack_single_sheet(R"(
     max-width 128
     height 128
     input "test/Items.png"
       colorkey
       atlas
   )");
-  CHECK(texture.width <= 128);
-  CHECK(texture.height == 128);
-  CHECK(le_size(texture, 30, 128));
+  CHECK(slice.width <= 128);
+  CHECK(slice.height == 128);
+  CHECK(le_size(slice, 30, 128));
 
-  texture = pack_single_sheet(R"(
+  slice = pack_single_sheet(R"(
     max-width 40
     input "test/Items.png"
       colorkey
       atlas
   )");
-  CHECK(texture.width <= 40);
-  CHECK(le_size(texture, 40, 85));
+  CHECK(slice.width <= 40);
+  CHECK(le_size(slice, 40, 85));
 
-  texture = pack_single_sheet(R"(
+  slice = pack_single_sheet(R"(
     max-height 40
     input "test/Items.png"
       colorkey
       atlas
   )");
-  CHECK(texture.height <= 40);
-  CHECK(le_size(texture, 89, 38));
+  CHECK(slice.height <= 40);
+  CHECK(le_size(slice, 89, 38));
 
-  texture = pack_single_sheet(R"(
+  slice = pack_single_sheet(R"(
     power-of-two true
     input "test/Items.png"
       colorkey
       atlas
   )");
-  CHECK(texture.width == 64);
-  CHECK(texture.height == 64);
+  CHECK(slice.width == 64);
+  CHECK(slice.height == 64);
 
-  texture = pack_single_sheet(R"(
+  slice = pack_single_sheet(R"(
     padding 1
     input "test/Items.png"
       colorkey
       atlas
   )");
-  CHECK(le_size(texture, 63, 65));
+  CHECK(le_size(slice, 63, 65));
 
-  texture = pack_single_sheet(R"(
+  slice = pack_single_sheet(R"(
     padding 1
     power-of-two true
     input "test/Items.png"
       colorkey
       atlas
   )");
-  CHECK(ceil_to_pot(texture.width) == texture.width);
-  CHECK(ceil_to_pot(texture.height) == texture.height);
-  CHECK(le_size(texture, 64, 128));
+  CHECK(ceil_to_pot(slice.width) == slice.width);
+  CHECK(ceil_to_pot(slice.height) == slice.height);
+  CHECK(le_size(slice, 64, 128));
 
-  texture = pack_single_sheet(R"(
+  slice = pack_single_sheet(R"(
     max-height 16
     common-divisor 16
     input "test/Items.png"
       colorkey
       atlas
   )");
-  CHECK(texture.height <= 16);
-  CHECK(le_size(texture, 496, 16));
+  CHECK(slice.height <= 16);
+  CHECK(le_size(slice, 496, 16));
 
-  texture = pack_single_sheet(R"(
+  slice = pack_single_sheet(R"(
     padding 0 1
     common-divisor 16
     max-height 20
@@ -184,10 +184,10 @@ TEST_CASE("packing - Basic") {
       colorkey
       atlas
   )");
-  CHECK(texture.height <= 20);
-  CHECK(le_size(texture, 498, 18));
+  CHECK(slice.height <= 20);
+  CHECK(le_size(slice, 498, 18));
 
-  texture = pack_single_sheet(R"(
+  slice = pack_single_sheet(R"(
     padding 1
     common-divisor 16
     max-height 30
@@ -195,10 +195,10 @@ TEST_CASE("packing - Basic") {
       colorkey
       atlas
   )");
-  CHECK(texture.height <= 30);
-  CHECK(le_size(texture, 528, 18));
+  CHECK(slice.height <= 30);
+  CHECK(le_size(slice, 528, 18));
 
-  texture = pack_single_sheet(R"(
+  slice = pack_single_sheet(R"(
     padding 1 0
     common-divisor 16
     max-height 20
@@ -206,10 +206,10 @@ TEST_CASE("packing - Basic") {
       colorkey
       atlas
   )");
-  CHECK(texture.height <= 20);
-  CHECK(le_size(texture, 526, 16));
+  CHECK(slice.height <= 20);
+  CHECK(le_size(slice, 526, 16));
 
-  texture = pack_single_sheet(R"(
+  slice = pack_single_sheet(R"(
     max-height 30
     common-divisor 24
     extrude 1
@@ -217,19 +217,19 @@ TEST_CASE("packing - Basic") {
       colorkey
       atlas
   )");
-  CHECK(texture.height <= 30);
-  CHECK(le_size(texture, 806, 26));
+  CHECK(slice.height <= 30);
+  CHECK(le_size(slice, 806, 26));
 
-  texture = pack_single_sheet(R"(
+  slice = pack_single_sheet(R"(
     padding 8 0
     common-divisor 16
     input "test/Items.png"
       colorkey
       atlas
   )");
-  CHECK(le_size(texture, 136, 136));
+  CHECK(le_size(slice, 136, 136));
 
-  texture = pack_single_sheet(R"(
+  slice = pack_single_sheet(R"(
     padding 8 0
     duplicates share
     allow-rotate
@@ -238,27 +238,27 @@ TEST_CASE("packing - Basic") {
       colorkey
       atlas
   )");
-  CHECK(le_size(texture, 112, 112));
+  CHECK(le_size(slice, 112, 112));
 
-  texture = pack_single_sheet(R"(
+  slice = pack_single_sheet(R"(
     padding 8 0
     max-width 16
     input "test/Items.png"
       colorkey
       atlas
   )");
-  CHECK(texture.width == 16);
-  CHECK(le_size(texture, 492, 16));
+  CHECK(slice.width == 16);
+  CHECK(le_size(slice, 492, 16));
 
-  texture = pack_single_sheet(R"(
+  slice = pack_single_sheet(R"(
     padding 8 1
     max-height 18
     input "test/Items.png"
       colorkey
       atlas
   )");
-  CHECK(texture.height == 18);
-  CHECK(le_size(texture, 478, 18));
+  CHECK(slice.height == 18);
+  CHECK(le_size(slice, 478, 18));
 }
 
 TEST_CASE("packing - Errors") {
@@ -282,7 +282,7 @@ TEST_CASE("packing - Errors") {
 }
 
 TEST_CASE("packing - Multiple sheets") {
-  auto textures = pack(R"(
+  auto slices = pack(R"(
     allow-rotate
     duplicates share
     max-width 30
@@ -292,25 +292,25 @@ TEST_CASE("packing - Multiple sheets") {
       colorkey
       atlas
   )");
-  REQUIRE(textures.size() == 13);
-  CHECK(textures[0].width <= 30);
-  CHECK(textures[0].width == textures[0].height);
-  CHECK(ceil_to_pot(textures[12].width) == textures[12].width);
-  CHECK(textures[12].width == textures[12].height);
+  REQUIRE(slices.size() == 13);
+  CHECK(slices[0].width <= 30);
+  CHECK(slices[0].width == slices[0].height);
+  CHECK(ceil_to_pot(slices[12].width) == slices[12].width);
+  CHECK(slices[12].width == slices[12].height);
 
-  CHECK_NOTHROW(textures = pack(R"(
+  CHECK_NOTHROW(slices = pack(R"(
     max-width 40
     max-height 40
     input "test/Items.png"
       colorkey
       atlas
   )"));
-  REQUIRE(textures.size() == 3);
-  CHECK(le_size(textures[0], 39, 40));
-  CHECK(le_size(textures[1], 38, 40));
-  CHECK(le_size(textures[2], 16, 30));
+  REQUIRE(slices.size() == 3);
+  CHECK(le_size(slices[0], 39, 40));
+  CHECK(le_size(slices[1], 38, 40));
+  CHECK(le_size(slices[2], 16, 30));
 
-  CHECK_NOTHROW(textures = pack(R"(
+  CHECK_NOTHROW(slices = pack(R"(
     max-width 40
     max-height 40
     square
@@ -318,12 +318,12 @@ TEST_CASE("packing - Multiple sheets") {
       colorkey
       atlas
   )"));
-  REQUIRE(textures.size() == 3);
-  CHECK(le_size(textures[0], 40, 40));
-  CHECK(le_size(textures[1], 32, 32));
-  CHECK(textures[2].width == textures[2].height);
+  REQUIRE(slices.size() == 3);
+  CHECK(le_size(slices[0], 40, 40));
+  CHECK(le_size(slices[1], 32, 32));
+  CHECK(slices[2].width == slices[2].height);
 
-  CHECK_NOTHROW(textures = pack(R"(
+  CHECK_NOTHROW(slices = pack(R"(
     max-width 40
     max-height 40
     power-of-two true
@@ -331,29 +331,29 @@ TEST_CASE("packing - Multiple sheets") {
       colorkey
       atlas
   )"));
-  REQUIRE(textures.size() == 4);
-  CHECK(le_size(textures[0], 32, 32));
-  CHECK(le_size(textures[1], 32, 32));
-  CHECK(le_size(textures[2], 32, 32));
-  CHECK(le_size(textures[3], 32, 16));
+  REQUIRE(slices.size() == 4);
+  CHECK(le_size(slices[0], 32, 32));
+  CHECK(le_size(slices[1], 32, 32));
+  CHECK(le_size(slices[2], 32, 32));
+  CHECK(le_size(slices[3], 32, 16));
 
-  textures = pack("");
-  CHECK(textures.size() == 0);
+  slices = pack("");
+  CHECK(slices.size() == 0);
 
   CHECK_THROWS(pack("padding 1"));
 
-  CHECK_NOTHROW(textures = pack(R"(
+  CHECK_NOTHROW(slices = pack(R"(
     max-width 16
     max-height 16
     input "test/Items.png"
       colorkey
       atlas
   )"));
-  REQUIRE(textures.size() == 14);
-  CHECK(textures[0].width <= 16);
-  CHECK(textures[0].height <= 16);
+  REQUIRE(slices.size() == 14);
+  CHECK(slices[0].width <= 16);
+  CHECK(slices[0].height <= 16);
 
-  CHECK_NOTHROW(textures = pack(R"(
+  CHECK_NOTHROW(slices = pack(R"(
     padding 1 0
     max-width 16
     max-height 16
@@ -361,7 +361,7 @@ TEST_CASE("packing - Multiple sheets") {
       colorkey
       atlas
   )"));
-  REQUIRE(textures.size() == 15);
-  CHECK(textures[0].width <= 16);
-  CHECK(textures[0].height <= 16);
+  REQUIRE(slices.size() == 15);
+  CHECK(slices[0].width <= 16);
+  CHECK(slices[0].height <= 16);
 }

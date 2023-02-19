@@ -34,7 +34,7 @@ int main(int argc, const char* argv[]) try {
   time_points.emplace_back(Clock::now(), "packing");
 
   evaluate_expressions(settings, sprites, slices, variables);
-  write_output_description(settings, sprites, slices, variables);
+  output_description(settings, sprites, slices, variables);
   time_points.emplace_back(Clock::now(), "output description");
 
   output_textures(settings, slices);

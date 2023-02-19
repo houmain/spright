@@ -112,7 +112,6 @@ namespace {
       auto& json_slice = json_slices.emplace_back();
       json_slice["index"] = slice.index;
       json_slice["inputFilename"] = path_to_utf8(slice.sheet->input_file);
-      json_slice["filename"] = slice.filename;
       json_slice["width"] = slice.width;
       json_slice["height"] = slice.height;
       json_slice["spriteIndices"] = slice_sprites[slice.index];
@@ -210,21 +209,8 @@ void evaluate_expressions(const Settings& settings,
     });
   };
 
-  const auto evaluate_slice_expression = [&](Slice& slice, std::string& expression) {
-    replace_variables(expression, [&](std::string_view variable) {
-      if (variable == "index")
-        return std::to_string(slice.index);
-      if (variable == "sprite.id")
-        return (slice.sprites.empty() ? "" : slice.sprites[0].id);
-      return replace_variable(variable);
-    });
-  };
-
   for (auto& sprite : sprites)
     evaluate_sprite_expression(sprite, sprite.id);
-
-  for (auto& slice : slices)
-    evaluate_slice_expression(slice, slice.filename);
 }
 
 std::string get_description(const std::string& template_source,
@@ -237,7 +223,7 @@ std::string get_description(const std::string& template_source,
   return ss.str();
 }
 
-bool write_output_description(const Settings& settings,
+bool output_description(const Settings& settings,
     const std::vector<Sprite>& sprites, 
     const std::vector<Slice>& slices,
     const VariantMap& variables) try {

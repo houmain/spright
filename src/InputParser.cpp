@@ -9,7 +9,7 @@
 namespace spright {
 
 namespace {
-  const auto default_output_name = "spright{0-}.png";
+  const auto default_sheet_id = "sheet";
   const auto default_sprite_id = "sprite_{{ index }}";
 
   ImagePtr try_get_map(const ImagePtr& source, 
@@ -33,7 +33,8 @@ namespace {
   }
 
   bool has_implicit_scope(Definition definition) {
-    return (definition == Definition::output ||
+    return (definition == Definition::sheet ||
+            definition == Definition::output ||
             definition == Definition::input ||
             definition == Definition::sprite);
   }
@@ -60,7 +61,9 @@ SheetPtr InputParser::get_sheet(const State& state) {
     update_applied_definitions(Definition::sheet);
     sheet = std::make_shared<Sheet>(Sheet{
       to_int(m_sheets.size() - 1),
+      state.sheet_id,
       m_input_file,
+      { },
       state.width,
       state.height,
       state.max_width,
@@ -313,8 +316,14 @@ void InputParser::deduce_single_sprite(State& state) {
   sprite_ends(state);
 }
 
+void InputParser::sheet_ends(State& state) {
+  get_sheet(state);
+}
+
 void InputParser::output_ends(State& state) {
-  get_output(state);
+  auto sheet = get_sheet(state);
+  auto output = get_output(state);
+  sheet->outputs.push_back(output);
 }
 
 void InputParser::source_ends(State& state) {
@@ -342,6 +351,9 @@ void InputParser::source_ends(State& state) {
 
 void InputParser::scope_ends(State& state) {
   switch (state.definition) {
+    case Definition::sheet:
+      sheet_ends(state);
+      break;
     case Definition::output:
       output_ends(state);
       break;
@@ -370,7 +382,7 @@ void InputParser::parse(std::istream& input,
   auto scope_stack = std::vector<State>();
   auto& top = scope_stack.emplace_back();
   top.level = -1;
-  top.output = default_output_name;
+  top.sheet_id = default_sheet_id;
   top.sprite_id = default_sprite_id;
 
   auto autocomplete_space = std::stringstream();
@@ -389,11 +401,11 @@ void InputParser::parse(std::istream& input,
       else if (level >= last->level) {
         const auto top = last.base();
 
-        // keep texture set on same level
+        // keep sheet set on same level
         if (top != scope_stack.end() &&
             top != scope_stack.begin() &&
-            top->definition == Definition::output)
-          std::prev(top)->output = top->output;
+            top->definition == Definition::sheet)
+          std::prev(top)->sheet_id = top->sheet_id;
 
         for (auto i = 0u; i < std::distance(top, scope_stack.end()); ++i) {
           check_not_applied_definitions();
@@ -468,6 +480,14 @@ void InputParser::parse(std::istream& input,
   m_line_number = 0;
   pop_scope_stack(-1);
   assert(m_not_applied_definitions.empty());
+
+  // add outputs to sheets which have none
+  for (const auto& [id, sheet] : m_sheets)
+    if (sheet->outputs.empty()) {
+      auto state = State();
+      state.output = id + "-{0-}.png";
+      sheet->outputs.push_back(get_output(state));
+    }
 }
 catch (const std::exception& ex) {
   auto ss = std::stringstream();
@@ -485,8 +505,8 @@ void InputParser::update_applied_definitions(Definition definition) {
 }
 
 void InputParser::update_not_applied_definitions(Definition definition) {
-  // outputs can also be explicitly assigned, tolerate when it is not at all
-  if (definition == Definition::output)
+  // sheets can also be explicitly assigned, tolerate when it is not at all
+  if (definition == Definition::sheet)
     return;
 
   assert(!m_not_applied_definitions.empty());

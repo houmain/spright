@@ -10,7 +10,7 @@
 namespace spright {
 
 using ImagePtr = std::shared_ptr<const Image>;
-using SheetPtr = std::shared_ptr<const struct Sheet>;
+using SheetPtr = std::shared_ptr<struct Sheet>;
 using OutputPtr = std::shared_ptr<const struct Output>;
 using MapVectorPtr = std::shared_ptr<const std::vector<ImagePtr>>;
 using StringMap = std::map<std::string, std::string, std::less<>>;
@@ -51,7 +51,9 @@ struct Output {
 
 struct Sheet {
   int index;
+  std::string id;
   std::filesystem::path input_file;
+  std::vector<OutputPtr> outputs;
   int width{ };
   int height{ };
   int max_width{ };
@@ -64,7 +66,6 @@ struct Sheet {
   int shape_padding{ };
   Duplicates duplicates{ };
   Pack pack{ Pack::binpack };
-  std::vector<OutputPtr> outputs;
 };
 
 struct Sprite {

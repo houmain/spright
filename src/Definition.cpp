@@ -47,6 +47,7 @@ std::string_view get_definition_name(Definition definition) {
 
     case Definition::set: return "set";
     case Definition::group: return "group";
+    case Definition::sheet: return "sheet";
     case Definition::output: return "output";
     case Definition::width: return "width";
     case Definition::height: return "height";
@@ -97,6 +98,7 @@ Definition get_affected_definition(Definition definition) {
     case Definition::MAX:
     case Definition::group:
     case Definition::set:
+    case Definition::output:
     case Definition::input:
     case Definition::sprite:
     // affect input and output
@@ -116,8 +118,10 @@ Definition get_affected_definition(Definition definition) {
     case Definition::allow_rotate:
     case Definition::padding:
     case Definition::duplicates:
-    case Definition::alpha:
     case Definition::pack:
+      return Definition::sheet;
+
+    case Definition::alpha:
     case Definition::scalings:
       return Definition::output;
 
@@ -130,7 +134,7 @@ Definition get_affected_definition(Definition definition) {
     case Definition::atlas:
       return Definition::input;
 
-    case Definition::output:
+    case Definition::sheet:
     case Definition::id:
     case Definition::rect:
     case Definition::pivot:

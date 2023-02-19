@@ -66,44 +66,44 @@ TEST_CASE("scope - Tags") {
 TEST_CASE("scope - Output/Sprite") {
   auto parser = parse(R"(
     width 256
-    output "tex1"
+    sheet "tex1"
       padding 1
-    output "tex2"
+    sheet "tex2"
       padding 2
     width 128
-    output "tex3"
+    sheet "tex3"
       padding 3
     input "test/Items.png"
       grid 16 16
       sprite
       sprite
-        output "tex1"
+        sheet "tex1"
       sprite
-        output "tex2"
+        sheet "tex2"
       sprite
   )");
   const auto& sprites = parser.sprites();
   REQUIRE(sprites.size() == 4);
-  CHECK(sprites[0].output->border_padding == 3);
-  CHECK(sprites[1].output->border_padding == 1);
-  CHECK(sprites[2].output->border_padding == 2);
-  CHECK(sprites[0].output == sprites[3].output);
-  CHECK(sprites[0].output->width == 128);
-  CHECK(sprites[1].output->width == 256);
-  CHECK(sprites[2].output->width == 256);
+  CHECK(sprites[0].sheet->border_padding == 3);
+  CHECK(sprites[1].sheet->border_padding == 1);
+  CHECK(sprites[2].sheet->border_padding == 2);
+  CHECK(sprites[0].sheet == sprites[3].sheet);
+  CHECK(sprites[0].sheet->width == 128);
+  CHECK(sprites[1].sheet->width == 256);
+  CHECK(sprites[2].sheet->width == 256);
 }
 
 TEST_CASE("scope - Problems") {
   // sprite not on input
   CHECK_THROWS(parse(R"(
-    output "tex1"
+    sheet "tex1"
     input "test/Items.png"
     sprite "text"
   )"));
 
   // definition without effect
   CHECK_NOTHROW(parse(R"(
-    output "tex1"
+    sheet "tex1"
       width 100
     input "test/Items.png"
       sprite "text"
@@ -111,13 +111,13 @@ TEST_CASE("scope - Problems") {
 
   CHECK_NOTHROW(parse(R"(
     width 100
-    output "tex1"
+    sheet "tex1"
     input "test/Items.png"
       sprite "text"
   )"));
 
   CHECK_THROWS(parse(R"(
-    output "tex1"
+    sheet "tex1"
     width 100
     input "test/Items.png"
       sprite "text"
@@ -125,21 +125,21 @@ TEST_CASE("scope - Problems") {
 
   // row, skip, span without grid
   CHECK_THROWS(parse(R"(
-    output "tex1"
+    sheet "tex1"
     input "test/Items.png"
       row 1
       sprite "text"
   )"));
 
   CHECK_THROWS(parse(R"(
-    output "tex1"
+    sheet "tex1"
     input "test/Items.png"
       sprite "text"
       skip
   )"));
 
   CHECK_THROWS(parse(R"(
-    output "tex1"
+    sheet "tex1"
     input "test/Items.png"
       sprite "text"
         span 2 2
@@ -147,14 +147,14 @@ TEST_CASE("scope - Problems") {
 
   // extra scopes are allowed
   CHECK_NOTHROW(parse(R"(
-    output "tex1"
+    sheet "tex1"
     input "test/Items.png"
       tag anim "anim"
         sprite "text"
   )"));
 
   CHECK_NOTHROW(parse(R"(
-    output "tex1"
+    sheet "tex1"
     input "test/Items.png"
       grid 16 16
       tag anim "anim"
@@ -170,7 +170,7 @@ TEST_CASE("scope - Problems") {
   )"));
 
   CHECK_NOTHROW(parse(R"(
-    output "tex1"
+    sheet "tex1"
     input "test/Items.png"
       group
         tag anim "anim"
@@ -181,15 +181,15 @@ TEST_CASE("scope - Problems") {
 
   // definition in wrong scope
   CHECK_THROWS(parse(R"(
-    output "tex1"
+    sheet "tex1"
     input "test/Items.png"
       width 100
       sprite "text"
   )"));
 
-  // output without sprites is tolerated
+  // sheet without sprites is tolerated
   CHECK_NOTHROW(parse(R"(
-    output "tex1"
+    sheet "tex1"
     input "test/Items.png"
       sprite "text"
   )"));
@@ -197,6 +197,6 @@ TEST_CASE("scope - Problems") {
   CHECK_NOTHROW(parse(R"(
     input "test/Items.png"
       sprite "text"
-    output "tex1"
+    sheet "tex1"
   )"));
 }
