@@ -30,14 +30,14 @@ int main(int argc, const char* argv[]) try {
     trim_sprite(sprite);
   time_points.emplace_back(Clock::now(), "trimming");
 
-  auto textures = pack_sprites(sprites);
+  auto slices = pack_sprites(sprites);
   time_points.emplace_back(Clock::now(), "packing");
 
-  evaluate_expressions(settings, sprites, textures, variables);
-  write_output_description(settings, sprites, textures, variables);
+  evaluate_expressions(settings, sprites, slices, variables);
+  write_output_description(settings, sprites, slices, variables);
   time_points.emplace_back(Clock::now(), "output description");
 
-  output_textures(settings, textures);
+  output_textures(settings, slices);
   time_points.emplace_back(Clock::now(), "output textures");
 
   if (settings.debug) {

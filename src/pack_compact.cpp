@@ -12,7 +12,7 @@ namespace {
   struct FreeBody { void operator()(cpBody* body) { cpBodyFree(body); } };
   using BodyPtr = std::unique_ptr<cpBody, FreeBody>;
 
-  void compact_sprites(const Texture& texture, int border_padding, int shape_padding) {
+  void compact_sprites(const Slice& slice, int border_padding, int shape_padding) {
     auto space_ptr = SpacePtr(cpSpaceNew());
     const auto space = space_ptr.get();
 
@@ -20,8 +20,8 @@ namespace {
     const auto border = to_real(border_padding) - padding;
     const auto x0 = border;
     const auto y0 = border;
-    const auto x1 = to_real(texture.width) - border - 0.5;
-    const auto y1 = to_real(texture.height) - border - 0.5;
+    const auto x1 = to_real(slice.width) - border - 0.5;
+    const auto y1 = to_real(slice.height) - border - 0.5;
 
     auto shapes = std::vector<ShapePtr>();
     shapes.emplace_back(cpSpaceAddShape(space, cpSegmentShapeNew(cpSpaceGetStaticBody(space), cpv(x0, y0), cpv(x1, y0), 0)));
@@ -31,7 +31,7 @@ namespace {
 
     auto bodies = std::vector<BodyPtr>();
     auto vertices = std::vector<cpVect>();
-    for (const auto& sprite : texture.sprites) {
+    for (const auto& sprite : slice.sprites) {
       const auto mass = 1;
       const auto moment = INFINITY;
       auto body = bodies.emplace_back(cpSpaceAddBody(space, cpBodyNew(mass, moment))).get();
@@ -59,7 +59,7 @@ namespace {
 
     auto i = 0u;
     for (const auto& body : bodies) {
-      auto& sprite = texture.sprites[i++];
+      auto& sprite = slice.sprites[i++];
       const auto position = cpBodyGetPosition(body.get());
       const auto dx = to_int(position.x + 0.5) - sprite.trimmed_rect.x;
       const auto dy = to_int(position.y + 0.5) - sprite.trimmed_rect.y;
@@ -75,12 +75,12 @@ namespace {
 } // namespace
 
 void pack_compact(const SheetPtr& sheet, SpriteSpan sprites,
-    std::vector<Texture>& textures) {
+    std::vector<Slice>& slices) {
   const auto fast = (sheet->allow_rotate == false);
-  pack_binpack(sheet, sprites, fast, textures);
-  for (auto& texture : textures) {
-    compact_sprites(texture, sheet->border_padding, sheet->shape_padding);
-    recompute_texture_size(texture);
+  pack_binpack(sheet, sprites, fast, slices);
+  for (auto& slice : slices) {
+    compact_sprites(slice, sheet->border_padding, sheet->shape_padding);
+    recompute_slice_size(slice);
   }
 }
 

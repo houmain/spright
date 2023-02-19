@@ -77,8 +77,8 @@ namespace {
 #endif
   }
 
-  void process_alpha(Image& target, const Texture& texture) {
-    switch (texture.output->alpha) {
+  void process_alpha(Image& target, const Output& output) {
+    switch (output.alpha) {
       case Alpha::keep:
         break;
 
@@ -95,7 +95,7 @@ namespace {
         break;
 
       case Alpha::colorkey:
-        make_opaque(target, texture.output->colorkey);
+        make_opaque(target, output.colorkey);
         break;
     }
   }

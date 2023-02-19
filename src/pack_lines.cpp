@@ -4,17 +4,17 @@
 namespace spright {
 
 void pack_lines(bool horizontal, const SheetPtr& sheet,
-    SpriteSpan sprites, std::vector<Texture>& textures) {
+    SpriteSpan sprites, std::vector<Slice>& slices) {
 
-  auto texture_sheet_index = 0;
-  const auto add_texture = [&](SpriteSpan sprites) {
-    auto texture = Texture{
+  auto slice_sheet_index = 0;
+  const auto add_slice = [&](SpriteSpan sprites) {
+    auto slice = Slice{
       sheet,
-      texture_sheet_index++,
+      slice_sheet_index++,
       sprites,
     };
-    recompute_texture_size(texture);
-    textures.push_back(std::move(texture));
+    recompute_slice_size(slice);
+    slices.push_back(std::move(slice));
   };
 
   const auto default_max = std::numeric_limits<int>::max();
@@ -49,7 +49,7 @@ void pack_lines(bool horizontal, const SheetPtr& sheet,
       line_size = 0;
     }
     if (pos_p + size_p > max_p) {
-      add_texture({ first_sprite, it });
+      add_slice({ first_sprite, it });
       first_sprite = it;
       pos.x = 0;
       pos.y = 0;
@@ -73,7 +73,7 @@ void pack_lines(bool horizontal, const SheetPtr& sheet,
   if (it != sprites.end())
     throw_not_all_sprites_packed();
 
-  add_texture({ first_sprite, it });
+  add_slice({ first_sprite, it });
 }
 
 } // namespace

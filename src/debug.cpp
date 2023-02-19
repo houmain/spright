@@ -99,8 +99,8 @@ namespace {
   }
 } // namespace
 
-void draw_debug_info(Image& image, const Texture &texture, real scale) {
-  for (const auto& sprite : texture.sprites)
+void draw_debug_info(Image& image, const Slice &slice, real scale) {
+  for (const auto& sprite : slice.sprites)
     draw_sprite_info(image, sprite, scale);
 }
 

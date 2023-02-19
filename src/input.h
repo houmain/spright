@@ -90,7 +90,7 @@ struct Sprite {
   StringMap tags;
   VariantMap data;
   bool rotated{ };
-  int texture_sheet_index{ };
+  int slice_index{ };
   Size common_divisor{ };
   Point common_divisor_offset{ };
   Size common_divisor_margin{ };
@@ -106,6 +106,6 @@ struct InputDefinition {
 };
 
 InputDefinition parse_definition(const Settings& settings);
-int get_max_texture_count(const Sheet& sheet);
+int get_max_slice_count(const Sheet& sheet);
 
 } // namespace

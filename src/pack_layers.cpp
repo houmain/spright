@@ -4,7 +4,7 @@
 namespace spright {
 
 void pack_layers(const SheetPtr& sheet, SpriteSpan sprites,
-    std::vector<Texture>& textures) {
+    std::vector<Slice>& slices) {
 
   for (auto& sprite : sprites) {
     const auto indent = get_sprite_indent(sprite);
@@ -23,10 +23,10 @@ void pack_layers(const SheetPtr& sheet, SpriteSpan sprites,
       size.y,
     };
   }
-  auto texture = Texture{ sheet, 0, sprites };
-  texture.layered = true;
-  recompute_texture_size(texture);  
-  textures.push_back(std::move(texture));
+  auto slice = Slice{ sheet, 0, sprites };
+  slice.layered = true;
+  recompute_slice_size(slice);  
+  slices.push_back(std::move(slice));
 }
 
 } // namespace

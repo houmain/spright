@@ -4,7 +4,7 @@
 namespace spright {
 
 void pack_single(const SheetPtr& sheet, SpriteSpan sprites,
-    std::vector<Texture>& textures) {
+    std::vector<Slice>& slices) {
 
   auto sheet_index = 0;
   for (auto& sprite : sprites) {
@@ -23,7 +23,7 @@ void pack_single(const SheetPtr& sheet, SpriteSpan sprites,
       size.x,
       size.y,
     };
-    textures.push_back(Texture{
+    slices.push_back(Slice{
       sheet,
       sheet_index++,
       { &sprite, 1 },

@@ -42,25 +42,25 @@ namespace {
 
   nlohmann::json get_json_description(
       const std::vector<Sprite>& sprites,
-      const std::vector<Texture>& textures,
+      const std::vector<Slice>& slices,
       const VariantMap& variables) {
 
     using TagKey = std::string;
     using TagValue = std::string;
     using SpriteIndex = int;
-    using TextureIndex = int;
+    using SliceIndex = int;
     using SourceIndex = int;
     auto tags = std::map<TagKey, std::map<TagValue, std::vector<SpriteIndex>>>();
     auto source_indices = std::map<ImagePtr, SourceIndex>();
-    auto texture_sprites = std::map<TextureIndex, std::vector<SpriteIndex>>();
+    auto slice_sprites = std::map<SliceIndex, std::vector<SpriteIndex>>();
     auto source_sprites = std::map<SourceIndex, std::vector<SpriteIndex>>();
-    auto sprite_on_texture = std::map<SpriteIndex, TextureIndex>();
+    auto sprite_on_slice = std::map<SpriteIndex, SliceIndex>();
     auto sprites_by_index = std::map<SpriteIndex, const Sprite*>();
     for (const auto& sprite : sprites)
       sprites_by_index[sprite.index] = &sprite;
-    for (const auto& texture : textures)
-      for (const auto& sprite : texture.sprites)
-        sprite_on_texture[sprite.index] = texture.index;
+    for (const auto& slice : slices)
+      for (const auto& sprite : slice.sprites)
+        sprite_on_slice[sprite.index] = slice.index;
 
     auto json = nlohmann::json{ };
     auto& json_sprites = json["sprites"];
@@ -73,7 +73,7 @@ namespace {
       if (!sprite->sheet)
         continue;
 
-      const auto texture_index = sprite_on_texture.find(sprite_index)->second;
+      const auto slice_index = sprite_on_slice.find(sprite_index)->second;
       const auto source_index = source_indices.emplace(
         sprite->source, to_int(source_indices.size())).first->second;
 
@@ -85,8 +85,8 @@ namespace {
       json_sprite["sourceRect"] = json_rect(sprite->source_rect);
       json_sprite["trimmedSourceRect"] = json_rect(sprite->trimmed_source_rect);
       json_sprite["pivot"] = json_point(sprite->pivot_point);
-      json_sprite["textureIndex"] = texture_index;
-      json_sprite["textureSpriteIndex"] = texture_sprites[texture_index].size();
+      json_sprite["sliceIndex"] = slice_index;
+      json_sprite["sliceSpriteIndex"] = slice_sprites[slice_index].size();
       json_sprite["rotated"] = sprite->rotated;
       json_sprite["tags"] = sprite->tags;
       json_sprite["data"] = json_variant_map(sprite->data);
@@ -95,7 +95,7 @@ namespace {
       for (const auto& [key, value] : sprite->tags)
         tags[key][value].push_back(sprite_index);
       source_sprites[source_index].push_back(sprite_index);
-      texture_sprites[texture_index].push_back(sprite_index);
+      slice_sprites[slice_index].push_back(sprite_index);
     }
 
     auto& json_tags = json["tags"];
@@ -106,16 +106,16 @@ namespace {
         json_tag[value] = sprite_indices;
     }
 
-    auto& json_textures = json["textures"];
-    json_textures = nlohmann::json::array();
-    for (const auto& texture : textures) {
-      auto& json_texture = json_textures.emplace_back();
-      json_texture["index"] = texture.index;
-      json_texture["inputFilename"] = path_to_utf8(texture.sheet->input_file);
-      json_texture["filename"] = texture.filename;
-      json_texture["width"] = texture.width;
-      json_texture["height"] = texture.height;
-      json_texture["spriteIndices"] = texture_sprites[texture.index];
+    auto& json_slices = json["slices"];
+    json_slices = nlohmann::json::array();
+    for (const auto& slice : slices) {
+      auto& json_slice = json_slices.emplace_back();
+      json_slice["index"] = slice.index;
+      json_slice["inputFilename"] = path_to_utf8(slice.sheet->input_file);
+      json_slice["filename"] = slice.filename;
+      json_slice["width"] = slice.width;
+      json_slice["height"] = slice.height;
+      json_slice["spriteIndices"] = slice_sprites[slice.index];
     }
 
     auto& json_sources = json["sources"];
@@ -183,7 +183,7 @@ namespace {
 
 void evaluate_expressions(const Settings& settings,
     std::vector<Sprite>& sprites,
-    std::vector<Texture>& textures,
+    std::vector<Slice>& slices,
     VariantMap& variables) {
 
   const auto replace_variable = [&](std::string_view variable) {
@@ -210,12 +210,12 @@ void evaluate_expressions(const Settings& settings,
     });
   };
 
-  const auto evaluate_texture_expression = [&](Texture& texture, std::string& expression) {
+  const auto evaluate_slice_expression = [&](Slice& slice, std::string& expression) {
     replace_variables(expression, [&](std::string_view variable) {
       if (variable == "index")
-        return std::to_string(texture.index);
+        return std::to_string(slice.index);
       if (variable == "sprite.id")
-        return (texture.sprites.empty() ? "" : texture.sprites[0].id);
+        return (slice.sprites.empty() ? "" : slice.sprites[0].id);
       return replace_variable(variable);
     });
   };
@@ -223,15 +223,15 @@ void evaluate_expressions(const Settings& settings,
   for (auto& sprite : sprites)
     evaluate_sprite_expression(sprite, sprite.id);
 
-  for (auto& texture : textures)
-    evaluate_texture_expression(texture, texture.filename);
+  for (auto& slice : slices)
+    evaluate_slice_expression(slice, slice.filename);
 }
 
 std::string get_description(const std::string& template_source,
     const std::vector<Sprite>& sprites, 
-    const std::vector<Texture>& textures) {
+    const std::vector<Slice>& slices) {
   auto ss = std::stringstream();
-  const auto json = get_json_description(sprites, textures, { });
+  const auto json = get_json_description(sprites, slices, { });
   auto env = setup_inja_environment(&json);
   env.render_to(ss, env.parse(template_source), json);
   return ss.str();
@@ -239,12 +239,12 @@ std::string get_description(const std::string& template_source,
 
 bool write_output_description(const Settings& settings,
     const std::vector<Sprite>& sprites, 
-    const std::vector<Texture>& textures,
+    const std::vector<Slice>& slices,
     const VariantMap& variables) try {
   auto ss = std::stringstream();
   auto& os = (settings.output_file == "stdout" ? std::cout : ss);
 
-  const auto json = get_json_description(sprites, textures, variables);
+  const auto json = get_json_description(sprites, slices, variables);
   if (!settings.template_file.empty()) {
     auto env = setup_inja_environment(&json);
     env.render_to(os, env.parse_template(path_to_utf8(settings.template_file)), json);
