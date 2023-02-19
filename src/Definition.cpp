@@ -217,6 +217,10 @@ void apply_definition(Definition definition,
       // just for opening scopes, useful for additive definitions (e.g. tags)
       break;
 
+     case Definition::sheet:
+      state.sheet_id = check_string();
+      break;
+
     case Definition::output:
       state.output = check_string();
       break;

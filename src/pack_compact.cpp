@@ -74,12 +74,12 @@ namespace {
   }
 } // namespace
 
-void pack_compact(const OutputPtr& output, SpriteSpan sprites,
+void pack_compact(const SheetPtr& sheet, SpriteSpan sprites,
     std::vector<Texture>& textures) {
-  const auto fast = (output->allow_rotate == false);
-  pack_binpack(output, sprites, fast, textures);
+  const auto fast = (sheet->allow_rotate == false);
+  pack_binpack(sheet, sprites, fast, textures);
   for (auto& texture : textures) {
-    compact_sprites(texture, output->border_padding, output->shape_padding);
+    compact_sprites(texture, sheet->border_padding, sheet->shape_padding);
     recompute_texture_size(texture);
   }
 }

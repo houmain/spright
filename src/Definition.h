@@ -10,6 +10,7 @@ enum class Definition {
   set,
   group,
 
+  sheet,
   output,
   width,
   height,
@@ -61,6 +62,7 @@ struct State {
   int level;
   std::string indent;
 
+  std::string sheet_id;
   std::filesystem::path output;
   int width{ };
   int height{ };

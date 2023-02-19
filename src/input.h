@@ -10,6 +10,7 @@
 namespace spright {
 
 using ImagePtr = std::shared_ptr<const Image>;
+using SheetPtr = std::shared_ptr<const struct Sheet>;
 using OutputPtr = std::shared_ptr<const struct Output>;
 using MapVectorPtr = std::shared_ptr<const std::vector<ImagePtr>>;
 using StringMap = std::map<std::string, std::string, std::less<>>;
@@ -40,11 +41,17 @@ struct Scaling {
 };
 
 struct Output {
-  int index;
-  std::filesystem::path input_file;
   FilenameSequence filename;
   std::string default_map_suffix;
   std::vector<std::string> map_suffixes;
+  Alpha alpha{ Alpha::keep };
+  RGBA colorkey{ };
+  std::vector<Scaling> scalings;
+};
+
+struct Sheet {
+  int index;
+  std::filesystem::path input_file;
   int width{ };
   int height{ };
   int max_width{ };
@@ -56,17 +63,15 @@ struct Output {
   int border_padding{ };
   int shape_padding{ };
   Duplicates duplicates{ };
-  Alpha alpha{ Alpha::keep };
-  RGBA colorkey{ };
   Pack pack{ Pack::binpack };
-  std::vector<Scaling> scalings;
+  std::vector<OutputPtr> outputs;
 };
 
 struct Sprite {
   int index{ };
   int input_sprite_index{ };
   std::string id;
-  OutputPtr output;
+  SheetPtr sheet;
   ImagePtr source;
   MapVectorPtr maps;
   Rect source_rect{ };
@@ -85,7 +90,7 @@ struct Sprite {
   StringMap tags;
   VariantMap data;
   bool rotated{ };
-  int texture_output_index{ };
+  int texture_sheet_index{ };
   Size common_divisor{ };
   Point common_divisor_offset{ };
   Size common_divisor_margin{ };
@@ -101,5 +106,6 @@ struct InputDefinition {
 };
 
 InputDefinition parse_definition(const Settings& settings);
+int get_max_texture_count(const Sheet& sheet);
 
 } // namespace

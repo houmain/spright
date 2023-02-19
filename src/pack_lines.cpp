@@ -3,14 +3,14 @@
 
 namespace spright {
 
-void pack_lines(bool horizontal, const OutputPtr& output,
+void pack_lines(bool horizontal, const SheetPtr& sheet,
     SpriteSpan sprites, std::vector<Texture>& textures) {
 
-  auto texture_output_index = 0;
+  auto texture_sheet_index = 0;
   const auto add_texture = [&](SpriteSpan sprites) {
     auto texture = Texture{
-      output,
-      texture_output_index++,
+      sheet,
+      texture_sheet_index++,
       sprites,
     };
     recompute_texture_size(texture);
@@ -18,10 +18,10 @@ void pack_lines(bool horizontal, const OutputPtr& output,
   };
 
   const auto default_max = std::numeric_limits<int>::max();
-  const auto max_width = (output->max_width ? 
-    output->max_width : default_max) - output->border_padding * 2;
-  const auto max_height = (output->max_height ? 
-    output->max_height : default_max) - output->border_padding * 2;
+  const auto max_width = (sheet->max_width ? 
+    sheet->max_width : default_max) - sheet->border_padding * 2;
+  const auto max_height = (sheet->max_height ? 
+    sheet->max_height : default_max) - sheet->border_padding * 2;
 
   auto pos = Point{ };
   auto size = Size{ };
@@ -40,8 +40,8 @@ void pack_lines(bool horizontal, const OutputPtr& output,
   for (; it != sprites.end(); ++it) {
     auto& sprite = *it;
     size = get_sprite_size(sprite);
-    size.x += output->shape_padding;
-    size.y += output->shape_padding;
+    size.x += sheet->shape_padding;
+    size.y += sheet->shape_padding;
 
     if (pos_d + size_d > max_d) {
       pos_d = 0;
@@ -61,8 +61,8 @@ void pack_lines(bool horizontal, const OutputPtr& output,
 
     const auto indent = get_sprite_indent(sprite);
     sprite.trimmed_rect = {
-      pos.x + indent.x + output->border_padding,
-      pos.y + indent.y + output->border_padding,
+      pos.x + indent.x + sheet->border_padding,
+      pos.y + indent.y + sheet->border_padding,
       sprite.trimmed_source_rect.w,
       sprite.trimmed_source_rect.h
     };

@@ -71,22 +71,22 @@ namespace {
     pivot_point.y += (pivot_rect.y - sprite.trimmed_source_rect.y);
   }
 
-  void pack_texture(const OutputPtr& output,
+  void pack_texture(const SheetPtr& sheet,
       SpriteSpan sprites, std::vector<Texture>& textures) {
     assert(!sprites.empty());
 
-    switch (output->pack) {
-      case Pack::binpack: return pack_binpack(output, sprites, sprites.size() > 1000, textures);
-      case Pack::compact: return pack_compact(output, sprites, textures);
-      case Pack::single: return pack_single(output, sprites, textures);
-      case Pack::keep: return pack_keep(output, sprites, textures);
-      case Pack::rows: return pack_lines(true, output, sprites, textures);
-      case Pack::columns: return pack_lines(false, output, sprites, textures);
-      case Pack::layers: return pack_layers(output, sprites, textures);
+    switch (sheet->pack) {
+      case Pack::binpack: return pack_binpack(sheet, sprites, sprites.size() > 1000, textures);
+      case Pack::compact: return pack_compact(sheet, sprites, textures);
+      case Pack::single: return pack_single(sheet, sprites, textures);
+      case Pack::keep: return pack_keep(sheet, sprites, textures);
+      case Pack::rows: return pack_lines(true, sheet, sprites, textures);
+      case Pack::columns: return pack_lines(false, sheet, sprites, textures);
+      case Pack::layers: return pack_layers(sheet, sprites, textures);
     }
   }
 
-  void pack_texture_deduplicate(const OutputPtr& output,
+  void pack_texture_deduplicate(const SheetPtr& sheet,
       SpriteSpan sprites, std::vector<Texture>& textures) {
     assert(!sprites.empty());
 
@@ -107,12 +107,12 @@ namespace {
     std::sort(unique_sprites.begin(), unique_sprites.end(),
       [](const Sprite& a, const Sprite& b) { return (a.index < b.index); });
 
-    pack_texture(output, unique_sprites, textures);
+    pack_texture(sheet, unique_sprites, textures);
 
     const auto duplicate_sprites = sprites.last(sprites.size() - unique_sprites.size());
-    if (output->duplicates == Duplicates::drop) {
+    if (sheet->duplicates == Duplicates::drop) {
       for (auto& sprite : duplicate_sprites)
-        sprite.output = { };
+        sprite.sheet = { };
     }
     else {
       // copy rectangles from unique to duplicate sprites
@@ -121,33 +121,33 @@ namespace {
         sprites_by_index[sprite.index] = &sprite;
       for (auto& duplicate : duplicate_sprites) {
         const auto& sprite = *sprites_by_index.find(duplicate.duplicate_of_index)->second;
-        duplicate.texture_output_index = sprite.texture_output_index;
+        duplicate.texture_sheet_index = sprite.texture_sheet_index;
         duplicate.trimmed_rect = sprite.trimmed_rect;
         duplicate.rotated = sprite.rotated;
       }
     }
   }
 
-  std::vector<Texture> pack_sprites_by_output(SpriteSpan sprites) {
+  std::vector<Texture> pack_sprites_by_sheet(SpriteSpan sprites) {
     if (sprites.empty())
       return { };
 
-    // sort sprites by output
+    // sort sprites by sheet
     std::sort(std::begin(sprites), std::end(sprites),
       [](const Sprite& a, const Sprite& b) {
-        return std::tie(a.output->index, a.index) <
-               std::tie(b.output->index, b.index);
+        return std::tie(a.sheet->index, a.index) <
+               std::tie(b.sheet->index, b.index);
       });
 
     auto textures = std::vector<Texture>();
     for (auto begin = sprites.begin(), it = begin; ; ++it)
       if (it == sprites.end() ||
-          it->output != begin->output) {
-        const auto& output = begin->output;
-        if (output->duplicates != Duplicates::keep)
-          pack_texture_deduplicate(output, { begin, it }, textures);
+          it->sheet != begin->sheet) {
+        const auto& sheet = begin->sheet;
+        if (sheet->duplicates != Duplicates::keep)
+          pack_texture_deduplicate(sheet, { begin, it }, textures);
         else
-          pack_texture(output, { begin, it }, textures);
+          pack_texture(sheet, { begin, it }, textures);
 
         if (it == sprites.end())
           break;
@@ -157,10 +157,10 @@ namespace {
   }
 } // namespace
 
-std::pair<int, int> get_texture_max_size(const Output& output) {
+std::pair<int, int> get_texture_max_size(const Sheet& sheet) {
   return {
-    get_max_size(output.width, output.max_width, output.power_of_two),
-    get_max_size(output.height, output.max_height, output.power_of_two)
+    get_max_size(sheet.width, sheet.max_width, sheet.power_of_two),
+    get_max_size(sheet.height, sheet.max_height, sheet.power_of_two)
   };
 }
 
@@ -184,7 +184,7 @@ std::vector<Texture> pack_sprites(std::vector<Sprite>& sprites) {
   for (auto& sprite : sprites)
     prepare_sprite(sprite);
 
-  auto textures = pack_sprites_by_output(sprites);
+  auto textures = pack_sprites_by_sheet(sprites);
 
   for (auto& sprite : sprites)
     complete_sprite(sprite);
@@ -198,14 +198,14 @@ std::vector<Texture> pack_sprites(std::vector<Sprite>& sprites) {
   return textures;
 }
 
-void create_textures_from_filename_indices(const OutputPtr& output_ptr, 
+void create_textures_from_filename_indices(const SheetPtr& sheet_ptr, 
     SpriteSpan sprites, std::vector<Texture>& textures) {
 
   // sort sprites by texture index
   std::sort(std::begin(sprites), std::end(sprites),
     [](const Sprite& a, const Sprite& b) {
-      return std::tie(a.texture_output_index, a.index) <
-             std::tie(b.texture_output_index, b.index);
+      return std::tie(a.texture_sheet_index, a.index) <
+             std::tie(b.texture_sheet_index, b.index);
     });
 
   // create textures
@@ -213,10 +213,10 @@ void create_textures_from_filename_indices(const OutputPtr& output_ptr,
   const auto end = sprites.end();
   for (auto it = begin;; ++it)
     if (it == end || 
-        it->texture_output_index != begin->texture_output_index) {
+        it->texture_sheet_index != begin->texture_sheet_index) {
       textures.push_back({ 
-        output_ptr,
-        begin->texture_output_index,
+        sheet_ptr,
+        begin->texture_sheet_index,
         SpriteSpan(begin, it),
       });
 
@@ -227,7 +227,7 @@ void create_textures_from_filename_indices(const OutputPtr& output_ptr,
 }
 
 void recompute_texture_size(Texture& texture) {
-  const auto& output = *texture.output;
+  const auto& sheet = *texture.sheet;
 
   auto max_x = 0;
   auto max_y = 0;
@@ -237,17 +237,17 @@ void recompute_texture_size(Texture& texture) {
     max_y = std::max(max_y, sprite.trimmed_rect.y + 
       (sprite.rotated ? sprite.trimmed_rect.w : sprite.trimmed_rect.h));
   }
-  texture.width = max_x + output.border_padding;
-  texture.height = max_y + output.border_padding;
+  texture.width = max_x + sheet.border_padding;
+  texture.height = max_y + sheet.border_padding;
 
-  if (output.align_width)
-    texture.width = ceil(texture.width, output.align_width);
+  if (sheet.align_width)
+    texture.width = ceil(texture.width, sheet.align_width);
 
-  if (output.power_of_two) {
+  if (sheet.power_of_two) {
     texture.width = ceil_to_pot(texture.width);
     texture.height = ceil_to_pot(texture.height);
   }
-  if (output.square)
+  if (sheet.square)
     texture.width = texture.height = std::max(texture.width, texture.height);
 }
 
@@ -256,7 +256,7 @@ void recompute_texture_size(Texture& texture) {
 }
 
 void update_last_source_written_time(Texture& texture) {
-  auto last_write_time = get_last_write_time(texture.output->input_file);
+  auto last_write_time = get_last_write_time(texture.sheet->input_file);
 
   auto sources = std::unordered_set<const Image*>();
   for (const auto& sprite : texture.sprites)

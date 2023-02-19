@@ -17,8 +17,8 @@ using SpriteSpan = nonstd::span<Sprite>;
 #endif
 
 struct Texture {
-  OutputPtr output;
-  int output_index{ };
+  SheetPtr sheet;
+  int sheet_index{ };
   SpriteSpan sprites;
   int width{ };
   int height{ };
@@ -30,27 +30,27 @@ struct Texture {
   bool layered{ };
 };
 
-std::pair<int, int> get_texture_max_size(const Output& output);
+std::pair<int, int> get_texture_max_size(const Sheet& sheet);
 Size get_sprite_size(const Sprite& sprite);
 Size get_sprite_indent(const Sprite& sprite);
-void create_textures_from_filename_indices(const OutputPtr& output_ptr, 
+void create_textures_from_filename_indices(const SheetPtr& sheet_ptr, 
     SpriteSpan sprites, std::vector<Texture>& textures);
 void recompute_texture_size(Texture& texture);
 void update_last_source_written_time(Texture& texture);
 
 std::vector<Texture> pack_sprites(std::vector<Sprite>& sprites);
 
-void pack_binpack(const OutputPtr& output, SpriteSpan sprites,
+void pack_binpack(const SheetPtr& sheet, SpriteSpan sprites,
   bool fast, std::vector<Texture>& textures);
-void pack_compact(const OutputPtr& output, SpriteSpan sprites,
+void pack_compact(const SheetPtr& sheet, SpriteSpan sprites,
   std::vector<Texture>& textures);
-void pack_single(const OutputPtr& output, SpriteSpan sprites,
+void pack_single(const SheetPtr& sheet, SpriteSpan sprites,
   std::vector<Texture>& textures);
-void pack_keep(const OutputPtr& output, SpriteSpan sprites,
+void pack_keep(const SheetPtr& sheet, SpriteSpan sprites,
   std::vector<Texture>& textures);
-void pack_lines(bool horizontal, const OutputPtr& output,
+void pack_lines(bool horizontal, const SheetPtr& sheet,
   SpriteSpan sprites, std::vector<Texture>& textures);
-void pack_layers(const OutputPtr& output, SpriteSpan sprites,
+void pack_layers(const SheetPtr& sheet, SpriteSpan sprites,
   std::vector<Texture>& textures);
 
 [[noreturn]] void throw_not_all_sprites_packed();

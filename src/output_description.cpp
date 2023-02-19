@@ -70,7 +70,7 @@ namespace {
       json_sprite["index"] = sprite_index;
 
       // output no more for dropped sprites
-      if (!sprite->output)
+      if (!sprite->sheet)
         continue;
 
       const auto texture_index = sprite_on_texture.find(sprite_index)->second;
@@ -111,7 +111,7 @@ namespace {
     for (const auto& texture : textures) {
       auto& json_texture = json_textures.emplace_back();
       json_texture["index"] = texture.index;
-      json_texture["inputFilename"] = path_to_utf8(texture.output->input_file);
+      json_texture["inputFilename"] = path_to_utf8(texture.sheet->input_file);
       json_texture["filename"] = texture.filename;
       json_texture["width"] = texture.width;
       json_texture["height"] = texture.height;

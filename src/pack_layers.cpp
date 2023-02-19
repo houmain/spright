@@ -3,13 +3,13 @@
 
 namespace spright {
 
-void pack_layers(const OutputPtr& output, SpriteSpan sprites,
+void pack_layers(const SheetPtr& sheet, SpriteSpan sprites,
     std::vector<Texture>& textures) {
 
   for (auto& sprite : sprites) {
     const auto indent = get_sprite_indent(sprite);
     const auto size = get_sprite_size(sprite);
-    const auto padding = output->border_padding;
+    const auto padding = sheet->border_padding;
     sprite.trimmed_rect = {
       indent.x + padding,
       indent.y + padding,
@@ -23,7 +23,7 @@ void pack_layers(const OutputPtr& output, SpriteSpan sprites,
       size.y,
     };
   }
-  auto texture = Texture{ output, 0, sprites };
+  auto texture = Texture{ sheet, 0, sprites };
   texture.layered = true;
   recompute_texture_size(texture);  
   textures.push_back(std::move(texture));

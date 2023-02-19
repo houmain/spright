@@ -3,14 +3,14 @@
 
 namespace spright {
 
-void pack_single(const OutputPtr& output, SpriteSpan sprites,
+void pack_single(const SheetPtr& sheet, SpriteSpan sprites,
     std::vector<Texture>& textures) {
 
-  auto indices = std::map<FilenameSequence, int>();
+  auto sheet_index = 0;
   for (auto& sprite : sprites) {
     const auto indent = get_sprite_indent(sprite);
     const auto size = get_sprite_size(sprite);
-    const auto padding = output->border_padding;
+    const auto padding = sheet->border_padding;
     sprite.trimmed_rect = {
       indent.x + padding,
       indent.y + padding,
@@ -23,10 +23,9 @@ void pack_single(const OutputPtr& output, SpriteSpan sprites,
       size.x,
       size.y,
     };
-    const auto index = indices[output->filename]++;
     textures.push_back(Texture{
-      output,
-      index,
+      sheet,
+      sheet_index++,
       { &sprite, 1 },
       sprite.rect.w + padding * 2,
       sprite.rect.h + padding * 2,

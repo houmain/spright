@@ -54,16 +54,13 @@ namespace {
   }
 } // namespace
 
-OutputPtr InputParser::get_output(const State& state) {
-  auto& output = m_outputs[std::filesystem::weakly_canonical(state.output)];
-  if (!output) {
-    update_applied_definitions(Definition::output);
-    output = std::make_shared<Output>(Output{
-      to_int(m_outputs.size() - 1),
+SheetPtr InputParser::get_sheet(const State& state) {
+  auto& sheet = m_sheets[state.sheet_id];
+  if (!sheet) {
+    update_applied_definitions(Definition::sheet);
+    sheet = std::make_shared<Sheet>(Sheet{
+      to_int(m_sheets.size() - 1),
       m_input_file,
-      FilenameSequence(path_to_utf8(state.output)),
-      state.default_map_suffix,
-      state.map_suffixes,
       state.width,
       state.height,
       state.max_width,
@@ -75,9 +72,22 @@ OutputPtr InputParser::get_output(const State& state) {
       state.border_padding,
       state.shape_padding,
       state.duplicates,
+      state.pack,
+    });
+  }
+  return sheet;
+}
+
+OutputPtr InputParser::get_output(const State& state) {
+  auto& output = m_outputs[std::filesystem::weakly_canonical(state.output)];
+  if (!output) {
+    update_applied_definitions(Definition::output);
+    output = std::make_shared<Output>(Output{
+      FilenameSequence(path_to_utf8(state.output)),
+      state.default_map_suffix,
+      state.map_suffixes,
       state.alpha,
       state.alpha_colorkey,
-      state.pack,
       state.scalings,
     });
   }
@@ -146,7 +156,7 @@ void InputParser::sprite_ends(State& state) {
   sprite.index = to_int(m_sprites.size());
   sprite.input_sprite_index = m_sprites_in_current_source;
   sprite.id = state.sprite_id;
-  sprite.output = get_output(state);
+  sprite.sheet = get_sheet(state);
   sprite.source = get_source(state);
   sprite.maps = get_maps(state, sprite.source);
   sprite.source_rect = (!empty(state.rect) ?

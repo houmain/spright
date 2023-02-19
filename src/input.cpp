@@ -33,4 +33,11 @@ InputDefinition parse_definition(const Settings& settings) {
   };
 }
 
+int get_max_texture_count(const Sheet& sheet) {
+  auto max_count = std::numeric_limits<int>::max();
+  for (const auto& output : sheet.outputs)
+    max_count = std::min(max_count, output->filename.count());
+  return max_count;
+}
+
 } // namespace
