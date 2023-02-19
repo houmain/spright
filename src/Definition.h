@@ -79,7 +79,7 @@ struct State {
   std::vector<Scaling> scalings;
 
   std::filesystem::path path;
-  FilenameSequence sheet;
+  FilenameSequence source_filenames;
   std::string default_map_suffix;
   std::vector<std::string> map_suffixes;
   RGBA colorkey{ };

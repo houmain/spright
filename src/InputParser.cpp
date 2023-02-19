@@ -12,15 +12,15 @@ namespace {
   const auto default_output_name = "spright{0-}.png";
   const auto default_sprite_id = "sprite_{{ index }}";
 
-  ImagePtr try_get_map(const ImagePtr& sheet, 
+  ImagePtr try_get_map(const ImagePtr& source, 
       const std::string& default_map_suffix, 
       const std::string& map_suffix) {
 
-    auto map_filename = replace_suffix(sheet->filename(), 
+    auto map_filename = replace_suffix(source->filename(), 
       default_map_suffix, map_suffix);
 
     if (std::filesystem::exists(map_filename))
-      return std::make_shared<Image>(sheet->path(), map_filename);
+      return std::make_shared<Image>(source->path(), map_filename);
     return { };
   }
 
@@ -84,10 +84,10 @@ OutputPtr InputParser::get_output(const State& state) {
   return output;
 }
 
-ImagePtr InputParser::get_sheet(const std::filesystem::path& path,
+ImagePtr InputParser::get_source(const std::filesystem::path& path,
     const std::filesystem::path& filename, RGBA colorkey) {
-  auto& sheet = m_sheets[std::filesystem::weakly_canonical(path / filename)];
-  if (!sheet) {
+  auto& source = m_sources[std::filesystem::weakly_canonical(path / filename)];
+  if (!source) {
     auto image = Image(path, filename);
 
     if (colorkey != RGBA{ }) {
@@ -95,40 +95,39 @@ ImagePtr InputParser::get_sheet(const std::filesystem::path& path,
         colorkey = guess_colorkey(image);
       replace_color(image, colorkey, RGBA{ });
     }
-
-    sheet = std::make_shared<Image>(std::move(image));
+    source = std::make_shared<Image>(std::move(image));
   }
-  return sheet;
+  return source;
 }
 
-ImagePtr InputParser::get_sheet(const State& state, int index) {
-  return get_sheet(state.path,
-    utf8_to_path(state.sheet.get_nth_filename(index)),
+ImagePtr InputParser::get_source(const State& state, int index) {
+  return get_source(state.path,
+    utf8_to_path(state.source_filenames.get_nth_filename(index)),
     state.colorkey);
 }
 
-ImagePtr InputParser::get_sheet(const State& state) {
-  return get_sheet(state, m_current_sequence_index);
+ImagePtr InputParser::get_source(const State& state) {
+  return get_source(state, m_current_sequence_index);
 }
 
-MapVectorPtr InputParser::get_maps(const State& state, const ImagePtr& sheet) {
+MapVectorPtr InputParser::get_maps(const State& state, const ImagePtr& source) {
   if (state.map_suffixes.empty())
     return { };
 
-  auto it = m_maps.find(sheet);
+  auto it = m_maps.find(source);
   if (it == m_maps.end()) {
     auto maps = std::vector<ImagePtr>();
     for (const auto& map_suffix : state.map_suffixes)
-      maps.push_back(try_get_map(sheet, 
+      maps.push_back(try_get_map(source, 
         state.default_map_suffix, map_suffix));
-    it = m_maps.emplace(sheet, 
+    it = m_maps.emplace(source, 
       std::make_shared<decltype(maps)>(std::move(maps))).first;
   }
   return it->second;
 }
 
 void InputParser::sprite_ends(State& state) {
-  check(!state.sheet.empty(), "sprite not on input");
+  check(!state.source_filenames.empty(), "sprite not on input");
   update_applied_definitions(Definition::sprite);
 
   // generate rect from grid
@@ -145,10 +144,10 @@ void InputParser::sprite_ends(State& state) {
 
   auto sprite = Sprite{ };
   sprite.index = to_int(m_sprites.size());
-  sprite.input_sprite_index = m_sprites_in_current_sheet;
+  sprite.input_sprite_index = m_sprites_in_current_source;
   sprite.id = state.sprite_id;
   sprite.output = get_output(state);
-  sprite.source = get_sheet(state);
+  sprite.source = get_source(state);
   sprite.maps = get_maps(state, sprite.source);
   sprite.source_rect = (!empty(state.rect) ?
     state.rect : sprite.source->bounds());
@@ -167,36 +166,36 @@ void InputParser::sprite_ends(State& state) {
   validate_sprite(sprite);
   m_sprites.push_back(std::move(sprite));
 
-  if (state.sheet.is_sequence())
+  if (state.source_filenames.is_sequence())
     ++m_current_sequence_index;
-  ++m_sprites_in_current_sheet;
+  ++m_sprites_in_current_source;
 }
 
-void InputParser::deduce_globbing_sheets(State& state) {
-  for (const auto& sequence : glob_sequences(state.path, state.sheet.filename())) {
+void InputParser::deduce_globbing_sources(State& state) {
+  for (const auto& sequence : glob_sequences(state.path, state.source_filenames.filename())) {
     if (has_map_suffix(sequence.filename(), state.map_suffixes))
       continue;
 
-    state.sheet = sequence;
-    sheet_ends(state);
+    state.source_filenames = sequence;
+    source_ends(state);
   }
 }
 
 void InputParser::deduce_sequence_sprites(State& state) {
   auto error = std::error_code{ };
-  if (state.sheet.is_infinite_sequence()) {
+  if (state.source_filenames.is_infinite_sequence()) {
     for (auto i = 0; ; ++i)
-      if (!std::filesystem::exists(state.path / state.sheet.get_nth_filename(i), error)) {
-        state.sheet.set_count(i);
+      if (!std::filesystem::exists(state.path / state.source_filenames.get_nth_filename(i), error)) {
+        state.source_filenames.set_count(i);
         break;
       }
-    if (state.sheet.is_infinite_sequence())
+    if (state.source_filenames.is_infinite_sequence())
       return;
   }
 
-  for (auto i = 0; i < state.sheet.count(); ++i) {
-    const auto sheet = get_sheet(state, i);
-    state.rect = sheet->bounds();
+  for (auto i = 0; i < state.source_filenames.count(); ++i) {
+    const auto source = get_source(state, i);
+    state.rect = source->bounds();
     sprite_ends(state);
   }
 }
@@ -206,11 +205,11 @@ void InputParser::deduce_grid_size(State& state) {
       empty(state.grid_cells))
     return;
 
-  const auto sheet = get_sheet(state);
+  const auto source = get_source(state);
   const auto sx = (state.grid_cells.x > 0 ? 
-    div_ceil(sheet->width() - state.grid_offset.x, state.grid_cells.x) : 0);
+    div_ceil(source->width() - state.grid_offset.x, state.grid_cells.x) : 0);
   const auto sy = (state.grid_cells.y > 0 ? 
-    div_ceil(sheet->height() - state.grid_offset.y, state.grid_cells.y) : 0);
+    div_ceil(source->height() - state.grid_offset.y, state.grid_cells.y) : 0);
   state.grid.x = (sx ? sx : sy);
   state.grid.y = (sy ? sy : sx);
   check(state.grid.x > 0 && state.grid.y > 0, "invalid grid");
@@ -218,13 +217,13 @@ void InputParser::deduce_grid_size(State& state) {
 
 void InputParser::deduce_grid_sprites(State& state) {
   deduce_grid_size(state);
-  const auto sheet = get_sheet(state);
+  const auto source = get_source(state);
 
   auto stride = state.grid;
   stride.x += state.grid_spacing.x;
   stride.y += state.grid_spacing.y;
 
-  auto bounds = sheet->bounds();
+  auto bounds = source->bounds();
   bounds.x += state.grid_offset.x;
   bounds.w -= state.grid_offset.x;
   bounds.y += state.grid_offset.y;
@@ -252,8 +251,8 @@ void InputParser::deduce_grid_sprites(State& state) {
         continue;
 
       if (state.trim_gray_levels ?
-          is_fully_black(*sheet, state.trim_threshold, state.rect) :
-          is_fully_transparent(*sheet, state.trim_threshold, state.rect)) {
+          is_fully_black(*source, state.trim_threshold, state.rect) :
+          is_fully_transparent(*source, state.trim_threshold, state.rect)) {
         ++skipped;
         continue;
       }
@@ -282,13 +281,13 @@ void InputParser::deduce_grid_sprites(State& state) {
 }
 
 void InputParser::deduce_atlas_sprites(State& state) {
-  const auto sheet = get_sheet(state);
-  for (const auto& rect : find_islands(*sheet,
+  const auto source = get_source(state);
+  for (const auto& rect : find_islands(*source,
       state.atlas_merge_distance, state.trim_gray_levels)) {
     if (m_settings.autocomplete) {
       auto& os = m_autocomplete_output;
       os << state.indent << "sprite \n";
-      if (rect != sheet->bounds())
+      if (rect != source->bounds())
         os << state.indent << "  rect "
           << rect.x << " " << rect.y << " "
           << rect.w << " " << rect.h << "\n";
@@ -299,8 +298,8 @@ void InputParser::deduce_atlas_sprites(State& state) {
 }
 
 void InputParser::deduce_single_sprite(State& state) {
-  const auto sheet = get_sheet(state);
-  state.rect = sheet->bounds();
+  const auto source = get_source(state);
+  state.rect = source->bounds();
   sprite_ends(state);
 }
 
@@ -308,13 +307,13 @@ void InputParser::output_ends(State& state) {
   get_output(state);
 }
 
-void InputParser::sheet_ends(State& state) {
+void InputParser::source_ends(State& state) {
   update_applied_definitions(Definition::input);
-  if (!m_sprites_in_current_sheet) {
-    if (is_globbing_pattern(state.sheet.filename())) {
-      deduce_globbing_sheets(state);
+  if (!m_sprites_in_current_source) {
+    if (is_globbing_pattern(state.source_filenames.filename())) {
+      deduce_globbing_sources(state);
     }
-    else if (state.sheet.is_sequence()) {
+    else if (state.source_filenames.is_sequence()) {
       deduce_sequence_sprites(state);
     }
     else if (has_grid(state)) {
@@ -327,7 +326,7 @@ void InputParser::sheet_ends(State& state) {
       deduce_single_sprite(state);
     }
   }
-  m_sprites_in_current_sheet = { };
+  m_sprites_in_current_source = { };
   m_current_sequence_index = { };
 }
 
@@ -337,7 +336,7 @@ void InputParser::scope_ends(State& state) {
       output_ends(state);
       break;
     case Definition::input:
-      sheet_ends(state);
+      source_ends(state);
       break;
     case Definition::sprite:
       sprite_ends(state);

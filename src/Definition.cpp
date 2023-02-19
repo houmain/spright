@@ -322,7 +322,7 @@ void apply_definition(Definition definition,
       break;
 
     case Definition::input:
-      state.sheet = path_to_utf8(check_path());
+      state.source_filenames = path_to_utf8(check_path());
       current_grid_cell = { };
       break;
 

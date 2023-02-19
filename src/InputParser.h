@@ -23,20 +23,20 @@ private:
 
   std::string get_sprite_id(const State& state) const;
   OutputPtr get_output(const State& state);
-  ImagePtr get_sheet(const State& state);
-  ImagePtr get_sheet(const State& state, int index);
-  ImagePtr get_sheet(const std::filesystem::path& path,
+  ImagePtr get_source(const State& state);
+  ImagePtr get_source(const State& state, int index);
+  ImagePtr get_source(const std::filesystem::path& path,
     const std::filesystem::path& filename, RGBA colorkey);
-  MapVectorPtr get_maps(const State& state, const ImagePtr& sheet);
+  MapVectorPtr get_maps(const State& state, const ImagePtr& source);
   void sprite_ends(State& state);
   void deduce_grid_size(State& state);
-  void deduce_globbing_sheets(State& state);
+  void deduce_globbing_sources(State& state);
   void deduce_sequence_sprites(State& state);
   void deduce_grid_sprites(State& state);
   void deduce_atlas_sprites(State& state);
   void deduce_single_sprite(State& state);
   void output_ends(State& state);
-  void sheet_ends(State& state);
+  void source_ends(State& state);
   void scope_ends(State& state);
   void update_applied_definitions(Definition definition);
   void update_not_applied_definitions(Definition definition);
@@ -47,11 +47,11 @@ private:
   std::filesystem::path m_input_file;
   int m_line_number{ };
   std::map<std::filesystem::path, OutputPtr> m_outputs;
-  std::map<std::filesystem::path, ImagePtr> m_sheets;
+  std::map<std::filesystem::path, ImagePtr> m_sources;
   std::map<ImagePtr, MapVectorPtr> m_maps;
   std::vector<Sprite> m_sprites;
   VariantMap m_variables;
-  int m_sprites_in_current_sheet{ };
+  int m_sprites_in_current_source{ };
   Point m_current_grid_cell{ };
   int m_current_sequence_index{ };
   std::string m_detected_indentation;
