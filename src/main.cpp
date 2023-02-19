@@ -33,11 +33,18 @@ int main(int argc, const char* argv[]) try {
   auto slices = pack_sprites(sprites);
   time_points.emplace_back(Clock::now(), "packing");
 
-  evaluate_expressions(settings, sprites, slices, variables);
-  output_description(settings, sprites, slices, variables);
+  auto textures = get_textures(settings, slices);
+  evaluate_expressions(settings, sprites, textures, variables);
+
+  output_description(settings, sprites, slices, textures, variables);
   time_points.emplace_back(Clock::now(), "output description");
 
-  output_textures(settings, slices);
+  if (!settings.rebuild) {
+    for (auto& slice : slices)
+      update_last_source_written_time(slice);
+    remove_not_updated(textures);
+  }
+  output_textures(settings, textures);
   time_points.emplace_back(Clock::now(), "output textures");
 
   if (settings.debug) {

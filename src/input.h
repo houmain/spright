@@ -34,19 +34,14 @@ struct Extrude {
   WrapMode mode;
 };
 
-struct Scaling {
-  real scale;
-  ResizeFilter resize_filter;
-  std::string filename_suffix;
-};
-
 struct Output {
   FilenameSequence filename;
   std::string default_map_suffix;
   std::vector<std::string> map_suffixes;
   Alpha alpha{ Alpha::keep };
   RGBA colorkey{ };
-  std::vector<Scaling> scalings;
+  real scale{ };
+  ResizeFilter scale_filter{ };
 };
 
 struct Sheet {
@@ -97,7 +92,6 @@ struct Sprite {
   Size common_divisor_margin{ };
   std::vector<PointF> vertices;
 
-  // generated
   int duplicate_of_index{ -1 };
 };
 

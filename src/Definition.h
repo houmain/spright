@@ -24,7 +24,7 @@ enum class Definition {
   duplicates,
   alpha,
   pack,
-  scalings,
+  scale,
 
   path,
   input,
@@ -78,7 +78,8 @@ struct State {
   Alpha alpha{ };
   RGBA alpha_colorkey{ };
   Pack pack{ };
-  std::vector<Scaling> scalings;
+  real scale{ };
+  ResizeFilter scale_filter{ };
 
   std::filesystem::path path;
   FilenameSequence source_filenames;

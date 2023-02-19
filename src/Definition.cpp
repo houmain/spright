@@ -61,7 +61,7 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::duplicates: return "duplicates";
     case Definition::alpha: return "alpha";
     case Definition::pack: return "pack";
-    case Definition::scalings: return "scalings";
+    case Definition::scale: return "scale";
     case Definition::path: return "path";
     case Definition::input: return "input";
     case Definition::colorkey: return "colorkey";
@@ -122,7 +122,7 @@ Definition get_affected_definition(Definition definition) {
       return Definition::sheet;
 
     case Definition::alpha:
-    case Definition::scalings:
+    case Definition::scale:
       return Definition::output;
 
     case Definition::path:
@@ -185,6 +185,12 @@ void apply_definition(Definition definition,
     if (auto b = to_bool(str))
       return b.value();
     error("invalid boolean value '", str, "'");
+  };
+  const auto check_real = [&]() {
+    const auto str = check_string();
+    if (auto value = to_real(str))
+      return *value;
+    error("invalid real value '", str, "'");
   };
   const auto check_variant = [&]() -> Variant {
     const auto str = check_string();
@@ -301,29 +307,19 @@ void apply_definition(Definition definition,
       break;
     }
 
-    case Definition::scalings: {
-      auto resize_filter = ResizeFilter::undefined;
-      state.scalings.clear();
-      while (arguments_left()) {
+    case Definition::scale:
+      state.scale = check_real();
+      state.scale_filter = ResizeFilter::undefined;
+      if (arguments_left()) {
         const auto string = check_string();
-        if (const auto scale = to_real(string)) {
-          check(scale > 0.01 && scale <= 8, "invalid scale");
-          state.scalings.push_back({ *scale, resize_filter });
-        }
-        else if (const auto index = index_of(string, 
+        if (const auto index = index_of(string, 
             { "default", "box", "triangle", "cubicspline",
-              "catmullrom", "mitchell" }); index >= 0) {
-          resize_filter = static_cast<ResizeFilter>(index);
-        }
-        else {
+                "catmullrom", "mitchell" }); index >= 0)
+          state.scale_filter = static_cast<ResizeFilter>(index);
+        else
           error("invalid scale filter '", string, "'");
-        }
       }
-      if (state.scalings.size() > 1)
-        for (auto& scaling : state.scalings)
-         scaling.filename_suffix = to_string(-scaling.scale);
       break;
-    }
 
     case Definition::path:
       state.path = check_string();

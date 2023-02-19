@@ -100,62 +100,22 @@ namespace {
     }
   }
 
-  struct OutputTask {
-    const Slice* slice;
-    const Output* output;
-    std::filesystem::path filename;
-    int map_index;
-  };
-
-  std::vector<OutputTask> get_output_tasks(const Settings& settings,
-      const std::vector<Slice>& slices) {
-    auto output_tasks = std::vector<OutputTask>();
-    for (const auto& slice : slices)
-      for (const auto& output : slice.sheet->outputs) {
-        const auto filename = settings.output_path / utf8_to_path(
-          output->filename.get_nth_filename(slice.sheet_index));
-        output_tasks.push_back({ &slice, output.get(), filename, -1 });
-
-        auto i = 0;
-        for (const auto& map_suffix : output->map_suffixes)
-          output_tasks.push_back({ &slice, output.get(), replace_suffix(filename,
-              output->default_map_suffix, map_suffix), i++ });
-      }
-    return output_tasks;
-  }
-
-  void remove_not_updated(std::vector<OutputTask>& output_tasks) {
-    output_tasks.erase(std::remove_if(output_tasks.begin(), output_tasks.end(), 
-      [&](const OutputTask& output_task) {
-        return (try_get_last_write_time(output_task.filename) > 
-                output_task.slice->last_source_written_time);
-      }), output_tasks.end());
-  }
-
-  void output_image(const Settings& settings, const OutputTask& output_task) {
-    const auto& slice = *output_task.slice;
-    const auto& output = *output_task.output;
-    const auto& filename = output_task.filename;
-    auto image = get_slice_image(slice, output_task.map_index);
+  void output_image(const Settings& settings, const Texture& texture) {
+    const auto& slice = *texture.slice;
+    auto image = get_slice_image(slice, texture.map_index);
     if (!image)
       return;
 
-    const auto& scalings = output.scalings;
-    if (scalings.empty()) {
-      if (settings.debug)
-        draw_debug_info(image, slice);
-      save_image(image, filename);
-    }
-    else {
-      scheduler->for_each_parallel(begin(scalings), end(scalings),
-        [&](const Scaling& scaling) {
-          const auto scale = scaling.scale;
-          auto resized = resize_image(image, scale, scaling.resize_filter);
-          if (settings.debug)
-            draw_debug_info(resized, slice, scale);
-          save_image(resized, add_suffix(filename, scaling.filename_suffix));
-        });
-    }
+    const auto& output = *texture.output;
+    process_alpha(image, output);
+
+    if (output.scale != 0 && output.scale != 1.0)
+      image = resize_image(image, output.scale, output.scale_filter);
+
+    if (settings.debug)
+      draw_debug_info(image, slice);
+
+    save_image(image, texture.filename);
   }
 } // namespace
 
@@ -171,18 +131,37 @@ Image get_slice_image(const Slice& slice, int map_index) {
   return target;
 }
 
-void output_textures(const Settings& settings,
-    std::vector<Slice>& slices) {
-  auto output_tasks = get_output_tasks(settings, slices);
-  if (!settings.rebuild) {
-    for (auto& slice : slices)
-      update_last_source_written_time(slice);
-    remove_not_updated(output_tasks);
-  }
+std::vector<Texture> get_textures(const Settings& settings,
+    const std::vector<Slice>& slices) {
+  auto textures = std::vector<Texture>();
+  for (const auto& slice : slices)
+    for (const auto& output : slice.sheet->outputs) {
+      const auto filename = settings.output_path / utf8_to_path(
+        output->filename.get_nth_filename(slice.sheet_index));
+      textures.push_back({ &slice, output.get(), path_to_utf8(filename), -1 });
 
-  scheduler->for_each_parallel(begin(output_tasks), end(output_tasks),
-    [&](const OutputTask& output_task) {
-      output_image(settings, output_task);
+      auto i = 0;
+      for (const auto& map_suffix : output->map_suffixes)
+        textures.push_back({ &slice, output.get(), 
+          path_to_utf8(replace_suffix(filename,
+            output->default_map_suffix, map_suffix)), i++ });
+    }
+  return textures;
+}
+
+void remove_not_updated(std::vector<Texture>& textures) {
+  textures.erase(std::remove_if(textures.begin(), textures.end(), 
+    [&](const Texture& texture) {
+      return (try_get_last_write_time(texture.filename) > 
+              texture.slice->last_source_written_time);
+    }), textures.end());
+}
+
+void output_textures(const Settings& settings,
+    std::vector<Texture>& textures) {
+  scheduler->for_each_parallel(begin(textures), end(textures),
+    [&](const Texture& texture) {
+      output_image(settings, texture);
     });
 }
 

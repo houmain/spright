@@ -9,7 +9,7 @@
 namespace spright {
 
 namespace {
-  const auto default_sheet_id = "sheet";
+  const auto default_sheet_id = "spright";
   const auto default_sprite_id = "sprite_{{ index }}";
 
   ImagePtr try_get_map(const ImagePtr& source, 
@@ -91,7 +91,8 @@ OutputPtr InputParser::get_output(const State& state) {
       state.map_suffixes,
       state.alpha,
       state.alpha_colorkey,
-      state.scalings,
+      state.scale,
+      state.scale_filter
     });
   }
   return output;

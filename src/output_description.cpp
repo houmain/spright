@@ -43,6 +43,7 @@ namespace {
   nlohmann::json get_json_description(
       const std::vector<Sprite>& sprites,
       const std::vector<Slice>& slices,
+      const std::vector<Texture>& textures,
       const VariantMap& variables) {
 
     using TagKey = std::string;
@@ -182,7 +183,7 @@ namespace {
 
 void evaluate_expressions(const Settings& settings,
     std::vector<Sprite>& sprites,
-    std::vector<Slice>& slices,
+    std::vector<Texture>& textures,
     VariantMap& variables) {
 
   const auto replace_variable = [&](std::string_view variable) {
@@ -197,7 +198,8 @@ void evaluate_expressions(const Settings& settings,
     throw std::runtime_error("unknown id '" + std::string(variable) + "'");
   };
 
-  const auto evaluate_sprite_expression = [&](Sprite& sprite, std::string& expression) {
+  const auto evaluate_sprite_expression = [&](const Sprite& sprite, 
+      std::string& expression) {
     replace_variables(expression, [&](std::string_view variable) {
       if (variable == "index")
         return std::to_string(sprite.index);
@@ -209,15 +211,30 @@ void evaluate_expressions(const Settings& settings,
     });
   };
 
+  const auto evaluate_slice_expression = [&](const Slice& slice, 
+      std::string& expression) {
+    replace_variables(expression, [&](std::string_view variable) {
+      if (variable == "index")
+        return std::to_string(slice.index);
+      if (variable == "sprite.id")
+        return (slice.sprites.empty() ? "" : slice.sprites[0].id);
+      return replace_variable(variable);
+    });
+  };
+
   for (auto& sprite : sprites)
     evaluate_sprite_expression(sprite, sprite.id);
+
+  for (auto& texture : textures)
+    evaluate_slice_expression(*texture.slice, texture.filename);
 }
 
 std::string get_description(const std::string& template_source,
     const std::vector<Sprite>& sprites, 
-    const std::vector<Slice>& slices) {
+    const std::vector<Slice>& slices,
+    const std::vector<Texture>& textures) {
   auto ss = std::stringstream();
-  const auto json = get_json_description(sprites, slices, { });
+  const auto json = get_json_description(sprites, slices, textures, { });
   auto env = setup_inja_environment(&json);
   env.render_to(ss, env.parse(template_source), json);
   return ss.str();
@@ -226,11 +243,12 @@ std::string get_description(const std::string& template_source,
 bool output_description(const Settings& settings,
     const std::vector<Sprite>& sprites, 
     const std::vector<Slice>& slices,
+    const std::vector<Texture>& textures,
     const VariantMap& variables) try {
   auto ss = std::stringstream();
   auto& os = (settings.output_file == "stdout" ? std::cout : ss);
 
-  const auto json = get_json_description(sprites, slices, variables);
+  const auto json = get_json_description(sprites, slices, textures, variables);
   if (!settings.template_file.empty()) {
     auto env = setup_inja_environment(&json);
     env.render_to(os, env.parse_template(path_to_utf8(settings.template_file)), json);

@@ -22,11 +22,10 @@ struct Slice {
   SpriteSpan sprites;
   int width{ };
   int height{ };
-
-  // generated
   int index{ };
-  std::filesystem::file_time_type last_source_written_time{ };
   bool layered{ };
+
+  std::filesystem::file_time_type last_source_written_time{ };
 };
 
 std::pair<int, int> get_slice_max_size(const Sheet& sheet);
