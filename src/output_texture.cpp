@@ -100,12 +100,27 @@ namespace {
     }
   }
 
-  void output_image(const Settings& settings, const Texture& texture) {
+  void output_image(const Settings& settings, Texture& texture) {
     const auto& slice = *texture.slice;
-    auto image = get_slice_image(slice, texture.map_index);
-    if (!image)
-      return;
 
+    // exists and is newer than input
+    const auto is_up_to_date = 
+      (texture.slice->last_source_written_time && 
+        try_get_last_write_time(texture.filename) > 
+        texture.slice->last_source_written_time);
+
+    // do not return before check if there is a map for slice
+    const auto is_map = (texture.map_index >= 0);
+    if (!is_map && is_up_to_date)
+      return;
+    auto image = get_slice_image(slice, texture.map_index);
+    if (!image) {
+      texture.filename = { };
+      return;
+    }
+    if (is_map && is_up_to_date)
+      return;
+    
     const auto& output = *texture.output;
     process_alpha(image, output);
 
@@ -149,18 +164,10 @@ std::vector<Texture> get_textures(const Settings& settings,
   return textures;
 }
 
-void remove_not_updated(std::vector<Texture>& textures) {
-  textures.erase(std::remove_if(textures.begin(), textures.end(), 
-    [&](const Texture& texture) {
-      return (try_get_last_write_time(texture.filename) > 
-              texture.slice->last_source_written_time);
-    }), textures.end());
-}
-
 void output_textures(const Settings& settings,
     std::vector<Texture>& textures) {
   scheduler->for_each_parallel(begin(textures), end(textures),
-    [&](const Texture& texture) {
+    [&](Texture& texture) {
       output_image(settings, texture);
     });
 }

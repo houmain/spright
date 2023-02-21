@@ -31,21 +31,17 @@ int main(int argc, const char* argv[]) try {
   time_points.emplace_back(Clock::now(), "trimming");
 
   auto slices = pack_sprites(sprites);
-  time_points.emplace_back(Clock::now(), "packing");
-
   auto textures = get_textures(settings, slices);
   evaluate_expressions(settings, sprites, textures, variables);
+  if (!settings.rebuild)
+    update_last_source_written_times(slices);
+  time_points.emplace_back(Clock::now(), "packing");
+
+  output_textures(settings, textures);
+  time_points.emplace_back(Clock::now(), "output textures");
 
   output_description(settings, sprites, slices, textures, variables);
   time_points.emplace_back(Clock::now(), "output description");
-
-  if (!settings.rebuild) {
-    for (auto& slice : slices)
-      update_last_source_written_time(slice);
-    remove_not_updated(textures);
-  }
-  output_textures(settings, textures);
-  time_points.emplace_back(Clock::now(), "output textures");
 
   if (settings.debug) {
     for (auto i = 1u; i < time_points.size(); ++i)

@@ -25,7 +25,7 @@ struct Slice {
   int index{ };
   bool layered{ };
 
-  std::filesystem::file_time_type last_source_written_time{ };
+  std::optional<std::filesystem::file_time_type> last_source_written_time;
 };
 
 std::pair<int, int> get_slice_max_size(const Sheet& sheet);
@@ -34,7 +34,7 @@ Size get_sprite_indent(const Sprite& sprite);
 void create_slices_from_indices(const SheetPtr& sheet_ptr, 
     SpriteSpan sprites, std::vector<Slice>& slices);
 void recompute_slice_size(Slice& slice);
-void update_last_source_written_time(Slice& slice);
+void update_last_source_written_times(std::vector<Slice>& slices);
 
 std::vector<Slice> pack_sprites(std::vector<Sprite>& sprites);
 

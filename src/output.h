@@ -13,7 +13,6 @@ struct Texture {
 
 std::vector<Texture> get_textures(const Settings& settings,
     const std::vector<Slice>& slices);
-void remove_not_updated(std::vector<Texture>& textures);
 void evaluate_expressions(const Settings& settings,
     std::vector<Sprite>& sprites, 
     std::vector<Texture>& textures, 

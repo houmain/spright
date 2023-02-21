@@ -254,17 +254,20 @@ void recompute_slice_size(Slice& slice) {
   throw std::runtime_error("not all sprites could be packed");
 }
 
-void update_last_source_written_time(Slice& slice) {
-  auto last_write_time = get_last_write_time(slice.sheet->input_file);
+void update_last_source_written_times(std::vector<Slice>& slices) {
+  scheduler->for_each_parallel(begin(slices), end(slices),
+    [](Slice& slice) {
+      auto last_write_time = get_last_write_time(slice.sheet->input_file);
 
-  auto sources = std::unordered_set<const Image*>();
-  for (const auto& sprite : slice.sprites)
-    sources.insert(sprite.source.get());
-  for (const auto& source : sources)
-    last_write_time = std::max(last_write_time,
-      get_last_write_time(source->path() / source->filename()));
+      auto sources = std::unordered_set<const Image*>();
+      for (const auto& sprite : slice.sprites)
+        sources.insert(sprite.source.get());
+      for (const auto& source : sources)
+        last_write_time = std::max(last_write_time,
+          get_last_write_time(source->path() / source->filename()));
 
-  slice.last_source_written_time = last_write_time;
+      slice.last_source_written_time = last_write_time;
+    });
 }
 
 } // namespace
