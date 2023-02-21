@@ -81,7 +81,7 @@ Say you got some [nice](https://itch.io/game-assets/tag-sprites) [sprites](https
 
 And your game engine supports efficiently packed sprite sheets like this:
 
-<kbd><img src="docs/spright0.png"/></kbd>
+<kbd><img src="docs/spright-0.png"/></kbd>
 
 Then you may want to use spright to define the sprites within their original sources and directly pack the sheet from there.
 
@@ -103,7 +103,7 @@ input "Orc Attack/Frame{01-04}.png"
 input "misc_scenery.png"
   atlas
 ```
-When spright is called without [command line](#command-line-arguments) arguments, the [input definition](#input-definition-reference) is read from ```spright.conf``` and it writes a ```spright0.png``` containing the packed sprites and a ```spright.json``` file containing the [output description](#output-description).
+When spright is called without [command line](#command-line-arguments) arguments, the [input definition](#input-definition-reference) is read from ```spright.conf``` and it writes a ```spright-0.png``` containing the packed sprites and a ```spright.json``` file containing the [output description](#output-description).
 
 Passing the argument **-a** or **--autocomplete** activates the auto-completion, which extends ```spright.conf``` with automatically deduced information:
 
@@ -221,21 +221,22 @@ The following table contains a list of all definitions, with the subject each af
 
 | Definition     |Subject| Arguments    | Description |
 | -------------- |-------| -------------| ----------- |
-| **output**     |sprite | path         | Sets the output texture's _path_. It can describe an un-/bounded sequence of files (e.g. "sheet{0-}.png").
-| pack           |output | pack-method  | Sets the method, which is used for placing the sprites on the output textures:<br/>- _binpack_ : Tries to reduce the texture size, while keeping the sprites' (trimmed) rectangles apart (default).<br/>- _compact_ : Tries to reduce the texture size, while keeping the sprites' convex outlines apart.<br/>- _rows_ : Layout sprites in simple rows.<br/>- _columns_ : Layout sprites in simple columns.<br/>- _single_ : Put each sprite on its own texture.<br/>- _keep_ : Keep sprite at same position as in source (ignores most constraints).
-| width          |output | width        | Sets a fixed output texture width.
-| height         |output | height       | Sets a fixed output texture height.
-| max-width      |output | width        | Sets a maximum output texture width.
-| max-height     |output | height       | Sets a maximum output texture height.
-| power-of-two   |output | [boolean]    | Restricts the output texture's size to be a power of two.
-| square         |output | [boolean]    | Restricts the output texture's size to be square.
-| align-width    |output | pixels       | Restricts the output texture's width to be divisible by a certain number of _pixels_.
-| allow-rotate   |output | [boolean]    | Allows to rotate sprites clockwise by 90 degrees for improved packing performance.
-| padding        |output | [pixels], [pixels] | Sets the space between two sprites / the space between a sprite and the texture's border.
-| duplicates     |output | dedupe-mode  | Sets how identical sprites should be processed:<br/>- _keep_ : Disable duplicate detection (default).<br/>- _share_ : Identical sprites should share pixels on the output texture.<br/>- _drop_ : Duplicates should be dropped.
-| alpha          |output | alpha-mode<br/>[color] | Sets an operation depending on the pixels' alpha values:<br/>- _keep_ : Keep source color and alpha.<br/>- _clear_ : Set color of fully transparent pixels to black.<br/>- _bleed_ : Set color of fully transparent pixels to their nearest non-fully transparent pixel's color.<br/>- _premultiply_ : Premultiply colors with alpha values.<br/>- _colorkey_ : Replace fully transparent pixels with the specified _color_ and make all others opaque.
+| **sheet**      |sprite | id           |
+| pack           |sheet  | pack-method  | Sets the method, which is used for placing the sprites on the sheet:<br/>- _binpack_ : Tries to reduce the texture size, while keeping the sprites' (trimmed) rectangles apart (default).<br/>- _compact_ : Tries to reduce the texture size, while keeping the sprites' convex outlines apart.<br/>- _rows_ : Layout sprites in simple rows.<br/>- _columns_ : Layout sprites in simple columns.<br/>- _single_ : Put each sprite on its own texture.<br/>- _keep_ : Keep sprite at same position as in source (ignores most constraints).
+| width          |sheet  | width        | Sets a fixed sheet width.
+| height         |sheet  | height       | Sets a fixed sheet height.
+| max-width      |sheet  | width        | Sets a maximum sheet width.
+| max-height     |sheet  | height       | Sets a maximum sheet height.
+| power-of-two   |sheet  | [boolean]    | Restricts the sheet's size to be a power of two.
+| square         |sheet  | [boolean]    | Restricts the sheet's size to be square.
+| align-width    |sheet  | pixels       | Restricts the sheet's width to be divisible by a certain number of _pixels_.
+| allow-rotate   |sheet  | [boolean]    | Allows to rotate sprites clockwise by 90 degrees for improved packing performance.
+| padding        |sheet  | [pixels], [pixels] | Sets the space between two sprites / the space between a sprite and the texture's border.
+| duplicates     |sheet  | dedupe-mode  | Sets how identical sprites should be processed:<br/>- _keep_ : Disable duplicate detection (default).<br/>- _share_ : Identical sprites should share pixels on the sheet.<br/>- _drop_ : Duplicates should be dropped.
+| **output**     |-      | path         | Sets the sheet's _path_. It can describe an un-/bounded sequence of files (e.g. "sheet{0-}.png").
 | scalings       |output | ([scale-filter] scale)+ | Specifies one or more factors for which a respectively scaled output should be generated, with an optional explicit scale-filter:<br/>- _box_: A trapezoid with 1-pixel wide ramps.<br/>- _triangle_: A triangle function (same as bilinear texture filtering).<br/>- _cubicspline_: A cubic b-spline (gaussian-esque).<br/>- _catmullrom_: An interpolating cubic spline.<br/>- _mitchell_: Mitchell-Netrevalli filter with B=1/3, C=1/3.
-| layers         |output/input| suffix+ | Specifies the number of layers and their filename suffixes (e.g. "-diffuse", "-normals", ...). Only the first layer is considered when packing, others get identical _rects_.
+| maps           |output/input| suffix+ | Specifies the number of maps and their filename suffixes (e.g. "-diffuse", "-normals", ...). Only the first map is considered when packing, others get identical _rects_.
+| alpha          |output | alpha-mode<br/>[color] | Sets an operation depending on the pixels' alpha values:<br/>- _keep_ : Keep source color and alpha.<br/>- _clear_ : Set color of fully transparent pixels to black.<br/>- _bleed_ : Set color of fully transparent pixels to their nearest non-fully transparent pixel's color.<br/>- _premultiply_ : Premultiply colors with alpha values.<br/>- _colorkey_ : Replace fully transparent pixels with the specified _color_ and make all others opaque.
 | **input**      |-      | path         | Adds a new input file at _path_. It can contain wildcards (e.g. "sprites/**/*.png") or it can describe an un-/bounded sequence of files (e.g. "frames_{0-}.png, frames_{0001-0013}.png").
 | path           |input  | path         | A _path_ which should be prepended to the input's path.
 | colorkey       |input  | [color]      | Specifies that the input has a color, which should be considered transparent (in hex notation e.g. _FF00FF_).
@@ -281,18 +282,20 @@ By default a [JSON](https://www.json.org) file containing all the information ab
       "sourceIndex": 0,
       "sourceRect":  { "x": 0, "y": 0, "w": 16, "h": 16 },
       "trimmedSourceRect": { "x": 0, "y": 0, "w": 16, "h": 16 },
-      "textureIndex": 0,
-      "textureSpriteIndex": 0,
+      "sliceIndex": 0,
+      "sliceSpriteIndex": 0,
       "data": { "key": "value" },
       "tags": { "key": "value" },
       "vertices": [ 0.0, 0.0,  16.0, 0.0,  16.0, 16.0,  0.0, 16.0 ]
     }
   ],
-  "tags": {
-    "key": {
-      "value": [ 0 ]
-    },
-  },
+  "slices": [
+    {
+      "index": 0,
+      "inputFilename": "spright.conf",
+      "spriteIndices": [ 0 ],
+    }
+  ],
   "sources": [
     {
       "index": 0,
@@ -303,14 +306,21 @@ By default a [JSON](https://www.json.org) file containing all the information ab
       "spriteIndices": [ 0 ]
     },
   ],
+  "tags": {
+    "key": {
+      "value": [ 0 ]
+    },
+  },
   "textures": [
     {
       "index": 0,
-      "filename": "path/spright0.png",
-      "inputFilename": "spright.conf",
+      "sliceIndex": 0,
+      "spriteIndices": [ 0 ],
+      "filename": "path/spright-0.png",
       "width": 256,
       "height": 256,
-      "spriteIndices": [ 0 ]
+      "scale": 1.0,
+      "map": ""
     }
   ]
 }

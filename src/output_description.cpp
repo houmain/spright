@@ -140,6 +140,7 @@ namespace {
       const auto& output = *texture.output;
       json_texture["index"] = texture_index++;
       json_texture["sliceIndex"] = texture.slice->index;
+      json_texture["spriteIndices"] = slice_sprites[slice.index];
       json_texture["filename"] = texture.filename;
       json_texture["scale"] = output.scale;
       json_texture["width"] = static_cast<int>(slice.width * output.scale);
