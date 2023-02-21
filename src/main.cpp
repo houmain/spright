@@ -26,8 +26,7 @@ int main(int argc, const char* argv[]) try {
   auto [sprites, variables] = parse_definition(settings);  
   time_points.emplace_back(Clock::now(), "input");
 
-  for (auto& sprite : sprites)
-    trim_sprite(sprite);
+  trim_sprites(sprites);
   time_points.emplace_back(Clock::now(), "trimming");
 
   auto slices = pack_sprites(sprites);

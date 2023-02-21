@@ -4,6 +4,6 @@
 
 namespace spright {
 
-void trim_sprite(Sprite& sprites);
+void trim_sprites(std::vector<Sprite>& sprites);
 
 } // namespace

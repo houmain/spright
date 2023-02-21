@@ -132,41 +132,44 @@ namespace {
       });
     return vertices;
   }
+
+  void trim_sprite(Sprite& sprite) {
+    if (sprite.trim == Trim::none) {
+      sprite.trimmed_source_rect = sprite.source_rect;
+      return;
+    }
+
+    sprite.trimmed_source_rect = get_used_bounds(*sprite.source,
+      sprite.trim_gray_levels, sprite.trim_threshold, sprite.source_rect);
+
+    if (sprite.trim_margin)
+      sprite.trimmed_source_rect = intersect(expand(
+        sprite.trimmed_source_rect, sprite.trim_margin), sprite.source_rect);
+
+    if (sprite.trim == Trim::convex) {
+      const auto levels = (sprite.trim_gray_levels ?
+        get_gray_levels(*sprite.source, sprite.trimmed_source_rect) :
+        get_alpha_levels(*sprite.source, sprite.trimmed_source_rect));
+
+      auto outline = get_polygon_outline(levels, sprite.trim_threshold);
+      outline = to_convex_polygon(*outline, 0);
+      outline = simplify_polygon(*outline, 3);
+      expand_polygon(*outline, sprite.trim_margin);
+      sprite.vertices = to_point_list(*outline);
+    }
+    else {
+      const auto w = to_real(sprite.trimmed_source_rect.w);
+      const auto h = to_real(sprite.trimmed_source_rect.h);
+      sprite.vertices.push_back({ 0, 0 });
+      sprite.vertices.push_back({ w, 0 });
+      sprite.vertices.push_back({ w, h });
+      sprite.vertices.push_back({ 0, h });
+    }
+  }
 } // namespace
 
-void trim_sprite(Sprite& sprite) {
-
-  if (sprite.trim == Trim::none) {
-    sprite.trimmed_source_rect = sprite.source_rect;
-    return;
-  }
-
-  sprite.trimmed_source_rect = get_used_bounds(*sprite.source,
-    sprite.trim_gray_levels, sprite.trim_threshold, sprite.source_rect);
-
-  if (sprite.trim_margin)
-    sprite.trimmed_source_rect = intersect(expand(
-      sprite.trimmed_source_rect, sprite.trim_margin), sprite.source_rect);
-
-  if (sprite.trim == Trim::convex) {
-    const auto levels = (sprite.trim_gray_levels ?
-      get_gray_levels(*sprite.source, sprite.trimmed_source_rect) :
-      get_alpha_levels(*sprite.source, sprite.trimmed_source_rect));
-
-    auto outline = get_polygon_outline(levels, sprite.trim_threshold);
-    outline = to_convex_polygon(*outline, 0);
-    outline = simplify_polygon(*outline, 3);
-    expand_polygon(*outline, sprite.trim_margin);
-    sprite.vertices = to_point_list(*outline);
-  }
-  else {
-    const auto w = to_real(sprite.trimmed_source_rect.w);
-    const auto h = to_real(sprite.trimmed_source_rect.h);
-    sprite.vertices.push_back({ 0, 0 });
-    sprite.vertices.push_back({ w, 0 });
-    sprite.vertices.push_back({ w, h });
-    sprite.vertices.push_back({ 0, h });
-  }
+void trim_sprites(std::vector<Sprite>& sprites) {
+  scheduler->for_each_parallel(begin(sprites), end(sprites), trim_sprite);
 }
 
 } // namespace
