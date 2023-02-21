@@ -78,7 +78,7 @@ struct State {
   Alpha alpha{ };
   RGBA alpha_colorkey{ };
   Pack pack{ };
-  real scale{ };
+  real scale{ 1.0 };
   ResizeFilter scale_filter{ };
 
   std::filesystem::path path;

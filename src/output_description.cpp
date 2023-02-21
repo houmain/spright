@@ -113,8 +113,6 @@ namespace {
       auto& json_slice = json_slices.emplace_back();
       json_slice["index"] = slice.index;
       json_slice["inputFilename"] = path_to_utf8(slice.sheet->input_file);
-      json_slice["width"] = slice.width;
-      json_slice["height"] = slice.height;
       json_slice["spriteIndices"] = slice_sprites[slice.index];
     }
 
@@ -131,6 +129,24 @@ namespace {
       json_source["width"] = source->width();
       json_source["height"] = source->height();
       json_source["spriteIndices"] = source_sprites[index];
+    }
+
+    auto texture_index = size_t{ };
+    auto& json_textures = json["textures"];
+    json_textures = nlohmann::json::array();
+    for (const auto& texture : textures) {
+      auto& json_texture = json_textures.emplace_back();
+      const auto& slice = *texture.slice;
+      const auto& output = *texture.output;
+      json_texture["index"] = texture_index++;
+      json_texture["sliceIndex"] = texture.slice->index;
+      json_texture["filename"] = texture.filename;
+      json_texture["scale"] = output.scale;
+      json_texture["width"] = static_cast<int>(slice.width * output.scale);
+      json_texture["height"] = static_cast<int>(slice.height * output.scale);
+      json_texture["map"] = (texture.map_index < 0 ?
+        texture.output->default_map_suffix :
+        texture.output->map_suffixes.at(static_cast<size_t>(texture.map_index)));
     }
 
     for (const auto& [key, value] : variables)

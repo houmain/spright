@@ -124,12 +124,11 @@ namespace {
     const auto& output = *texture.output;
     process_alpha(image, output);
 
-    const auto scale = (output.scale ? output.scale : 1.0);
-    if (scale != 1.0)
-      image = resize_image(image, scale, output.scale_filter);
+    if (output.scale != 1.0)
+      image = resize_image(image, output.scale, output.scale_filter);
 
     if (settings.debug)
-      draw_debug_info(image, slice, scale);
+      draw_debug_info(image, slice, output.scale);
 
     save_image(image, texture.filename);
   }

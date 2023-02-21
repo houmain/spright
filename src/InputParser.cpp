@@ -486,7 +486,7 @@ void InputParser::parse(std::istream& input,
   for (const auto& [id, sheet] : m_sheets)
     if (sheet->outputs.empty()) {
       auto state = State();
-      state.output = id + "{0-}.png";
+      state.output = id + "-{0-}.png";
       sheet->outputs.push_back(get_output(state));
     }
 }

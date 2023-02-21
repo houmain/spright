@@ -309,6 +309,7 @@ void apply_definition(Definition definition,
 
     case Definition::scale:
       state.scale = check_real();
+      check(state.scale >= 0.01 && state.scale < 100, "invalid scale");
       state.scale_filter = ResizeFilter::undefined;
       if (arguments_left()) {
         const auto string = check_string();
