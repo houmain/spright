@@ -25,6 +25,7 @@ namespace {
 
 TEST_CASE("templates - Empty") {
   const auto [sprites, slices] = pack(R"(
+    sheet "sprites"
     input "test/Items.png"
   )");
   const auto description = get_description(
@@ -37,6 +38,7 @@ R"(
 
 TEST_CASE("templates - getIdOrFilename") {
   const auto [sprites, slices] = pack(R"(
+    sheet "sprites"
     id "{{ source.filename }}"
     input "test/Items.png"
   )");
@@ -52,6 +54,7 @@ let sprite_ids = ["test/Items.png",];
 
 TEST_CASE("templates - removeExtension") {
   const auto [sprites, slices] = pack(R"(
+    sheet "sprites"
     path "test"
     id "{{ source.filename }}"
     input "Items.png"

@@ -9,7 +9,6 @@
 namespace spright {
 
 namespace {
-  const auto default_sheet_id = "spright";
   const auto default_sprite_id = "sprite_{{ index }}";
 
   ImagePtr try_get_map(const ImagePtr& source, 
@@ -56,7 +55,7 @@ namespace {
 } // namespace
 
 std::shared_ptr<Sheet> InputParser::get_sheet(const State& state) {
-  check(!state.sheet_id.empty(), "missing sheet id");
+  check(!state.sheet_id.empty(), "no sheet specified");
   auto& sheet = m_sheets[state.sheet_id];
   if (!sheet)
     sheet = std::make_shared<Sheet>();
@@ -383,12 +382,6 @@ void InputParser::parse(std::istream& input,
   auto scope_stack = std::vector<State>();
   auto top = &scope_stack.emplace_back();
   top->level = -1;
-
-  top = &scope_stack.emplace_back();
-  m_not_applied_definitions.emplace_back();
-  top->level = 0;
-  top->definition = Definition::sheet;
-  top->sheet_id = default_sheet_id;
   top->sprite_id = default_sprite_id;
 
   auto autocomplete_space = std::stringstream();
@@ -486,14 +479,6 @@ void InputParser::parse(std::istream& input,
   m_line_number = 0;
   pop_scope_stack(-1);
   assert(m_not_applied_definitions.empty());
-
-  // add outputs to sheets which have none
-  for (const auto& [id, sheet] : m_sheets)
-    if (sheet->outputs.empty()) {
-      auto state = State();
-      state.output = id + "-{0-}.png";
-      sheet->outputs.push_back(get_output(state));
-    }
 }
 catch (const std::exception& ex) {
   auto ss = std::stringstream();

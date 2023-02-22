@@ -7,6 +7,7 @@ using namespace spright;
 
 TEST_CASE("autocompletion - Grid") {
   auto input = std::stringstream(R"(
+sheet "sprites"
 input "test/Items.png"
   colorkey
   grid 16 16
@@ -18,6 +19,7 @@ input "test/Items.png"
 
   const auto text = parser.autocomplete_output();
   CHECK(text == R"(
+sheet "sprites"
 input "test/Items.png"
   colorkey
   grid 16 16
@@ -56,6 +58,7 @@ input "test/Items.png"
 
 TEST_CASE("autocompletion - Unaligned") {
   auto input = std::stringstream(R"(
+    sheet "sprites"
     input "test/Items.png"
       colorkey
       atlas

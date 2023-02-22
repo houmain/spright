@@ -135,7 +135,7 @@ namespace {
     auto& json_textures = json["textures"];
     json_textures = nlohmann::json::array();
     for (const auto& texture : textures) {
-      if (!texture.filename.empty())
+      if (texture.filename.empty())
         continue;
 
       auto& json_texture = json_textures.emplace_back();

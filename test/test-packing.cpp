@@ -55,6 +55,7 @@ namespace {
 
 TEST_CASE("packing - Basic") {
   auto slice = pack_single_sheet(R"(
+    sheet "sprites"
     input "test/Items.png"
       colorkey
       atlas
@@ -62,7 +63,8 @@ TEST_CASE("packing - Basic") {
   CHECK(le_size(slice, 59, 58));
 
   slice = pack_single_sheet(R"(
-    allow-rotate true
+    sheet "sprites"
+      allow-rotate true
     input "test/Items.png"
       colorkey
       atlas
@@ -70,7 +72,8 @@ TEST_CASE("packing - Basic") {
   CHECK(le_size(slice, 59, 58));
 
   slice = pack_single_sheet(R"(
-    duplicates share
+    sheet "sprites"
+      duplicates share
     input "test/Items.png"
       colorkey
       atlas
@@ -78,8 +81,9 @@ TEST_CASE("packing - Basic") {
   CHECK(le_size(slice, 55, 58));
 
   slice = pack_single_sheet(R"(
-    allow-rotate true
-    duplicates share
+    sheet "sprites"
+      allow-rotate true
+      duplicates share
     input "test/Items.png"
       colorkey
       atlas
@@ -87,8 +91,9 @@ TEST_CASE("packing - Basic") {
   CHECK(le_size(slice, 55, 58));
 
   slice = pack_single_sheet(R"(
-    max-width 128
-    max-height 128
+    sheet "sprites"
+      max-width 128
+      max-height 128
     input "test/Items.png"
       colorkey
       atlas
@@ -98,8 +103,9 @@ TEST_CASE("packing - Basic") {
   CHECK(le_size(slice, 59, 58));
 
   slice = pack_single_sheet(R"(
-    width 128
-    max-height 128
+    sheet "sprites"
+      width 128
+      max-height 128
     input "test/Items.png"
       colorkey
       atlas
@@ -109,8 +115,9 @@ TEST_CASE("packing - Basic") {
   CHECK(le_size(slice, 128, 32));
 
   slice = pack_single_sheet(R"(
-    max-width 128
-    height 128
+    sheet "sprites"
+      max-width 128
+      height 128
     input "test/Items.png"
       colorkey
       atlas
@@ -120,7 +127,8 @@ TEST_CASE("packing - Basic") {
   CHECK(le_size(slice, 30, 128));
 
   slice = pack_single_sheet(R"(
-    max-width 40
+    sheet "sprites"
+      max-width 40
     input "test/Items.png"
       colorkey
       atlas
@@ -129,7 +137,8 @@ TEST_CASE("packing - Basic") {
   CHECK(le_size(slice, 40, 85));
 
   slice = pack_single_sheet(R"(
-    max-height 40
+    sheet "sprites"
+      max-height 40
     input "test/Items.png"
       colorkey
       atlas
@@ -138,7 +147,8 @@ TEST_CASE("packing - Basic") {
   CHECK(le_size(slice, 89, 38));
 
   slice = pack_single_sheet(R"(
-    power-of-two true
+    sheet "sprites"
+      power-of-two true
     input "test/Items.png"
       colorkey
       atlas
@@ -147,7 +157,8 @@ TEST_CASE("packing - Basic") {
   CHECK(slice.height == 64);
 
   slice = pack_single_sheet(R"(
-    padding 1
+    sheet "sprites"
+      padding 1
     input "test/Items.png"
       colorkey
       atlas
@@ -155,8 +166,9 @@ TEST_CASE("packing - Basic") {
   CHECK(le_size(slice, 63, 65));
 
   slice = pack_single_sheet(R"(
-    padding 1
-    power-of-two true
+    sheet "sprites"
+      padding 1
+      power-of-two true
     input "test/Items.png"
       colorkey
       atlas
@@ -166,82 +178,90 @@ TEST_CASE("packing - Basic") {
   CHECK(le_size(slice, 64, 128));
 
   slice = pack_single_sheet(R"(
-    max-height 16
-    common-divisor 16
+    sheet "sprites"
+      max-height 16
     input "test/Items.png"
       colorkey
       atlas
+      common-divisor 16
   )");
   CHECK(slice.height <= 16);
   CHECK(le_size(slice, 496, 16));
 
   slice = pack_single_sheet(R"(
-    padding 0 1
-    common-divisor 16
-    max-height 20
+    sheet "sprites"
+      padding 0 1
+      max-height 20
     input "test/Items.png"
       colorkey
       atlas
+      common-divisor 16
   )");
   CHECK(slice.height <= 20);
   CHECK(le_size(slice, 498, 18));
 
   slice = pack_single_sheet(R"(
-    padding 1
-    common-divisor 16
-    max-height 30
+    sheet "sprites"
+      padding 1
+      max-height 30
     input "test/Items.png"
       colorkey
       atlas
+      common-divisor 16
   )");
   CHECK(slice.height <= 30);
   CHECK(le_size(slice, 528, 18));
 
   slice = pack_single_sheet(R"(
-    padding 1 0
-    common-divisor 16
-    max-height 20
+    sheet "sprites"
+      padding 1 0
+      max-height 20
     input "test/Items.png"
       colorkey
       atlas
+      common-divisor 16
   )");
   CHECK(slice.height <= 20);
   CHECK(le_size(slice, 526, 16));
 
   slice = pack_single_sheet(R"(
-    max-height 30
-    common-divisor 24
-    extrude 1
+    sheet "sprites"
+      max-height 30
     input "test/Items.png"
       colorkey
       atlas
+      common-divisor 24
+      extrude 1
   )");
   CHECK(slice.height <= 30);
   CHECK(le_size(slice, 806, 26));
 
   slice = pack_single_sheet(R"(
-    padding 8 0
-    common-divisor 16
+    sheet "sprites"
+      padding 8 0
     input "test/Items.png"
       colorkey
       atlas
+      common-divisor 16
   )");
   CHECK(le_size(slice, 136, 136));
 
   slice = pack_single_sheet(R"(
-    padding 8 0
-    duplicates share
-    allow-rotate
-    common-divisor 16
+    sheet "sprites"
+      padding 8 0
+      duplicates share
+      allow-rotate
     input "test/Items.png"
       colorkey
       atlas
+      common-divisor 16
   )");
   CHECK(le_size(slice, 112, 112));
 
   slice = pack_single_sheet(R"(
-    padding 8 0
-    max-width 16
+    sheet "sprites"
+      padding 8 0
+      max-width 16
     input "test/Items.png"
       colorkey
       atlas
@@ -250,8 +270,9 @@ TEST_CASE("packing - Basic") {
   CHECK(le_size(slice, 492, 16));
 
   slice = pack_single_sheet(R"(
-    padding 8 1
-    max-height 18
+    sheet "sprites"
+      padding 8 1
+      max-height 18
     input "test/Items.png"
       colorkey
       atlas
@@ -262,18 +283,20 @@ TEST_CASE("packing - Basic") {
 
 TEST_CASE("packing - Errors") {
   CHECK_THROWS(pack(R"(
-    padding 1
-    max-width 16
-    max-height 16
+    sheet "sprites"
+      padding 1
+      max-width 16
+      max-height 16
     input "test/Items.png"
       colorkey
       atlas
   )"));
 
   CHECK_THROWS(pack(R"(
-    padding 0 1
-    max-width 16
-    max-height 16
+    sheet "sprites"
+      padding 0 1
+      max-width 16
+      max-height 16
     input "test/Items.png"
       colorkey
       atlas
@@ -282,11 +305,12 @@ TEST_CASE("packing - Errors") {
 
 TEST_CASE("packing - Multiple sheets") {
   auto slices = pack(R"(
-    allow-rotate
-    duplicates share
-    max-width 30
-    square
-    power-of-two
+    sheet "sprites"
+      allow-rotate
+      duplicates share
+      max-width 30
+      square
+      power-of-two
     input "test/Items.png"
       colorkey
       atlas
@@ -298,8 +322,9 @@ TEST_CASE("packing - Multiple sheets") {
   CHECK(slices[12].width == slices[12].height);
 
   CHECK_NOTHROW(slices = pack(R"(
-    max-width 40
-    max-height 40
+    sheet "sprites"
+      max-width 40
+      max-height 40
     input "test/Items.png"
       colorkey
       atlas
@@ -310,9 +335,10 @@ TEST_CASE("packing - Multiple sheets") {
   CHECK(le_size(slices[2], 16, 30));
 
   CHECK_NOTHROW(slices = pack(R"(
-    max-width 40
-    max-height 40
-    square
+    sheet "sprites"
+      max-width 40
+      max-height 40
+      square
     input "test/Items.png"
       colorkey
       atlas
@@ -323,9 +349,10 @@ TEST_CASE("packing - Multiple sheets") {
   CHECK(slices[2].width == slices[2].height);
 
   CHECK_NOTHROW(slices = pack(R"(
-    max-width 40
-    max-height 40
-    power-of-two true
+    sheet "sprites"
+      max-width 40
+      max-height 40
+      power-of-two true
     input "test/Items.png"
       colorkey
       atlas
@@ -342,8 +369,9 @@ TEST_CASE("packing - Multiple sheets") {
   CHECK_THROWS(pack("padding 1"));
 
   CHECK_NOTHROW(slices = pack(R"(
-    max-width 16
-    max-height 16
+    sheet "sprites"
+      max-width 16
+      max-height 16
     input "test/Items.png"
       colorkey
       atlas
@@ -353,9 +381,10 @@ TEST_CASE("packing - Multiple sheets") {
   CHECK(slices[0].height <= 16);
 
   CHECK_NOTHROW(slices = pack(R"(
-    padding 1 0
-    max-width 16
-    max-height 16
+    sheet "sprites"
+      padding 1 0
+      max-width 16
+      max-height 16
     input "test/Items.png"
       colorkey
       atlas

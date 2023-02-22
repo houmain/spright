@@ -16,6 +16,7 @@ namespace {
 
 TEST_CASE("scope - Tags") {
   auto parser = parse(R"(
+    sheet "sprites"
     input "test/Items.png"
       grid 16 16
       trim none
@@ -84,10 +85,13 @@ TEST_CASE("scope - Sheet/Sprite") {
   )");
   const auto& sprites = parser.sprites();
   REQUIRE(sprites.size() == 4);
+  CHECK(sprites[0].sheet->id == "tex3");
+  CHECK(sprites[1].sheet->id == "tex1");
+  CHECK(sprites[2].sheet->id == "tex2");
+  CHECK(sprites[0].sheet == sprites[3].sheet);
   CHECK(sprites[0].sheet->border_padding == 3);
   CHECK(sprites[1].sheet->border_padding == 1);
   CHECK(sprites[2].sheet->border_padding == 2);
-  CHECK(sprites[0].sheet == sprites[3].sheet);
   CHECK(sprites[0].sheet->width == 128);
   CHECK(sprites[1].sheet->width == 256);
   CHECK(sprites[2].sheet->width == 256);
@@ -194,7 +198,7 @@ TEST_CASE("scope - Problems") {
       sprite "text"
   )"));
 
-  CHECK_NOTHROW(parse(R"(
+  CHECK_THROWS(parse(R"(
     input "test/Items.png"
       sprite "text"
     sheet "tex1"

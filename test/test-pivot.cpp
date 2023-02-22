@@ -7,6 +7,7 @@ using namespace spright;
 
 TEST_CASE("pivot") {
   auto input = std::stringstream(R"(
+    sheet "sprites"
     input "test/Items.png"
       grid 16 16
       sprite xword_yword
@@ -58,6 +59,7 @@ TEST_CASE("pivot") {
 
   // not allowed combination (use: top + 2 left)
   input = std::stringstream(R"(
+    sheet "sprites"
     input "test/Items.png"
       grid 16 16
       sprite ynum_xword
@@ -67,6 +69,7 @@ TEST_CASE("pivot") {
 
   // duplicate coordinates
   input = std::stringstream(R"(
+    sheet "sprites"
     input "test/Items.png"
       grid 16 16
       sprite yword_yword
@@ -77,6 +80,7 @@ TEST_CASE("pivot") {
 
 TEST_CASE("pivot - expressions") {
   auto input = std::stringstream(R"(
+    sheet "sprites"
     input "test/Items.png"
       grid 16 16
       sprite expr1
@@ -119,6 +123,7 @@ TEST_CASE("pivot - expressions") {
 
   // not allowed combination (use: middle left - 3)
   input = std::stringstream(R"(
+    sheet "sprites"
     input "test/Items.png"
       grid 16 16
       sprite
