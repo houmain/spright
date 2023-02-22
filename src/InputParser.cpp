@@ -55,46 +55,18 @@ namespace {
   }
 } // namespace
 
-SheetPtr InputParser::get_sheet(const State& state) {
+std::shared_ptr<Sheet> InputParser::get_sheet(const State& state) {
+  check(!state.sheet_id.empty(), "missing sheet id");
   auto& sheet = m_sheets[state.sheet_id];
-  if (!sheet) {
-    update_applied_definitions(Definition::sheet);
-    sheet = std::make_shared<Sheet>(Sheet{
-      to_int(m_sheets.size() - 1),
-      state.sheet_id,
-      m_input_file,
-      { },
-      state.width,
-      state.height,
-      state.max_width,
-      state.max_height,
-      state.power_of_two,
-      state.square,
-      state.align_width,
-      state.allow_rotate,
-      state.border_padding,
-      state.shape_padding,
-      state.duplicates,
-      state.pack,
-    });
-  }
+  if (!sheet)
+    sheet = std::make_shared<Sheet>();
   return sheet;
 }
 
-OutputPtr InputParser::get_output(const State& state) {
+std::shared_ptr<Output> InputParser::get_output(const State& state) {
   auto& output = m_outputs[std::filesystem::weakly_canonical(state.output)];
-  if (!output) {
-    update_applied_definitions(Definition::output);
-    output = std::make_shared<Output>(Output{
-      FilenameSequence(path_to_utf8(state.output)),
-      state.default_map_suffix,
-      state.map_suffixes,
-      state.alpha,
-      state.alpha_colorkey,
-      state.scale,
-      state.scale_filter
-    });
-  }
+  if (!output)
+    output = std::make_shared<Output>();
   return output;
 }
 
@@ -318,13 +290,41 @@ void InputParser::deduce_single_sprite(State& state) {
 }
 
 void InputParser::sheet_ends(State& state) {
-  get_sheet(state);
+  // sheet can be opened multiple times, copy state only the first time
+  auto& sheet = *get_sheet(state);
+  if (!sheet.id.empty())
+    return;
+
+  update_applied_definitions(Definition::sheet);
+  sheet.index = to_int(m_sheets.size() - 1);
+  sheet.id = state.sheet_id;
+  sheet.input_file = m_input_file;
+  sheet.width = state.width;
+  sheet.height = state.height;
+  sheet.max_width = state.max_width;
+  sheet.max_height = state.max_height;
+  sheet.power_of_two = state.power_of_two;
+  sheet.square = state.square;
+  sheet.align_width = state.align_width;
+  sheet.allow_rotate = state.allow_rotate;
+  sheet.border_padding = state.border_padding;
+  sheet.shape_padding = state.shape_padding;
+  sheet.duplicates = state.duplicates;
+  sheet.pack = state.pack;
 }
 
 void InputParser::output_ends(State& state) {
+  update_applied_definitions(Definition::output);
   auto sheet = get_sheet(state);
   auto output = get_output(state);
   sheet->outputs.push_back(output);
+  output->filename = FilenameSequence(path_to_utf8(state.output));
+  output->default_map_suffix = state.default_map_suffix;
+  output->map_suffixes = state.map_suffixes;
+  output->alpha = state.alpha;
+  output->colorkey = state.alpha_colorkey;
+  output->scale = state.scale;
+  output->scale_filter = state.scale_filter;
 }
 
 void InputParser::source_ends(State& state) {
@@ -381,10 +381,15 @@ void InputParser::parse(std::istream& input,
 
   auto indentation_detected = false;
   auto scope_stack = std::vector<State>();
-  auto& top = scope_stack.emplace_back();
-  top.level = -1;
-  top.sheet_id = default_sheet_id;
-  top.sprite_id = default_sprite_id;
+  auto top = &scope_stack.emplace_back();
+  top->level = -1;
+
+  top = &scope_stack.emplace_back();
+  m_not_applied_definitions.emplace_back();
+  top->level = 0;
+  top->definition = Definition::sheet;
+  top->sheet_id = default_sheet_id;
+  top->sprite_id = default_sprite_id;
 
   auto autocomplete_space = std::stringstream();
   const auto pop_scope_stack = [&](int level) {

@@ -63,7 +63,7 @@ TEST_CASE("scope - Tags") {
   CHECK(sprites[4].trim == Trim::none);
 }
 
-TEST_CASE("scope - Output/Sprite") {
+TEST_CASE("scope - Sheet/Sprite") {
   auto parser = parse(R"(
     width 256
     sheet "tex1"

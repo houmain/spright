@@ -10,7 +10,7 @@
 namespace spright {
 
 using ImagePtr = std::shared_ptr<const Image>;
-using SheetPtr = std::shared_ptr<struct Sheet>;
+using SheetPtr = std::shared_ptr<const struct Sheet>;
 using OutputPtr = std::shared_ptr<const struct Output>;
 using MapVectorPtr = std::shared_ptr<const std::vector<ImagePtr>>;
 using StringMap = std::map<std::string, std::string, std::less<>>;

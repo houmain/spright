@@ -22,8 +22,8 @@ private:
   };
 
   std::string get_sprite_id(const State& state) const;
-  SheetPtr get_sheet(const State& state);
-  OutputPtr get_output(const State& state);
+  std::shared_ptr<Sheet> get_sheet(const State& state);
+  std::shared_ptr<Output> get_output(const State& state);
   ImagePtr get_source(const State& state);
   ImagePtr get_source(const State& state, int index);
   ImagePtr get_source(const std::filesystem::path& path,
@@ -48,8 +48,8 @@ private:
   std::stringstream m_autocomplete_output;
   std::filesystem::path m_input_file;
   int m_line_number{ };
-  std::map<std::string, SheetPtr> m_sheets;
-  std::map<std::filesystem::path, OutputPtr> m_outputs;
+  std::map<std::string,std::shared_ptr<Sheet>> m_sheets;
+  std::map<std::filesystem::path, std::shared_ptr<Output>> m_outputs;
   std::map<std::filesystem::path, ImagePtr> m_sources;
   std::map<ImagePtr, MapVectorPtr> m_maps;
   std::vector<Sprite> m_sprites;
