@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Version 2.0.0] - 2023-02-22
+
+### Changed
+- Split output in sheet and output.
+- Removed implicit output.
+- Renamed layers to maps.
+- Added pack mode layers.
+- Replaced scalings with scale.
+
+### Added
+- Parallelized trimming.
+- Added texture to JSON output.
+
 ## [Version 1.9.0] - 2023-02-12
 
 ### Added
@@ -107,6 +120,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fixed -- commandline arguments.
 - Fixed sample cpp.template.
 
+[version 2.0.0]: https://github.com/houmain/spright/compare/1.9.0...2.0.0
 [version 1.9.0]: https://github.com/houmain/spright/compare/1.8.0...1.9.0
 [version 1.8.0]: https://github.com/houmain/spright/compare/1.7.0...1.8.0
 [version 1.7.0]: https://github.com/houmain/spright/compare/1.6.0...1.7.0
