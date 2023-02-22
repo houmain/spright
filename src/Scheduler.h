@@ -4,6 +4,7 @@
 #include <condition_variable>
 #include <functional>
 #include <atomic>
+#include <vector>
 #include <list>
 
 class Scheduler {
