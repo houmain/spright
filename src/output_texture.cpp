@@ -124,11 +124,12 @@ namespace {
     const auto& output = *texture.output;
     process_alpha(image, output);
 
-    if (output.scale != 0 && output.scale != 1.0)
-      image = resize_image(image, output.scale, output.scale_filter);
+    const auto scale = (output.scale ? output.scale : 1.0);
+    if (scale != 1.0)
+      image = resize_image(image, scale, output.scale_filter);
 
     if (settings.debug)
-      draw_debug_info(image, slice);
+      draw_debug_info(image, slice, scale);
 
     save_image(image, texture.filename);
   }
@@ -166,7 +167,7 @@ std::vector<Texture> get_textures(const Settings& settings,
 
 void output_textures(const Settings& settings,
     std::vector<Texture>& textures) {
-  scheduler->for_each_parallel(begin(textures), end(textures),
+  scheduler.for_each_parallel(begin(textures), end(textures),
     [&](Texture& texture) {
       output_image(settings, texture);
     });

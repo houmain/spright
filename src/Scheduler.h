@@ -3,6 +3,7 @@
 #include <thread>
 #include <condition_variable>
 #include <functional>
+#include <atomic>
 #include <list>
 
 class Scheduler {
@@ -42,32 +43,27 @@ public:
       return;
 
     auto exception = std::exception_ptr();
-    auto next_index = size_t{ };
-    auto remaining = count;
-    auto parallel_function = [&]() noexcept {
-      auto lock = std::unique_lock(m_tasks_mutex);
-      const auto index = next_index++;
-      lock.unlock();
+    auto next_index = std::atomic<size_t>{ };
+    auto local_remaining = std::atomic<size_t>{ count };
+    const auto parallel_function = [&]() noexcept {
       try {
-        function(index);
-        lock.lock();
+        function(next_index.fetch_add(1));
       }
       catch (...) {
-        lock.lock();
+        auto lock = std::lock_guard(m_tasks_mutex);
         exception = std::current_exception();
       }
-      --remaining;
+      local_remaining.fetch_sub(1);
     };
 
     auto lock = std::unique_lock(m_tasks_mutex);
     m_tasks.push_back({ parallel_function, count, count });
     m_tasks_pending += count;
     m_tasks_signal.notify_all();
-
     while (next_index < count)
       execute_next(lock);
     
-    m_done_signal.wait(lock, [&]() { return (remaining == 0); });
+    m_done_signal.wait(lock, [&]() { return (local_remaining.load() == 0); });
     if (exception)
       std::rethrow_exception(exception);
   }
@@ -98,11 +94,11 @@ private:
     for (;; ++it) {
       if (it == m_tasks.end())
         return;
-      if (it->count == 0)
-        continue;
-      --m_tasks_pending;
-      --it->count;
-      break;
+      if (it->count > 0) {
+        --m_tasks_pending;
+        --it->count;
+        break;
+      }
     }
     lock.unlock();
 

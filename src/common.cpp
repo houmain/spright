@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <fstream>
 
+Scheduler scheduler;
+
 namespace spright {
 
 std::filesystem::path utf8_to_path(std::string_view utf8_string) {

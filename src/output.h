@@ -20,8 +20,7 @@ void evaluate_expressions(const Settings& settings,
 
 std::string get_description(const std::string& template_source,
   const std::vector<Sprite>& sprites, 
-  const std::vector<Slice>& slices,
-  const std::vector<Texture>& textures);
+  const std::vector<Slice>& slices);
 bool output_description(const Settings& settings,
   const std::vector<Sprite>& sprites, 
   const std::vector<Slice>& slices,

@@ -14,11 +14,11 @@ namespace {
     auto parser = InputParser(settings);
     parser.parse(input);
     auto sprites = std::move(parser).sprites();
-    for (auto& sprite : sprites)
-      trim_sprite(sprite);
+    trim_sprites(sprites);
     auto slices = pack_sprites(sprites);
+    auto textures = get_textures(settings, slices);
     auto variables = VariantMap{ };
-    evaluate_expressions(settings, sprites, slices, variables);
+    evaluate_expressions(settings, sprites, textures, variables);
     return { std::move(sprites), std::move(slices) };
   }
 } // namespace

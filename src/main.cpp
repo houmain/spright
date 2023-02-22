@@ -5,8 +5,6 @@
 #include <iostream>
 #include <chrono>
 
-Scheduler* scheduler;
-
 int main(int argc, const char* argv[]) try {
   using namespace spright;
 
@@ -15,9 +13,6 @@ int main(int argc, const char* argv[]) try {
     print_help_message(argv[0]);
     return 1;
   }
-
-  auto scheduler = Scheduler();
-  ::scheduler = &scheduler;
 
   using Clock = std::chrono::high_resolution_clock;
   auto time_points = std::vector<std::pair<Clock::time_point, const char*>>();

@@ -12,7 +12,7 @@
 #include <utility>
 #include <optional>
 
-extern Scheduler* scheduler;
+extern Scheduler scheduler;
 
 namespace spright {
 

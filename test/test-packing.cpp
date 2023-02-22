@@ -28,8 +28,7 @@ namespace {
     parser.parse(input);
     static auto s_sprites = std::vector<Sprite>();
     s_sprites = std::move(parser).sprites();
-    for (auto& sprite : s_sprites)
-      trim_sprite(sprite);
+    trim_sprites(s_sprites);
     return pack_sprites(s_sprites);
   }
 
