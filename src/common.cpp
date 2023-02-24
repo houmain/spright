@@ -259,4 +259,20 @@ std::string remove_extension(std::string filename) {
   return filename;
 }
 
+void replace_variables(std::string& expression,
+    const std::function<std::string(std::string_view)>& replace_function) {
+  for (;;) {
+    const auto begin = expression.find("{{");
+    if (begin == std::string::npos)
+      break;
+    const auto end = expression.find("}}", begin);
+    if (end == std::string::npos)
+      break;
+    const auto length = end - begin;
+    const auto variable = trim(std::string_view{
+        expression.data() + begin + 2, length - 2 });
+    expression.replace(begin, length + 2, replace_function(variable));
+  }
+}
+
 } // namespace

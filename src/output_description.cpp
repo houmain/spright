@@ -170,21 +170,6 @@ namespace {
     return env;
   }
 
-  template<typename F>
-  void replace_variables(std::string& expression, F&& replace_function) {
-    for (;;) {
-      const auto begin = expression.find("{{");
-      if (begin == std::string::npos)
-        break;
-      const auto end = expression.find("}}", begin);
-      if (end == std::string::npos)
-        break;
-      const auto variable = trim(std::string_view{
-          expression.data() + begin + 2, end - begin - 2 });
-      expression.replace(begin, end + 2, replace_function(variable));
-    }
-  }
-
   std::string variant_to_string(const Variant& variant) {
     auto string = std::string();
     std::visit([&](const auto& value) {
@@ -225,6 +210,8 @@ void evaluate_expressions(const Settings& settings,
         return std::to_string(sprite.index);
       if (variable == "inputSpriteIndex")
         return std::to_string(sprite.input_sprite_index);
+      if (variable == "sheet.id")
+        return sprite.sheet->id;
       if (variable == "source.filename")
         return path_to_utf8(sprite.source->filename());
       return replace_variable(variable);
@@ -236,6 +223,8 @@ void evaluate_expressions(const Settings& settings,
     replace_variables(expression, [&](std::string_view variable) {
       if (variable == "index")
         return std::to_string(slice.index);
+      if (variable == "sheet.id")
+        return slice.sheet->id;
       if (variable == "sprite.id")
         return (slice.sprites.empty() ? "" : slice.sprites[0].id);
       return replace_variable(variable);

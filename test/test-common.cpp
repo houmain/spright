@@ -50,3 +50,27 @@ TEST_CASE("split_expression") {
 TEST_CASE("Rect") {
   CHECK(combine(Rect(0, 0, 4, 4), Rect(4, 0, 4, 4)) == Rect(0, 0, 8, 4));
 }
+
+TEST_CASE("replace_variables") {
+
+  const auto replace_function = [](std::string_view string) {
+    if (string == "sprite.id")
+      return "ok";
+    if (string == "empty")
+      return "";
+    throw std::runtime_error("unknown variable");
+  };
+  const auto replace = [&](std::string string) {
+    replace_variables(string, replace_function);
+    return string;
+  };
+  CHECK(replace("test-{{sprite.id}}-test") == "test-ok-test");
+  CHECK(replace("test-{{ sprite.id}}-test") == "test-ok-test");
+  CHECK(replace("test-{{sprite.id  }}-test") == "test-ok-test");
+  CHECK(replace("test-{{empty }}-test") == "test--test");
+  CHECK(replace("test-{{ empty}}-test") == "test--test");
+  CHECK(replace("test-{{  empty    }}-test") == "test--test");
+  CHECK_THROWS(replace("test-{{}}-test"));
+  CHECK_THROWS(replace("test-{{ }}-test"));
+  CHECK_THROWS(replace("test-{{ sprite2.id }}-test"));
+}

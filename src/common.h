@@ -101,6 +101,8 @@ std::string read_textfile(const std::filesystem::path& filename);
 void write_textfile(const std::filesystem::path& filename, std::string_view text);
 bool update_textfile(const std::filesystem::path& filename, std::string_view text);
 std::string remove_extension(std::string filename);
+void replace_variables(std::string& expression,
+  const std::function<std::string(std::string_view)>& replace_function);
 
 inline int floor(int v, int q) { return (v / q) * q; };
 inline int ceil(int v, int q) { return ((v + q - 1) / q) * q; };
