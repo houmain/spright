@@ -54,16 +54,17 @@ namespace {
   }
 } // namespace
 
-std::shared_ptr<Sheet> InputParser::get_sheet(const State& state) {
-  check(!state.sheet_id.empty(), "no sheet specified");
-  auto& sheet = m_sheets[state.sheet_id];
+std::shared_ptr<Sheet> InputParser::get_sheet(const std::string& sheet_id) {
+  check(!sheet_id.empty(), "no sheet specified");
+  auto& sheet = m_sheets[sheet_id];
   if (!sheet)
     sheet = std::make_shared<Sheet>();
   return sheet;
 }
 
-std::shared_ptr<Output> InputParser::get_output(const State& state) {
-  auto& output = m_outputs[std::filesystem::weakly_canonical(state.output)];
+std::shared_ptr<Output> InputParser::get_output(
+    const std::filesystem::path& filename) {
+  auto& output = m_outputs[std::filesystem::weakly_canonical(filename)];
   if (!output)
     output = std::make_shared<Output>();
   return output;
@@ -131,7 +132,7 @@ void InputParser::sprite_ends(State& state) {
   sprite.index = to_int(m_sprites.size());
   sprite.input_sprite_index = m_sprites_in_current_source;
   sprite.id = state.sprite_id;
-  sprite.sheet = get_sheet(state);
+  sprite.sheet = get_sheet(state.sheet_id);
   sprite.source = get_source(state);
   sprite.maps = get_maps(state, sprite.source);
   sprite.source_rect = (!empty(state.rect) ?
@@ -290,11 +291,13 @@ void InputParser::deduce_single_sprite(State& state) {
 
 void InputParser::sheet_ends(State& state) {
   // sheet can be opened multiple times, copy state only the first time
-  auto& sheet = *get_sheet(state);
+  auto& sheet = *get_sheet(state.sheet_id);
   if (!sheet.id.empty())
     return;
 
   update_applied_definitions(Definition::sheet);
+  for (const auto& filename : state.output_filenames)
+    sheet.outputs.push_back(get_output(filename));
   sheet.index = to_int(m_sheets.size() - 1);
   sheet.id = state.sheet_id;
   sheet.input_file = m_input_file;
@@ -314,10 +317,9 @@ void InputParser::sheet_ends(State& state) {
 
 void InputParser::output_ends(State& state) {
   update_applied_definitions(Definition::output);
-  auto sheet = get_sheet(state);
-  auto output = get_output(state);
-  sheet->outputs.push_back(output);
-  output->filename = FilenameSequence(path_to_utf8(state.output));
+  const auto& filename = state.output_filenames.back();
+  auto output = get_output(filename);
+  output->filename = FilenameSequence(path_to_utf8(filename));
   output->default_map_suffix = state.default_map_suffix;
   output->map_suffixes = state.map_suffixes;
   output->alpha = state.alpha;
@@ -383,6 +385,7 @@ void InputParser::parse(std::istream& input,
   auto top = &scope_stack.emplace_back();
   top->level = -1;
   top->sprite_id = default_sprite_id;
+  m_not_applied_definitions.emplace_back();
 
   auto autocomplete_space = std::stringstream();
   const auto pop_scope_stack = [&](int level) {
@@ -400,11 +403,14 @@ void InputParser::parse(std::istream& input,
       else if (level >= last->level) {
         const auto top = last.base();
 
-        // keep sheet set on same level
-        if (top != scope_stack.end() &&
-            top != scope_stack.begin() &&
-            top->definition == Definition::sheet)
-          std::prev(top)->sheet_id = top->sheet_id;
+        // sheets and outputs open a scope and affect parent scope
+        // keep id/filename set when popping their scope
+        if (top != scope_stack.end() && top != scope_stack.begin()) {
+          if (top->definition == Definition::sheet)
+            std::prev(top)->sheet_id = std::move(top->sheet_id);
+          else if (top->definition == Definition::output)
+            std::prev(top)->output_filenames = std::move(top->output_filenames);
+        }
 
         for (auto i = 0u; i < std::distance(top, scope_stack.end()); ++i) {
           check_not_applied_definitions();
@@ -478,6 +484,8 @@ void InputParser::parse(std::istream& input,
   }
   m_line_number = 0;
   pop_scope_stack(-1);
+  check_not_applied_definitions();
+  m_not_applied_definitions.pop_back();
   assert(m_not_applied_definitions.empty());
 }
 catch (const std::exception& ex) {
@@ -496,14 +504,13 @@ void InputParser::update_applied_definitions(Definition definition) {
 }
 
 void InputParser::update_not_applied_definitions(Definition definition) {
-  // sheets can also be explicitly assigned, tolerate when it is not at all
-  if (definition == Definition::sheet)
-    return;
-
   assert(!m_not_applied_definitions.empty());
-  if (auto affected = get_affected_definition(definition); affected != Definition::none)
-    m_not_applied_definitions.back().try_emplace(affected, 
-      NotAppliedDefinition{ definition, m_line_number });
+  if (auto affected = get_affected_definition(definition); affected != Definition::none) {
+    auto it = std::prev(m_not_applied_definitions.end());
+    if (has_implicit_scope(definition))
+      it = std::prev(it);
+    it->try_emplace(affected, NotAppliedDefinition{ definition, m_line_number });
+  }
 }
 
 void InputParser::check_not_applied_definitions() {

@@ -98,9 +98,10 @@ Definition get_affected_definition(Definition definition) {
     case Definition::MAX:
     case Definition::group:
     case Definition::set:
-    case Definition::output:
     case Definition::input:
     case Definition::sprite:
+    // allow sheets without sprites
+    case Definition::sheet:
     // affect input and output
     case Definition::maps:
     // directly change state
@@ -108,6 +109,7 @@ Definition get_affected_definition(Definition definition) {
     case Definition::skip:
       return Definition::none;
 
+    case Definition::output:
     case Definition::width:
     case Definition::height:
     case Definition::max_width:
@@ -134,7 +136,6 @@ Definition get_affected_definition(Definition definition) {
     case Definition::atlas:
       return Definition::input;
 
-    case Definition::sheet:
     case Definition::id:
     case Definition::rect:
     case Definition::pivot:
@@ -232,7 +233,7 @@ void apply_definition(Definition definition,
       break;
 
     case Definition::output:
-      state.output = check_string();
+      state.output_filenames.push_back(check_string());
       break;
 
     case Definition::width:

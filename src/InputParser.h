@@ -22,8 +22,8 @@ private:
   };
 
   std::string get_sprite_id(const State& state) const;
-  std::shared_ptr<Sheet> get_sheet(const State& state);
-  std::shared_ptr<Output> get_output(const State& state);
+  std::shared_ptr<Sheet> get_sheet(const std::string& sheet_id);
+  std::shared_ptr<Output> get_output(const std::filesystem::path& filename);
   ImagePtr get_source(const State& state);
   ImagePtr get_source(const State& state, int index);
   ImagePtr get_source(const std::filesystem::path& path,

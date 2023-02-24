@@ -63,7 +63,7 @@ struct State {
   std::string indent;
 
   std::string sheet_id;
-  std::filesystem::path output;
+  std::vector<std::filesystem::path> output_filenames;
   int width{ };
   int height{ };
   int max_width{ };

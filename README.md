@@ -222,7 +222,7 @@ The following table contains a list of all definitions, with the item each affec
 
 | Definition     |Affects| Arguments    | Description |
 | -------------- |-------| -------------| ----------- |
-| **sheet**      |sprite | id           | Selects the sheet on which the sprites should be packed.
+| **sheet**      |sprite | id           | Sets the sheet on which the sprites should be packed.
 | pack           |sheet  | pack-method  | Sets the method, which is used for placing the sprites on the sheet:<br/>- _binpack_ : Tries to reduce the texture size, while keeping the sprites' (trimmed) rectangles apart (default).<br/>- _compact_ : Tries to reduce the texture size, while keeping the sprites' convex outlines apart.<br/>- _rows_ : Layout sprites in simple rows.<br/>- _columns_ : Layout sprites in simple columns.<br/>- _single_ : Put each sprite on its own texture.<br/>- _keep_ : Keep sprite at same position as in source (ignores most constraints).
 | width          |sheet  | width        | Sets a fixed sheet width.
 | height         |sheet  | height       | Sets a fixed sheet height.
@@ -234,11 +234,11 @@ The following table contains a list of all definitions, with the item each affec
 | allow-rotate   |sheet  | [boolean]    | Allows to rotate sprites clockwise by 90 degrees for improved packing performance.
 | padding        |sheet  | [pixels], [pixels] | Sets the space between two sprites / the space between a sprite and the texture's border.
 | duplicates     |sheet  | dedupe-mode  | Sets how identical sprites should be processed:<br/>- _keep_ : Disable duplicate detection (default).<br/>- _share_ : Identical sprites should share pixels on the sheet.<br/>- _drop_ : Duplicates should be dropped.
-| **output**     |-      | path         | Adds a new output file at _path_ to the current sheet. It can define an un-/bounded sequence of files (e.g. "sheet{0-}.png").
+| **output**     |sheet  | path         | Adds a new output file at _path_ to a sheet. It can define an un-/bounded sequence of files (e.g. "sheet{0-}.png").
 | scalings       |output | ([scale-filter] scale)+ | Specifies one or more factors for which a respectively scaled output should be generated, with an optional explicit scale-filter:<br/>- _box_: A trapezoid with 1-pixel wide ramps.<br/>- _triangle_: A triangle function (same as bilinear texture filtering).<br/>- _cubicspline_: A cubic b-spline (gaussian-esque).<br/>- _catmullrom_: An interpolating cubic spline.<br/>- _mitchell_: Mitchell-Netrevalli filter with B=1/3, C=1/3.
 | maps           |output/input| suffix+ | Specifies the number of maps and their filename suffixes (e.g. "-diffuse", "-normals", ...). Only the first map is considered when packing, others get identical _rects_.
 | alpha          |output | alpha-mode<br/>[color] | Sets an operation depending on the pixels' alpha values:<br/>- _keep_ : Keep source color and alpha.<br/>- _clear_ : Set color of fully transparent pixels to black.<br/>- _bleed_ : Set color of fully transparent pixels to their nearest non-fully transparent pixel's color.<br/>- _premultiply_ : Premultiply colors with alpha values.<br/>- _colorkey_ : Replace fully transparent pixels with the specified _color_ and make all others opaque.
-| **input**      |-      | path         | Adds a new input file at _path_ to the current sheet. It can contain wildcards (e.g. "sprites/**/*.png") or it can define an un-/bounded sequence of files (e.g. "frames_{0-}.png, frames_{0001-0013}.png").
+| **input**      |-      | path         | Adds a new input file at _path_. It can contain wildcards (e.g. "sprites/**/*.png") or it can define an un-/bounded sequence of files (e.g. "frames_{0-}.png, frames_{0001-0013}.png").
 | path           |input  | path         | A _path_ which should be prepended to the input's path.
 | colorkey       |input  | [color]      | Specifies that the input has a color, which should be considered transparent (in hex notation e.g. _FF00FF_).
 | grid           |input  | x, [y]       | Specifies that the input contains multiple sprites, arranged in a grid of a certain cell size. In this mode the _rect_ of each _sprite_ is deduced from the grid. Each _sprite_ automatically advances the current cell horizontally.

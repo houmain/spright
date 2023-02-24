@@ -97,6 +97,46 @@ TEST_CASE("scope - Sheet/Sprite") {
   CHECK(sprites[2].sheet->width == 256);
 }
 
+TEST_CASE("scope - Sheet/Output") {
+  auto parser = parse(R"(
+    output "output1.png"
+      alpha clear
+    sheet "tex1"
+      output "output2.png"
+        alpha bleed
+    sheet "tex2"
+      output "output3.png"
+    output "output4.png"
+    sheet "tex3"
+      padding 3
+    input "test/Items.png"
+      grid 16 16
+      sprite
+        sheet "tex1"
+      sprite
+        sheet "tex2"
+      sprite
+        sheet "tex3"
+  )");
+  const auto& sprites = parser.sprites();
+  REQUIRE(sprites.size() == 3);
+  CHECK(sprites[0].sheet->id == "tex1");
+  CHECK(sprites[1].sheet->id == "tex2");
+  CHECK(sprites[2].sheet->id == "tex3");
+  REQUIRE(sprites[0].sheet->outputs.size() == 2);
+  REQUIRE(sprites[1].sheet->outputs.size() == 2);
+  REQUIRE(sprites[2].sheet->outputs.size() == 2);
+  CHECK(sprites[0].sheet->outputs[0]->filename.filename() == "output1.png");
+  CHECK(sprites[0].sheet->outputs[1]->filename.filename() == "output2.png");
+  CHECK(sprites[1].sheet->outputs[0]->filename.filename() == "output1.png");
+  CHECK(sprites[1].sheet->outputs[1]->filename.filename() == "output3.png");
+  CHECK(sprites[2].sheet->outputs[0]->filename.filename() == "output1.png");
+  CHECK(sprites[2].sheet->outputs[1]->filename.filename() == "output4.png");
+  CHECK(sprites[0].sheet->outputs[0]->alpha == Alpha::clear);
+  CHECK(sprites[0].sheet->outputs[1]->alpha == Alpha::bleed);
+  CHECK(sprites[1].sheet->outputs[1]->alpha == Alpha::keep);
+}
+
 TEST_CASE("scope - Problems") {
   // sprite not on input
   CHECK_THROWS(parse(R"(
@@ -189,6 +229,24 @@ TEST_CASE("scope - Problems") {
     input "test/Items.png"
       width 100
       sprite "text"
+  )"));
+
+  CHECK_NOTHROW(parse(R"(
+    sheet "tex1"
+      output "output.png"
+    input "test/Items.png"
+  )"));
+
+  CHECK_NOTHROW(parse(R"(
+    output "output.png"
+    sheet "tex1"  
+    input "test/Items.png"
+  )"));
+
+  CHECK_THROWS(parse(R"(
+    sheet "tex1"
+    output "output.png"
+    input "test/Items.png"
   )"));
 
   // sheet without sprites is tolerated
