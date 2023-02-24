@@ -106,6 +106,13 @@ private:
     const auto end = m_filename.cend();
     auto it = begin;
     if (skip_until(it, end, "{")) {
+
+      // skip {{ }} variables
+      while (skip(it, end, "{"))
+        if (skip_until(it, end, "}}"))
+          if (!skip_until(it, end, "{"))
+            return;
+
       m_format_offset = std::distance(begin, it) - 1u;
       
       skip_space(it, end);
