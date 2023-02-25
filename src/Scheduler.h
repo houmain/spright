@@ -78,6 +78,11 @@ public:
       }, count);
   }
 
+  template<typename R, typename F> // F(*It)
+  void for_each_parallel(R&& range, F&& function) {
+    for_each_parallel(begin(range), end(range), std::move(function));
+  }
+
 private:
   void thread_func() {
     auto lock = std::unique_lock(m_tasks_mutex);

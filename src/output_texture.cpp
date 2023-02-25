@@ -100,27 +100,19 @@ namespace {
     }
   }
 
-  void output_image(const Settings& settings, Texture& texture) {
-    const auto& slice = *texture.slice;
+  bool is_map(const Texture& texture) {
+    return (texture.map_index >= 0);
+  }
 
+  bool is_up_to_date(const Texture& texture) {
     // exists and is newer than input
-    const auto is_up_to_date = 
-      (texture.slice->last_source_written_time && 
+    return (texture.slice->last_source_written_time && 
         try_get_last_write_time(texture.filename) > 
         texture.slice->last_source_written_time);
+  }
 
-    // do not return before check if there is a map for slice
-    const auto is_map = (texture.map_index >= 0);
-    if (!is_map && is_up_to_date)
-      return;
-    auto image = get_slice_image(slice, texture.map_index);
-    if (!image) {
-      texture.filename = { };
-      return;
-    }
-    if (is_map && is_up_to_date)
-      return;
-    
+  void process_texture_image(const Settings& settings, 
+      const Texture& texture, Image& image) {
     const auto& output = *texture.output;
     process_alpha(image, output);
 
@@ -128,9 +120,51 @@ namespace {
       image = resize_image(image, output.scale, output.scale_filter);
 
     if (settings.debug)
-      draw_debug_info(image, slice, output.scale);
+      draw_debug_info(image, *texture.slice, output.scale);
+  }
 
+  bool output_image(const Settings& settings, const Texture& texture) {
+    // do not return before check if there is a map for slice
+    if (!is_map(texture) && is_up_to_date(texture))
+      return true;
+
+    auto image = get_slice_image(*texture.slice, texture.map_index);
+    if (!image)
+      return false;
+
+    if (is_map(texture) && is_up_to_date(texture))
+      return true;
+    
+    process_texture_image(settings, texture, image);
     save_image(image, texture.filename);
+    return true;
+  }
+
+  bool output_animation(const Settings& settings, const Texture& texture) {
+    // do not return before check if there is a map for slice
+    if (!is_map(texture) && is_up_to_date(texture))
+      return true;
+
+    auto animation = get_slice_animation(*texture.slice,
+      texture.map_index);
+    if (animation.frames.empty())
+      return false;
+
+    if (is_map(texture) && is_up_to_date(texture))
+      return true;
+    
+    scheduler.for_each_parallel(animation.frames, 
+      [&](Animation::Frame& frame) {
+        process_texture_image(settings, texture, frame.image);
+      });
+    save_animation(animation, texture.filename);
+    return true;
+  }
+
+  bool output_texture(const Settings& settings, const Texture& texture) {
+    if (!texture.slice->layered)
+      return output_image(settings, texture);
+    return output_animation(settings, texture);
   }
 } // namespace
 
@@ -144,6 +178,19 @@ Image get_slice_image(const Slice& slice, int map_index) {
     return { };
 
   return target;
+}
+
+Animation get_slice_animation(const Slice& slice, int map_index) {
+  auto animation = Animation();
+  for (const auto& sprite : slice.sprites)
+    if (const auto source = get_source(sprite, map_index)) {
+      auto& frame = animation.frames.emplace_back();
+      frame.image = Image(slice.width, slice.height);
+      copy_sprite(frame.image, sprite, map_index);
+      frame.duration = 0.1;
+    }
+
+  return animation;
 }
 
 std::vector<Texture> get_textures(const Settings& settings,
@@ -166,9 +213,10 @@ std::vector<Texture> get_textures(const Settings& settings,
 
 void output_textures(const Settings& settings,
     std::vector<Texture>& textures) {
-  scheduler.for_each_parallel(begin(textures), end(textures),
+  scheduler.for_each_parallel(textures,
     [&](Texture& texture) {
-      output_image(settings, texture);
+      if (!output_texture(settings, texture))
+        texture.filename = { };
     });
 }
 

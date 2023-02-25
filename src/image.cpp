@@ -4,6 +4,7 @@
 #include "stb/stb_image_write.h"
 #include "stb/stb_image_resize.h"
 #include "texpack/bleeding.h"
+#include "gifenc/gifenc.h"
 #include <array>
 #include <algorithm>
 #include <stdexcept>
@@ -325,6 +326,26 @@ void save_image(const Image& image, const std::filesystem::path& path) {
       !(extension == ".bmp" && stbi_write_bmp(filename.c_str(), w, h, comp, data)) &&
       !(extension == ".tga" && stbi_write_tga(filename.c_str(), w, h, comp, data)))
     error("writing file '", filename, "' failed");
+}
+
+void save_animation(const Animation& animation, const std::filesystem::path& path) {
+  if (!path.parent_path().empty())
+    std::filesystem::create_directories(path.parent_path());
+  const auto filename = path_to_utf8(path);
+  const auto extension = to_lower(path_to_utf8(path.extension()));
+  const auto [width, height] = animation.frames.front().image.bounds().size();
+  auto palette = std::array<uint8_t, 256>();
+  const auto loop_count = 0;
+  auto gif = ge_new_gif(filename.c_str(), width, height, nullptr, 8, 0, loop_count);
+  for (const auto& frame : animation.frames) {
+    const auto delay = std::chrono::duration_cast<
+      std::chrono::duration<uint16_t, std::ratio<1, 100>>>(
+      std::chrono::duration<real>(frame.duration)).count();
+    auto mono = get_gray_levels(frame.image);
+    std::memcpy(gif->frame, mono.data(), width * height);
+    ge_add_frame(gif, delay);
+  }
+  ge_close_gif(gif);
 }
 
 void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy) {

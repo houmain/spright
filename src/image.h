@@ -72,7 +72,16 @@ enum class ResizeFilter {
   mitchell      // Mitchell-Netrevalli filter with B=1/3, C=1/3
 };
 
+struct Animation {
+  struct Frame {
+    Image image;
+    real duration;
+  };
+  std::vector<Frame> frames;
+};
+
 void save_image(const Image& image, const std::filesystem::path& filename);
+void save_animation(const Animation& animation, const std::filesystem::path& filename);
 Image resize_image(const Image& image, real scale, ResizeFilter filter);
 void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy);
 void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy);

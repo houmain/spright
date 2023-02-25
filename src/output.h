@@ -28,6 +28,7 @@ bool output_description(const Settings& settings,
   const VariantMap& variables);
 
 Image get_slice_image(const Slice& slice, int map_index = -1);
+Animation get_slice_animation(const Slice& slice, int map_index = -1);
 void output_textures(const Settings& settings,
     std::vector<Texture>& textures);
 

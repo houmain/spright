@@ -255,7 +255,7 @@ void recompute_slice_size(Slice& slice) {
 }
 
 void update_last_source_written_times(std::vector<Slice>& slices) {
-  scheduler.for_each_parallel(begin(slices), end(slices),
+  scheduler.for_each_parallel(slices,
     [](Slice& slice) {
       auto last_write_time = get_last_write_time(slice.sheet->input_file);
 

@@ -169,7 +169,7 @@ namespace {
 } // namespace
 
 void trim_sprites(std::vector<Sprite>& sprites) {
-  scheduler.for_each_parallel(begin(sprites), end(sprites), trim_sprite);
+  scheduler.for_each_parallel(sprites, trim_sprite);
 }
 
 } // namespace
