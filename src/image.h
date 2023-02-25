@@ -39,11 +39,13 @@ class MonoImage {
 public:
   using Value = uint8_t;
 
+  MonoImage() = default;
   MonoImage(int width, int height);
   MonoImage(int width, int height, Value background);
   MonoImage(MonoImage&& rhs);
   MonoImage& operator=(MonoImage&& rhs);
   ~MonoImage();
+  explicit operator bool() const { return m_data != nullptr; }
 
   int width() const { return m_width; }
   int height() const { return m_height; }
@@ -78,7 +80,12 @@ struct Animation {
     real duration;
   };
   std::vector<Frame> frames;
+  int max_colors{ };
+  std::optional<RGBA> color_key;
+  int loop_count;
 };
+
+using Palette = std::vector<RGBA>;
 
 void save_image(const Image& image, const std::filesystem::path& filename);
 void save_animation(const Animation& animation, const std::filesystem::path& filename);
@@ -113,5 +120,9 @@ void premultiply_alpha(Image& image);
 void bleed_alpha(Image& image);
 MonoImage get_alpha_levels(const Image& image, const Rect& rect = { });
 MonoImage get_gray_levels(const Image& image, const Rect& rect = { });
+Palette generate_palette(const Image& image, int count);
+Palette generate_palette(const Animation& animation, int count);
+MonoImage quantize_image(const Image& image, const Palette& palette, bool dither);
+Image apply_palette(const MonoImage& image, const Palette& palette);
 
 } // namespace

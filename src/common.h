@@ -29,6 +29,8 @@ union RGBA {
   };
   uint32_t rgba;
 
+  uint8_t& channel(int index) { return (&r)[index]; }
+  const uint8_t& channel(int index) const { return (&r)[index]; }
   uint8_t gray() const {
     return static_cast<uint8_t>((r * 77 + g * 151 + b * 28) >> 8);
   }

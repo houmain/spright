@@ -157,6 +157,9 @@ namespace {
       [&](Animation::Frame& frame) {
         process_texture_image(settings, texture, frame.image);
       });
+
+    if (texture.output->alpha == Alpha::colorkey)
+      animation.color_key = texture.output->colorkey;
     save_animation(animation, texture.filename);
     return true;
   }
@@ -185,11 +188,10 @@ Animation get_slice_animation(const Slice& slice, int map_index) {
   for (const auto& sprite : slice.sprites)
     if (const auto source = get_source(sprite, map_index)) {
       auto& frame = animation.frames.emplace_back();
-      frame.image = Image(slice.width, slice.height);
+      frame.image = Image(slice.width, slice.height, RGBA());
       copy_sprite(frame.image, sprite, map_index);
       frame.duration = 0.1;
     }
-
   return animation;
 }
 
