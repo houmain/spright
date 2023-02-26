@@ -852,6 +852,11 @@ Image resize_image(const Image& image, real scale, ResizeFilter filter) {
   const auto height = to_int(image.height() * scale + 0.5);
   if (width == image.width() && height == image.height())
     return image.clone();
+
+  if (filter == ResizeFilter::undefined)
+    filter = (std::fmod(scale, 1.0f) == 0 ? 
+      ResizeFilter::box : ResizeFilter::triangle);
+
   auto output = Image(width, height);
   const auto flags = 0;
   const auto edge_mode = STBIR_EDGE_CLAMP;
