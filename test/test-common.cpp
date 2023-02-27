@@ -10,32 +10,32 @@ TEST_CASE("join_expressions") {
   split_arguments(" a  + b ", &arguments);
   CHECK(arguments.size() == 3);
   join_expressions(&arguments);
-  CHECK(arguments.size() == 1);
+  REQUIRE(arguments.size() == 1);
   CHECK(arguments[0] == "a  + b");
 
   split_arguments(" a  -b ", &arguments);
   CHECK(arguments.size() == 2);
   join_expressions(&arguments);
-  CHECK(arguments.size() == 1);
+  REQUIRE(arguments.size() == 1);
   CHECK(arguments[0] == "a  -b");
 
   split_arguments("c a+  b- d", &arguments);
   CHECK(arguments.size() == 4);
   join_expressions(&arguments);
-  CHECK(arguments.size() == 2);
+  REQUIRE(arguments.size() == 2);
   CHECK(arguments[1] == "a+  b- d");
 
   split_arguments("+ a+ + ++b- ", &arguments);
   CHECK(arguments.size() == 4);
   join_expressions(&arguments);
-  CHECK(arguments.size() == 1);
+  REQUIRE(arguments.size() == 1);
   CHECK(arguments[0] == "+ a+ + ++b-");
 }
 
 TEST_CASE("split_expression") {
   auto arguments = std::vector<std::string_view>{ };
   split_expression("a  + b", &arguments);
-  CHECK(arguments.size() == 3);
+  REQUIRE(arguments.size() == 3);
   CHECK(arguments[0] == "a");
   CHECK(arguments[1] == "+");
   CHECK(arguments[2] == "b");
@@ -45,6 +45,51 @@ TEST_CASE("split_expression") {
 
   split_expression("", &arguments);
   CHECK(arguments.size() == 1);
+}
+
+TEST_CASE("split_arguments - optional comma") {
+  auto arguments = std::vector<std::string_view>{ };
+  split_arguments(" def a b ", &arguments);
+  REQUIRE(arguments.size() == 3);
+  CHECK(arguments[0] == "def");
+  CHECK(arguments[1] == "a");
+  CHECK(arguments[2] == "b");
+
+  split_arguments(" def a,b ", &arguments);
+  REQUIRE(arguments.size() == 3);
+  CHECK(arguments[0] == "def");
+  CHECK(arguments[1] == "a");
+  CHECK(arguments[2] == "b");
+  
+  split_arguments(" def  a , b ", &arguments);
+  REQUIRE(arguments.size() == 3);
+  CHECK(arguments[0] == "def");
+  CHECK(arguments[1] == "a");
+  CHECK(arguments[2] == "b");
+
+  split_arguments(" def \" a,b \"  c ", &arguments);
+  REQUIRE(arguments.size() == 3);
+  CHECK(arguments[0] == "def");
+  CHECK(arguments[1] == " a,b ");
+  CHECK(arguments[2] == "c");
+
+  split_arguments(" def \" a,b \" , c ", &arguments);
+  REQUIRE(arguments.size() == 3);
+  CHECK(arguments[0] == "def");
+  CHECK(arguments[1] == " a,b ");
+  CHECK(arguments[2] == "c");
+
+  // do not allow after definition name
+  CHECK_THROWS(split_arguments("def,a,b,c", &arguments));
+
+  // do not allow trailing comma
+  CHECK_THROWS(split_arguments("def a,b,c,", &arguments));
+  CHECK_THROWS(split_arguments("def a , b , c , ", &arguments));
+
+  // allow to mix (because of pivot expression)
+  CHECK_NOTHROW(split_arguments("def a , b c ", &arguments));
+  CHECK_NOTHROW(split_arguments("def a b , c ", &arguments));
+  
 }
 
 TEST_CASE("Rect") {

@@ -51,6 +51,10 @@ bool is_space(char c) {
   return std::isspace(static_cast<unsigned char>(c));
 }
 
+bool is_space_or_comma(char c) {
+  return is_space(c) || c == ',';
+}
+
 bool is_punct(char c) {
   return std::ispunct(static_cast<unsigned char>(c));
 }
@@ -153,12 +157,10 @@ std::string_view unquote(LStringView str) {
 }
 
 void split_arguments(LStringView str, std::vector<std::string_view>* result) {
+  // ([^\s]+)\s+([^\s,]+)+
   result->clear();
-  for (;;) {
-    str = ltrim(str);
-    if (str.empty())
-      break;
-
+  str = ltrim(str);
+  while (!str.empty()) {
     if (str.front() == '"' || str.front() == '\'') {
       auto end = str.find(str.front(), 1);
       if (end == std::string::npos)
@@ -168,10 +170,24 @@ void split_arguments(LStringView str, std::vector<std::string_view>* result) {
     }
     else {
       auto i = 0u;
-      while (i < str.size() && !is_space(str[i]))
+      while (i < str.size() && !is_space_or_comma(str[i]))
         ++i;
       result->push_back(str.substr(0, i));
       str = str.substr(i);
+    }
+
+    str = ltrim(str);
+    if (!str.empty() && str.front() == ',') {
+      str.remove_prefix(1);
+      str = ltrim(str);
+
+      // do not allow comma after first part
+      if (result->size() == 1)
+        throw std::runtime_error("unexpected comma");
+      
+      // do not allow to end with comma
+      if (str.empty())
+        throw std::runtime_error("unexpected comma");
     }
   }
 }
