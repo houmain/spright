@@ -252,17 +252,21 @@ The following table contains a list of all definitions, with the item each affec
 | id             |sprite | id           | Sets the sprite's id (defaults to "sprite_{{ index }}").
 | span           |sprite | columns, rows| Sets the number of grid cells a sprite spans.
 | rect           |sprite | x, y, width, height | Sets a sprite's rectangle in the input sheet.
-| pivot          |sprite | pivot-x, pivot-y | Sets the coordinates of the sprite's pivot point. Optionally the horizontal (_left, center, right_) and vertical (_top, middle, bottom_) origin of the coordinates can be set (e.g. 10 20, right - 5 top + 3, bottom left).
-| tag            |sprite | key, [value] | Adds a tag to a sprite (_value_ defaults to an empty string).
-| data           |sprite | key, value   | Adds a user defined data entry to a sprite.
+| pivot          |sprite | pivot-x, pivot-y | Sets the coordinates of the sprite's pivot point. Optionally the horizontal (_left, center, right_) and vertical (_top, middle, bottom_) origin of the coordinates can be set (e.g. 10 20 / right - 5, top + 3 / bottom left).
 | trim           |sprite | trim-mode    | Sets a mode for trimming, which reduces the sprite to the non-transparent region:<br/>- _none_ : Do not trim.<br/>- _rect_ : Trim to rectangular region (default).<br/>- _convex_ : Trim to convex region (_vertices_ are set in output description).
 | trim-channel   |sprite | channel      | Sets the channel which should be considered during trimming:<br/>- _alpha_ : The alpha channel of a pixel (default).<br/>- _gray_ : The gray level of the pixel.
 | trim-threshold |sprite | value        | Sets the value which should be considered non-transparent during trimming (1 - 255).
 | trim-margin    |sprite | [pixels]     | Sets a number of transparent pixel rows around the sprite, which should not be removed by trimming.
 | crop           |sprite | [boolean]    | Sets whether the sprite's rectangle should be reduced to the trimmed bounds.
 | crop-pivot     |sprite | [boolean]    | Sets whether the sprite's pivot point should be relative to the trimmed bounds.
+| min-size       |sprite | x, [y]       | Sets a sprite's minimum size. Smaller sprites are filled up with transparency.
+| max-size       |sprite | x, [y]       | Sets a sprite's maximum size. Bigger sprites are truncated.
+| divisible-size |sprite | x, [y]       | Restricts the sprite's size to be divisible by a certain number of pixels.
+| common-size    |sprite | key          | Makes all sprites with identical _keys_ expand to a common size.
+| align          |sprite | align-x, align-y | Sets the offset of the sprite when it's size is expanded/truncated. Optionally a horizontal (_pivot-x, left, center, right_) and vertical (_pivot-y, top, middle, bottom_) anchor can be set.
 | extrude        |sprite | [pixels],<br/>[wrap-mode] | Adds a padding around the sprite and fills it depending on the _wrap-mode_:<br/>- _clamp_: Clamp to border pixels (default).<br/>- _mirror_: Mirror border pixels.<br/>- _repeat_: Repeat border pixels.
-| common-divisor |sprite | x, [y]       | Restricts the sprite's size to be divisible by a certain number of pixels. Smaller sprites are filled up with transparency.
+| tag            |sprite | key, [value] | Adds a tag to a sprite (_value_ defaults to an empty string).
+| data           |sprite | key, value   | Adds a user defined data entry to a sprite.
 | set            |-      | key, value   | Sets a variable value, which can be accessed in different places using `{{ key }}`.
 | group          |-      | -            | Can be used for opening a new scope, to limit for example the effect of a tag.
 
