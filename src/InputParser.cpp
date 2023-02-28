@@ -146,7 +146,7 @@ void InputParser::sprite_ends(State& state) {
   sprite.crop = state.crop;
   sprite.crop_pivot = state.crop_pivot;
   sprite.extrude = state.extrude;
-  sprite.common_divisor = state.common_divisor;
+  sprite.divisible_size = state.divisible_size;
   sprite.tags = state.tags;
   sprite.data = state.data;
   validate_sprite(sprite);

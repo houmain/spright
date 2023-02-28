@@ -24,13 +24,13 @@ namespace {
   void prepare_sprite(Sprite& sprite) {
     const auto distance_to_next_multiple =
       [](int value, int divisor) { return ceil(value, divisor) - value; };
-    sprite.common_divisor_margin = {
-      distance_to_next_multiple(sprite.trimmed_source_rect.w, sprite.common_divisor.x),
-      distance_to_next_multiple(sprite.trimmed_source_rect.h, sprite.common_divisor.y),
+    sprite.resize_margin = {
+      distance_to_next_multiple(sprite.trimmed_source_rect.w, sprite.divisible_size.x),
+      distance_to_next_multiple(sprite.trimmed_source_rect.h, sprite.divisible_size.y),
     };
-    sprite.common_divisor_offset = {
-      sprite.common_divisor_margin.x / 2,
-      sprite.common_divisor_margin.y / 2
+    sprite.resize_offset = {
+      sprite.resize_margin.x / 2,
+      sprite.resize_margin.y / 2
     };
   }
 
@@ -47,10 +47,10 @@ namespace {
         sprite.source_rect.h,
       };
     }
-    rect.x -= sprite.common_divisor_offset.x;
-    rect.y -= sprite.common_divisor_offset.y;
-    rect.w += sprite.common_divisor_margin.x;
-    rect.h += sprite.common_divisor_margin.y;
+    rect.x -= sprite.resize_offset.x;
+    rect.y -= sprite.resize_offset.y;
+    rect.w += sprite.resize_margin.x;
+    rect.h += sprite.resize_margin.y;
 
     auto& pivot_point = sprite.pivot_point;
     const auto pivot_rect = RectF(sprite.crop_pivot ?
@@ -166,17 +166,17 @@ std::pair<int, int> get_slice_max_size(const Sheet& sheet) {
 
 Size get_sprite_size(const Sprite& sprite) {
   return {
-    sprite.trimmed_source_rect.w + sprite.common_divisor_margin.x + 
+    sprite.trimmed_source_rect.w + sprite.resize_margin.x + 
       sprite.extrude.count * 2,
-    sprite.trimmed_source_rect.h + sprite.common_divisor_margin.y + 
+    sprite.trimmed_source_rect.h + sprite.resize_margin.y + 
       sprite.extrude.count * 2
   };
 }
 
 Size get_sprite_indent(const Sprite& sprite) {
   return {
-    sprite.common_divisor_offset.x + sprite.extrude.count,
-    sprite.common_divisor_offset.y + sprite.extrude.count,
+    sprite.resize_offset.x + sprite.extrude.count,
+    sprite.resize_offset.y + sprite.extrude.count,
   };
 }
 

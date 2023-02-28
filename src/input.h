@@ -87,9 +87,9 @@ struct Sprite {
   VariantMap data;
   bool rotated{ };
   int slice_index{ };
-  Size common_divisor{ };
-  Point common_divisor_offset{ };
-  Size common_divisor_margin{ };
+  Size divisible_size{ };
+  Point resize_offset{ };
+  Size resize_margin{ };
   std::vector<PointF> vertices;
 
   int duplicate_of_index{ -1 };

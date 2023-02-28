@@ -52,7 +52,7 @@ enum class Definition {
   crop,
   crop_pivot,
   extrude,
-  common_divisor,
+  divisible_size,
 
   MAX
 };
@@ -105,7 +105,7 @@ struct State {
   bool crop{ };
   bool crop_pivot{ };
   Extrude extrude{ };
-  Size common_divisor{ 1, 1 };
+  Size divisible_size{ 1, 1 };
 };
 
 Definition get_definition(std::string_view command);

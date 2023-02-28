@@ -87,7 +87,7 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::crop: return "crop";
     case Definition::crop_pivot: return "crop-pivot";
     case Definition::extrude: return "extrude";
-    case Definition::common_divisor: return "common-divisor";
+    case Definition::divisible_size: return "divisible-size";
   }
   return "-";
 }
@@ -148,7 +148,7 @@ Definition get_affected_definition(Definition definition) {
     case Definition::crop:
     case Definition::crop_pivot:
     case Definition::extrude:
-    case Definition::common_divisor:
+    case Definition::divisible_size:
     case Definition::span:
       return Definition::sprite;
   }
@@ -505,9 +505,9 @@ void apply_definition(Definition definition,
       }
       break;
 
-    case Definition::common_divisor:
-      state.common_divisor = check_size(true);
-      check(state.common_divisor.x >= 1 && state.common_divisor.y >= 1, "invalid divisor");
+    case Definition::divisible_size:
+      state.divisible_size = check_size(true);
+      check(state.divisible_size.x >= 1 && state.divisible_size.y >= 1, "invalid divisor");
       break;
 
     case Definition::MAX:
