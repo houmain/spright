@@ -21,6 +21,10 @@ enum class PivotX { left, center, right };
 enum class PivotY { top, middle, bottom };
 struct Pivot { PivotX x; PivotY y; };
 
+enum class AlignX { left, center, right };
+enum class AlignY { top, middle, bottom };
+struct Align { AlignX x; AlignY y; };
+
 enum class Trim { none, rect, convex };
 
 enum class Alpha { keep, clear, bleed, premultiply, colorkey };
@@ -87,7 +91,11 @@ struct Sprite {
   VariantMap data;
   bool rotated{ };
   int slice_index{ };
+  Size min_size{ };
+  Size max_size{ };
   Size divisible_size{ };
+  std::string common_size;
+  Align align;
   Point resize_offset{ };
   Size resize_margin{ };
   std::vector<PointF> vertices;

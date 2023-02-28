@@ -21,54 +21,66 @@ namespace {
     return std::numeric_limits<int>::max();
   }
 
-  void prepare_sprite(Sprite& sprite) {
-    const auto distance_to_next_multiple =
-      [](int value, int divisor) { return ceil(value, divisor) - value; };
-    sprite.resize_margin = {
-      distance_to_next_multiple(sprite.trimmed_source_rect.w, sprite.divisible_size.x),
-      distance_to_next_multiple(sprite.trimmed_source_rect.h, sprite.divisible_size.y),
+  void update_sprite_resize_margin(Sprite& s) {
+    const auto size = s.trimmed_source_rect.size();
+    auto new_size = Size{
+      std::max(ceil(size.x, s.divisible_size.x), s.min_size.x),
+      std::max(ceil(size.y, s.divisible_size.y), s.min_size.y)
     };
-    sprite.resize_offset = {
-      sprite.resize_margin.x / 2,
-      sprite.resize_margin.y / 2
+    s.resize_margin = {
+      new_size.x - size.x,
+      new_size.y - size.y,
     };
   }
 
-  void complete_sprite(Sprite& sprite) {
-    auto& rect = sprite.rect;
-    if (sprite.crop) {
-      rect = sprite.trimmed_rect;
+  void update_sprite_resize_offset(Sprite& s) {
+    switch (s.align.x) {
+      case AlignX::left:   s.resize_offset.x = 0; break;
+      case AlignX::center: s.resize_offset.x = s.resize_margin.x / 2; break;
+      case AlignX::right:  s.resize_offset.x = s.resize_margin.x; break;
+    }
+    switch (s.align.y) {
+      case AlignY::top:    s.resize_offset.y = 0; break;
+      case AlignY::middle: s.resize_offset.y = s.resize_margin.y / 2; break;
+      case AlignY::bottom: s.resize_offset.y = s.resize_margin.y; break;
+    }
+  }
+
+  void update_sprite_rect(Sprite& s) {
+    if (s.crop) {
+      s.rect = s.trimmed_rect;
     }
     else {
-      rect = {
-        sprite.trimmed_rect.x - (sprite.trimmed_source_rect.x - sprite.source_rect.x),
-        sprite.trimmed_rect.y - (sprite.trimmed_source_rect.y - sprite.source_rect.y),
-        sprite.source_rect.w,
-        sprite.source_rect.h,
+      s.rect = {
+        s.trimmed_rect.x - (s.trimmed_source_rect.x - s.source_rect.x),
+        s.trimmed_rect.y - (s.trimmed_source_rect.y - s.source_rect.y),
+        s.source_rect.w,
+        s.source_rect.h,
       };
     }
-    rect.x -= sprite.resize_offset.x;
-    rect.y -= sprite.resize_offset.y;
-    rect.w += sprite.resize_margin.x;
-    rect.h += sprite.resize_margin.y;
+    s.rect.x -= s.resize_offset.x;
+    s.rect.y -= s.resize_offset.y;
+    s.rect.w += s.resize_margin.x;
+    s.rect.h += s.resize_margin.y;
+  }
 
-    auto& pivot_point = sprite.pivot_point;
-    const auto pivot_rect = RectF(sprite.crop_pivot ?
-      sprite.trimmed_source_rect : sprite.source_rect);
-    switch (sprite.pivot.x) {
-      case PivotX::left: pivot_point.x += 0; break;
-      case PivotX::center: pivot_point.x += pivot_rect.w / 2; break;
-      case PivotX::right: pivot_point.x += pivot_rect.w; break;
+  void update_sprite_pivot_point(Sprite &s) {
+    const auto pivot_rect = RectF(s.crop_pivot ?
+      s.trimmed_source_rect : s.source_rect);
+    switch (s.pivot.x) {
+      case PivotX::left:   s.pivot_point.x += 0; break;
+      case PivotX::center: s.pivot_point.x += pivot_rect.w / 2; break;
+      case PivotX::right:  s.pivot_point.x += pivot_rect.w; break;
     }
-    switch (sprite.pivot.y) {
-      case PivotY::top: pivot_point.y += 0; break;
-      case PivotY::middle: pivot_point.y += pivot_rect.h / 2; break;
-      case PivotY::bottom: pivot_point.y += pivot_rect.h; break;
+    switch (s.pivot.y) {
+      case PivotY::top:    s.pivot_point.y += 0; break;
+      case PivotY::middle: s.pivot_point.y += pivot_rect.h / 2; break;
+      case PivotY::bottom: s.pivot_point.y += pivot_rect.h; break;
     }
-    pivot_point.x -= rect.x - sprite.trimmed_rect.x;
-    pivot_point.y -= rect.y - sprite.trimmed_rect.y;
-    pivot_point.x += (pivot_rect.x - sprite.trimmed_source_rect.x);
-    pivot_point.y += (pivot_rect.y - sprite.trimmed_source_rect.y);
+    s.pivot_point.x -= s.rect.x - s.trimmed_rect.x;
+    s.pivot_point.y -= s.rect.y - s.trimmed_rect.y;
+    s.pivot_point.x += (pivot_rect.x - s.trimmed_source_rect.x);
+    s.pivot_point.y += (pivot_rect.y - s.trimmed_source_rect.y);
   }
 
   void pack_slice(const SheetPtr& sheet,
@@ -155,6 +167,30 @@ namespace {
       }
     return slices;
   }
+
+  void update_common_sizes(std::vector<Sprite>& sprites) {
+    auto sprites_by_key = std::map<std::string, std::vector<Sprite*>>();
+    for (auto& sprite : sprites)
+      if (!sprite.common_size.empty())
+        sprites_by_key[sprite.common_size].push_back(&sprite);
+
+    for (const auto& [key, sprites] : sprites_by_key) {
+      auto max_size = Size{ };
+      for (auto sprite : sprites) {
+        const auto size = get_sprite_size(*sprite);
+        max_size.x = std::max(max_size.x, size.x);
+        max_size.y = std::max(max_size.y, size.y);
+      }
+
+      for (auto sprite : sprites) {
+        const auto size = get_sprite_size(*sprite);
+        if (max_size.x > size.x)
+          sprite->resize_margin.x += (max_size.x - size.x);
+        if (max_size.y > size.y)
+          sprite->resize_margin.y += (max_size.y - size.y);
+      }
+    }
+  }
 } // namespace
 
 std::pair<int, int> get_slice_max_size(const Sheet& sheet) {
@@ -182,12 +218,17 @@ Size get_sprite_indent(const Sprite& sprite) {
 
 std::vector<Slice> pack_sprites(std::vector<Sprite>& sprites) {
   for (auto& sprite : sprites)
-    prepare_sprite(sprite);
+    update_sprite_resize_margin(sprite);
+  update_common_sizes(sprites);
+  for (auto& sprite : sprites)
+    update_sprite_resize_offset(sprite);
 
   auto slices = pack_sprites_by_sheet(sprites);
 
-  for (auto& sprite : sprites)
-    complete_sprite(sprite);
+  for (auto& sprite : sprites) {
+    update_sprite_rect(sprite);
+    update_sprite_pivot_point(sprite);
+  }
 
   // finish slices
   for (auto i = size_t{ }; i < slices.size(); ++i) {
@@ -231,10 +272,12 @@ void recompute_slice_size(Slice& slice) {
   auto max_x = 0;
   auto max_y = 0;
   for (const auto& sprite : slice.sprites) {
-    max_x = std::max(max_x, sprite.trimmed_rect.x + 
-      (sprite.rotated ? sprite.trimmed_rect.h : sprite.trimmed_rect.w));
+    const auto size = get_sprite_size(sprite);
+    const auto indent = get_sprite_indent(sprite);
+    max_x = std::max(max_x, sprite.trimmed_rect.x +
+      (sprite.rotated ? size.y : size.x)) - indent.x;
     max_y = std::max(max_y, sprite.trimmed_rect.y + 
-      (sprite.rotated ? sprite.trimmed_rect.w : sprite.trimmed_rect.h));
+      (sprite.rotated ? size.x : size.y)) - indent.y;
   }
   slice.width = max_x + sheet.border_padding;
   slice.height = max_y + sheet.border_padding;

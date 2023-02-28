@@ -87,7 +87,11 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::crop: return "crop";
     case Definition::crop_pivot: return "crop-pivot";
     case Definition::extrude: return "extrude";
+    case Definition::min_size: return "min-size";
+    case Definition::max_size: return "max-size";
     case Definition::divisible_size: return "divisible-size";
+    case Definition::common_size: return "common-size";
+    case Definition::align: return "align";
   }
   return "-";
 }
@@ -148,7 +152,11 @@ Definition get_affected_definition(Definition definition) {
     case Definition::crop:
     case Definition::crop_pivot:
     case Definition::extrude:
+    case Definition::min_size:
+    case Definition::max_size:
     case Definition::divisible_size:
+    case Definition::common_size:
+    case Definition::align:
     case Definition::span:
       return Definition::sprite;
   }
@@ -505,11 +513,40 @@ void apply_definition(Definition definition,
       }
       break;
 
-    case Definition::divisible_size:
-      state.divisible_size = check_size(true);
-      check(state.divisible_size.x >= 1 && state.divisible_size.y >= 1, "invalid divisor");
+    case Definition::min_size:
+      state.min_size = check_size(true);
       break;
 
+    case Definition::max_size:
+      state.max_size = check_size(true);
+      break;
+
+    case Definition::divisible_size:
+      state.divisible_size = check_size(true);
+      check(state.divisible_size.x >= 1 && state.divisible_size.y >= 1, 
+        "invalid divisor");
+      break;
+
+    case Definition::common_size:
+      state.common_size = (arguments_left() ? check_string() : "ALL");
+      break;
+
+    case Definition::align: {
+      const auto string_x = check_string();
+      if (const auto index = index_of(string_x,
+          { "left", "center", "right" }); index >= 0)
+        state.align.x = static_cast<AlignX>(index);
+      else
+        error("invalid align mode '", string_x, "'");
+
+      const auto string_y = check_string();
+      if (const auto index = index_of(string_y,
+          { "top", "middle", "bottom" }); index >= 0)
+        state.align.y = static_cast<AlignY>(index);
+      else
+        error("invalid align mode '", string_y, "'");
+      break;
+    }
     case Definition::MAX:
     case Definition::none:
       break;
