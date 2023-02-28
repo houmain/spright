@@ -118,9 +118,6 @@ namespace {
 
     if (output.scale != 1.0)
       image = resize_image(image, output.scale, output.scale_filter);
-
-    if (settings.debug)
-      draw_debug_info(image, *texture.slice, output.scale);
   }
 
   bool output_image(const Settings& settings, const Texture& texture) {
@@ -136,6 +133,10 @@ namespace {
       return true;
     
     process_texture_image(settings, texture, image);
+
+    if (settings.debug)
+      draw_debug_info(image, *texture.slice, texture.output->scale);
+
     save_image(image, texture.filename);
     return true;
   }
@@ -156,6 +157,10 @@ namespace {
     scheduler.for_each_parallel(animation.frames, 
       [&](Animation::Frame& frame) {
         process_texture_image(settings, texture, frame.image);
+
+        if (settings.debug)
+          draw_debug_info(frame.image, 
+            texture.slice->sprites[frame.index], texture.output->scale);
       });
 
     if (texture.output->alpha == Alpha::colorkey)
@@ -188,6 +193,7 @@ Animation get_slice_animation(const Slice& slice, int map_index) {
   for (const auto& sprite : slice.sprites)
     if (const auto source = get_source(sprite, map_index)) {
       auto& frame = animation.frames.emplace_back();
+      frame.index = static_cast<int>(animation.frames.size() - 1);
       frame.image = Image(slice.width, slice.height, RGBA());
       copy_sprite(frame.image, sprite, map_index);
       frame.duration = 0.1;

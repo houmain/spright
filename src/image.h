@@ -76,6 +76,7 @@ enum class ResizeFilter {
 
 struct Animation {
   struct Frame {
+    int index;
     Image image;
     real duration;
   };
