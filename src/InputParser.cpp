@@ -307,7 +307,7 @@ void InputParser::sheet_ends(State& state) {
   sheet.max_height = state.max_height;
   sheet.power_of_two = state.power_of_two;
   sheet.square = state.square;
-  sheet.align_width = state.align_width;
+  sheet.divisible_width = state.divisible_width;
   sheet.allow_rotate = state.allow_rotate;
   sheet.border_padding = state.border_padding;
   sheet.shape_padding = state.shape_padding;

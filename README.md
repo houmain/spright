@@ -230,7 +230,7 @@ The following table contains a list of all definitions, with the item each affec
 | max-height     |sheet  | height       | Sets a maximum sheet height.
 | power-of-two   |sheet  | [boolean]    | Restricts the sheet's size to be a power of two.
 | square         |sheet  | [boolean]    | Restricts the sheet's size to be square.
-| align-width    |sheet  | pixels       | Restricts the sheet's width to be divisible by a certain number of _pixels_.
+| divisible-width|sheet  | pixels       | Restricts the sheet's width to be divisible by a certain number of _pixels_.
 | allow-rotate   |sheet  | [boolean]    | Allows to rotate sprites clockwise by 90 degrees for improved packing performance.
 | padding        |sheet  | [pixels], [pixels] | Sets the space between two sprites / the space between a sprite and the texture's border.
 | duplicates     |sheet  | dedupe-mode  | Sets how identical sprites should be processed:<br/>- _keep_ : Disable duplicate detection (default).<br/>- _share_ : Identical sprites should share pixels on the sheet.<br/>- _drop_ : Duplicates should be dropped.

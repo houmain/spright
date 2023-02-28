@@ -55,7 +55,7 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::max_height: return "max-height";
     case Definition::power_of_two: return "power-of-two";
     case Definition::square: return "square";
-    case Definition::align_width: return "align-width";
+    case Definition::divisible_width: return "align-width";
     case Definition::allow_rotate: return "allow-rotate";
     case Definition::padding: return "padding";
     case Definition::duplicates: return "duplicates";
@@ -116,7 +116,7 @@ Definition get_affected_definition(Definition definition) {
     case Definition::max_height:
     case Definition::power_of_two:
     case Definition::square:
-    case Definition::align_width:
+    case Definition::divisible_width:
     case Definition::allow_rotate:
     case Definition::padding:
     case Definition::duplicates:
@@ -260,8 +260,8 @@ void apply_definition(Definition definition,
       state.square = check_bool(true);
       break;
 
-    case Definition::align_width:
-      state.align_width = check_uint();
+    case Definition::divisible_width:
+      state.divisible_width = check_uint();
       break;
 
     case Definition::allow_rotate:

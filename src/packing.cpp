@@ -239,8 +239,8 @@ void recompute_slice_size(Slice& slice) {
   slice.width = max_x + sheet.border_padding;
   slice.height = max_y + sheet.border_padding;
 
-  if (sheet.align_width)
-    slice.width = ceil(slice.width, sheet.align_width);
+  if (sheet.divisible_width)
+    slice.width = ceil(slice.width, sheet.divisible_width);
 
   if (sheet.power_of_two) {
     slice.width = ceil_to_pot(slice.width);

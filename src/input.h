@@ -55,7 +55,7 @@ struct Sheet {
   int max_height{ };
   bool power_of_two{ };
   bool square{ };
-  int align_width{ };
+  int divisible_width{ };
   bool allow_rotate{ };
   int border_padding{ };
   int shape_padding{ };

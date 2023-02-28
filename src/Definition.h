@@ -18,7 +18,7 @@ enum class Definition {
   max_height,
   power_of_two,
   square,
-  align_width,
+  divisible_width,
   allow_rotate,
   padding,
   duplicates,
@@ -70,7 +70,7 @@ struct State {
   int max_height{};
   bool power_of_two{ };
   bool square{ };
-  int align_width{ };
+  int divisible_width{ };
   bool allow_rotate{ };
   int border_padding{ };
   int shape_padding{ };
