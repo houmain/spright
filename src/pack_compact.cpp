@@ -61,12 +61,8 @@ namespace {
     for (const auto& body : bodies) {
       auto& sprite = slice.sprites[i++];
       const auto position = cpBodyGetPosition(body.get());
-      const auto dx = to_int(position.x + 0.5) - sprite.trimmed_rect.x;
-      const auto dy = to_int(position.y + 0.5) - sprite.trimmed_rect.y;
-      sprite.trimmed_rect.x += dx;
-      sprite.trimmed_rect.y += dy;
-      sprite.rect.x += dx;
-      sprite.rect.y += dy;
+      sprite.trimmed_rect.x = to_int(position.x + 0.5);
+      sprite.trimmed_rect.y = to_int(position.y + 0.5);
     }
 
     // destroy space before shapes
@@ -79,8 +75,8 @@ void pack_compact(const SheetPtr& sheet, SpriteSpan sprites,
   const auto fast = (sheet->allow_rotate == false);
   pack_binpack(sheet, sprites, fast, slices);
   for (auto& slice : slices) {
-    compact_sprites(slice, sheet->border_padding, sheet->shape_padding);
     recompute_slice_size(slice);
+    compact_sprites(slice, sheet->border_padding, sheet->shape_padding);
   }
 }
 

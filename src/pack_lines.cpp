@@ -8,21 +8,16 @@ void pack_lines(bool horizontal, const SheetPtr& sheet,
 
   auto slice_sheet_index = 0;
   const auto add_slice = [&](SpriteSpan sprites) {
-    auto slice = Slice{
+    slices.push_back({
       sheet,
       slice_sheet_index++,
       sprites,
-    };
-    recompute_slice_size(slice);
-    slices.push_back(std::move(slice));
+    });
   };
 
-  const auto default_max = std::numeric_limits<int>::max();
-  const auto max_width = (sheet->max_width ? 
-    sheet->max_width : default_max) - sheet->border_padding * 2;
-  const auto max_height = (sheet->max_height ? 
-    sheet->max_height : default_max) - sheet->border_padding * 2;
-
+  auto [max_width, max_height] = get_slice_max_size(*sheet);
+  max_width -= sheet->border_padding * 2;
+  max_height -= sheet->border_padding * 2;
   auto pos = Point{ };
   auto size = Size{ };
   auto line_size = 0;
@@ -39,9 +34,7 @@ void pack_lines(bool horizontal, const SheetPtr& sheet,
   auto it = first_sprite;
   for (; it != sprites.end(); ++it) {
     auto& sprite = *it;
-    size = get_sprite_size(sprite);
-    size.x += sheet->shape_padding;
-    size.y += sheet->shape_padding;
+    size = sprite.size;
 
     if (pos_d + size_d > max_d) {
       pos_d = 0;
@@ -59,16 +52,11 @@ void pack_lines(bool horizontal, const SheetPtr& sheet,
         pos.y + size.y > max_height)
       break;
 
-    const auto indent = get_sprite_indent(sprite);
-    sprite.trimmed_rect = {
-      pos.x + indent.x + sheet->border_padding,
-      pos.y + indent.y + sheet->border_padding,
-      sprite.trimmed_source_rect.w,
-      sprite.trimmed_source_rect.h
-    };
+    sprite.trimmed_rect.x = pos.x + sprite.offset.x + sheet->border_padding;
+    sprite.trimmed_rect.y = pos.y + sprite.offset.y + sheet->border_padding;
 
-    pos_d += size_d;
-    line_size = std::max(line_size, size_p);
+    pos_d += size_d + sheet->shape_padding;
+    line_size = std::max(line_size, size_p + sheet->shape_padding);
   }
   if (it != sprites.end())
     throw_not_all_sprites_packed();

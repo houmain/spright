@@ -12,13 +12,13 @@ void pack_binpack(const SheetPtr& sheet_ptr, SpriteSpan sprites,
   auto pack_sizes = std::vector<rect_pack::Size>();
   pack_sizes.reserve(sprites.size());
   for (const auto& sprite : sprites) {
-    auto size = get_sprite_size(sprite);
+    auto size = sprite.size;
     size.x += sheet.shape_padding;
     size.y += sheet.shape_padding;
     pack_sizes.push_back({ to_int(pack_sizes.size()), size.x, size.y });
   }
 
-  const auto [max_slice_width, max_slice_height] = get_slice_max_size(sheet);
+  const auto [max_width, max_height] = get_slice_max_size(sheet);
   const auto pack_sheets = pack(
     rect_pack::Settings{
       (fast ? rect_pack::Method::Best_Skyline : rect_pack::Method::Best),
@@ -31,8 +31,8 @@ void pack_binpack(const SheetPtr& sheet_ptr, SpriteSpan sprites,
       sheet.shape_padding,
       sheet.width,
       sheet.height,
-      max_slice_width,
-      max_slice_height,
+      max_width,
+      max_height,
     },
     std::move(pack_sizes));
 
@@ -42,15 +42,10 @@ void pack_binpack(const SheetPtr& sheet_ptr, SpriteSpan sprites,
   for (const auto& pack_sheet : pack_sheets) {
     for (const auto& pack_rect : pack_sheet.rects) {
       auto& sprite = sprites[to_unsigned(pack_rect.id)];
-      const auto indent = get_sprite_indent(sprite);
       sprite.rotated = pack_rect.rotated;
       sprite.slice_index = slice_index;
-      sprite.trimmed_rect = {
-        pack_rect.x + indent.x,
-        pack_rect.y + indent.y,
-        sprite.trimmed_source_rect.w,
-        sprite.trimmed_source_rect.h
-      };
+      sprite.trimmed_rect.x = pack_rect.x + sprite.offset.x;
+      sprite.trimmed_rect.y = pack_rect.y + sprite.offset.y;
       ++packed_sprites;
     }
     ++slice_index;
@@ -60,13 +55,6 @@ void pack_binpack(const SheetPtr& sheet_ptr, SpriteSpan sprites,
     throw_not_all_sprites_packed();
 
   create_slices_from_indices(sheet_ptr, sprites, slices);
-
-  auto slice = &slices[slices.size() - pack_sheets.size()];
-  for (const auto& pack_sheet : pack_sheets) {
-    slice->width = pack_sheet.width;
-    slice->height = pack_sheet.height;
-    ++slice;
-  }
 }
 
 } // namespace

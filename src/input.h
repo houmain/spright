@@ -74,10 +74,10 @@ struct Sprite {
   SheetPtr sheet;
   ImagePtr source;
   MapVectorPtr maps;
+  // the logical rect in the source.
   Rect source_rect{ };
+  // the actual pixels in the sources.
   Rect trimmed_source_rect{ };
-  Rect rect{ };
-  Rect trimmed_rect{ };
   Pivot pivot{ PivotX::center, PivotY::middle };
   PointF pivot_point{ };
   Trim trim{ Trim::none };
@@ -87,19 +87,26 @@ struct Sprite {
   bool crop{ };
   bool crop_pivot{ };
   Extrude extrude{ };
-  StringMap tags;
-  VariantMap data;
-  bool rotated{ };
-  int slice_index{ };
   Size min_size{ };
   Size max_size{ };
   Size divisible_size{ };
   std::string common_size;
-  Align align;
-  Point resize_offset{ };
-  Size resize_margin{ };
-  std::vector<PointF> vertices;
+  Align align{ AlignX::center, AlignY::middle };
+  StringMap tags;
+  VariantMap data;
 
+  int slice_index{ };
+  // the logical rect in the output.
+  Rect rect{ };
+  // the actual pixels in the output. has the same size as
+  // the trimmed source rect (unless cropped by max_size).
+  Rect trimmed_rect{ };
+  bool rotated{ };
+  // the size it takes on the slice (including size-margin, extrude...).
+  Size size{ };
+  // the offset of the trimmed rect in the rect of 'size'.
+  Point offset{ };
+  std::vector<PointF> vertices;
   int duplicate_of_index{ -1 };
 };
 

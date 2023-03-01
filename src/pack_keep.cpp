@@ -12,13 +12,9 @@ void pack_keep(const SheetPtr& sheet, SpriteSpan sprites,
       sprite.source, to_int(source_indices.size())).first->second;
     sprite.slice_index = source_index;
     sprite.trimmed_rect = sprite.trimmed_source_rect;
-    sprite.rect = sprite.source_rect;
   }
 
   create_slices_from_indices(sheet, sprites, slices);
-
-  for (auto& slice : slices)
-    recompute_slice_size(slice);
 }
 
 } // namespace

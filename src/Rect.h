@@ -24,6 +24,9 @@ struct SizeT {
   friend bool operator==(const SizeT& a, const SizeT& b) {
     return (a.x == b.x && a.y == b.y);
   }
+  friend SizeT operator-(const SizeT& a, const SizeT& b) {
+    return SizeT(a.x - b.x, a.y - b.y);
+  }
 };
 
 template<typename T>

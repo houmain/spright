@@ -29,8 +29,6 @@ struct Slice {
 };
 
 std::pair<int, int> get_slice_max_size(const Sheet& sheet);
-Size get_sprite_size(const Sprite& sprite);
-Size get_sprite_indent(const Sprite& sprite);
 void create_slices_from_indices(const SheetPtr& sheet_ptr, 
     SpriteSpan sprites, std::vector<Slice>& slices);
 void recompute_slice_size(Slice& slice);

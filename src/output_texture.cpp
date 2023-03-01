@@ -111,8 +111,7 @@ namespace {
         texture.slice->last_source_written_time);
   }
 
-  void process_texture_image(const Settings& settings, 
-      const Texture& texture, Image& image) {
+  void process_texture_image(const Texture& texture, Image& image) {
     const auto& output = *texture.output;
     process_alpha(image, output);
 
@@ -132,7 +131,7 @@ namespace {
     if (is_map(texture) && is_up_to_date(texture))
       return true;
     
-    process_texture_image(settings, texture, image);
+    process_texture_image(texture, image);
 
     if (settings.debug)
       draw_debug_info(image, *texture.slice, texture.output->scale);
@@ -156,7 +155,7 @@ namespace {
     
     scheduler.for_each_parallel(animation.frames, 
       [&](Animation::Frame& frame) {
-        process_texture_image(settings, texture, frame.image);
+        process_texture_image(texture, frame.image);
 
         if (settings.debug)
           draw_debug_info(frame.image, 
