@@ -52,9 +52,9 @@ enum class Definition {
   crop,
   crop_pivot,
   extrude,
-  min_size,
-  divisible_size,
-  common_size,
+  min_bounds,
+  divisible_bounds,
+  common_bounds,
   align,
 
   MAX
@@ -107,9 +107,9 @@ struct State {
   bool crop{ };
   bool crop_pivot{ };
   Extrude extrude{ };
-  Size min_size{ };
-  Size divisible_size{ 1, 1 };
-  std::string common_size;
+  Size min_bounds{ };
+  Size divisible_bounds{ 1, 1 };
+  std::string common_bounds;
   Anchor align{ { 0, 0 }, AnchorX::center, AnchorY::middle };
 };
 

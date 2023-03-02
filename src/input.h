@@ -77,9 +77,9 @@ struct Sprite {
   SheetPtr sheet;
   ImagePtr source;
   MapVectorPtr maps;
-  // the logical rect in the source.
+  // the logical rect on the source
   Rect source_rect{ };
-  // the actual pixels in the sources.
+  // the actual pixels on the sources
   Rect trimmed_source_rect{ };
   AnchorF pivot{ };
   Trim trim{ Trim::none };
@@ -89,23 +89,22 @@ struct Sprite {
   bool crop{ };
   bool crop_pivot{ };
   Extrude extrude{ };
-  Size min_size{ };
-  Size divisible_size{ };
-  std::string common_size;
-  // the offset of the trimmed rect in the rect of 'size'.
+  Size min_bounds{ };
+  Size divisible_bounds{ };
+  std::string common_bounds;
+  // the offset of the trimmed rect within the sprite's bounds
   Anchor align{ };
   StringMap tags;
   VariantMap data;
 
   int slice_index{ };
-  // the logical rect in the output.
+  // the logical rect on the output
   Rect rect{ };
-  // the actual pixels in the output. has the same size as
-  // the trimmed source rect.
+  // the actual pixels on the output. same size as the trimmed source
   Rect trimmed_rect{ };
   bool rotated{ };
-  // the size it takes on the slice (including size-margin, extrude...).
-  Size size{ };
+  // total space it allocates on the output
+  Size bounds{ };
   std::vector<PointF> vertices;
   int duplicate_of_index{ -1 };
 };

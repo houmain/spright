@@ -34,7 +34,7 @@ void pack_lines(bool horizontal, const SheetPtr& sheet,
   auto it = first_sprite;
   for (; it != sprites.end(); ++it) {
     auto& sprite = *it;
-    size = sprite.size;
+    size = sprite.bounds;
 
     if (pos_d + size_d > max_d) {
       pos_d = 0;

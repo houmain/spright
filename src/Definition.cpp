@@ -87,9 +87,9 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::crop: return "crop";
     case Definition::crop_pivot: return "crop-pivot";
     case Definition::extrude: return "extrude";
-    case Definition::min_size: return "min-size";
-    case Definition::divisible_size: return "divisible-size";
-    case Definition::common_size: return "common-size";
+    case Definition::min_bounds: return "min-bounds";
+    case Definition::divisible_bounds: return "divisible-bounds";
+    case Definition::common_bounds: return "common-bonuds";
     case Definition::align: return "align";
   }
   return "-";
@@ -151,9 +151,9 @@ Definition get_affected_definition(Definition definition) {
     case Definition::crop:
     case Definition::crop_pivot:
     case Definition::extrude:
-    case Definition::min_size:
-    case Definition::divisible_size:
-    case Definition::common_size:
+    case Definition::min_bounds:
+    case Definition::divisible_bounds:
+    case Definition::common_bounds:
     case Definition::align:
     case Definition::span:
       return Definition::sprite;
@@ -514,18 +514,18 @@ void apply_definition(Definition definition,
       }
       break;
 
-    case Definition::min_size:
-      state.min_size = check_size(true);
+    case Definition::min_bounds:
+      state.min_bounds = check_size(true);
       break;
 
-    case Definition::divisible_size:
-      state.divisible_size = check_size(true);
-      check(state.divisible_size.x >= 1 && state.divisible_size.y >= 1, 
+    case Definition::divisible_bounds:
+      state.divisible_bounds = check_size(true);
+      check(state.divisible_bounds.x >= 1 && state.divisible_bounds.y >= 1, 
         "invalid divisor");
       break;
 
-    case Definition::common_size:
-      state.common_size = (arguments_left() ? check_string() : "ALL");
+    case Definition::common_bounds:
+      state.common_bounds = (arguments_left() ? check_string() : "ALL");
       break;
 
     case Definition::align: {

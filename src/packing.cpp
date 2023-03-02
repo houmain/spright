@@ -21,16 +21,16 @@ namespace {
     return std::numeric_limits<int>::max();
   }
 
-  void update_sprite_size(Sprite& s) {
+  void update_sprite_bounds(Sprite& s) {
     const auto size = s.trimmed_source_rect.size();
-    s.size.x = std::max(s.min_size.x,
-      ceil(size.x + 2 * s.extrude.count, s.divisible_size.x));
-    s.size.y = std::max(s.min_size.y,
-      ceil(size.y + 2 * s.extrude.count, s.divisible_size.y));
+    s.bounds.x = std::max(s.min_bounds.x,
+      ceil(size.x + 2 * s.extrude.count, s.divisible_bounds.x));
+    s.bounds.y = std::max(s.min_bounds.y,
+      ceil(size.y + 2 * s.extrude.count, s.divisible_bounds.y));
   }
 
   void update_sprite_alignment(Sprite& s) {
-    const auto margin = s.size - s.trimmed_source_rect.size();
+    const auto margin = s.bounds - s.trimmed_source_rect.size();
     switch (s.align.anchor_x) {
       case AnchorX::left:   s.align.x += 0; break;
       case AnchorX::center: s.align.x += margin.x / 2; break;
@@ -168,21 +168,21 @@ namespace {
     return slices;
   }
 
-  void update_common_sizes(std::vector<Sprite>& sprites) {
+  void update_common_bounds(std::vector<Sprite>& sprites) {
     auto sprites_by_key = std::map<std::string, std::vector<Sprite*>>();
     for (auto& sprite : sprites)
-      if (!sprite.common_size.empty())
-        sprites_by_key[sprite.common_size].push_back(&sprite);
+      if (!sprite.common_bounds.empty())
+        sprites_by_key[sprite.common_bounds].push_back(&sprite);
 
     for (const auto& [key, sprites] : sprites_by_key) {
-      auto max_size = Size{ };
+      auto max_bounds = Size{ };
       for (const auto* sprite : sprites) {
-        max_size.x = std::max(max_size.x, sprite->size.x);
-        max_size.y = std::max(max_size.y, sprite->size.y);
+        max_bounds.x = std::max(max_bounds.x, sprite->bounds.x);
+        max_bounds.y = std::max(max_bounds.y, sprite->bounds.y);
       }
       for (auto* sprite : sprites) {
-        sprite->size.x = std::max(max_size.x, sprite->size.x);
-        sprite->size.y = std::max(max_size.y, sprite->size.y);
+        sprite->bounds.x = std::max(max_bounds.x, sprite->bounds.x);
+        sprite->bounds.y = std::max(max_bounds.y, sprite->bounds.y);
       }
     }
   }
@@ -197,8 +197,8 @@ std::pair<int, int> get_slice_max_size(const Sheet& sheet) {
 
 std::vector<Slice> pack_sprites(std::vector<Sprite>& sprites) {
   for (auto& sprite : sprites)
-    update_sprite_size(sprite);
-  update_common_sizes(sprites);
+    update_sprite_bounds(sprite);
+  update_common_bounds(sprites);
 
   auto slices = pack_sprites_by_sheet(sprites);
 
@@ -252,9 +252,9 @@ void recompute_slice_size(Slice& slice) {
   auto max_y = 0;
   for (const auto& sprite : slice.sprites) {
     max_x = std::max(max_x, sprite.trimmed_rect.x - sprite.align.x +
-      (sprite.rotated ? sprite.size.y : sprite.size.x));
+      (sprite.rotated ? sprite.bounds.y : sprite.bounds.x));
     max_y = std::max(max_y, sprite.trimmed_rect.y - sprite.align.y +
-      (sprite.rotated ? sprite.size.x : sprite.size.y));
+      (sprite.rotated ? sprite.bounds.x : sprite.bounds.y));
   }
   slice.width = std::max(sheet.width, max_x + sheet.border_padding);
   slice.height = std::max(sheet.height, max_y + sheet.border_padding);

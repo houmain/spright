@@ -260,10 +260,10 @@ The following table contains a list of all definitions, with the item each affec
 | crop           |sprite | [boolean]    | Sets whether the sprite's rectangle should be reduced to the trimmed bounds.
 | crop-pivot     |sprite | [boolean]    | Sets whether the sprite's pivot point should be relative to the trimmed bounds.
 | extrude        |sprite | [pixels],<br/>[wrap-mode] | Adds a padding around the sprite and fills it depending on the _wrap-mode_:<br/>- _clamp_: Clamp to border pixels (default).<br/>- _mirror_: Mirror border pixels.<br/>- _repeat_: Repeat border pixels.
-| min-size       |sprite | x, [y]       | Sets a sprite's minimum size. Smaller sprites are filled up with transparency.
-| divisible-size |sprite | x, [y]       | Restricts the sprite's size to be divisible by a certain number of pixels.
-| common-size    |sprite | [key]        | Makes all sprites with identical _keys_ expand to a common size.
-| align          |sprite | align-x, align-y | Sets the offset of the sprite when it's size is expanded. The parametrization works as for _pivot_ points.
+| min-bounds     |sprite | x, [y]       | Sets a sprite's minimum bounds, which is the total space it allocates on the output. Smaller sprites are surrounded with transparency.
+| divisible-bounds|sprite| x, [y]       | Restricts the sprite's bounds to be divisible by a certain number of pixels.
+| common-bounds  |sprite | [key]        | Makes all sprites with identical _keys_ expand to common bounds.
+| align          |sprite | align-x, align-y| Sets the alignment of the sprite within its bounds. The parametrization works as for _pivot_ points.
 | tag            |sprite | key, [value] | Adds a tag to a sprite (_value_ defaults to an empty string).
 | data           |sprite | key, value   | Adds a user defined data entry to a sprite.
 | set            |-      | key, value   | Sets a variable value, which can be accessed in different places using `{{ key }}`.
