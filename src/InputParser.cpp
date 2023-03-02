@@ -138,7 +138,6 @@ void InputParser::sprite_ends(State& state) {
   sprite.source_rect = (!empty(state.rect) ?
     state.rect : sprite.source->bounds());
   sprite.pivot = state.pivot;
-  sprite.pivot_point = state.pivot_point;
   sprite.trim = state.trim;
   sprite.trim_margin = state.trim_margin;
   sprite.trim_threshold = state.trim_threshold;

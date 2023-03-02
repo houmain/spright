@@ -44,8 +44,8 @@ void pack_binpack(const SheetPtr& sheet_ptr, SpriteSpan sprites,
       auto& sprite = sprites[to_unsigned(pack_rect.id)];
       sprite.rotated = pack_rect.rotated;
       sprite.slice_index = slice_index;
-      sprite.trimmed_rect.x = pack_rect.x + sprite.offset.x;
-      sprite.trimmed_rect.y = pack_rect.y + sprite.offset.y;
+      sprite.trimmed_rect.x = pack_rect.x;
+      sprite.trimmed_rect.y = pack_rect.y;
       ++packed_sprites;
     }
     ++slice_index;

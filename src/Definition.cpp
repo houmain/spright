@@ -223,6 +223,55 @@ void apply_definition(Definition definition,
       color.a = 255;
     return color;
   };
+  const auto check_anchor = [&]() {
+    // join expressions (e.g. middle - 7 top + 2)
+    if (!std::all_of(arguments.begin(), arguments.end(),
+        [](const auto& v) { return to_real(v).has_value(); }))
+      join_expressions(&arguments);
+
+    auto anchor = AnchorF{ { 0, 0 }, AnchorX::left, AnchorY::top };
+    auto current_coord = &anchor.x;
+    auto prev_coord = std::add_pointer_t<real>{ };
+    auto expr = std::vector<std::string_view>();
+    for (auto i = 0; i < 2; ++i) {
+      split_expression(check_string(), &expr);
+      if (const auto index = index_of(expr.front(),
+          { "left", "center", "right" }); index >= 0) {
+        anchor.anchor_x = static_cast<AnchorX>(index);
+        current_coord = &anchor.x;
+      }
+      else if (const auto index = index_of(expr.front(),
+          { "top", "middle", "bottom" }); index >= 0) {
+        anchor.anchor_y = static_cast<AnchorY>(index);
+        current_coord = &anchor.y;
+      }
+      else if (auto value = to_real(expr.front())) {
+        *current_coord = *value;
+      }
+      else if (!expr.front().empty()) {
+        error("invalid anchor value '", expr.front(), "'");
+      }
+
+      if (expr.size() % 2 != 1)
+        error("invalid anchor expression");
+      for (auto j = 1u; j < expr.size(); j += 2) {
+        const auto value = to_real(expr[j + 1]);
+        if (value && expr[j] == "+")
+          *current_coord += *value;
+        else if (value && expr[j] == "-")
+          *current_coord -= *value;
+        else
+          error("invalid anchor expression");
+      }
+
+      if (prev_coord == current_coord)
+        error("duplicate coordinate specified");
+      prev_coord = current_coord;
+      current_coord = (current_coord == &anchor.x ?
+        &anchor.y : &anchor.x);
+    }
+    return anchor;
+  };
 
   switch (definition) {
     case Definition::set: {
@@ -414,55 +463,9 @@ void apply_definition(Definition definition,
       state.rect = check_rect();
       break;
 
-    case Definition::pivot: {
-      // join expressions (e.g. middle - 7 top + 2)
-      if (!std::all_of(arguments.begin(), arguments.end(), 
-          [](const auto& v) { return to_real(v).has_value(); }))
-        join_expressions(&arguments);
-
-      state.pivot = { PivotX::left, PivotY::top };
-      auto current_coord = &state.pivot_point.x;
-      auto prev_coord = std::add_pointer_t<real>{ };
-      auto expr = std::vector<std::string_view>();
-      for (auto i = 0; i < 2; ++i) {
-        split_expression(check_string(), &expr);
-        if (const auto index = index_of(expr.front(), 
-            { "left", "center", "right" }); index >= 0) {
-          state.pivot.x = static_cast<PivotX>(index);
-          current_coord = &state.pivot_point.x;
-        }
-        else if (const auto index = index_of(expr.front(), 
-            { "top", "middle", "bottom" }); index >= 0) {
-          state.pivot.y = static_cast<PivotY>(index);
-          current_coord = &state.pivot_point.y;
-        }
-        else if (auto value = to_real(expr.front())) {
-          *current_coord = *value;
-        }
-        else if (!expr.front().empty()) {
-          error("invalid pivot value '", expr.front(), "'");
-        }
-
-        if (expr.size() % 2 != 1)
-          error("invalid pivot expression");
-        for (auto j = 1u; j < expr.size(); j += 2) {
-          const auto value = to_real(expr[j + 1]);
-          if (value && expr[j] == "+")
-            *current_coord += *value;
-          else if (value && expr[j] == "-")
-            *current_coord -= *value;
-          else
-            error("invalid pivot expression");
-        }
-
-        if (prev_coord == current_coord)
-          error("duplicate pivot coordinate specified");
-        prev_coord = current_coord;
-        current_coord = (current_coord == &state.pivot_point.x ? 
-          &state.pivot_point.y : &state.pivot_point.x);
-      }
+    case Definition::pivot:
+      state.pivot = check_anchor();
       break;
-    }
 
     case Definition::trim: {
       const auto string = check_string();
@@ -526,19 +529,12 @@ void apply_definition(Definition definition,
       break;
 
     case Definition::align: {
-      const auto string_x = check_string();
-      if (const auto index = index_of(string_x,
-          { "left", "center", "right" }); index >= 0)
-        state.align.x = static_cast<AlignX>(index);
-      else
-        error("invalid align mode '", string_x, "'");
-
-      const auto string_y = check_string();
-      if (const auto index = index_of(string_y,
-          { "top", "middle", "bottom" }); index >= 0)
-        state.align.y = static_cast<AlignY>(index);
-      else
-        error("invalid align mode '", string_y, "'");
+      const auto anchor = check_anchor();
+      state.align = {
+        Point(anchor),
+        anchor.anchor_x,
+        anchor.anchor_y
+      };
       break;
     }
     case Definition::MAX:

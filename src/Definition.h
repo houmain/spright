@@ -98,8 +98,7 @@ struct State {
   Size grid_spacing{ };
   Size span{ 1, 1 };
   int atlas_merge_distance{ -1 };
-  Pivot pivot{ PivotX::center, PivotY::middle };
-  PointF pivot_point{ };
+  AnchorF pivot{ { 0, 0 }, AnchorX::center, AnchorY::middle };
   Rect rect{ };
   Trim trim{ Trim::rect };
   int trim_threshold{ 1 };
@@ -111,7 +110,7 @@ struct State {
   Size min_size{ };
   Size divisible_size{ 1, 1 };
   std::string common_size;
-  Align align{ AlignX::center, AlignY::middle };
+  Anchor align{ { 0, 0 }, AnchorX::center, AnchorY::middle };
 };
 
 Definition get_definition(std::string_view command);

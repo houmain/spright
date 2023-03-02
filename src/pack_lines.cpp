@@ -52,8 +52,8 @@ void pack_lines(bool horizontal, const SheetPtr& sheet,
         pos.y + size.y > max_height)
       break;
 
-    sprite.trimmed_rect.x = pos.x + sprite.offset.x + sheet->border_padding;
-    sprite.trimmed_rect.y = pos.y + sprite.offset.y + sheet->border_padding;
+    sprite.trimmed_rect.x = pos.x + sheet->border_padding;
+    sprite.trimmed_rect.y = pos.y + sheet->border_padding;
 
     pos_d += size_d + sheet->shape_padding;
     line_size = std::max(line_size, size_p + sheet->shape_padding);

@@ -853,9 +853,9 @@ Image resize_image(const Image& image, real scale, ResizeFilter filter) {
   if (width == image.width() && height == image.height())
     return image.clone();
 
-  if (filter == ResizeFilter::undefined)
-    filter = (std::fmod(scale, 1.0f) == 0 ? 
-      ResizeFilter::box : ResizeFilter::triangle);
+  if (filter == ResizeFilter::undefined &&
+      std::fmod(scale, 1.0f) == 0)
+    filter = ResizeFilter::box;
 
   auto output = Image(width, height);
   const auto flags = 0;

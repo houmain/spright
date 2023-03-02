@@ -60,7 +60,7 @@ void draw_debug_info(Image& target, const Sprite& sprite, real scale) {
 
   auto rect = scale_rect(sprite.rect);
   auto trimmed_rect = scale_rect(sprite.trimmed_rect);
-  auto pivot_point = scale_point(sprite.pivot_point);
+  auto pivot_point = scale_point(sprite.pivot);
   if (sprite.rotated) {
     std::swap(rect.w, rect.h);
     std::swap(trimmed_rect.w, trimmed_rect.h);

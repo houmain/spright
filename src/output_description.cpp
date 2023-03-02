@@ -85,7 +85,7 @@ namespace {
       json_sprite["sourceIndex"] = source_index;
       json_sprite["sourceRect"] = json_rect(sprite->source_rect);
       json_sprite["trimmedSourceRect"] = json_rect(sprite->trimmed_source_rect);
-      json_sprite["pivot"] = json_point(sprite->pivot_point);
+      json_sprite["pivot"] = json_point(sprite->pivot);
       json_sprite["sliceIndex"] = slice_index;
       json_sprite["sliceSpriteIndex"] = slice_sprites[slice_index].size();
       json_sprite["rotated"] = sprite->rotated;

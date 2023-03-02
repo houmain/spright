@@ -29,33 +29,33 @@ TEST_CASE("pivot") {
   REQUIRE(sprites.size() == 6u);
 
   CHECK(sprites[0].id == "xword_yword");
-  CHECK(sprites[0].pivot.x == PivotX::left);
-  CHECK(sprites[0].pivot.y == PivotY::top);
+  CHECK(sprites[0].pivot.anchor_x == AnchorX::left);
+  CHECK(sprites[0].pivot.anchor_y == AnchorY::top);
 
   CHECK(sprites[1].id == "xnum_yword");
-  CHECK(sprites[1].pivot.x == PivotX::left);
-  CHECK(sprites[1].pivot_point.x == 1);
-  CHECK(sprites[1].pivot.y == PivotY::top);
+  CHECK(sprites[1].pivot.anchor_x == AnchorX::left);
+  CHECK(sprites[1].pivot.x == 1);
+  CHECK(sprites[1].pivot.anchor_y == AnchorY::top);
 
   CHECK(sprites[2].id == "xword_ynum");
-  CHECK(sprites[2].pivot.x == PivotX::left);
-  CHECK(sprites[2].pivot.y == PivotY::top);
-  CHECK(sprites[2].pivot_point.y == 2);
+  CHECK(sprites[2].pivot.anchor_x == AnchorX::left);
+  CHECK(sprites[2].pivot.anchor_y == AnchorY::top);
+  CHECK(sprites[2].pivot.y == 2);
 
   CHECK(sprites[3].id == "xnum_ynum");
-  CHECK(sprites[3].pivot.x == PivotX::left);
-  CHECK(sprites[3].pivot_point.x == 1);
-  CHECK(sprites[3].pivot.y == PivotY::top);
-  CHECK(sprites[3].pivot_point.y == 2);
+  CHECK(sprites[3].pivot.anchor_x == AnchorX::left);
+  CHECK(sprites[3].pivot.x == 1);
+  CHECK(sprites[3].pivot.anchor_y == AnchorY::top);
+  CHECK(sprites[3].pivot.y == 2);
 
   CHECK(sprites[4].id == "yword_xword");
-  CHECK(sprites[4].pivot.x == PivotX::left);
-  CHECK(sprites[4].pivot.y == PivotY::top);
+  CHECK(sprites[4].pivot.anchor_x == AnchorX::left);
+  CHECK(sprites[4].pivot.anchor_y == AnchorY::top);
 
   CHECK(sprites[5].id == "yword_xnum");
-  CHECK(sprites[5].pivot.x == PivotX::left);
-  CHECK(sprites[5].pivot_point.x == 1);
-  CHECK(sprites[5].pivot.y == PivotY::top);
+  CHECK(sprites[5].pivot.anchor_x == AnchorX::left);
+  CHECK(sprites[5].pivot.x == 1);
+  CHECK(sprites[5].pivot.anchor_y == AnchorY::top);
 
   // not allowed combination (use: top + 2 left)
   input = std::stringstream(R"(
@@ -98,28 +98,28 @@ TEST_CASE("pivot - expressions") {
   REQUIRE(sprites.size() == 4u);
 
   CHECK(sprites[0].id == "expr1");
-  CHECK(sprites[0].pivot.x == PivotX::left);
-  CHECK(sprites[0].pivot_point.x == -4);
-  CHECK(sprites[0].pivot.y == PivotY::middle);
-  CHECK(sprites[0].pivot_point.y == 0);
+  CHECK(sprites[0].pivot.anchor_x == AnchorX::left);
+  CHECK(sprites[0].pivot.x == -4);
+  CHECK(sprites[0].pivot.anchor_y == AnchorY::middle);
+  CHECK(sprites[0].pivot.y == 0);
 
   CHECK(sprites[1].id == "expr2");
-  CHECK(sprites[1].pivot.x == PivotX::left);
-  CHECK(sprites[1].pivot_point.x == -3);
-  CHECK(sprites[1].pivot.y == PivotY::bottom);
-  CHECK(sprites[1].pivot_point.y == 4);
+  CHECK(sprites[1].pivot.anchor_x == AnchorX::left);
+  CHECK(sprites[1].pivot.x == -3);
+  CHECK(sprites[1].pivot.anchor_y == AnchorY::bottom);
+  CHECK(sprites[1].pivot.y == 4);
 
   CHECK(sprites[2].id == "expr3");
-  CHECK(sprites[2].pivot.x == PivotX::left);
-  CHECK(sprites[2].pivot_point.x == 3);
-  CHECK(sprites[2].pivot.y == PivotY::top);
-  CHECK(sprites[2].pivot_point.y == -7);
+  CHECK(sprites[2].pivot.anchor_x == AnchorX::left);
+  CHECK(sprites[2].pivot.x == 3);
+  CHECK(sprites[2].pivot.anchor_y == AnchorY::top);
+  CHECK(sprites[2].pivot.y == -7);
 
   CHECK(sprites[3].id == "expr4");
-  CHECK(sprites[3].pivot.x == PivotX::center);
-  CHECK(sprites[3].pivot_point.x == 3.5 - 1.1);
-  CHECK(sprites[3].pivot.y == PivotY::middle);
-  CHECK(sprites[3].pivot_point.y == -4.2 + 2.5);
+  CHECK(sprites[3].pivot.anchor_x == AnchorX::center);
+  CHECK(sprites[3].pivot.x == 3.5 - 1.1);
+  CHECK(sprites[3].pivot.anchor_y == AnchorY::middle);
+  CHECK(sprites[3].pivot.y == -4.2 + 2.5);
 
   // not allowed combination (use: middle left - 3)
   input = std::stringstream(R"(

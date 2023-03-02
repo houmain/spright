@@ -17,13 +17,16 @@ using StringMap = std::map<std::string, std::string, std::less<>>;
 using Variant = std::variant<bool, real, std::string>;
 using VariantMap = std::map<std::string, Variant, std::less<>>;
 
-enum class PivotX { left, center, right };
-enum class PivotY { top, middle, bottom };
-struct Pivot { PivotX x; PivotY y; };
+enum class AnchorX { left, center, right };
+enum class AnchorY { top, middle, bottom };
 
-enum class AlignX { left, center, right };
-enum class AlignY { top, middle, bottom };
-struct Align { AlignX x; AlignY y; };
+template<typename T>
+struct AnchorT : PointT<T> {
+  AnchorX anchor_x;
+  AnchorY anchor_y;
+};
+using Anchor = AnchorT<int>;
+using AnchorF = AnchorT<real>;
 
 enum class Trim { none, rect, convex };
 
@@ -42,7 +45,7 @@ struct Output {
   FilenameSequence filename;
   std::string default_map_suffix;
   std::vector<std::string> map_suffixes;
-  Alpha alpha{ Alpha::keep };
+  Alpha alpha{ };
   RGBA colorkey{ };
   real scale{ };
   ResizeFilter scale_filter{ };
@@ -64,7 +67,7 @@ struct Sheet {
   int border_padding{ };
   int shape_padding{ };
   Duplicates duplicates{ };
-  Pack pack{ Pack::binpack };
+  Pack pack{ };
 };
 
 struct Sprite {
@@ -78,8 +81,7 @@ struct Sprite {
   Rect source_rect{ };
   // the actual pixels in the sources.
   Rect trimmed_source_rect{ };
-  Pivot pivot{ PivotX::center, PivotY::middle };
-  PointF pivot_point{ };
+  AnchorF pivot{ };
   Trim trim{ Trim::none };
   int trim_margin{ };
   int trim_threshold{ };
@@ -90,7 +92,8 @@ struct Sprite {
   Size min_size{ };
   Size divisible_size{ };
   std::string common_size;
-  Align align{ AlignX::center, AlignY::middle };
+  // the offset of the trimmed rect in the rect of 'size'.
+  Anchor align{ };
   StringMap tags;
   VariantMap data;
 
@@ -103,8 +106,6 @@ struct Sprite {
   bool rotated{ };
   // the size it takes on the slice (including size-margin, extrude...).
   Size size{ };
-  // the offset of the trimmed rect in the rect of 'size'.
-  Point offset{ };
   std::vector<PointF> vertices;
   int duplicate_of_index{ -1 };
 };

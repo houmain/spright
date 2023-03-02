@@ -29,21 +29,25 @@ namespace {
       ceil(size.y + 2 * s.extrude.count, s.divisible_size.y));
   }
 
-  void update_sprite_offset(Sprite& s) {
+  void update_sprite_alignment(Sprite& s) {
     const auto margin = s.size - s.trimmed_source_rect.size();
-    switch (s.align.x) {
-      case AlignX::left:   s.offset.x = 0; break;
-      case AlignX::center: s.offset.x = margin.x / 2; break;
-      case AlignX::right:  s.offset.x = margin.x; break;
+    switch (s.align.anchor_x) {
+      case AnchorX::left:   s.align.x += 0; break;
+      case AnchorX::center: s.align.x += margin.x / 2; break;
+      case AnchorX::right:  s.align.x += margin.x; break;
     }
-    switch (s.align.y) {
-      case AlignY::top:    s.offset.y = 0; break;
-      case AlignY::middle: s.offset.y = margin.y / 2; break;
-      case AlignY::bottom: s.offset.y = margin.y; break;
+    switch (s.align.anchor_y) {
+      case AnchorY::top:    s.align.y += 0; break;
+      case AnchorY::middle: s.align.y += margin.y / 2; break;
+      case AnchorY::bottom: s.align.y += margin.y; break;
     }
   }
 
   void update_sprite_rect(Sprite& s) {
+    if (s.sheet && s.sheet->pack != Pack::keep) {
+      s.trimmed_rect.x += s.align.x;
+      s.trimmed_rect.y += s.align.y;
+    }
     s.trimmed_rect.w = s.trimmed_source_rect.w;
     s.trimmed_rect.h = s.trimmed_source_rect.h;
 
@@ -63,20 +67,20 @@ namespace {
   void update_sprite_pivot_point(Sprite &s) {
     const auto pivot_rect = RectF(s.crop_pivot ?
       s.trimmed_source_rect : s.source_rect);
-    switch (s.pivot.x) {
-      case PivotX::left:   s.pivot_point.x += 0; break;
-      case PivotX::center: s.pivot_point.x += pivot_rect.w / 2; break;
-      case PivotX::right:  s.pivot_point.x += pivot_rect.w; break;
+    switch (s.pivot.anchor_x) {
+      case AnchorX::left:   s.pivot.x += 0; break;
+      case AnchorX::center: s.pivot.x += pivot_rect.w / 2; break;
+      case AnchorX::right:  s.pivot.x += pivot_rect.w; break;
     }
-    switch (s.pivot.y) {
-      case PivotY::top:    s.pivot_point.y += 0; break;
-      case PivotY::middle: s.pivot_point.y += pivot_rect.h / 2; break;
-      case PivotY::bottom: s.pivot_point.y += pivot_rect.h; break;
+    switch (s.pivot.anchor_y) {
+      case AnchorY::top:    s.pivot.y += 0; break;
+      case AnchorY::middle: s.pivot.y += pivot_rect.h / 2; break;
+      case AnchorY::bottom: s.pivot.y += pivot_rect.h; break;
     }
-    s.pivot_point.x -= s.rect.x - s.trimmed_rect.x;
-    s.pivot_point.y -= s.rect.y - s.trimmed_rect.y;
-    s.pivot_point.x += (pivot_rect.x - s.trimmed_source_rect.x);
-    s.pivot_point.y += (pivot_rect.y - s.trimmed_source_rect.y);
+    s.pivot.x -= s.rect.x - s.trimmed_rect.x;
+    s.pivot.y -= s.rect.y - s.trimmed_rect.y;
+    s.pivot.x += (pivot_rect.x - s.trimmed_source_rect.x);
+    s.pivot.y += (pivot_rect.y - s.trimmed_source_rect.y);
   }
 
   void pack_slice(const SheetPtr& sheet,
@@ -195,12 +199,11 @@ std::vector<Slice> pack_sprites(std::vector<Sprite>& sprites) {
   for (auto& sprite : sprites)
     update_sprite_size(sprite);
   update_common_sizes(sprites);
-  for (auto& sprite : sprites)
-    update_sprite_offset(sprite);
 
   auto slices = pack_sprites_by_sheet(sprites);
 
   for (auto& sprite : sprites) {
+    update_sprite_alignment(sprite);
     update_sprite_rect(sprite);
     update_sprite_pivot_point(sprite);
   }
@@ -248,9 +251,9 @@ void recompute_slice_size(Slice& slice) {
   auto max_x = 0;
   auto max_y = 0;
   for (const auto& sprite : slice.sprites) {
-    max_x = std::max(max_x, sprite.trimmed_rect.x - sprite.offset.x +
+    max_x = std::max(max_x, sprite.trimmed_rect.x - sprite.align.x +
       (sprite.rotated ? sprite.size.y : sprite.size.x));
-    max_y = std::max(max_y, sprite.trimmed_rect.y - sprite.offset.y +
+    max_y = std::max(max_y, sprite.trimmed_rect.y - sprite.align.y +
       (sprite.rotated ? sprite.size.x : sprite.size.y));
   }
   slice.width = std::max(sheet.width, max_x + sheet.border_padding);
