@@ -261,7 +261,6 @@ The following table contains a list of all definitions, with the item each affec
 | crop-pivot     |sprite | [boolean]    | Sets whether the sprite's pivot point should be relative to the trimmed bounds.
 | extrude        |sprite | [pixels],<br/>[wrap-mode] | Adds a padding around the sprite and fills it depending on the _wrap-mode_:<br/>- _clamp_: Clamp to border pixels (default).<br/>- _mirror_: Mirror border pixels.<br/>- _repeat_: Repeat border pixels.
 | min-size       |sprite | x, [y]       | Sets a sprite's minimum size. Smaller sprites are filled up with transparency.
-| max-size       |sprite | x, [y]       | Sets a sprite's maximum size. Bigger sprites are truncated.
 | divisible-size |sprite | x, [y]       | Restricts the sprite's size to be divisible by a certain number of pixels.
 | common-size    |sprite | [key]        | Makes all sprites with identical _keys_ expand to a common size.
 | align          |sprite | align-x, align-y | Sets the offset of the sprite when it's size is expanded/truncated. Optionally a horizontal (_pivot-x, left, center, right_) and vertical (_pivot-y, top, middle, bottom_) anchor can be set.

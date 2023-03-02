@@ -88,7 +88,6 @@ struct Sprite {
   bool crop_pivot{ };
   Extrude extrude{ };
   Size min_size{ };
-  Size max_size{ };
   Size divisible_size{ };
   std::string common_size;
   Align align{ AlignX::center, AlignY::middle };
@@ -99,7 +98,7 @@ struct Sprite {
   // the logical rect in the output.
   Rect rect{ };
   // the actual pixels in the output. has the same size as
-  // the trimmed source rect (unless cropped by max_size).
+  // the trimmed source rect.
   Rect trimmed_rect{ };
   bool rotated{ };
   // the size it takes on the slice (including size-margin, extrude...).

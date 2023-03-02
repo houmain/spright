@@ -88,7 +88,6 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::crop_pivot: return "crop-pivot";
     case Definition::extrude: return "extrude";
     case Definition::min_size: return "min-size";
-    case Definition::max_size: return "max-size";
     case Definition::divisible_size: return "divisible-size";
     case Definition::common_size: return "common-size";
     case Definition::align: return "align";
@@ -153,7 +152,6 @@ Definition get_affected_definition(Definition definition) {
     case Definition::crop_pivot:
     case Definition::extrude:
     case Definition::min_size:
-    case Definition::max_size:
     case Definition::divisible_size:
     case Definition::common_size:
     case Definition::align:
@@ -515,10 +513,6 @@ void apply_definition(Definition definition,
 
     case Definition::min_size:
       state.min_size = check_size(true);
-      break;
-
-    case Definition::max_size:
-      state.max_size = check_size(true);
       break;
 
     case Definition::divisible_size:
