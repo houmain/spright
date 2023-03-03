@@ -59,9 +59,9 @@ namespace {
   void blend(Image& image, int x, int y, const RGBA& color) {
     auto& a = image.rgba_at({ x, y });
     const auto& b = color;
-    a.r = static_cast<uint8_t>((a.r * (255 - b.a) + b.r * b.a) / 255);
-    a.g = static_cast<uint8_t>((a.g * (255 - b.a) + b.g * b.a) / 255);
-    a.b = static_cast<uint8_t>((a.b * (255 - b.a) + b.b * b.a) / 255);
+    a.r = to_byte((a.r * (255 - b.a) + b.r * b.a) / 255);
+    a.g = to_byte((a.g * (255 - b.a) + b.g * b.a) / 255);
+    a.b = to_byte((a.b * (255 - b.a) + b.b * b.a) / 255);
     a.a = std::max(a.a, b.a);
   }
 
@@ -209,7 +209,7 @@ namespace {
       for (auto i = 0; i < 4; ++i) {
         const auto [min, max] = std::minmax_element(colors.begin(), colors.end(),
           [&](const RGBA& a, const RGBA& b) { return a.channel(i) < b.channel(i); });
-        const auto channel_range = max->channel(i) - min->channel(i);
+        const auto channel_range = to_byte(max->channel(i) - min->channel(i));
         if (channel_range > max_channel_range) {
           max_channel_range = channel_range;
           max_channel = i;
@@ -233,7 +233,7 @@ namespace {
     // start with one bucket containing whole image
     insert_bucket(image);
 
-    while (static_cast<int>(buckets.size()) < max_colors) {
+    while (to_int(buckets.size()) < max_colors) {
       // split bucket with maximum range
       auto [range, colors] = buckets.back();
       if (range == 0)
@@ -250,10 +250,10 @@ namespace {
       auto sum = std::array<uint32_t, 4>();
       for (const auto& color : bucket.colors)
         for (auto i = 0; i < 4; ++i)
-          sum[i] += color.channel(i);
+          sum[to_unsigned(i)] += color.channel(i);
       auto color = RGBA{ };
       for (auto i = 0; i < 4; ++i)
-        color.channel(i) = sum[i] / bucket.colors.size();
+        color.channel(i) = to_byte(sum[to_unsigned(i)] / bucket.colors.size());
       palette.push_back(color);
     }
     return palette;
@@ -262,13 +262,13 @@ namespace {
   int index_of_closest_palette_color(const Palette& palette, const RGBA& color) {
     auto min_index = 0;
     auto min_distance = std::numeric_limits<int>::max();
-    for (auto i = 0; i < palette.size(); ++i) {
+    for (auto i = 0u; i < palette.size(); ++i) {
       const auto r = palette[i].r - color.r;
       const auto g = palette[i].g - color.g;
       const auto b = palette[i].b - color.b;
       const auto distance = (r * r + g * g + b * b);
       if (distance < min_distance) {
-        min_index = i;
+        min_index = to_int(i);
         min_distance = distance;
       }
     }
@@ -276,7 +276,7 @@ namespace {
   }
 
   const RGBA& closest_palette_color(const Palette& palette, const RGBA& color) {
-    return palette[index_of_closest_palette_color(palette, color)];
+    return palette[to_unsigned(index_of_closest_palette_color(palette, color))];
   }
 
   // https://en.wikipedia.org/wiki/Floyd%E2%80%93Steinberg_dithering
@@ -285,7 +285,7 @@ namespace {
       return static_cast<int>(a) - static_cast<int>(b);
     };
     const auto saturate = [](int value) { 
-      return static_cast<uint8_t>(std::clamp(value, 0, 255));
+      return to_byte(std::clamp(value, 0, 255));
     };
     const auto w = image.width();
     const auto h = image.height();
@@ -338,7 +338,12 @@ namespace {
         palette, *animation.color_key);
 
     const auto [width, height] = first_image.bounds().size();
-    auto gif = ge_new_gif(filename.c_str(), width, height, 
+    if (width > 0xFFFF || height > 0xFFFF)
+      return false;
+
+    auto gif = ge_new_gif(filename.c_str(),
+      static_cast<uint16_t>(width),
+      static_cast<uint16_t>(height),
       palette_rgb.get(), bits, transparent_index, animation.loop_count);
     if (!gif)
       return false;
@@ -348,7 +353,7 @@ namespace {
         std::chrono::duration<uint16_t, std::ratio<1, 100>>>(
         std::chrono::duration<real>(frame.duration)).count();
       const auto mono = quantize_image(frame.image, palette, true);
-      std::memcpy(gif->frame, mono.data(), width * height);
+      std::memcpy(gif->frame, mono.data(), to_unsigned(width * height));
       ge_add_frame(gif, delay);
     }
     ge_close_gif(gif);
@@ -809,7 +814,7 @@ void make_opaque(Image& image, RGBA background) {
 
 void premultiply_alpha(Image& image) {
   const auto multiply = [](int channel, int alpha) {
-    return static_cast<uint8_t>(channel * alpha / 256);
+    return to_byte(channel * alpha / 256);
   };
   const auto size = image.width() * image.height();
   auto rgba = image.rgba();
@@ -899,14 +904,14 @@ MonoImage quantize_image(const Image& image, const Palette& palette, bool dither
   auto out = MonoImage(image.width(), image.height());
   for (auto y = 0; y < image.height(); ++y)
     for (auto x = 0; x < image.width(); ++x)
-      out.value_at({ x, y }) = 
-        index_of_closest_palette_color(palette, image.rgba_at({ x, y }));
+      out.value_at({ x, y }) = to_byte(
+        index_of_closest_palette_color(palette, image.rgba_at({ x, y })));
   return out;
 }
 
 Image apply_palette(const MonoImage& image, const Palette& palette) {
   auto out = Image(image.width(), image.height());
-  const auto max = static_cast<uint8_t>(palette.size() - 1);
+  const auto max = to_byte(palette.size() - 1);
   for (auto y = 0; y < image.height(); ++y)
     for (auto x = 0; x < image.width(); ++x)
       out.rgba_at({ x, y }) = palette[std::min(max, image.value_at({ x, y }))];

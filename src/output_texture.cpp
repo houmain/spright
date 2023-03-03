@@ -159,7 +159,7 @@ namespace {
 
         if (settings.debug)
           draw_debug_info(frame.image, 
-            texture.slice->sprites[frame.index], texture.output->scale);
+            texture.slice->sprites[to_unsigned(frame.index)], texture.output->scale);
       });
 
     if (texture.output->alpha == Alpha::colorkey)

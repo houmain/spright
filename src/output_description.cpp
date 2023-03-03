@@ -146,11 +146,11 @@ namespace {
       json_texture["spriteIndices"] = slice_sprites[slice.index];
       json_texture["filename"] = texture.filename;
       json_texture["scale"] = output.scale;
-      json_texture["width"] = static_cast<int>(slice.width * output.scale);
-      json_texture["height"] = static_cast<int>(slice.height * output.scale);
+      json_texture["width"] = to_int(slice.width * output.scale);
+      json_texture["height"] = to_int(slice.height * output.scale);
       json_texture["map"] = (texture.map_index < 0 ?
         texture.output->default_map_suffix :
-        texture.output->map_suffixes.at(static_cast<size_t>(texture.map_index)));
+        texture.output->map_suffixes.at(to_unsigned(texture.map_index)));
     }
 
     for (const auto& [key, value] : variables)

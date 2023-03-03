@@ -183,7 +183,7 @@ TEST_CASE("packing - Basic") {
     input "test/Items.png"
       colorkey
       atlas
-      divisible-size 16
+      divisible-bounds 16
   )");
   CHECK(slice.height <= 16);
   CHECK(le_size(slice, 496, 16));
@@ -195,7 +195,7 @@ TEST_CASE("packing - Basic") {
     input "test/Items.png"
       colorkey
       atlas
-      divisible-size 16
+      divisible-bounds 16
   )");
   CHECK(slice.height <= 20);
   CHECK(le_size(slice, 498, 18));
@@ -207,7 +207,7 @@ TEST_CASE("packing - Basic") {
     input "test/Items.png"
       colorkey
       atlas
-      divisible-size 16
+      divisible-bounds 16
   )");
   CHECK(slice.height <= 30);
   CHECK(le_size(slice, 528, 18));
@@ -219,7 +219,7 @@ TEST_CASE("packing - Basic") {
     input "test/Items.png"
       colorkey
       atlas
-      divisible-size 16
+      divisible-bounds 16
   )");
   CHECK(slice.height <= 20);
   CHECK(le_size(slice, 526, 16));
@@ -230,7 +230,7 @@ TEST_CASE("packing - Basic") {
     input "test/Items.png"
       colorkey
       atlas
-      divisible-size 24
+      divisible-bounds 24
       extrude 1
   )");
   CHECK(slice.height <= 30);
@@ -242,7 +242,7 @@ TEST_CASE("packing - Basic") {
     input "test/Items.png"
       colorkey
       atlas
-      divisible-size 16
+      divisible-bounds 16
   )");
   CHECK(le_size(slice, 136, 136));
 
@@ -254,7 +254,7 @@ TEST_CASE("packing - Basic") {
     input "test/Items.png"
       colorkey
       atlas
-      divisible-size 16
+      divisible-bounds 16
   )");
   CHECK(le_size(slice, 112, 112));
 

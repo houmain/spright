@@ -56,7 +56,13 @@ template<typename T>
 int to_int(const T& v) { 
   static_assert(std::is_floating_point_v<T> || 
     std::is_enum_v<T> || std::is_unsigned_v<T>);
-  return static_cast<int>(v); 
+  return static_cast<int>(v);
+}
+
+template<typename T>
+uint8_t to_byte(const T& v) {
+  static_assert(std::is_integral_v<T>);
+  return static_cast<uint8_t>(v);
 }
 
 template<typename T>
