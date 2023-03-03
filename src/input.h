@@ -94,6 +94,7 @@ struct Sprite {
   std::string common_bounds;
   // the offset of the trimmed rect within the sprite's bounds
   Anchor align{ };
+  std::string align_pivot;
   StringMap tags;
   VariantMap data;
 

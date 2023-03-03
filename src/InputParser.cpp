@@ -149,6 +149,7 @@ void InputParser::sprite_ends(State& state) {
   sprite.divisible_bounds = state.divisible_bounds;
   sprite.common_bounds = state.common_bounds;
   sprite.align = state.align;
+  sprite.align_pivot = state.align_pivot;
   sprite.tags = state.tags;
   sprite.data = state.data;
   validate_sprite(sprite);

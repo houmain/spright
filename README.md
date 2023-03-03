@@ -264,6 +264,7 @@ The following table contains a list of all definitions, with the item each affec
 | divisible-bounds|sprite| x, [y]       | Restricts the sprite's bounds to be divisible by a certain number of pixels.
 | common-bounds  |sprite | [key]        | Makes all sprites with identical _keys_ expand to common bounds.
 | align          |sprite | align-x, align-y| Sets the alignment of the sprite within its bounds. The parametrization works as for _pivot_ points.
+| align-pivot    |sprite | [key]        | Aligns all sprites with identical _keys_, so their pivot points have identical offsets within the sprites' bounds.
 | tag            |sprite | key, [value] | Adds a tag to a sprite (_value_ defaults to an empty string).
 | data           |sprite | key, value   | Adds a user defined data entry to a sprite.
 | set            |-      | key, value   | Sets a variable value, which can be accessed in different places using `{{ key }}`.

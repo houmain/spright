@@ -43,6 +43,48 @@ namespace {
     }
   }
 
+  void update_aligned_pivot(std::vector<Sprite>& sprites) {
+    auto sprites_by_key = std::map<std::string, std::vector<Sprite*>>();
+    for (auto& sprite : sprites)
+      if (!sprite.align_pivot.empty())
+        sprites_by_key[sprite.align_pivot].push_back(&sprite);
+
+    for (const auto& [key, sprites] : sprites_by_key) {
+      auto max_pivot = PointF{
+        std::numeric_limits<real>::min(),
+        std::numeric_limits<real>::min()
+      };
+      for (const auto* sprite : sprites) {
+        max_pivot.x = std::max(max_pivot.x, sprite->pivot.x);
+        max_pivot.y = std::max(max_pivot.y, sprite->pivot.y);
+      }
+      for (auto* sprite : sprites) {
+        auto offset = Point(max_pivot - sprite->pivot);
+        sprite->align.x += offset.x;
+        sprite->align.y += offset.y;
+        sprite->bounds.x += offset.x;
+        sprite->bounds.y += offset.y;
+      }
+    }
+  }
+
+  void update_common_bounds(std::vector<Sprite>& sprites) {
+    auto sprites_by_key = std::map<std::string, std::vector<Sprite*>>();
+    for (auto& sprite : sprites)
+      if (!sprite.common_bounds.empty())
+        sprites_by_key[sprite.common_bounds].push_back(&sprite);
+
+    for (const auto& [key, sprites] : sprites_by_key) {
+      auto max_bounds = Size{ };
+      for (const auto* sprite : sprites) {
+        max_bounds.x = std::max(max_bounds.x, sprite->bounds.x);
+        max_bounds.y = std::max(max_bounds.y, sprite->bounds.y);
+      }
+      for (auto* sprite : sprites)
+        sprite->bounds = max_bounds;
+    }
+  }
+
   void update_sprite_rect(Sprite& s) {
     if (s.sheet && s.sheet->pack != Pack::keep) {
       s.trimmed_rect.x += s.align.x;
@@ -167,25 +209,6 @@ namespace {
       }
     return slices;
   }
-
-  void update_common_bounds(std::vector<Sprite>& sprites) {
-    auto sprites_by_key = std::map<std::string, std::vector<Sprite*>>();
-    for (auto& sprite : sprites)
-      if (!sprite.common_bounds.empty())
-        sprites_by_key[sprite.common_bounds].push_back(&sprite);
-
-    for (const auto& [key, sprites] : sprites_by_key) {
-      auto max_bounds = Size{ };
-      for (const auto* sprite : sprites) {
-        max_bounds.x = std::max(max_bounds.x, sprite->bounds.x);
-        max_bounds.y = std::max(max_bounds.y, sprite->bounds.y);
-      }
-      for (auto* sprite : sprites) {
-        sprite->bounds.x = std::max(max_bounds.x, sprite->bounds.x);
-        sprite->bounds.y = std::max(max_bounds.y, sprite->bounds.y);
-      }
-    }
-  }
 } // namespace
 
 std::pair<int, int> get_slice_max_size(const Sheet& sheet) {
@@ -198,12 +221,22 @@ std::pair<int, int> get_slice_max_size(const Sheet& sheet) {
 std::vector<Slice> pack_sprites(std::vector<Sprite>& sprites) {
   for (auto& sprite : sprites)
     update_sprite_bounds(sprite);
+
+  // apply alignments which affect bounds first
+  for (auto& sprite : sprites)
+    if (!sprite.align_pivot.empty())
+      update_sprite_alignment(sprite);
+  update_aligned_pivot(sprites);
+
+  // otherwise apply alignments after updating bounds
   update_common_bounds(sprites);
+  for (auto& sprite : sprites)
+    if (sprite.align_pivot.empty())
+      update_sprite_alignment(sprite);
 
   auto slices = pack_sprites_by_sheet(sprites);
 
   for (auto& sprite : sprites) {
-    update_sprite_alignment(sprite);
     update_sprite_rect(sprite);
     update_sprite_pivot_point(sprite);
   }

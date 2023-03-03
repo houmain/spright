@@ -89,8 +89,9 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::extrude: return "extrude";
     case Definition::min_bounds: return "min-bounds";
     case Definition::divisible_bounds: return "divisible-bounds";
-    case Definition::common_bounds: return "common-bonuds";
+    case Definition::common_bounds: return "common-bounds";
     case Definition::align: return "align";
+    case Definition::align_pivot: return "align-pivot";
   }
   return "-";
 }
@@ -155,6 +156,7 @@ Definition get_affected_definition(Definition definition) {
     case Definition::divisible_bounds:
     case Definition::common_bounds:
     case Definition::align:
+    case Definition::align_pivot:
     case Definition::span:
       return Definition::sprite;
   }
@@ -537,6 +539,11 @@ void apply_definition(Definition definition,
       };
       break;
     }
+
+    case Definition::align_pivot:
+      state.align_pivot = (arguments_left() ? check_string() : "ALL");
+      break;
+
     case Definition::MAX:
     case Definition::none:
       break;

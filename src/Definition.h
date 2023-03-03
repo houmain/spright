@@ -56,6 +56,7 @@ enum class Definition {
   divisible_bounds,
   common_bounds,
   align,
+  align_pivot,
 
   MAX
 };
@@ -111,6 +112,7 @@ struct State {
   Size divisible_bounds{ 1, 1 };
   std::string common_bounds;
   Anchor align{ { 0, 0 }, AnchorX::center, AnchorY::middle };
+  std::string align_pivot;
 };
 
 Definition get_definition(std::string_view command);
