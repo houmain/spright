@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Version 2.2.0] - 2023-03-03
+
+### Added
+
+- Added gif output.
+- Added min-bounds.
+- Added common-bounds.
+- Added align.
+- Added align-pivot.
+- Allow to separate arguments by comma.
+
+### Changed
+
+- Renamed align-width to divisible-width.
+- Renamed common-divisor to divisible-bounds.
+
+## [Version 2.1.0] - 2023-02-24
+
+### Fixed
+
+- Fixed output scope.
+- Fixed expression evaluation.
+- Allow unexpanded variables in filename sequences.
+
 ## [Version 2.0.0] - 2023-02-22
 
 ### Changed
@@ -120,6 +144,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fixed -- commandline arguments.
 - Fixed sample cpp.template.
 
+[version 2.2.0]: https://github.com/houmain/spright/compare/2.1.0...2.2.0
+[version 2.1.0]: https://github.com/houmain/spright/compare/2.0.0...2.1.0
 [version 2.0.0]: https://github.com/houmain/spright/compare/1.9.0...2.0.0
 [version 1.9.0]: https://github.com/houmain/spright/compare/1.8.0...1.9.0
 [version 1.8.0]: https://github.com/houmain/spright/compare/1.7.0...1.8.0

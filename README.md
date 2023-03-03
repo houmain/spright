@@ -223,7 +223,7 @@ The following table contains a list of all definitions, with the item each affec
 | Definition     |Affects| Arguments    | Description |
 | -------------- |-------| -------------| ----------- |
 | **sheet**      |sprite | id           | Sets the sheet on which the sprites should be packed.
-| pack           |sheet  | pack-method  | Sets the method, which is used for placing the sprites on the sheet:<br/>- _binpack_ : Tries to reduce the texture size, while keeping the sprites' (trimmed) rectangles apart (default).<br/>- _compact_ : Tries to reduce the texture size, while keeping the sprites' convex outlines apart.<br/>- _rows_ : Layout sprites in simple rows.<br/>- _columns_ : Layout sprites in simple columns.<br/>- _single_ : Put each sprite on its own texture.<br/>- _keep_ : Keep sprite at same position as in source (ignores most constraints).
+| pack           |sheet  | pack-method  | Sets the method, which is used for placing the sprites on the sheet:<br/>- _binpack_ : Tries to reduce the texture size, while keeping the sprites' trimmed rectangle apart (default).<br/>- _compact_ : Tries to reduce the texture size, while keeping the sprites' convex outlines apart.<br/>- _rows_ : Layout sprites in simple rows.<br/>- _columns_ : Layout sprites in simple columns.<br/>- _single_ : Put each sprite on its own texture.<br/>- _layers_ : Put each sprite on its own layer (only for .gif output).<br/>- _keep_ : Keep sprite at same position as in source (ignores most constraints).
 | width          |sheet  | width        | Sets a fixed sheet width.
 | height         |sheet  | height       | Sets a fixed sheet height.
 | max-width      |sheet  | width        | Sets a maximum sheet width.
@@ -231,7 +231,7 @@ The following table contains a list of all definitions, with the item each affec
 | power-of-two   |sheet  | [boolean]    | Restricts the sheet's size to be a power of two.
 | square         |sheet  | [boolean]    | Restricts the sheet's size to be square.
 | divisible-width|sheet  | pixels       | Restricts the sheet's width to be divisible by a certain number of _pixels_.
-| allow-rotate   |sheet  | [boolean]    | Allows to rotate sprites clockwise by 90 degrees for improved packing performance.
+| allow-rotate   |sheet  | [boolean]    | Allows to rotate sprites clockwise by 90 degrees for improved packing efficiency.
 | padding        |sheet  | [pixels], [pixels] | Sets the space between two sprites / the space between a sprite and the texture's border.
 | duplicates     |sheet  | dedupe-mode  | Sets how identical sprites should be processed:<br/>- _keep_ : Disable duplicate detection (default).<br/>- _share_ : Identical sprites should share pixels on the sheet.<br/>- _drop_ : Duplicates should be dropped.
 | **output**     |sheet  | path         | Adds a new output file at _path_ to a sheet. It can define an un-/bounded sequence of files (e.g. "sheet{0-}.png").
