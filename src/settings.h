@@ -8,7 +8,7 @@ namespace spright {
 struct Settings {
   const char* default_input_file{ "spright.conf" };
   const char* default_output_file{ "spright.json" };
-  std::vector<std::filesystem::path> input_files;
+  std::filesystem::path input_file;
   std::filesystem::path output_path;
   std::filesystem::path output_file;
   std::filesystem::path template_file;

@@ -11,12 +11,11 @@ namespace spright {
 InputDefinition parse_definition(const Settings& settings) {
   auto parser = InputParser(settings);
 
-  for (const auto& input_file : settings.input_files) {
-    if (input_file == "stdin") {
-      parser.parse(std::cin);
-      continue;
-    }
-
+  const auto& input_file = settings.input_file;
+  if (input_file == "stdin") {
+    parser.parse(std::cin);
+  }
+  else {
     auto input = std::fstream(input_file, std::ios::in | std::ios::binary);
     if (!input.good())
       throw std::runtime_error("opening file '" + path_to_utf8(input_file) + "' failed");

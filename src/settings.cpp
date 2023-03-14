@@ -13,7 +13,7 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
     if (argument == "-i" || argument == "--input") {
       if (++i >= argc)
         return false;
-      settings.input_files.push_back(std::filesystem::u8path(unquote(argv[i])));
+      settings.input_file = std::filesystem::u8path(unquote(argv[i]));
     }
     else if (argument == "-t" || argument == "--template") {
       if (++i >= argc)
@@ -44,8 +44,8 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
     }
   }
 
-  if (settings.input_files.empty())
-    settings.input_files.emplace_back(settings.default_input_file);
+  if (settings.input_file.empty())
+    settings.input_file = settings.default_input_file;
 
   if (settings.output_file.empty())
     settings.output_file = settings.default_output_file;
