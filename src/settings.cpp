@@ -36,8 +36,8 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
     else if (argument == "-r" || argument == "--rebuild") {
       settings.rebuild = true;
     }
-    else if (argument == "-d" || argument == "--debug") {
-      settings.debug = true;
+    else if (argument == "-v" || argument == "--verbose") {
+      settings.verbose = true;
     }
     else {
       return false;
@@ -79,7 +79,7 @@ void print_help_message(const char* argv0) {
     "  -p, --path <path>      path to prepend to all output files.\n"
     "  -a, --autocomplete     autocomplete input definition.\n"
     "  -r, --regenerate       generate output even when input did not change.\n"
-    "  -d, --debug            draw sprite boundaries and pivot points on output.\n"
+    "  -v, --verbose          enable verbose messages.\n"
     "  -h, --help             print this help.\n"
     "\n"
     "All Rights Reserved.\n"

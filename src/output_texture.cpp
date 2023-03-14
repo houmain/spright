@@ -119,7 +119,7 @@ namespace {
       image = resize_image(image, output.scale, output.scale_filter);
   }
 
-  bool output_image(const Settings& settings, const Texture& texture) {
+  bool output_image(const Texture& texture) {
     // do not return before check if there is a map for slice
     if (!is_map(texture) && is_up_to_date(texture))
       return true;
@@ -133,14 +133,14 @@ namespace {
     
     process_texture_image(texture, image);
 
-    if (settings.debug)
+    if (texture.output->debug)
       draw_debug_info(image, *texture.slice, texture.output->scale);
 
     save_image(image, texture.filename);
     return true;
   }
 
-  bool output_animation(const Settings& settings, const Texture& texture) {
+  bool output_animation(const Texture& texture) {
     // do not return before check if there is a map for slice
     if (!is_map(texture) && is_up_to_date(texture))
       return true;
@@ -157,7 +157,7 @@ namespace {
       [&](Animation::Frame& frame) {
         process_texture_image(texture, frame.image);
 
-        if (settings.debug)
+        if (texture.output->debug)
           draw_debug_info(frame.image, 
             texture.slice->sprites[to_unsigned(frame.index)], texture.output->scale);
       });
@@ -168,10 +168,10 @@ namespace {
     return true;
   }
 
-  bool output_texture(const Settings& settings, const Texture& texture) {
+  bool output_texture(const Texture& texture) {
     if (!texture.slice->layered)
-      return output_image(settings, texture);
-    return output_animation(settings, texture);
+      return output_image(texture);
+    return output_animation(texture);
   }
 } // namespace
 
@@ -218,11 +218,10 @@ std::vector<Texture> get_textures(const Settings& settings,
   return textures;
 }
 
-void output_textures(const Settings& settings,
-    std::vector<Texture>& textures) {
+void output_textures(std::vector<Texture>& textures) {
   scheduler.for_each_parallel(textures,
     [&](Texture& texture) {
-      if (!output_texture(settings, texture))
+      if (!output_texture(texture))
         texture.filename = { };
     });
 }

@@ -31,13 +31,13 @@ int main(int argc, const char* argv[]) try {
     update_last_source_written_times(slices);
   time_points.emplace_back(Clock::now(), "packing");
 
-  output_textures(settings, textures);
+  output_textures(textures);
   time_points.emplace_back(Clock::now(), "output textures");
 
   output_description(settings, sprites, slices, textures, variables);
   time_points.emplace_back(Clock::now(), "output description");
 
-  if (settings.debug) {
+  if (settings.verbose) {
     for (auto i = 1u; i < time_points.size(); ++i)
       std::cout << (i > 1 ? ", " : "") << time_points[i].second << ": " << 
         std::chrono::duration_cast<std::chrono::milliseconds>(

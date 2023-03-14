@@ -13,8 +13,8 @@ struct Settings {
   std::filesystem::path output_file;
   std::filesystem::path template_file;
   bool autocomplete{ };
-  bool debug{ };
   bool rebuild{ };
+  bool verbose{ };
 };
 
 bool interpret_commandline(Settings& settings, int argc, const char* argv[]);

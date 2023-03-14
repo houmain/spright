@@ -29,7 +29,6 @@ bool output_description(const Settings& settings,
 
 Image get_slice_image(const Slice& slice, int map_index = -1);
 Animation get_slice_animation(const Slice& slice, int map_index = -1);
-void output_textures(const Settings& settings,
-    std::vector<Texture>& textures);
+void output_textures(std::vector<Texture>& textures);
 
 } // namespace

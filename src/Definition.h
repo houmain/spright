@@ -25,6 +25,7 @@ enum class Definition {
   alpha,
   pack,
   scale,
+  debug,
 
   path,
   input,
@@ -84,6 +85,7 @@ struct State {
   Pack pack{ };
   real scale{ 1.0 };
   ResizeFilter scale_filter{ };
+  bool debug{ };
 
   std::filesystem::path path;
   FilenameSequence source_filenames;
