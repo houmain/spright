@@ -11,19 +11,21 @@ namespace spright {
 InputDefinition parse_definition(const Settings& settings) {
   auto parser = InputParser(settings);
 
-  const auto& input_file = settings.input_file;
-  if (input_file == "stdin") {
+  if (settings.input_file == "stdin") {
     parser.parse(std::cin);
   }
   else {
-    auto input = std::fstream(input_file, std::ios::in | std::ios::binary);
+    auto input = std::fstream(settings.input_file, std::ios::in | std::ios::binary);
     if (!input.good())
-      throw std::runtime_error("opening file '" + path_to_utf8(input_file) + "' failed");
-    parser.parse(input, input_file);
-    input.close();
+      throw std::runtime_error("opening file '" + path_to_utf8(settings.input_file) + "' failed");
+    parser.parse(input, settings.input_file);
+  }
 
-    if (settings.autocomplete)
-      update_textfile(input_file, parser.autocomplete_output());
+  if (settings.autocomplete) {
+    if (settings.output_file == "stdout")
+      std::cout << parser.autocomplete_output();
+    else 
+      update_textfile(settings.output_file, parser.autocomplete_output());
   }
 
   return {

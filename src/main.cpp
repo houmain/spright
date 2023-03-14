@@ -21,22 +21,24 @@ int main(int argc, const char* argv[]) try {
   auto [sprites, variables] = parse_definition(settings);  
   time_points.emplace_back(Clock::now(), "input");
 
-  trim_sprites(sprites);
-  time_points.emplace_back(Clock::now(), "trimming");
+  if (!settings.autocomplete) {
+    trim_sprites(sprites);
+    time_points.emplace_back(Clock::now(), "trimming");
 
-  auto slices = pack_sprites(sprites);
-  auto textures = get_textures(settings, slices);
-  evaluate_expressions(settings, sprites, textures, variables);
-  if (!settings.rebuild && !settings.describe)
-    update_last_source_written_times(slices);
-  time_points.emplace_back(Clock::now(), "packing");
+    auto slices = pack_sprites(sprites);
+    auto textures = get_textures(settings, slices);
+    evaluate_expressions(settings, sprites, textures, variables);
+    time_points.emplace_back(Clock::now(), "packing");    
 
-  if (!settings.describe) {
-    output_textures(textures);
-    time_points.emplace_back(Clock::now(), "output textures");
+    if (!settings.describe) {
+      if (!settings.rebuild)
+        update_last_source_written_times(slices);
+      output_textures(textures);
+      time_points.emplace_back(Clock::now(), "output textures");
+    }
+    output_description(settings, sprites, slices, textures, variables);
+    time_points.emplace_back(Clock::now(), "output description");
   }
-  output_description(settings, sprites, slices, textures, variables);
-  time_points.emplace_back(Clock::now(), "output description");
 
   if (settings.verbose) {
     for (auto i = 1u; i < time_points.size(); ++i)
