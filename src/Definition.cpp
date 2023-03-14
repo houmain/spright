@@ -62,6 +62,7 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::alpha: return "alpha";
     case Definition::pack: return "pack";
     case Definition::scale: return "scale";
+    case Definition::debug: return "debug";
     case Definition::path: return "path";
     case Definition::input: return "input";
     case Definition::colorkey: return "colorkey";
@@ -129,6 +130,7 @@ Definition get_affected_definition(Definition definition) {
 
     case Definition::alpha:
     case Definition::scale:
+    case Definition::debug:
       return Definition::output;
 
     case Definition::path:
@@ -378,6 +380,10 @@ void apply_definition(Definition definition,
         else
           error("invalid scale filter '", string, "'");
       }
+      break;
+
+    case Definition::debug:
+      state.debug = check_bool(true);
       break;
 
     case Definition::path:

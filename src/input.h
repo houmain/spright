@@ -49,6 +49,7 @@ struct Output {
   RGBA colorkey{ };
   real scale{ };
   ResizeFilter scale_filter{ };
+  bool debug{ };
 };
 
 struct Sheet {

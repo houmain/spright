@@ -194,8 +194,6 @@ void evaluate_expressions(const Settings& settings,
   const auto replace_variable = [&](std::string_view variable) {
     if (variable == "settings.autocomplete")
       return to_string(settings.autocomplete);
-    if (variable == "settings.debug")
-      return to_string(settings.debug);
     if (variable == "settings.rebuild")
       return to_string(settings.rebuild);
     if (auto it = variables.find(variable); it != variables.end())

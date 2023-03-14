@@ -329,6 +329,7 @@ void InputParser::output_ends(State& state) {
   output->colorkey = state.alpha_colorkey;
   output->scale = state.scale;
   output->scale_filter = state.scale_filter;
+  output->debug = state.debug;
 }
 
 void InputParser::source_ends(State& state) {
