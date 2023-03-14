@@ -27,13 +27,14 @@ int main(int argc, const char* argv[]) try {
   auto slices = pack_sprites(sprites);
   auto textures = get_textures(settings, slices);
   evaluate_expressions(settings, sprites, textures, variables);
-  if (!settings.rebuild)
+  if (!settings.rebuild && !settings.describe)
     update_last_source_written_times(slices);
   time_points.emplace_back(Clock::now(), "packing");
 
-  output_textures(textures);
-  time_points.emplace_back(Clock::now(), "output textures");
-
+  if (!settings.describe) {
+    output_textures(textures);
+    time_points.emplace_back(Clock::now(), "output textures");
+  }
   output_description(settings, sprites, slices, textures, variables);
   time_points.emplace_back(Clock::now(), "output description");
 
