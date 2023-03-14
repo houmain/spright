@@ -51,7 +51,13 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
     settings.input_file = settings.default_input_file;
 
   if (settings.output_file.empty())
-    settings.output_file = settings.default_output_file;
+    settings.output_file =
+      (!settings.autocomplete ? settings.default_output_file :
+       settings.input_file == "stdin" ? "stdout" :
+       settings.input_file);
+
+  if (settings.output_file == "stdout")
+    settings.verbose = false;
 
   return true;
 }
@@ -77,8 +83,10 @@ void print_help_message(const char* argv0) {
     "\n"
     "Usage: %s [-options]\n"
     "  -i, --input <file>     input definition file (default: %s).\n"
-    "  -o, --output <file>    output description file (default: %s).\n"
-    "  -t, --template <file>  template for output description.\n"
+    "  -o, --output <file>    output file containing either the output\n"
+    "                     description (default: %s) or the\n"
+    "                     autocompleted input definition (defaults to input).\n"
+    "  -t, --template <file>  template for the output description.\n"
     "  -p, --path <path>      path to prepend to all output files.\n"
     "  -a, --autocomplete     autocomplete input definition.\n"
     "  -r, --regenerate       generate output even when input did not change.\n"
