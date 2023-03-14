@@ -36,6 +36,9 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
     else if (argument == "-r" || argument == "--rebuild") {
       settings.rebuild = true;
     }
+    else if (argument == "-d" || argument == "--describe") {
+      settings.describe = true;
+    }
     else if (argument == "-v" || argument == "--verbose") {
       settings.verbose = true;
     }
@@ -79,6 +82,7 @@ void print_help_message(const char* argv0) {
     "  -p, --path <path>      path to prepend to all output files.\n"
     "  -a, --autocomplete     autocomplete input definition.\n"
     "  -r, --regenerate       generate output even when input did not change.\n"
+    "  -d, --describe         only output description, no texture files.\n"
     "  -v, --verbose          enable verbose messages.\n"
     "  -h, --help             print this help.\n"
     "\n"

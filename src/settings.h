@@ -13,6 +13,7 @@ struct Settings {
   std::filesystem::path output_file;
   std::filesystem::path template_file;
   bool autocomplete{ };
+  bool describe{ };
   bool rebuild{ };
   bool verbose{ };
 };
