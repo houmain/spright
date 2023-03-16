@@ -166,6 +166,20 @@ void InputParser::deduce_globbing_sources(State& state) {
       continue;
 
     state.source_filenames = sequence;
+
+    if (m_settings.autocomplete) {
+      // when globbing add a source definition to sprites
+      if (sequence.is_sequence()) {
+        // only add once for whole sequence
+        auto& os = m_autocomplete_output;
+        os << state.indent << "source \"" << sequence.sequence_filename() << "\"\n";
+        state.indent += m_detected_indentation;
+      }
+      else {
+        // add to each single sprite
+        state.globbing = true;
+      }
+    }
     source_ends(state);
   }
 }
@@ -185,6 +199,11 @@ void InputParser::deduce_sequence_sprites(State& state) {
   for (auto i = 0; i < state.source_filenames.count(); ++i) {
     const auto source = get_source(state, i);
     state.rect = source->bounds();
+
+    if (m_settings.autocomplete) {
+      auto& os = m_autocomplete_output;
+      os << state.indent << "sprite\n";
+    }
     sprite_ends(state);
   }
 }
@@ -277,7 +296,7 @@ void InputParser::deduce_atlas_sprites(State& state) {
       auto& os = m_autocomplete_output;
       os << state.indent << "sprite \n";
       if (rect != source->bounds())
-        os << state.indent << "  rect "
+        os << state.indent << m_detected_indentation << "rect "
           << rect.x << " " << rect.y << " "
           << rect.w << " " << rect.h << "\n";
     }
@@ -289,6 +308,14 @@ void InputParser::deduce_atlas_sprites(State& state) {
 void InputParser::deduce_single_sprite(State& state) {
   const auto source = get_source(state);
   state.rect = source->bounds();
+
+  if (m_settings.autocomplete) {
+    auto& os = m_autocomplete_output;
+    os << state.indent << "sprite\n";
+    if (state.globbing)
+      os << state.indent << m_detected_indentation << 
+        "source \"" << path_to_utf8(source->filename()) << "\"\n";
+  }
   sprite_ends(state);
 }
 

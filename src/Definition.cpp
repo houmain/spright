@@ -78,6 +78,7 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::sprite: return "sprite";
     case Definition::id: return "id";
     case Definition::rect: return "rect";
+    case Definition::source: return "source";
     case Definition::pivot: return "pivot";
     case Definition::tag: return "tag";
     case Definition::data: return "data";
@@ -144,6 +145,7 @@ Definition get_affected_definition(Definition definition) {
 
     case Definition::id:
     case Definition::rect:
+    case Definition::source:
     case Definition::pivot:
     case Definition::tag:
     case Definition::data:
@@ -469,6 +471,10 @@ void apply_definition(Definition definition,
 
     case Definition::rect:
       state.rect = check_rect();
+      break;
+
+    case Definition::source:
+      state.source_filenames = path_to_utf8(check_path());
       break;
 
     case Definition::pivot:
