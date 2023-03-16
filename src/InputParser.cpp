@@ -161,8 +161,8 @@ void InputParser::sprite_ends(State& state) {
 }
 
 void InputParser::deduce_globbing_sources(State& state) {
-  for (const auto& sequence : glob_sequences(state.path, state.source_filenames.filename())) {
-    if (has_map_suffix(sequence.filename(), state.map_suffixes))
+  for (const auto& sequence : glob_sequences(state.path, state.source_filenames)) {
+    if (has_map_suffix(sequence, state.map_suffixes))
       continue;
 
     state.source_filenames = sequence;
@@ -335,7 +335,7 @@ void InputParser::output_ends(State& state) {
 void InputParser::source_ends(State& state) {
   update_applied_definitions(Definition::input);
   if (!m_sprites_in_current_source) {
-    if (is_globbing_pattern(state.source_filenames.filename())) {
+    if (is_globbing_pattern(state.source_filenames)) {
       deduce_globbing_sources(state);
     }
     else if (state.source_filenames.is_sequence()) {

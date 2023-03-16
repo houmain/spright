@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <utility>
 #include <optional>
+#include <cassert>
 
 extern Scheduler scheduler;
 

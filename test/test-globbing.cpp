@@ -1,6 +1,7 @@
 
 #include "catch.hpp"
 #include "src/globbing.h"
+#include "src/FilenameSequence.h"
 
 using namespace spright;
 
@@ -51,4 +52,39 @@ TEST_CASE("globbing - Match") {
   CHECK(!has_suffix("test-abcd.png", "-abc"));
   CHECK(has_suffix("test-abc", "-abc"));
   CHECK(!has_suffix("test-abcd", "-abc"));
+}
+
+TEST_CASE("FilenameSequence") {
+  CHECK(!FilenameSequence("test.txt").is_sequence());
+  CHECK(!FilenameSequence("test{.txt").is_sequence());
+  CHECK(!FilenameSequence("test}.txt").is_sequence());
+  CHECK(!FilenameSequence("test{0.txt").is_sequence());
+  CHECK(!FilenameSequence("test{0-.txt").is_sequence());
+  CHECK(FilenameSequence("test{0-10}.txt").is_sequence());
+  CHECK(FilenameSequence("test{0-10}.txt").count() == 11);
+  CHECK(FilenameSequence("test{0-}.txt").is_sequence());
+  CHECK(FilenameSequence("test{08-}.txt").is_infinite_sequence());
+  CHECK(FilenameSequence("test{00-01}.txt").is_sequence());
+  CHECK(FilenameSequence("test{00-01}.txt").count() == 2);
+  CHECK(FilenameSequence("test{08-10}.txt").first() == 8);
+  CHECK(FilenameSequence("test{08-10}.txt").get_nth_filename(1) == "test09.txt");
+  CHECK(FilenameSequence("test{08-10}.txt").get_nth_filename(3) == "test11.txt");
+  CHECK(FilenameSequence("test{08-}.txt").get_nth_filename(1) == "test09.txt");
+  CHECK(FilenameSequence("test{08-}.txt").get_nth_filename(101) == "test109.txt");
+
+  auto filename = FilenameSequence("test{08-10}.txt");
+  filename.set_count(3);
+  CHECK(filename == "test{08-10}.txt");
+
+  filename.set_infinite();
+  CHECK(filename == "test{08-}.txt");
+
+  filename.set_count(1000);
+  CHECK(filename == "test{08-1007}.txt");
+
+  CHECK(try_make_sequence("test01.txt", "test02.txt").is_sequence());
+  CHECK(try_make_sequence("test01.txt", "test02.txt").count() == 2);
+  CHECK(try_make_sequence("test01.txt", "test08.txt").is_sequence());
+  CHECK(try_make_sequence("test01.txt", "test08.txt").count() == 8);
+  CHECK(!try_make_sequence("test01.txt", "tes02.txt").is_sequence());
 }

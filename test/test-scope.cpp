@@ -126,12 +126,12 @@ TEST_CASE("scope - Sheet/Output") {
   REQUIRE(sprites[0].sheet->outputs.size() == 2);
   REQUIRE(sprites[1].sheet->outputs.size() == 2);
   REQUIRE(sprites[2].sheet->outputs.size() == 2);
-  CHECK(sprites[0].sheet->outputs[0]->filename.filename() == "output1.png");
-  CHECK(sprites[0].sheet->outputs[1]->filename.filename() == "output2.png");
-  CHECK(sprites[1].sheet->outputs[0]->filename.filename() == "output1.png");
-  CHECK(sprites[1].sheet->outputs[1]->filename.filename() == "output3.png");
-  CHECK(sprites[2].sheet->outputs[0]->filename.filename() == "output1.png");
-  CHECK(sprites[2].sheet->outputs[1]->filename.filename() == "output4.png");
+  CHECK(sprites[0].sheet->outputs[0]->filename == "output1.png");
+  CHECK(sprites[0].sheet->outputs[1]->filename == "output2.png");
+  CHECK(sprites[1].sheet->outputs[0]->filename == "output1.png");
+  CHECK(sprites[1].sheet->outputs[1]->filename == "output3.png");
+  CHECK(sprites[2].sheet->outputs[0]->filename == "output1.png");
+  CHECK(sprites[2].sheet->outputs[1]->filename == "output4.png");
   CHECK(sprites[0].sheet->outputs[0]->alpha == Alpha::clear);
   CHECK(sprites[0].sheet->outputs[1]->alpha == Alpha::bleed);
   CHECK(sprites[1].sheet->outputs[1]->alpha == Alpha::keep);
