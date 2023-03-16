@@ -43,6 +43,7 @@ enum class Definition {
   sprite,
   id,
   rect,
+  source,
   pivot,
   tag,
   data,
@@ -66,6 +67,7 @@ struct State {
   Definition definition{ };
   int level;
   std::string indent;
+  bool globbing{ };
 
   std::string sheet_id;
   std::vector<std::filesystem::path> output_filenames;
