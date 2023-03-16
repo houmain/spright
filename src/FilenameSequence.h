@@ -2,7 +2,6 @@
 
 #include "common.h"
 #include <limits>
-#include <cassert>
 
 namespace spright {
 
@@ -19,32 +18,33 @@ public:
     : m_filename(std::move(sequence_filename)) {
     parse();
     if (!is_sequence())
-      set_count(1);
+      m_count = 1;
   }
   explicit operator bool() const { return is_sequence(); }
-  const std::string& filename() const { return m_filename; }
-  std::string base() const { return { begin(m_filename), begin(m_filename) + m_format_offset }; }
-  std::string extension() const { return { begin(m_filename) + m_format_offset + static_cast<std::string::difference_type>(m_format_size), end(m_filename) }; }
+  operator const std::string&() const { return m_filename; }
+  const std::string& sequence_filename() const { return m_filename; }
   bool is_sequence() const { return (m_format_size != 0u); }
   bool is_infinite_sequence() const { return (m_count == infinite); }
   bool empty() const { return m_filename.empty(); }
   int first() const { return m_first; }
   int count() const { return m_count; }
-  void set_count(int count) { m_count = count; }
-  void set_infinite() { if (is_sequence()) m_count = infinite; }
-
-  friend bool operator<(const FilenameSequence& a, const FilenameSequence& b) {
-    return a.m_filename < b.m_filename;
+  void set_count(int count) { 
+    if (is_sequence()) {
+      m_count = count; 
+      update_filename(); 
+    }
   }
-  friend bool operator!=(const FilenameSequence& a, const FilenameSequence& b) {
-    return a.m_filename != b.m_filename;
+  void set_infinite() { 
+    if (is_sequence()) {
+      m_count = infinite; 
+      update_filename();
+    }
   }
 
   std::string get_nth_filename(int index) const {
     if (!is_sequence())
       return m_filename;
 
-    assert(index >= 0 && index < m_count);
     return std::string(m_filename).replace(
       static_cast<std::string::size_type>(m_format_offset),
       m_format_size, to_digit_string(m_first + index));
@@ -131,7 +131,8 @@ private:
 
       skip_space(it, end);
       if (skip(it, end, "}"))
-        m_format_size = static_cast<std::string::size_type>(std::distance(begin, it) - m_format_offset);
+        m_format_size = static_cast<std::string::size_type>(
+          std::distance(begin, it) - m_format_offset);
     }
   }
 
@@ -143,6 +144,20 @@ private:
     return string;
   }
 
+  void update_filename() {
+    auto range = std::string("{");
+	  range += to_digit_string(m_first);
+	  range += "-";
+	  if (!is_infinite_sequence())
+	    range += to_digit_string(m_first + m_count - 1);
+	  range += "}";
+    
+    m_filename.replace(
+      static_cast<std::string::size_type>(m_format_offset),
+      m_format_size, range);
+    m_format_size += range.size() - m_format_size;
+  }
+
   std::string m_filename{ };
   std::string::difference_type m_format_offset{ };
   std::string::size_type m_format_size{ };
@@ -150,6 +165,15 @@ private:
   int m_count{ };
   int m_min_digits{ };
 };
+
+template <typename T>
+bool operator==(const FilenameSequence& a, const T& b) { 
+  return a.sequence_filename() == b;
+}
+template <typename T>
+bool operator==(const T& a, const FilenameSequence& b) { 
+  return a == b.sequence_filename();
+}
 
 inline std::string make_sequence_filename(const std::string& base,
     const std::string& first_frame, const std::string& last_frame, 
