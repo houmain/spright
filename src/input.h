@@ -41,6 +41,11 @@ struct Extrude {
   WrapMode mode;
 };
 
+struct Input {
+  std::string source_filenames;
+  std::vector<ImagePtr> sources;
+};
+
 struct Output {
   FilenameSequence filename;
   std::string default_map_suffix;
@@ -112,6 +117,7 @@ struct Sprite {
 };
 
 struct InputDefinition {
+  std::vector<Input> inputs;
   std::vector<Sprite> sprites;
   VariantMap variables;
 };

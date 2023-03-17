@@ -18,7 +18,7 @@ int main(int argc, const char* argv[]) try {
   auto time_points = std::vector<std::pair<Clock::time_point, const char*>>();
   time_points.emplace_back(Clock::now(), "begin");
 
-  auto [sprites, variables] = parse_definition(settings);  
+  auto [inputs, sprites, variables] = parse_definition(settings);  
   time_points.emplace_back(Clock::now(), "input");
 
   if (!settings.autocomplete) {
@@ -36,7 +36,8 @@ int main(int argc, const char* argv[]) try {
       output_textures(textures);
       time_points.emplace_back(Clock::now(), "output textures");
     }
-    output_description(settings, sprites, slices, textures, variables);
+    output_description(settings, inputs, sprites, 
+      slices, textures, variables);
     time_points.emplace_back(Clock::now(), "output description");
   }
 
