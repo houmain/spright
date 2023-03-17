@@ -87,18 +87,20 @@ private:
   }
 
   template<typename InputIt>
-  int read_int(InputIt& it, InputIt end) {
+  bool read_int(InputIt& it, InputIt end, int* value) {
+    const auto begin = it;
     auto sign = 1;
     if (it != end && *it == '-') {
       sign = -1;
       ++it;
     }
-    auto value = 0;
+    *value = 0;
     while (it != end && is_digit(*it)) {
-      value = value * 10 + (*it - '0');
+      *value = *value * 10 + (*it - '0');
       ++it;
     }
-    return value * sign;
+    *value *= sign;
+    return it != begin;
   }
 
   void parse() {
@@ -117,13 +119,16 @@ private:
       
       skip_space(it, end);
       auto first_begin = it;
-      m_first = read_int(it, end);
+      if (!read_int(it, end, &m_first))
+        return;
+      m_count = 1;
       m_min_digits = static_cast<int>(std::distance(first_begin, it));
 
       skip_space(it, end);
       if (skip(it, end, "-")) {
         skip_space(it, end);
-        if (auto last = read_int(it, end))
+        auto last = 0;
+        if (read_int(it, end, &last))
           m_count = std::max(last - m_first + 1, 0);
         else
           m_count = infinite;
