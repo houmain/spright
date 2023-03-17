@@ -29,6 +29,7 @@ InputDefinition parse_definition(const Settings& settings) {
   }
 
   return {
+    std::move(parser).inputs(),
     std::move(parser).sprites(),
     std::move(parser).variables()
   };

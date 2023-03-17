@@ -41,6 +41,7 @@ namespace {
   }
 
   nlohmann::json get_json_description(
+      const std::vector<Input>& inputs, 
       const std::vector<Sprite>& sprites,
       const std::vector<Slice>& slices,
       const std::vector<Texture>& textures,
@@ -129,6 +130,17 @@ namespace {
       json_source["width"] = source->width();
       json_source["height"] = source->height();
       json_source["spriteIndices"] = source_sprites[index];
+    }
+
+    auto& json_inputs = json["inputs"];
+    json_inputs = nlohmann::json::array();
+    for (const auto& input : inputs) {
+      auto& json_input = json_inputs.emplace_back();
+      json_input["filename"] = input.source_filenames;
+      auto json_source_indices = nlohmann::json::array();
+      for (const auto& source : input.sources)
+        json_source_indices.push_back(source_indices[source]);
+      json_input["sourceIndices"] = std::move(json_source_indices);
     }
 
     auto texture_index = size_t{ };
@@ -240,13 +252,14 @@ std::string get_description(const std::string& template_source,
     const std::vector<Sprite>& sprites, 
     const std::vector<Slice>& slices) {
   auto ss = std::stringstream();
-  const auto json = get_json_description(sprites, slices, { }, { });
+  const auto json = get_json_description({ }, sprites, slices, { }, { });
   auto env = setup_inja_environment(&json);
   env.render_to(ss, env.parse(template_source), json);
   return ss.str();
 }
 
 bool output_description(const Settings& settings,
+    const std::vector<Input>& inputs, 
     const std::vector<Sprite>& sprites, 
     const std::vector<Slice>& slices,
     const std::vector<Texture>& textures,
@@ -254,7 +267,8 @@ bool output_description(const Settings& settings,
   auto ss = std::stringstream();
   auto& os = (settings.output_file == "stdout" ? std::cout : ss);
 
-  const auto json = get_json_description(sprites, slices, textures, variables);
+  const auto json = get_json_description(
+    inputs, sprites, slices, textures, variables);
   if (!settings.template_file.empty()) {
     auto env = setup_inja_environment(&json);
     env.render_to(os, env.parse_template(path_to_utf8(settings.template_file)), json);

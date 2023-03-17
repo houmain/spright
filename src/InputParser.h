@@ -11,6 +11,7 @@ public:
   explicit InputParser(const Settings& settings);
   void parse(std::istream& input, const std::filesystem::path& input_file = { });
   const std::vector<Sprite>& sprites() const & { return m_sprites; }
+  std::vector<Input> inputs() && { return std::move(m_inputs); }
   std::vector<Sprite> sprites() && { return std::move(m_sprites); }
   VariantMap variables() && { return std::move(m_variables); }
   std::string autocomplete_output() const { return std::move(m_autocomplete_output).str(); }
@@ -21,7 +22,6 @@ private:
     int line_number;
   };
 
-  std::string get_sprite_id(const State& state) const;
   std::shared_ptr<Sheet> get_sheet(const std::string& sheet_id);
   std::shared_ptr<Output> get_output(const std::filesystem::path& filename);
   ImagePtr get_source(const State& state);
@@ -38,6 +38,8 @@ private:
   void deduce_single_sprite(State& state);
   void sheet_ends(State& state);
   void output_ends(State& state);
+  void input_begins(State& state);
+  void input_ends(State& state);
   void source_ends(State& state);
   void scope_ends(State& state);
   void update_applied_definitions(Definition definition);
@@ -48,7 +50,8 @@ private:
   std::stringstream m_autocomplete_output;
   std::filesystem::path m_input_file;
   int m_line_number{ };
-  std::map<std::string,std::shared_ptr<Sheet>> m_sheets;
+  std::vector<Input> m_inputs;
+  std::map<std::string, std::shared_ptr<Sheet>> m_sheets;
   std::map<std::filesystem::path, std::shared_ptr<Output>> m_outputs;
   std::map<std::filesystem::path, ImagePtr> m_sources;
   std::map<ImagePtr, MapVectorPtr> m_maps;
@@ -57,6 +60,7 @@ private:
   int m_sprites_in_current_source{ };
   Point m_current_grid_cell{ };
   int m_current_sequence_index{ };
+  std::vector<ImagePtr> m_current_input_sources;
   std::string m_detected_indentation;
   std::vector<std::map<Definition, NotAppliedDefinition>> m_not_applied_definitions;
 };

@@ -83,6 +83,8 @@ ImagePtr InputParser::get_source(const std::filesystem::path& path,
     }
     source = std::make_shared<Image>(std::move(image));
   }
+
+  m_current_input_sources.push_back(source);
   return source;
 }
 
@@ -161,11 +163,10 @@ void InputParser::sprite_ends(State& state) {
 }
 
 void InputParser::deduce_globbing_sources(State& state) {
-  for (const auto& sequence : glob_sequences(state.path, state.source_filenames)) {
+  const auto sequences = glob_sequences(state.path, state.source_filenames);
+  for (const auto& sequence : sequences) {
     if (has_map_suffix(sequence, state.map_suffixes))
       continue;
-
-    state.source_filenames = sequence;
 
     if (m_settings.autocomplete) {
       // when globbing add a source definition to sprites
@@ -180,6 +181,8 @@ void InputParser::deduce_globbing_sources(State& state) {
         state.globbing = true;
       }
     }
+
+    state.source_filenames = sequence;
     source_ends(state);
   }
 }
@@ -359,8 +362,28 @@ void InputParser::output_ends(State& state) {
   output->debug = state.debug;
 }
 
-void InputParser::source_ends(State& state) {
+void InputParser::input_begins(State& state) {
+  auto& input = m_inputs.emplace_back();
+  input.source_filenames = state.source_filenames;
+}
+
+void InputParser::input_ends(State& state) {
   update_applied_definitions(Definition::input);
+  source_ends(state);
+
+  auto& input = m_inputs.back();
+  auto& sources = m_current_input_sources;
+  std::sort(begin(sources), end(sources));
+  sources.erase(std::unique(begin(sources), end(sources)), end(sources));
+  std::sort(begin(sources), end(sources),
+    [](const auto& a, const auto& b) { return 
+      std::tie(a->path(), a->filename()) <
+      std::tie(b->path(), b->filename()); 
+    });
+  input.sources = std::move(sources);
+}
+
+void InputParser::source_ends(State& state) {
   if (!m_sprites_in_current_source) {
     if (is_globbing_pattern(state.source_filenames)) {
       deduce_globbing_sources(state);
@@ -391,7 +414,7 @@ void InputParser::scope_ends(State& state) {
       output_ends(state);
       break;
     case Definition::input:
-      source_ends(state);
+      input_ends(state);
       break;
     case Definition::sprite:
       sprite_ends(state);
@@ -506,6 +529,9 @@ void InputParser::parse(std::istream& input,
     apply_definition(definition, arguments,
         state, m_current_grid_cell, m_variables);
     update_not_applied_definitions(definition);
+
+    if (definition == Definition::input)
+      input_begins(state);
 
     if (m_settings.autocomplete) {
       const auto space = autocomplete_space.str();
