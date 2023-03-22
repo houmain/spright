@@ -15,6 +15,7 @@ struct Settings {
   bool autocomplete{ };
   bool describe{ };
   bool rebuild{ };
+  bool errors_as_warnings{ };
   bool verbose{ };
 };
 

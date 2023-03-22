@@ -210,7 +210,7 @@ void evaluate_expressions(const Settings& settings,
       return to_string(settings.rebuild);
     if (auto it = variables.find(variable); it != variables.end())
       return variant_to_string(it->second);
-    throw std::runtime_error("unknown id '" + std::string(variable) + "'");
+    error("unknown id '", variable, "'");
   };
 
   const auto evaluate_sprite_expression = [&](const Sprite& sprite, 

@@ -44,11 +44,11 @@ namespace {
       message << "sprite";
       if (!sprite.id.empty())
         message << " '" << sprite.id << "' ";
-      message << "(" <<
+      message << "sprite outside bounds "<< " (" <<
         sprite.source_rect.x << ", " <<
         sprite.source_rect.y << ", " <<
         sprite.source_rect.w << ", " <<
-        sprite.source_rect.h << ") outside '" << path_to_utf8(sprite.source->filename()) << "' bounds";
+        sprite.source_rect.h << ")";
       error(message.str());
     }
   }
@@ -369,6 +369,7 @@ void InputParser::input_begins(State& state) {
 
 void InputParser::input_ends(State& state) {
   update_applied_definitions(Definition::input);
+  update_applied_definitions(Definition::sprite);
   source_ends(state);
 
   auto& input = m_inputs.back();
@@ -381,6 +382,7 @@ void InputParser::input_ends(State& state) {
       std::tie(b->path(), b->filename()); 
     });
   input.sources = std::move(sources);
+  assert(m_current_input_sources.empty());
 }
 
 void InputParser::source_ends(State& state) {
@@ -429,7 +431,7 @@ InputParser::InputParser(const Settings& settings)
 }
 
 void InputParser::parse(std::istream& input, 
-    const std::filesystem::path& input_file) try {
+    const std::filesystem::path& input_file) {
   m_autocomplete_output = { };
   m_detected_indentation = "  ";
   m_input_file = input_file;
@@ -452,7 +454,9 @@ void InputParser::parse(std::istream& input,
         if (&*last == &scope_stack.back())
           state.indent += m_detected_indentation;
 
-        scope_ends(state);
+        handle_exception([&]() {
+          scope_ends(state);
+        });
       }
       else if (level >= last->level) {
         const auto top = last.base();
@@ -467,7 +471,9 @@ void InputParser::parse(std::istream& input,
         }
 
         for (auto i = 0u; i < std::distance(top, scope_stack.end()); ++i) {
-          check_not_applied_definitions();
+          handle_exception([&]() {
+            check_not_applied_definitions();
+          });
           m_not_applied_definitions.pop_back();
         }
         scope_stack.erase(top, scope_stack.end());
@@ -478,12 +484,12 @@ void InputParser::parse(std::istream& input,
 
   auto buffer = std::string();
   auto arguments = std::vector<std::string_view>();
-  for (m_line_number = 1; !input.eof(); ++m_line_number) {
+  for (auto line_number = 1; !input.eof(); ++line_number) {
     std::getline(input, buffer);
 
     // skip UTF-8 BOM
-    if (m_line_number == 1 && starts_with(buffer.data(), "\xEF\xBB\xBF")) {
-      --m_line_number;
+    if (line_number == 1 && starts_with(buffer.data(), "\xEF\xBB\xBF")) {
+      --line_number;
       continue;
     }
 
@@ -503,35 +509,44 @@ void InputParser::parse(std::istream& input,
       continue;
     }
 
-    split_arguments(line, &arguments);
-    const auto definition = get_definition(arguments[0]);
-    if (definition == Definition::none)
-      error("invalid definition '", arguments[0], "'");
-    arguments.erase(arguments.begin());
-
     pop_scope_stack(level);
 
-    if (level > scope_stack.back().level || has_implicit_scope(definition)) {
-      scope_stack.push_back(scope_stack.back());
-      m_not_applied_definitions.emplace_back();
-    }
+    handle_exception([&]() {
+      m_error_line_number = line_number;
 
-    auto& state = scope_stack.back();
-    state.definition = definition;
-    state.level = level;
-    state.indent = std::string(begin(buffer), begin(buffer) + level);
+      split_arguments(line, &arguments);
+      const auto definition = get_definition(arguments[0]);
 
-    if (!indentation_detected && !state.indent.empty()) {
-      m_detected_indentation = state.indent;
-      indentation_detected = true;
-    }
+      if (level > scope_stack.back().level || has_implicit_scope(definition)) {
+        scope_stack.push_back(scope_stack.back());
+        m_not_applied_definitions.emplace_back();
+      }
 
-    apply_definition(definition, arguments,
-        state, m_current_grid_cell, m_variables);
-    update_not_applied_definitions(definition);
+      auto& state = scope_stack.back();
+      state.definition = Definition::none;
+      state.level = level;
+      state.indent = std::string(begin(buffer), begin(buffer) + level);
 
-    if (definition == Definition::input)
-      input_begins(state);
+      if (!indentation_detected && !state.indent.empty()) {
+        m_detected_indentation = state.indent;
+        indentation_detected = true;
+      }
+
+      if (definition == Definition::none)
+        error("invalid definition '", arguments[0], "'");
+      arguments.erase(arguments.begin());
+
+      apply_definition(definition, arguments,
+          state, m_current_grid_cell, m_variables);
+      update_not_applied_definitions(definition, line_number);
+
+      if (definition == Definition::input)
+        input_begins(state);
+
+      // set definition when it was successfully applied
+      // to disable scope_ends() on "errors as warnings"
+      state.definition = definition;
+    });
 
     if (m_settings.autocomplete) {
       const auto space = autocomplete_space.str();
@@ -539,20 +554,13 @@ void InputParser::parse(std::istream& input,
       autocomplete_space = { };
     }
   }
-  m_line_number = 0;
-  pop_scope_stack(-1);
-  check_not_applied_definitions();
-  m_not_applied_definitions.pop_back();
-  assert(m_not_applied_definitions.empty());
-}
-catch (const std::exception& ex) {
-  auto ss = std::stringstream();
-  if (!m_input_file.empty())
-    ss << "'" << path_to_utf8(m_input_file) << "' ";
-  ss << ex.what();
-  if (m_line_number > 0)
-    ss << " in line " << m_line_number;
-  throw std::runtime_error(ss.str());
+
+  handle_exception([&]() {
+    pop_scope_stack(-1);
+    check_not_applied_definitions();
+    m_not_applied_definitions.pop_back();
+    assert(m_not_applied_definitions.empty());
+  });
 }
 
 void InputParser::update_applied_definitions(Definition definition) {
@@ -560,22 +568,43 @@ void InputParser::update_applied_definitions(Definition definition) {
     not_applied_definitions.erase(definition);
 }
 
-void InputParser::update_not_applied_definitions(Definition definition) {
+void InputParser::update_not_applied_definitions(Definition definition, int line_number) {
   assert(!m_not_applied_definitions.empty());
   if (auto affected = get_affected_definition(definition); affected != Definition::none) {
     auto it = std::prev(m_not_applied_definitions.end());
     if (has_implicit_scope(definition))
       it = std::prev(it);
-    it->try_emplace(affected, NotAppliedDefinition{ definition, m_line_number });
+    it->try_emplace(affected, NotAppliedDefinition{ definition, line_number });
   }
 }
 
 void InputParser::check_not_applied_definitions() {
   assert(!m_not_applied_definitions.empty());
   for (const auto& [affected, not_applied] : m_not_applied_definitions.back()) {
-    m_line_number = not_applied.line_number;
+    m_error_line_number = not_applied.line_number;
     error("no ", get_definition_name(affected), " is affected by ", 
       get_definition_name(not_applied.definition));
+  }
+}
+
+void InputParser::handle_exception(std::function<void()> function) {
+  try {
+    function();
+  }
+  catch (const std::exception& ex) {
+    auto ss = std::stringstream();
+    if (!m_input_file.empty() && 
+        !m_settings.errors_as_warnings)
+      ss << "'" << path_to_utf8(m_input_file) << "' ";
+    ss << ex.what();
+    if (m_error_line_number > 0)
+      ss << " in line " << m_error_line_number;
+    if (m_settings.errors_as_warnings) {
+      m_warning_output << ss.str() << "\n";
+    }
+    else {
+      throw std::runtime_error(ss.str());
+    }
   }
 }
 

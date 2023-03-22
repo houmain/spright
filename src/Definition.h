@@ -65,7 +65,7 @@ enum class Definition {
 
 struct State {
   Definition definition{ };
-  int level;
+  int level{ };
   std::string indent;
   bool globbing{ };
 
@@ -74,7 +74,7 @@ struct State {
   int width{ };
   int height{ };
   int max_width{ };
-  int max_height{};
+  int max_height{ };
   bool power_of_two{ };
   bool square{ };
   int divisible_width{ };
