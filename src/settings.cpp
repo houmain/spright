@@ -39,6 +39,9 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
     else if (argument == "-d" || argument == "--describe") {
       settings.describe = true;
     }
+    else if (argument == "-w" || argument == "--warnings") {
+      settings.errors_as_warnings = true;
+    }
     else if (argument == "-v" || argument == "--verbose") {
       settings.verbose = true;
     }
@@ -91,6 +94,7 @@ void print_help_message(const char* argv0) {
     "  -a, --autocomplete     autocomplete input definition.\n"
     "  -r, --regenerate       generate output even when input did not change.\n"
     "  -d, --describe         only output description, no texture files.\n"
+    "  -w, --warnings         output errors as warnings.\n"
     "  -v, --verbose          enable verbose messages.\n"
     "  -h, --help             print this help.\n"
     "\n"
