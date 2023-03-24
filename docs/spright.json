@@ -1,4 +1,22 @@
 {
+	"inputs": [
+		{
+			"filename": "Decorations (32x32).png",
+			"sourceIndices": [0]
+		},
+		{
+			"filename": "Old enemies 2.png",
+			"sourceIndices": [1]
+		},
+		{
+			"filename": "Orc Attack/Frame*.png",
+			"sourceIndices": [2,3,4,5]
+		},
+		{
+			"filename": "misc_scenery.png",
+			"sourceIndices": [6]
+		}
+	],
 	"slices": [
 		{
 			"index": 0,

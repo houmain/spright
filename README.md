@@ -235,6 +235,7 @@ The following table contains a list of all definitions, with the item each affec
 | padding        |sheet  | [pixels], [pixels] | Sets the space between two sprites / the space between a sprite and the texture's border.
 | duplicates     |sheet  | dedupe-mode  | Sets how identical sprites should be processed:<br/>- _keep_ : Disable duplicate detection (default).<br/>- _share_ : Identical sprites should share pixels on the sheet.<br/>- _drop_ : Duplicates should be dropped.
 | **output**     |sheet  | path         | Adds a new output file at _path_ to a sheet. It can define an un-/bounded sequence of files (e.g. "sheet{0-}.png").
+| debug          |output | [boolean]    | Draw sprite boundaries and pivot points on output.
 | scale          |output | scale,<br/>[scale-filter] | Sets a factor the output should be scaled by, with an optional explicit scale-filter:<br/>- _box_: A trapezoid with 1-pixel wide ramps.<br/>- _triangle_: A triangle function (same as bilinear texture filtering).<br/>- _cubicspline_: A cubic b-spline (gaussian-esque).<br/>- _catmullrom_: An interpolating cubic spline.<br/>- _mitchell_: Mitchell-Netrevalli filter with B=1/3, C=1/3.
 | maps           |output/input| suffix+ | Specifies the number of maps and their filename suffixes (e.g. "-diffuse", "-normals", ...). Only the first map is considered when packing, others get identical _rects_.
 | alpha          |output | alpha-mode,<br/>[color] | Sets an operation depending on the pixels' alpha values:<br/>- _keep_ : Keep source color and alpha.<br/>- _clear_ : Set color of fully transparent pixels to black.<br/>- _bleed_ : Set color of fully transparent pixels to their nearest non-fully transparent pixel's color.<br/>- _premultiply_ : Premultiply colors with alpha values.<br/>- _colorkey_ : Replace fully transparent pixels with the specified _color_ and make all others opaque.
@@ -309,6 +310,12 @@ By default a [JSON](https://www.json.org) file containing all the information ab
       "width": 256,
       "height": 256,
       "spriteIndices": [ 0 ]
+    },
+  ],
+  "inputs": [
+    {
+      "filename": "source.png",
+      "sourceIndices": [0]
     },
   ],
   "tags": {
