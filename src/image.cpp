@@ -3,7 +3,6 @@
 #include "stb/stb_image.h"
 #include "stb/stb_image_write.h"
 #include "stb/stb_image_resize.h"
-#include "texpack/bleeding.h"
 #include "gifenc/gifenc.h"
 #include "nonstd/span.hpp"
 #include <array>
@@ -11,6 +10,9 @@
 #include <stdexcept>
 #include <cstring>
 #include <utility>
+
+#define TEXBLEED_IMPLEMENTATION
+#include "rmj/rmj_texbleed.h"
 
 namespace spright {
 
@@ -826,8 +828,9 @@ void premultiply_alpha(Image& image) {
 }
 
 void bleed_alpha(Image& image) {
-  bleed_apply(reinterpret_cast<uint8_t*>(image.rgba()),
-    image.width(), image.height());
+  rjm_texbleed(reinterpret_cast<unsigned char*>(image.rgba()),
+    image.width(), image.height(), 3, sizeof(RGBA),
+    image.width() * to_int(sizeof(RGBA)));
 }
 
 MonoImage get_alpha_levels(const Image& image, const Rect& rect) {
