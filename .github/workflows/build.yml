@@ -17,10 +17,10 @@ jobs:
             package: ZIP
 
           - os: ubuntu-18.04
-            package: TGZ
+            package: ZIP
 
           - os: macos-latest
-            package: TGZ
+            package: ZIP
 
     steps:
     - name: Setup Windows/MSVC
