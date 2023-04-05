@@ -16,7 +16,7 @@ jobs:
           - os: windows-latest
             package: ZIP
 
-          - os: ubuntu-18.04
+          - os: ubuntu-20.04
             package: ZIP
 
           - os: macos-latest
