@@ -21,7 +21,7 @@ InputDefinition parse_definition(const Settings& settings) {
     parser.parse(input, settings.input_file);
   }
 
-  if (settings.autocomplete) {
+  if (settings.mode == Mode::autocomplete) {
     if (settings.output_file == "stdout")
       std::cout << parser.autocomplete_output();
     else 

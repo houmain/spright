@@ -10,7 +10,27 @@ namespace spright {
 bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
   for (auto i = 1; i < argc; i++) {
     const auto argument = std::string_view(argv[i]);
-    if (argument == "-i" || argument == "--input") {
+    if (argument == "-m" || argument == "--mode") {
+      if (++i >= argc)
+        return false;
+      const auto mode = std::string_view(argv[i]);
+      if (mode == "update") 
+        settings.mode = Mode::update;
+      else if (mode == "rebuild")
+        settings.mode = Mode::rebuild;
+      else if (mode == "describe")
+        settings.mode = Mode::describe;
+      else if (mode == "describe-input")
+        settings.mode = Mode::describe_input;
+      else if (mode == "complete") {
+        settings.mode = Mode::autocomplete;
+        if (i + 1 < argc && *argv[i + 1] != '-')
+          settings.autocomplete_pattern = unquote(argv[++i]);
+      }
+      else
+        return false;
+    }
+    else if (argument == "-i" || argument == "--input") {
       if (++i >= argc)
         return false;
       settings.input_file = std::filesystem::u8path(unquote(argv[i]));
@@ -30,15 +50,6 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
         return false;
       settings.output_path = std::filesystem::u8path(unquote(argv[i]));
     }
-    else if (argument == "-a" || argument == "--autocomplete") {
-      settings.autocomplete = true;
-    }
-    else if (argument == "-r" || argument == "--rebuild") {
-      settings.rebuild = true;
-    }
-    else if (argument == "-d" || argument == "--describe") {
-      settings.describe = true;
-    }
     else if (argument == "-w" || argument == "--warnings") {
       settings.errors_as_warnings = true;
     }
@@ -55,7 +66,7 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
 
   if (settings.output_file.empty())
     settings.output_file =
-      (!settings.autocomplete ? settings.default_output_file :
+      (settings.mode != Mode::autocomplete ? settings.default_output_file :
        settings.input_file == "stdin" ? "stdout" :
        settings.input_file);
 
@@ -85,18 +96,21 @@ void print_help_message(const char* argv0) {
     "spright %s(c) 2020-2023 by Albert Kalchmair\n"
     "\n"
     "Usage: %s [-options]\n"
-    "  -i, --input <file>     input definition file (default: %s).\n"
-    "  -o, --output <file>    output file containing either the output\n"
+    "  -m, --mode <mode>       sets the run mode:\n"
+    "     'update'             the default run mode.\n"
+    "     'rebuild'            regenerate output even when input did not change.\n"
+    "     'describe'           only output description, no texture files. \n"
+    "     'describe-input'     only output description of input, do not pack. \n"
+    "     'complete' [pattern] autocomplete inputs (matching optional pattern).\n"
+    "  -i, --input <file>      input definition file (default: %s).\n"
+    "  -o, --output <file>     output file containing either the output\n"
     "                     description (default: %s) or the\n"
     "                     autocompleted input definition (defaults to input).\n"
-    "  -t, --template <file>  template for the output description.\n"
-    "  -p, --path <path>      path to prepend to all output files.\n"
-    "  -a, --autocomplete     autocomplete input definition.\n"
-    "  -r, --regenerate       generate output even when input did not change.\n"
-    "  -d, --describe         only output description, no texture files.\n"
-    "  -w, --warnings         output errors as warnings.\n"
-    "  -v, --verbose          enable verbose messages.\n"
-    "  -h, --help             print this help.\n"
+    "  -t, --template <file>   template for the output description.\n"
+    "  -p, --path <path>       path to prepend to all output files.\n"
+    "  -w, --warnings          output errors as warnings.\n"
+    "  -v, --verbose           enable verbose messages.\n"
+    "  -h, --help              print this help.\n"
     "\n"
     "All Rights Reserved.\n"
     "This program comes with absolutely no warranty.\n"

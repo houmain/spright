@@ -21,21 +21,27 @@ int main(int argc, const char* argv[]) try {
   auto [inputs, sprites, variables] = parse_definition(settings);  
   time_points.emplace_back(Clock::now(), "input");
 
-  if (!settings.autocomplete) {
+  auto slices = std::vector<Slice>();
+  auto textures = std::vector<Texture>();
+  if (settings.mode != Mode::autocomplete &&
+      settings.mode != Mode::describe_input) {
     trim_sprites(sprites);
     time_points.emplace_back(Clock::now(), "trimming");
 
-    auto slices = pack_sprites(sprites);
-    auto textures = get_textures(settings, slices);
+    slices = pack_sprites(sprites);
+    textures = get_textures(settings, slices);
     evaluate_expressions(settings, sprites, textures, variables);
     time_points.emplace_back(Clock::now(), "packing");    
 
-    if (!settings.describe) {
-      if (!settings.rebuild)
+    if (settings.mode != Mode::describe) {
+      if (settings.mode != Mode::rebuild)
         update_last_source_written_times(slices);
       output_textures(textures);
       time_points.emplace_back(Clock::now(), "output textures");
     }
+  }
+
+  if (settings.mode != Mode::autocomplete) {
     output_description(settings, inputs, sprites, 
       slices, textures, variables);
     time_points.emplace_back(Clock::now(), "output description");

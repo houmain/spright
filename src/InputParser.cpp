@@ -168,7 +168,7 @@ void InputParser::deduce_globbing_sources(State& state) {
     if (has_map_suffix(sequence, state.map_suffixes))
       continue;
 
-    if (m_settings.autocomplete) {
+    if (m_settings.mode == Mode::autocomplete) {
       // when globbing add a source definition to sprites
       if (sequence.is_sequence()) {
         // only add once for whole sequence
@@ -203,7 +203,7 @@ void InputParser::deduce_sequence_sprites(State& state) {
     const auto source = get_source(state, i);
     state.rect = source->bounds();
 
-    if (m_settings.autocomplete) {
+    if (m_settings.mode == Mode::autocomplete) {
       auto& os = m_autocomplete_output;
       os << state.indent << "sprite\n";
     }
@@ -268,7 +268,7 @@ void InputParser::deduce_grid_sprites(State& state) {
         continue;
       }
 
-      if (m_settings.autocomplete) {
+      if (m_settings.mode == Mode::autocomplete) {
         auto& os = m_autocomplete_output;
         if (!std::exchange(output_offset, true)) {
           if (y)
@@ -295,7 +295,7 @@ void InputParser::deduce_atlas_sprites(State& state) {
   const auto source = get_source(state);
   for (const auto& rect : find_islands(*source,
       state.atlas_merge_distance, state.trim_gray_levels)) {
-    if (m_settings.autocomplete) {
+    if (m_settings.mode == Mode::autocomplete) {
       auto& os = m_autocomplete_output;
       os << state.indent << "sprite \n";
       if (rect != source->bounds())
@@ -312,7 +312,7 @@ void InputParser::deduce_single_sprite(State& state) {
   const auto source = get_source(state);
   state.rect = source->bounds();
 
-  if (m_settings.autocomplete) {
+  if (m_settings.mode == Mode::autocomplete) {
     auto& os = m_autocomplete_output;
     os << state.indent << "sprite\n";
     if (state.globbing)
@@ -500,7 +500,7 @@ void InputParser::parse(std::istream& input,
       line = line.substr(0, hash);
 
     if (line.empty()) {
-      if (m_settings.autocomplete) {
+      if (m_settings.mode == Mode::autocomplete) {
         if (input.eof())
           m_autocomplete_output << autocomplete_space.str();
         else
@@ -548,7 +548,7 @@ void InputParser::parse(std::istream& input,
       state.definition = definition;
     });
 
-    if (m_settings.autocomplete) {
+    if (m_settings.mode == Mode::autocomplete) {
       const auto space = autocomplete_space.str();
       m_autocomplete_output << space << buffer << '\n';
       autocomplete_space = { };

@@ -204,10 +204,6 @@ void evaluate_expressions(const Settings& settings,
     VariantMap& variables) {
 
   const auto replace_variable = [&](std::string_view variable) {
-    if (variable == "settings.autocomplete")
-      return to_string(settings.autocomplete);
-    if (variable == "settings.rebuild")
-      return to_string(settings.rebuild);
     if (auto it = variables.find(variable); it != variables.end())
       return variant_to_string(it->second);
     error("unknown id '", variable, "'");
