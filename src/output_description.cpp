@@ -75,29 +75,33 @@ namespace {
       if (!sprite->sheet)
         continue;
 
-      const auto slice_index = sprite_on_slice.find(sprite_index)->second;
       const auto source_index = source_indices.emplace(
         sprite->source, to_int(source_indices.size())).first->second;
 
       json_sprite["id"] = sprite->id;
       json_sprite["inputSpriteIndex"] = sprite->input_sprite_index;
-      json_sprite["rect"] = json_rect(sprite->rect);
-      json_sprite["trimmedRect"] = json_rect(sprite->trimmed_rect);
       json_sprite["sourceIndex"] = source_index;
       json_sprite["sourceRect"] = json_rect(sprite->source_rect);
-      json_sprite["trimmedSourceRect"] = json_rect(sprite->trimmed_source_rect);
-      json_sprite["pivot"] = json_point(sprite->pivot);
-      json_sprite["sliceIndex"] = slice_index;
-      json_sprite["sliceSpriteIndex"] = slice_sprites[slice_index].size();
-      json_sprite["rotated"] = sprite->rotated;
       json_sprite["tags"] = sprite->tags;
       json_sprite["data"] = json_variant_map(sprite->data);
-      json_sprite["vertices"] = json_compact_point_list(sprite->vertices);
 
       for (const auto& [key, value] : sprite->tags)
         tags[key][value].push_back(sprite_index);
       source_sprites[source_index].push_back(sprite_index);
-      slice_sprites[slice_index].push_back(sprite_index);
+
+      // only available when packing was executed
+      if (const auto it = sprite_on_slice.find(sprite_index); it != sprite_on_slice.end()) {
+        const auto slice_index = it->second;
+        json_sprite["sliceIndex"] = slice_index;
+        json_sprite["sliceSpriteIndex"] = slice_sprites[slice_index].size();
+        json_sprite["rect"] = json_rect(sprite->rect);
+        json_sprite["trimmedRect"] = json_rect(sprite->trimmed_rect);
+        json_sprite["trimmedSourceRect"] = json_rect(sprite->trimmed_source_rect);
+        json_sprite["pivot"] = json_point(sprite->pivot);
+        json_sprite["rotated"] = sprite->rotated;
+        json_sprite["vertices"] = json_compact_point_list(sprite->vertices);
+        slice_sprites[slice_index].push_back(sprite_index);
+      }
     }
 
     auto& json_tags = json["tags"];

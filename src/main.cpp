@@ -40,6 +40,9 @@ int main(int argc, const char* argv[]) try {
       time_points.emplace_back(Clock::now(), "output textures");
     }
   }
+  else {
+    evaluate_expressions(settings, sprites, textures, variables);
+  }
 
   if (settings.mode != Mode::autocomplete) {
     output_description(settings, inputs, sprites, 
