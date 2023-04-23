@@ -12,7 +12,7 @@ input "test/Items.png"
   colorkey
   grid 16 16
   )");
-  auto parser = InputParser(Settings{ .autocomplete = true });
+  auto parser = InputParser(Settings{ .mode = Mode::autocomplete });
   REQUIRE_NOTHROW(parser.parse(input));
   const auto& sprites = parser.sprites();
   REQUIRE(sprites.size() == 18);

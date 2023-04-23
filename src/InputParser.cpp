@@ -117,18 +117,7 @@ MapVectorPtr InputParser::get_maps(const State& state, const ImagePtr& source) {
 void InputParser::sprite_ends(State& state) {
   check(!state.source_filenames.empty(), "sprite not on input");
   update_applied_definitions(Definition::sprite);
-
-  // generate rect from grid
-  if (empty(state.rect) && has_grid(state)) {
-    deduce_grid_size(state);
-    state.rect = {
-      state.grid_offset.x + (state.grid.x + state.grid_spacing.x) * m_current_grid_cell.x,
-      state.grid_offset.y + (state.grid.y + state.grid_spacing.y) * m_current_grid_cell.y,
-      state.grid.x * state.span.x,
-      state.grid.y * state.span.y
-    };
-    m_current_grid_cell.x += state.span.x;
-  }
+  deduce_rect_from_grid(state);
 
   auto sprite = Sprite{ };
   sprite.index = to_int(m_sprites.size());
@@ -160,6 +149,13 @@ void InputParser::sprite_ends(State& state) {
   if (state.source_filenames.is_sequence())
     ++m_current_sequence_index;
   ++m_sprites_in_current_source;
+}
+
+bool InputParser::sprite_already_added(const State& state) const {
+  for (auto i = m_sprites_in_current_source - 1; i >= 0; --i)
+    if (overlapping(m_sprites[m_sprites.size() - i - 1].source_rect, state.rect))
+      return true;
+  return false;
 }
 
 void InputParser::deduce_globbing_sources(State& state) {
@@ -199,10 +195,15 @@ void InputParser::deduce_sequence_sprites(State& state) {
       return;
   }
 
+  auto skip_already_added = m_sprites_in_current_source;
   for (auto i = 0; i < state.source_filenames.count(); ++i) {
     const auto source = get_source(state, i);
     state.rect = source->bounds();
 
+    if (skip_already_added) {
+      --skip_already_added;
+      continue;
+    }
     if (m_settings.mode == Mode::autocomplete) {
       auto& os = m_autocomplete_output;
       os << state.indent << "sprite\n";
@@ -226,6 +227,19 @@ void InputParser::deduce_grid_size(State& state) {
   check(state.grid.x > 0 && state.grid.y > 0, "invalid grid");
 }
 
+void InputParser::deduce_rect_from_grid(State& state) {
+  if (empty(state.rect) && has_grid(state)) {
+    deduce_grid_size(state);
+    state.rect = {
+      state.grid_offset.x + (state.grid.x + state.grid_spacing.x) * m_current_grid_cell.x,
+      state.grid_offset.y + (state.grid.y + state.grid_spacing.y) * m_current_grid_cell.y,
+      state.grid.x * state.span.x,
+      state.grid.y * state.span.y
+    };
+    m_current_grid_cell.x += state.span.x;
+  }
+}
+
 void InputParser::deduce_grid_sprites(State& state) {
   deduce_grid_size(state);
   const auto source = get_source(state);
@@ -247,10 +261,11 @@ void InputParser::deduce_grid_sprites(State& state) {
   if (!cells_y)
     cells_y = ceil(bounds.h, stride.y) / stride.y;
 
-  for (auto y = 0; y < cells_y; ++y) {
-    auto output_offset = false;
+  const auto is_update = (m_sprites_in_current_source != 0);
+  for (auto y = m_current_grid_cell.y; y < cells_y; ++y) {
+    auto output_offset = (m_current_grid_cell.x != 0);
     auto skipped = 0;
-    for (auto x = 0; x < cells_x; ++x) {
+    for (auto x = m_current_grid_cell.x; x < cells_x; ++x) {
 
       state.rect = intersect({
         bounds.x + x * stride.x,
@@ -267,6 +282,9 @@ void InputParser::deduce_grid_sprites(State& state) {
         ++skipped;
         continue;
       }
+
+      if (is_update && sprite_already_added(state))
+        continue;
 
       if (m_settings.mode == Mode::autocomplete) {
         auto& os = m_autocomplete_output;
@@ -288,13 +306,20 @@ void InputParser::deduce_grid_sprites(State& state) {
 
       sprite_ends(state);
     }
+    m_current_grid_cell.x = 0;
   }
 }
 
 void InputParser::deduce_atlas_sprites(State& state) {
   const auto source = get_source(state);
+  const auto is_update = (m_sprites_in_current_source != 0);
   for (const auto& rect : find_islands(*source,
       state.atlas_merge_distance, state.trim_gray_levels)) {
+    state.rect = rect;
+
+    if (is_update && sprite_already_added(state))
+      continue;
+
     if (m_settings.mode == Mode::autocomplete) {
       auto& os = m_autocomplete_output;
       os << state.indent << "sprite \n";
@@ -303,7 +328,6 @@ void InputParser::deduce_atlas_sprites(State& state) {
           << rect.x << " " << rect.y << " "
           << rect.w << " " << rect.h << "\n";
     }
-    state.rect = rect;
     sprite_ends(state);
   }
 }
@@ -311,6 +335,10 @@ void InputParser::deduce_atlas_sprites(State& state) {
 void InputParser::deduce_single_sprite(State& state) {
   const auto source = get_source(state);
   state.rect = source->bounds();
+
+  const auto is_update = (m_sprites_in_current_source != 0);
+  if (is_update && sprite_already_added(state))
+    return;
 
   if (m_settings.mode == Mode::autocomplete) {
     auto& os = m_autocomplete_output;
@@ -386,7 +414,8 @@ void InputParser::input_ends(State& state) {
 }
 
 void InputParser::source_ends(State& state) {
-  if (!m_sprites_in_current_source) {
+  if (!m_sprites_in_current_source ||
+       m_settings.mode == Mode::autocomplete) {
     if (is_globbing_pattern(state.source_filenames)) {
       deduce_globbing_sources(state);
     }
@@ -450,9 +479,9 @@ void InputParser::parse(std::istream& input,
         auto& state = scope_stack.back();
         state.definition = last->definition;
 
-        // add indentation before autocompleting in implicit scope
-        if (&*last == &scope_stack.back())
-          state.indent += m_detected_indentation;
+        // add indentation before autocompleting
+        if (m_settings.mode == Mode::autocomplete)
+          state.indent = last->indent + m_detected_indentation;
 
         handle_exception([&]() {
           scope_ends(state);
