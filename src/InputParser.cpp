@@ -170,7 +170,6 @@ void InputParser::deduce_globbing_sources(State& state) {
         // only add once for whole sequence
         auto& os = m_autocomplete_output;
         os << state.indent << "source \"" << sequence.sequence_filename() << "\"\n";
-        state.indent += m_detected_indentation;
       }
       else {
         // add to each single sprite
@@ -391,8 +390,14 @@ void InputParser::output_ends(State& state) {
 }
 
 void InputParser::input_begins(State& state) {
+  source_begins(state);
   auto& input = m_inputs.emplace_back();
   input.source_filenames = state.source_filenames;
+}
+
+void InputParser::source_begins(State& state) {
+  m_sprites_in_current_source = { };
+  m_current_sequence_index = { };
 }
 
 void InputParser::input_ends(State& state) {
@@ -432,8 +437,23 @@ void InputParser::source_ends(State& state) {
       deduce_single_sprite(state);
     }
   }
-  m_sprites_in_current_source = { };
-  m_current_sequence_index = { };
+}
+
+void InputParser::scope_begins(State& state, Definition definition) {
+  switch (definition) {
+    case Definition::input:
+      input_begins(state);
+      break;
+    case Definition::source:
+      source_begins(state);
+      break;
+    default:
+      break;
+  }
+
+  // set definition when it was successfully applied
+  // to disable scope_ends() on "errors as warnings"
+  state.definition = definition;
 }
 
 void InputParser::scope_ends(State& state) {
@@ -569,12 +589,7 @@ void InputParser::parse(std::istream& input,
           state, m_current_grid_cell, m_variables);
       update_not_applied_definitions(definition, line_number);
 
-      if (definition == Definition::input)
-        input_begins(state);
-
-      // set definition when it was successfully applied
-      // to disable scope_ends() on "errors as warnings"
-      state.definition = definition;
+      scope_begins(state, definition);
     });
 
     if (m_settings.mode == Mode::autocomplete) {

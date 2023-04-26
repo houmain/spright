@@ -39,12 +39,14 @@ private:
   void deduce_grid_sprites(State& state);
   void deduce_atlas_sprites(State& state);
   void deduce_single_sprite(State& state);
+  void scope_begins(State& state, Definition definition);
+  void input_begins(State& state);
+  void source_begins(State& state);
+  void scope_ends(State& state);
   void sheet_ends(State& state);
   void output_ends(State& state);
-  void input_begins(State& state);
   void input_ends(State& state);
   void source_ends(State& state);
-  void scope_ends(State& state);
   void update_applied_definitions(Definition definition);
   void update_not_applied_definitions(Definition definition, int line_number);
   void check_not_applied_definitions();
