@@ -206,7 +206,7 @@ void InputParser::deduce_sequence_sprites(State& state) {
     }
     if (m_settings.mode == Mode::autocomplete) {
       auto& os = m_autocomplete_output;
-      os << state.indent << "sprite\n";
+      os << state.indent << "sprite \n";
     }
     sprite_ends(state);
   }
@@ -301,7 +301,7 @@ void InputParser::deduce_grid_sprites(State& state) {
           skipped = 0;
         }
 
-        os << state.indent << m_detected_indentation << "sprite\n";
+        os << state.indent << m_detected_indentation << "sprite \n";
       }
 
       sprite_ends(state);
@@ -342,7 +342,7 @@ void InputParser::deduce_single_sprite(State& state) {
 
   if (m_settings.mode == Mode::autocomplete) {
     auto& os = m_autocomplete_output;
-    os << state.indent << "sprite\n";
+    os << state.indent << "sprite \n";
     if (state.globbing)
       os << state.indent << m_detected_indentation << 
         "source \"" << path_to_utf8(source->filename()) << "\"\n";
@@ -578,8 +578,7 @@ void InputParser::parse(std::istream& input,
     });
 
     if (m_settings.mode == Mode::autocomplete) {
-      const auto space = autocomplete_space.str();
-      m_autocomplete_output << space << buffer << '\n';
+      m_autocomplete_output << autocomplete_space.str() << buffer << '\n';
       autocomplete_space = { };
     }
   }
