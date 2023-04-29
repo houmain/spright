@@ -50,8 +50,8 @@ sheet "sprites"
   output "sheet{0-}.png"
 
 colorkey
-input "characters/**/*.png"
-input "scenery/**/*.png"
+glob "characters/**/*.png"
+glob "scenery/**/*.png"
 ```
 
 Unless specified on the [command line](#command-line-arguments) spright reads the input definition from `spright.conf` in the current directory. To pack the sheets and generate an output description consumable by e.g. [Phaser](https://github.com/photonstorm/phaser) using the [phaser.template](templates/phaser.template), call:
@@ -242,6 +242,7 @@ The following table contains a list of all definitions, with the item each affec
 | scale | output | scale,<br/>[scale-filter] | Sets a factor the output should be scaled by, with an optional explicit scale-filter:<br/>- _box_: A trapezoid with 1-pixel wide ramps.<br/>- _triangle_: A triangle function (same as bilinear texture filtering).<br/>- _cubicspline_: A cubic b-spline (gaussian-esque).<br/>- _catmullrom_: An interpolating cubic spline.<br/>- _mitchell_: Mitchell-Netrevalli filter with B=1/3, C=1/3. |
 | maps | output/input | suffix+ | Specifies the number of maps and their filename suffixes (e.g. "-diffuse", "-normals", ...). Only the first map is considered when packing, others get identical _rects_. |
 | alpha | output | alpha-mode,<br/>[color] | Sets an operation depending on the pixels' alpha values:<br/>- _keep_ : Keep source color and alpha.<br/>- _clear_ : Set color of fully transparent pixels to black.<br/>- _bleed_ : Set color of fully transparent pixels to their nearest non-fully transparent pixel's color.<br/>- _premultiply_ : Premultiply colors with alpha values.<br/>- _colorkey_ : Replace fully transparent pixels with the specified _color_ and make all others opaque. |
+| **glob** | - | pattern | Adds all files matching the _pattern_ as inputs (e.g. `"sprites/**/*.png"`). |
 | **input** | - | path | Adds a new input file at _path_. It can define a single file or an un-/bounded sequence of files (e.g. `"frames{0-}.png", "frames{0001-0013}.png"`). |
 | path | input | path | A _path_ which should be prepended to the input's path. |
 | colorkey | input | [color] | Specifies that the input has a color, which should be considered transparent (in hex notation e.g. `FF00FF`). |
