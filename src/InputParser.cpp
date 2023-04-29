@@ -34,6 +34,7 @@ namespace {
   bool has_implicit_scope(Definition definition) {
     return (definition == Definition::sheet ||
             definition == Definition::output ||
+            definition == Definition::glob ||
             definition == Definition::input ||
             definition == Definition::sprite);
   }
@@ -51,6 +52,17 @@ namespace {
         sprite.source_rect.h << ")";
       error(message.str());
     }
+  }
+
+  std::vector<ImagePtr> make_unique_sort(std::vector<ImagePtr> sources) {
+    std::sort(begin(sources), end(sources));
+    sources.erase(std::unique(begin(sources), end(sources)), end(sources));
+    std::sort(begin(sources), end(sources),
+      [](const auto& a, const auto& b) { return 
+        std::tie(a->path(), a->filename()) <
+        std::tie(b->path(), b->filename()); 
+      });
+    return sources;
   }
 } // namespace
 
@@ -156,30 +168,6 @@ bool InputParser::sprite_already_added(const State& state) const {
     if (overlapping(m_sprites[m_sprites.size() - i - 1].source_rect, state.rect))
       return true;
   return false;
-}
-
-void InputParser::deduce_globbing_sources(State& state) {
-  const auto sequences = glob_sequences(state.path, state.source_filenames);
-  for (const auto& sequence : sequences) {
-    if (has_map_suffix(sequence, state.map_suffixes))
-      continue;
-
-    if (m_settings.mode == Mode::autocomplete) {
-      // when globbing add a source definition to sprites
-      if (sequence.is_sequence()) {
-        // only add once for whole sequence
-        auto& os = m_autocomplete_output;
-        os << state.indent << "source \"" << sequence.sequence_filename() << "\"\n";
-      }
-      else {
-        // add to each single sprite
-        state.globbing = true;
-      }
-    }
-
-    state.source_filenames = sequence;
-    source_ends(state);
-  }
 }
 
 void InputParser::deduce_sequence_sprites(State& state) {
@@ -332,20 +320,12 @@ void InputParser::deduce_atlas_sprites(State& state) {
 }
 
 void InputParser::deduce_single_sprite(State& state) {
-  const auto source = get_source(state);
-  state.rect = source->bounds();
-
-  const auto is_update = (m_sprites_in_current_source != 0);
-  if (is_update && sprite_already_added(state))
+  if (m_sprites_in_current_source > 0)
     return;
 
-  if (m_settings.mode == Mode::autocomplete) {
-    auto& os = m_autocomplete_output;
-    os << state.indent << "sprite \n";
-    if (state.globbing)
-      os << state.indent << m_detected_indentation << 
-        "source \"" << path_to_utf8(source->filename()) << "\"\n";
-  }
+  if (m_settings.mode == Mode::autocomplete)
+    m_autocomplete_output << state.indent << "sprite \n";
+
   sprite_ends(state);
 }
 
@@ -389,71 +369,68 @@ void InputParser::output_ends(State& state) {
   output->debug = state.debug;
 }
 
-void InputParser::input_begins(State& state) {
-  source_begins(state);
-  auto& input = m_inputs.emplace_back();
-  input.source_filenames = state.source_filenames;
-}
+void InputParser::glob_ends(State& state) {
+  if (!m_sprites_in_current_source ||
+       m_settings.mode == Mode::autocomplete) {
+    
+    state.indent += m_detected_indentation;
 
-void InputParser::source_begins(State& state) {
-  m_sprites_in_current_source = { };
-  m_current_sequence_index = { };
+    const auto sequences = glob_sequences(state.path, state.glob_pattern);
+    for (const auto& sequence : sequences) {
+      if (has_map_suffix(sequence, state.map_suffixes))
+        continue;
+
+      // add only not yet encountered inputs
+      const auto sequence_filename = sequence.sequence_filename();
+      if (std::find_if(m_inputs.begin(), m_inputs.end(), 
+          [&](const Input& input) { 
+            return input.source_filenames == sequence_filename; 
+          }) != m_inputs.end())
+        continue;
+
+      if (m_settings.mode == Mode::autocomplete)
+        m_autocomplete_output << state.indent << "input \"" <<
+          sequence.sequence_filename() << "\"\n";
+
+      state.source_filenames = sequence;
+      input_ends(state);
+    }
+  }
 }
 
 void InputParser::input_ends(State& state) {
   update_applied_definitions(Definition::input);
   update_applied_definitions(Definition::sprite);
-  source_ends(state);
-
-  auto& input = m_inputs.back();
-  auto& sources = m_current_input_sources;
-  std::sort(begin(sources), end(sources));
-  sources.erase(std::unique(begin(sources), end(sources)), end(sources));
-  std::sort(begin(sources), end(sources),
-    [](const auto& a, const auto& b) { return 
-      std::tie(a->path(), a->filename()) <
-      std::tie(b->path(), b->filename()); 
-    });
-  input.sources = std::move(sources);
-  assert(m_current_input_sources.empty());
-}
-
-void InputParser::source_ends(State& state) {
+  
   if (!m_sprites_in_current_source ||
        m_settings.mode == Mode::autocomplete) {
-    if (is_globbing_pattern(state.source_filenames)) {
-      deduce_globbing_sources(state);
-    }
-    else if (state.source_filenames.is_sequence()) {
-      deduce_sequence_sprites(state);
-    }
-    else if (has_grid(state)) {
-      deduce_grid_sprites(state);
-    }
-    else if (state.atlas_merge_distance >= 0) {
-      deduce_atlas_sprites(state);
-    }
-    else {
-      deduce_single_sprite(state);
-    }
+    auto sprite_indent = state.indent + m_detected_indentation;
+    std::swap(state.indent, sprite_indent);
+    deduce_input_sprites(state);
+    std::swap(state.indent, sprite_indent);
   }
+
+  m_inputs.push_back({
+    state.source_filenames.sequence_filename(),
+    make_unique_sort(std::move(m_current_input_sources))
+  });
+  m_sprites_in_current_source = { };
+  m_current_sequence_index = { };
 }
 
-void InputParser::scope_begins(State& state, Definition definition) {
-  switch (definition) {
-    case Definition::input:
-      input_begins(state);
-      break;
-    case Definition::source:
-      source_begins(state);
-      break;
-    default:
-      break;
+void InputParser::deduce_input_sprites(State& state) {
+  if (state.source_filenames.is_sequence()) {
+    deduce_sequence_sprites(state);
   }
-
-  // set definition when it was successfully applied
-  // to disable scope_ends() on "errors as warnings"
-  state.definition = definition;
+  else if (has_grid(state)) {
+    deduce_grid_sprites(state);
+  }
+  else if (state.atlas_merge_distance >= 0) {
+    deduce_atlas_sprites(state);
+  }
+  else {
+    deduce_single_sprite(state);
+  }
 }
 
 void InputParser::scope_ends(State& state) {
@@ -463,6 +440,9 @@ void InputParser::scope_ends(State& state) {
       break;
     case Definition::output:
       output_ends(state);
+      break;
+    case Definition::glob:
+      glob_ends(state);
       break;
     case Definition::input:
       input_ends(state);
@@ -496,15 +476,18 @@ void InputParser::parse(std::istream& input,
   const auto pop_scope_stack = [&](int level) {
     for (auto last = scope_stack.rbegin(); ; ++last) {
       if (has_implicit_scope(last->definition) && level <= last->level) {
-        auto& state = scope_stack.back();
-        state.definition = last->definition;
-
-        // add indentation before autocompleting
-        if (m_settings.mode == Mode::autocomplete)
-          state.indent = last->indent + m_detected_indentation;
-
         handle_exception([&]() {
-          scope_ends(state);
+          // except for glob call end of scope handler before
+          // unwinding (just apply actual definition and indent)
+          if (last->definition != Definition::glob) {
+            auto& state = scope_stack.back();
+            state.definition = last->definition;
+            state.indent = last->indent;
+            scope_ends(state);
+          }
+          else {
+            scope_ends(*last);
+          }
         });
       }
       else if (level >= last->level) {
@@ -589,7 +572,9 @@ void InputParser::parse(std::istream& input,
           state, m_current_grid_cell, m_variables);
       update_not_applied_definitions(definition, line_number);
 
-      scope_begins(state, definition);
+      // set definition when it was successfully applied
+      // to disable scope_ends() on "errors as warnings"
+      state.definition = definition;
     });
 
     if (m_settings.mode == Mode::autocomplete) {

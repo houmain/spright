@@ -28,6 +28,7 @@ enum class Definition {
   debug,
 
   path,
+  glob,
   input,
   colorkey,
   grid,
@@ -43,7 +44,6 @@ enum class Definition {
   sprite,
   id,
   rect,
-  source,
   pivot,
   tag,
   data,
@@ -67,7 +67,6 @@ struct State {
   Definition definition{ };
   int level{ };
   std::string indent;
-  bool globbing{ };
 
   std::string sheet_id;
   std::vector<std::filesystem::path> output_filenames;
@@ -90,6 +89,7 @@ struct State {
   bool debug{ };
 
   std::filesystem::path path;
+  std::string glob_pattern;
   FilenameSequence source_filenames;
   std::string default_map_suffix;
   std::vector<std::string> map_suffixes;
