@@ -34,6 +34,7 @@ private:
   bool sprite_already_added(const State& state) const;
   void deduce_grid_size(State& state);
   void deduce_rect_from_grid(State& state);
+  void deduce_globbed_inputs(State& state);
   void deduce_input_sprites(State& state);
   void deduce_sequence_sprites(State& state);
   void deduce_grid_sprites(State& state);
@@ -61,6 +62,7 @@ private:
   std::map<ImagePtr, MapVectorPtr> m_maps;
   std::vector<Sprite> m_sprites;
   VariantMap m_variables;
+  int m_inputs_in_current_glob{ };
   int m_sprites_in_current_source{ };
   Point m_current_grid_cell{ };
   int m_current_sequence_index{ };

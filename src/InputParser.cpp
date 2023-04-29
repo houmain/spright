@@ -369,33 +369,37 @@ void InputParser::output_ends(State& state) {
   output->debug = state.debug;
 }
 
-void InputParser::glob_ends(State& state) {
-  if (!m_sprites_in_current_source ||
-       m_settings.mode == Mode::autocomplete) {
-    
-    state.indent += m_detected_indentation;
+void InputParser::deduce_globbed_inputs(State& state) {
+  state.indent += m_detected_indentation;
 
-    const auto sequences = glob_sequences(state.path, state.glob_pattern);
-    for (const auto& sequence : sequences) {
-      if (has_map_suffix(sequence, state.map_suffixes))
-        continue;
+  const auto sequences = glob_sequences(state.path, state.glob_pattern);
+  for (const auto& sequence : sequences) {
+    if (has_map_suffix(sequence, state.map_suffixes))
+      continue;
 
-      // add only not yet encountered inputs
-      const auto sequence_filename = sequence.sequence_filename();
-      if (std::find_if(m_inputs.begin(), m_inputs.end(), 
-          [&](const Input& input) { 
-            return input.source_filenames == sequence_filename; 
-          }) != m_inputs.end())
-        continue;
+    // add only not yet encountered inputs
+    const auto sequence_filename = sequence.sequence_filename();
+    if (std::find_if(m_inputs.begin(), m_inputs.end(), 
+        [&](const Input& input) { 
+          return input.source_filenames == sequence_filename; 
+        }) != m_inputs.end())
+      continue;
 
-      if (m_settings.mode == Mode::autocomplete)
-        m_autocomplete_output << "\n" << state.indent << "input \"" <<
-          sequence.sequence_filename() << "\"\n";
+    if (m_settings.mode == Mode::autocomplete)
+      m_autocomplete_output << "\n" << state.indent << "input \"" <<
+        sequence.sequence_filename() << "\"\n";
 
-      state.source_filenames = sequence;
-      input_ends(state);
-    }
+    state.source_filenames = sequence;
+    input_ends(state);
   }
+}
+
+void InputParser::glob_ends(State& state) {
+  if (!m_inputs_in_current_glob ||
+       m_settings.mode == Mode::autocomplete)
+    deduce_globbed_inputs(state);
+
+  m_inputs_in_current_glob = { };
 }
 
 void InputParser::input_ends(State& state) {
@@ -416,6 +420,7 @@ void InputParser::input_ends(State& state) {
   });
   m_sprites_in_current_source = { };
   m_current_sequence_index = { };
+  ++m_inputs_in_current_glob;
 }
 
 void InputParser::deduce_input_sprites(State& state) {
