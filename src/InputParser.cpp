@@ -389,7 +389,7 @@ void InputParser::glob_ends(State& state) {
         continue;
 
       if (m_settings.mode == Mode::autocomplete)
-        m_autocomplete_output << state.indent << "input \"" <<
+        m_autocomplete_output << "\n" << state.indent << "input \"" <<
           sequence.sequence_filename() << "\"\n";
 
       state.source_filenames = sequence;
