@@ -105,7 +105,7 @@ void print_help_message(const char* argv0) {
     "  -i, --input <file>      input definition file (default: %s).\n"
     "  -o, --output <file>     output file containing either the output\n"
     "                     description (default: %s) or the\n"
-    "                     autocompleted input definition (defaults to input).\n"
+    "                     autocompleted input definition (defaults to --input).\n"
     "  -t, --template <file>   template for the output description.\n"
     "  -p, --path <path>       path to prepend to all output files.\n"
     "  -w, --warnings          output errors as warnings.\n"

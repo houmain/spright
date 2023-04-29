@@ -38,22 +38,6 @@ Also have a look at the [spright test suite](https://github.com/houmain/spright-
 
 ---
 
-## Command line arguments
-
-```
-Usage: spright [-options]
-  -i, --input <file>     input definition file (default: spright.conf).
-  -o, --output <file>    output description file (default: spright.json).
-  -t, --template <file>  template for output description.
-  -p, --path <path>      path to prepend to all output files.
-  -a, --autocomplete     autocomplete input sheet definition.
-  -r, --regenerate       generate output even when input did not change.
-  -d, --debug            draw sprite boundaries and pivot points on output.
-  -h, --help             print this help.
-```
-
-The special identifiers _stdin_ and _stdout_ can be passed to _input_ and _output_ to enable console redirection.
-
 ## Simple sheet packing
 
 To pack your sprites into one or more sheets, a simple input definition like the following example is enough:
@@ -388,6 +372,29 @@ For information about the functionality of the template engine, please see the [
 | [Phaser 2](https://github.com/photonstorm/phaser) | [phaser2.template](templates/phaser2.template) |
 
 The C++ template is just an example for how the sprite description can be directly embedded in code. This [spright.h](docs/spright.h) was generated from the [sample](#advanced-usage-example), using the [cpp.template](templates/cpp.template) template.
+
+## Command line arguments
+
+```
+Usage: spright [-options]
+  -m, --mode <mode>       sets the run mode:
+     'update'             the default run mode.
+     'rebuild'            regenerate output even when input did not change.
+     'describe'           only output description, no texture files.
+     'describe-input'     only output description of input, do not pack.
+     'complete' [pattern] autocomplete inputs (matching optional pattern).
+  -i, --input <file>      input definition file (default: spright.conf).
+  -o, --output <file>     output file containing either the output
+                     description (default: spright.json) or the
+                     autocompleted input definition (defaults to --input).
+  -t, --template <file>   template for the output description.
+  -p, --path <path>       path to prepend to all output files.
+  -w, --warnings          output errors as warnings.
+  -v, --verbose           enable verbose messages.
+  -h, --help              print this help.
+```
+
+The special identifiers _stdin_ and _stdout_ can be passed to _input_ and _output_ to enable console redirection.
 
 ---
 
