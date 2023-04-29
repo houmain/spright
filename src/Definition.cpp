@@ -1,5 +1,6 @@
 
 #include "Definition.h"
+#include "globbing.h"
 #include <charconv>
 #include <sstream>
 #include <utility>
@@ -181,8 +182,14 @@ void apply_definition(Definition definition,
       get_definition_name(definition));
     return arguments[argument_index++];
   };
+  const auto check_string_copy = [&]() {
+    return std::string(check_string());
+  };
   const auto check_path = [&]() {
-    return utf8_to_path(check_string());
+    const auto string = check_string();
+    check(!is_globbing_pattern(string), 
+      "filename must not contain wildcard");
+    return utf8_to_path(string);
   };
   const auto check_uint = [&]() {
     auto result = 0;
@@ -221,11 +228,13 @@ void apply_definition(Definition definition,
     return Rect{ check_uint(), check_uint(), check_uint(), check_uint() };
   };
   const auto check_color = [&]() {
-    std::stringstream ss;
-    ss << std::hex << check_string();
+    const auto string = check_string();
+    auto ss = std::istringstream(std::string(string));
     auto color = RGBA{ };
-    ss >> color.rgba;
-    if (!color.a)
+    auto rest = char{ };
+    ss >> std::hex >> color.rgba >> rest;
+    check(!rest, "invalid hex value");
+    if (string.length() <= 6)
       color.a = 255;
     return color;
   };
@@ -281,7 +290,7 @@ void apply_definition(Definition definition,
 
   switch (definition) {
     case Definition::set: {
-      auto& var = variables[std::string(check_string())];
+      auto& var = variables[check_string_copy()];
       var = check_variant();
       break;
     }
@@ -294,7 +303,7 @@ void apply_definition(Definition definition,
       break;
 
     case Definition::output:
-      state.output_filenames.push_back(check_string());
+      state.output_filenames.push_back(check_path());
       break;
 
     case Definition::width:
@@ -389,11 +398,11 @@ void apply_definition(Definition definition,
       break;
 
     case Definition::path:
-      state.path = check_string();
+      state.path = check_path();
       break;
 
     case Definition::input:
-      state.source_filenames = path_to_utf8(check_path());
+      state.source_filenames = FilenameSequence(path_to_utf8(check_path()));
       current_grid_cell = { };
       break;
 
@@ -403,12 +412,12 @@ void apply_definition(Definition definition,
       break;
     }
     case Definition::tag: {
-      auto& tag = state.tags[std::string(check_string())];
+      auto& tag = state.tags[check_string_copy()];
       tag = (arguments_left() ? check_string() : "");
       break;
     }
     case Definition::data: {
-      auto& data = state.data[std::string(check_string())];
+      auto& data = state.data[check_string_copy()];
       data = check_variant();
       break;
     }
