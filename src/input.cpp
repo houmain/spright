@@ -11,7 +11,7 @@ namespace spright {
 InputDefinition parse_definition(const Settings& settings) {
   auto parser = InputParser(settings);
 
-  if (settings.input_file == "stdin") {
+  if (settings.input_file.string() == "stdin") {
     parser.parse(std::cin);
   }
   else {
@@ -22,7 +22,7 @@ InputDefinition parse_definition(const Settings& settings) {
   }
 
   if (settings.mode == Mode::autocomplete) {
-    if (settings.output_file == "stdout")
+    if (settings.output_file.string() == "stdout")
       std::cout << parser.autocomplete_output();
     else 
       update_textfile(settings.output_file, parser.autocomplete_output());

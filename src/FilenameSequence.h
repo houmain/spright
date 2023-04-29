@@ -14,11 +14,17 @@ namespace spright {
 class FilenameSequence {
 public:
   FilenameSequence() = default;
-  FilenameSequence(std::string sequence_filename)
+  explicit FilenameSequence(std::string sequence_filename)
     : m_filename(std::move(sequence_filename)) {
     parse();
     if (!is_sequence())
       m_count = 1;
+  }
+  explicit FilenameSequence(const char* sequence_filename)
+    : FilenameSequence(std::string(sequence_filename)) {
+  }
+  explicit FilenameSequence(std::string_view sequence_filename)
+    : FilenameSequence(std::string(sequence_filename)) {
   }
   explicit operator bool() const { return is_sequence(); }
   operator const std::string&() const { return m_filename; }
@@ -195,7 +201,7 @@ inline FilenameSequence try_make_sequence(const std::string& first_filename,
   // advance to first mismatch
   for (; it0 != end0 && it1 != end1 && *it0 == *it1; ++it0, ++it1) ;
   if (it0 == end0)
-    return { first_filename };
+    return FilenameSequence(first_filename);
   // revert to begin of digit
   for (; it0 != begin(first_filename) && is_digit(*std::prev(it0)); --it0, --it1) ;
   // advance to end of digit
@@ -210,11 +216,11 @@ inline FilenameSequence try_make_sequence(const std::string& first_filename,
   // both should have reached end
   if (it0 != end0 || it1 != end1)
     return { };
-  return make_sequence_filename(
+  return FilenameSequence(make_sequence_filename(
     { begin(first_filename), pattern_begin0 },
     { pattern_begin0, pattern_end0 },
     { pattern_begin1, pattern_end1 },
-    { pattern_end0, end0 });
+    { pattern_end0, end0 }));
 }
 
 } // namespace

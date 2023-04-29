@@ -43,7 +43,7 @@ namespace {
 
     FilenameSequence flush() {
       if (m_count == 1)
-        return std::exchange(m_first_filename, { });
+        return FilenameSequence(std::exchange(m_first_filename, { }));
       m_sequence.set_count(m_count);
       m_first_filename.clear();
       return std::exchange(m_sequence, { });
@@ -122,7 +122,7 @@ std::vector<std::string> glob(
   return { };
 }
 
-bool is_globbing_pattern(const std::string& filename) {
+bool is_globbing_pattern(std::string_view filename) {
   return (filename.find_first_of("*?") != std::string::npos);
 }
 

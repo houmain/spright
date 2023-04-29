@@ -265,7 +265,7 @@ bool output_description(const Settings& settings,
     const std::vector<Texture>& textures,
     const VariantMap& variables) try {
   auto ss = std::stringstream();
-  auto& os = (settings.output_file == "stdout" ? std::cout : ss);
+  auto& os = (settings.output_file.string() == "stdout" ? std::cout : ss);
 
   const auto json = get_json_description(
     inputs, sprites, slices, textures, variables);
@@ -276,7 +276,7 @@ bool output_description(const Settings& settings,
   else {
     os << json.dump(1, '\t');
   }
-  if (settings.output_file != "stdout")
+  if (settings.output_file.string() != "stdout")
     if (!update_textfile(settings.output_path / settings.output_file, ss.str()))
       return false;
 
