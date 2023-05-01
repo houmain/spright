@@ -180,23 +180,19 @@ bool InputParser::overlaps_sprite_rect(const Rect& rect) const {
 }
 
 void InputParser::deduce_sequence_sprites(State& state) {
-  auto error = std::error_code{ };
-  if (state.source_filenames.is_infinite_sequence()) {
-    for (auto i = 0; ; ++i)
-      if (!std::filesystem::exists(state.path / state.source_filenames.get_nth_filename(i), error)) {
-        state.source_filenames.set_count(i);
-        break;
-      }
-    if (state.source_filenames.is_infinite_sequence())
-      return;
-  }
-
   auto skip_already_added = m_sprites_in_current_source;
   for (auto i = 0; i < state.source_filenames.count(); ++i) {
     if (skip_already_added) {
       --skip_already_added;
       continue;
     }
+
+    auto error = std::error_code{ };
+    if (state.source_filenames.is_infinite_sequence())
+      if (!std::filesystem::exists(
+            state.path / state.source_filenames.get_nth_filename(i), error))
+        break;
+
     if (m_settings.mode == Mode::autocomplete) {
       auto& os = m_autocomplete_output;
       os << state.indent << "sprite \n";
@@ -376,13 +372,16 @@ void InputParser::output_ends(State& state) {
 void InputParser::deduce_globbed_inputs(State& state) {
   state.indent += m_detected_indentation;
 
-  const auto sequences = glob_sequences(state.path, state.glob_pattern);
-  for (const auto& sequence : sequences) {
+  auto sequences = glob_sequences(state.path, state.glob_pattern);
+  for (auto& sequence : sequences) {
     if (has_map_suffix(sequence, state.map_suffixes))
       continue;
 
+    if (sequence.is_sequence())
+      sequence.set_infinite();
+
     // add only not yet encountered inputs
-    const auto sequence_filename = sequence.sequence_filename();
+    const auto& sequence_filename = sequence.sequence_filename();
     if (std::find_if(m_inputs.begin(), m_inputs.end(), 
         [&](const Input& input) { 
           return input.source_filenames == sequence_filename; 
