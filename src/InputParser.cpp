@@ -135,7 +135,6 @@ bool InputParser::should_autocomplete(const std::string& filename) const {
 void InputParser::sprite_ends(State& state) {
   check(!state.source_filenames.empty(), "sprite not on input");
   update_applied_definitions(Definition::sprite);
-  deduce_rect_from_grid(state);
 
   auto sprite = Sprite{ };
   sprite.index = to_int(m_sprites.size());
@@ -144,8 +143,10 @@ void InputParser::sprite_ends(State& state) {
   sprite.sheet = get_sheet(state.sheet_id);
   sprite.source = get_source(state);
   sprite.maps = get_maps(state, sprite.source);
-  sprite.source_rect = (!empty(state.rect) ?
-    state.rect : sprite.source->bounds());
+  sprite.source_rect = 
+    (!empty(state.rect) ? state.rect : 
+     has_grid(state) ? deduce_rect_from_grid(state) :
+     sprite.source->bounds());
   sprite.pivot = state.pivot;
   sprite.trim = state.trim;
   sprite.trim_margin = state.trim_margin;
@@ -167,11 +168,12 @@ void InputParser::sprite_ends(State& state) {
   if (state.source_filenames.is_sequence())
     ++m_current_sequence_index;
   ++m_sprites_in_current_source;
+  m_current_grid_cell.x += state.span.x;
 }
 
-bool InputParser::sprite_already_added(const State& state) const {
+bool InputParser::overlaps_sprite_rect(const Rect& rect) const {
   for (auto i = m_sprites_in_current_source - 1; i >= 0; --i)
-    if (overlapping(m_sprites[m_sprites.size() - i - 1].source_rect, state.rect))
+    if (overlapping(m_sprites[m_sprites.size() - i - 1].source_rect, rect))
       return true;
   return false;
 }
@@ -190,9 +192,6 @@ void InputParser::deduce_sequence_sprites(State& state) {
 
   auto skip_already_added = m_sprites_in_current_source;
   for (auto i = 0; i < state.source_filenames.count(); ++i) {
-    const auto source = get_source(state, i);
-    state.rect = source->bounds();
-
     if (skip_already_added) {
       --skip_already_added;
       continue;
@@ -220,17 +219,15 @@ void InputParser::deduce_grid_size(State& state) {
   check(state.grid.x > 0 && state.grid.y > 0, "invalid grid");
 }
 
-void InputParser::deduce_rect_from_grid(State& state) {
-  if (empty(state.rect) && has_grid(state)) {
-    deduce_grid_size(state);
-    state.rect = {
-      state.grid_offset.x + (state.grid.x + state.grid_spacing.x) * m_current_grid_cell.x,
-      state.grid_offset.y + (state.grid.y + state.grid_spacing.y) * m_current_grid_cell.y,
-      state.grid.x * state.span.x,
-      state.grid.y * state.span.y
-    };
-    m_current_grid_cell.x += state.span.x;
-  }
+Rect InputParser::deduce_rect_from_grid(State& state) {
+  assert(has_grid(state));
+  deduce_grid_size(state);
+  return {
+    state.grid_offset.x + (state.grid.x + state.grid_spacing.x) * m_current_grid_cell.x,
+    state.grid_offset.y + (state.grid.y + state.grid_spacing.y) * m_current_grid_cell.y,
+    state.grid.x * state.span.x,
+    state.grid.y * state.span.y
+  };
 }
 
 void InputParser::deduce_grid_sprites(State& state) {
@@ -260,23 +257,23 @@ void InputParser::deduce_grid_sprites(State& state) {
     auto skipped = 0;
     for (auto x = m_current_grid_cell.x; x < cells_x; ++x) {
 
-      state.rect = intersect({
+      const auto rect = intersect({
         bounds.x + x * stride.x,
         bounds.y + y * stride.y,
         state.grid.x, state.grid.y
       }, bounds);
 
-      if (empty(state.rect))
+      if (empty(rect))
         continue;
 
       if (state.trim_gray_levels ?
-          is_fully_black(*source, state.trim_threshold, state.rect) :
-          is_fully_transparent(*source, state.trim_threshold, state.rect)) {
+          is_fully_black(*source, state.trim_threshold, rect) :
+          is_fully_transparent(*source, state.trim_threshold, rect)) {
         ++skipped;
         continue;
       }
 
-      if (is_update && sprite_already_added(state))
+      if (is_update && overlaps_sprite_rect(rect))
         continue;
 
       if (m_settings.mode == Mode::autocomplete) {
@@ -308,9 +305,7 @@ void InputParser::deduce_atlas_sprites(State& state) {
   const auto is_update = (m_sprites_in_current_source != 0);
   for (const auto& rect : find_islands(*source,
       state.atlas_merge_distance, state.trim_gray_levels)) {
-    state.rect = rect;
-
-    if (is_update && sprite_already_added(state))
+    if (is_update && overlaps_sprite_rect(rect))
       continue;
 
     if (m_settings.mode == Mode::autocomplete) {
@@ -321,8 +316,10 @@ void InputParser::deduce_atlas_sprites(State& state) {
           << rect.x << " " << rect.y << " "
           << rect.w << " " << rect.h << "\n";
     }
+    state.rect = rect;
     sprite_ends(state);
   }
+  state.rect = { };
 }
 
 void InputParser::deduce_single_sprite(State& state) {

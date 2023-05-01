@@ -31,10 +31,10 @@ private:
     const std::filesystem::path& filename, RGBA colorkey);
   MapVectorPtr get_maps(const State& state, const ImagePtr& source);
   bool should_autocomplete(const std::string& filename) const;
+  bool overlaps_sprite_rect(const Rect& rect) const;
   void sprite_ends(State& state);
-  bool sprite_already_added(const State& state) const;
   void deduce_grid_size(State& state);
-  void deduce_rect_from_grid(State& state);
+  Rect deduce_rect_from_grid(State& state);
   void deduce_globbed_inputs(State& state);
   void deduce_input_sprites(State& state);
   void deduce_sequence_sprites(State& state);
