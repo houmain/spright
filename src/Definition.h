@@ -130,5 +130,6 @@ void apply_definition(Definition definition,
     VariantMap& variables);
 
 bool has_grid(const State& state);
+bool has_atlas(const State& state);
 
 } // namespace

@@ -23,6 +23,10 @@ bool has_grid(const State& state) {
   return !empty(state.grid) || !empty(state.grid_cells);
 }
 
+bool has_atlas(const State& state) {
+  return state.atlas_merge_distance >= 0;
+}
+
 Definition get_definition(std::string_view command) {
   static const auto s_map = []() {
     auto map = std::map<std::string, Definition, std::less<>>{ };

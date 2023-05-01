@@ -101,6 +101,7 @@ ImagePtr InputParser::get_source(const std::filesystem::path& path,
 }
 
 ImagePtr InputParser::get_source(const State& state, int index) {
+  check(index < state.source_filenames.count(), "too many sprites in sequence");
   return get_source(state.path,
     utf8_to_path(state.source_filenames.get_nth_filename(index)),
     state.colorkey);
@@ -433,7 +434,7 @@ void InputParser::deduce_input_sprites(State& state) {
   else if (has_grid(state)) {
     deduce_grid_sprites(state);
   }
-  else if (state.atlas_merge_distance >= 0) {
+  else if (has_atlas(state)) {
     deduce_atlas_sprites(state);
   }
   else {
