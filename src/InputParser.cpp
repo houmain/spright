@@ -126,6 +126,12 @@ MapVectorPtr InputParser::get_maps(const State& state, const ImagePtr& source) {
   return it->second;
 }
 
+bool InputParser::should_autocomplete(const std::string& filename) const {
+  return m_settings.mode == Mode::autocomplete && 
+    (m_settings.autocomplete_pattern.empty() ||
+     match(m_settings.autocomplete_pattern, filename));
+}
+
 void InputParser::sprite_ends(State& state) {
   check(!state.source_filenames.empty(), "sprite not on input");
   update_applied_definitions(Definition::sprite);
@@ -396,7 +402,7 @@ void InputParser::deduce_globbed_inputs(State& state) {
 
 void InputParser::glob_ends(State& state) {
   if (!m_inputs_in_current_glob ||
-       m_settings.mode == Mode::autocomplete)
+       should_autocomplete(state.glob_pattern))
     deduce_globbed_inputs(state);
 
   m_inputs_in_current_glob = { };
@@ -407,7 +413,7 @@ void InputParser::input_ends(State& state) {
   update_applied_definitions(Definition::sprite);
   
   if (!m_sprites_in_current_source ||
-       m_settings.mode == Mode::autocomplete) {
+       should_autocomplete(state.source_filenames.sequence_filename())) {
     auto sprite_indent = state.indent + m_detected_indentation;
     std::swap(state.indent, sprite_indent);
     deduce_input_sprites(state);

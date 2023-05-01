@@ -30,6 +30,7 @@ private:
   ImagePtr get_source(const std::filesystem::path& path,
     const std::filesystem::path& filename, RGBA colorkey);
   MapVectorPtr get_maps(const State& state, const ImagePtr& source);
+  bool should_autocomplete(const std::string& filename) const;
   void sprite_ends(State& state);
   bool sprite_already_added(const State& state) const;
   void deduce_grid_size(State& state);

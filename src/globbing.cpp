@@ -63,7 +63,7 @@ namespace {
 } // namespace
 
 bool match(std::string_view pattern, std::string_view string) {
-  if (pattern.empty() && string.empty())
+  if (pattern == string)
     return true;
 
   if (pattern.empty())
