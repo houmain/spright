@@ -455,8 +455,17 @@ void apply_definition(Definition definition,
       break;
 
     case Definition::skip:
-      check(has_grid(state), "skip is only valid in grid");
-      current_grid_cell.x += (arguments_left() ? check_uint() : 1);
+      state.skip_sprites = 1;
+      if (arguments_left()) {
+        const auto string = check_string();
+        if (const auto value = to_int(string)) {
+          state.skip_sprites = *value;
+        }
+        else {
+          // allow to replace "spright ID" with "skip ID"
+          state.sprite_id = string;
+        }
+      }
       break;
 
     case Definition::span:

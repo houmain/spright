@@ -251,7 +251,7 @@ The following table contains a list of all definitions, with the item each affec
 | grid-offset | input | x, [y] | Offsets the grid from the top-left corner by a number of pixels. |
 | grid-spacing | input | x, [y] | Sets a spacing between the grid cells. |
 | row | input | row | Sets a sprite's vertical offset within a grid (starting with 0). |
-| skip | input | [columns] | Skips one or more horizontal grid cells. |
+| skip | input | [count] | Skips one or more horizontal grid cells or indices in file sequences (a non-numeric parameter is treated as 1, to allow simple substitutions of _sprite_). |
 | atlas | input | [pixels] | Specifies that the input contains multiple unaligned sprites, separated by more than a specific number of transparent pixel rows. |
 | **sprite** | - | [id] | Adds a new sprite to an input and optionally sets its id. |
 | id | sprite | id | Sets the sprite's id (defaults to `"sprite_{{index}}"`). |

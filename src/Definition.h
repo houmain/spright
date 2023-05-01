@@ -97,6 +97,7 @@ struct State {
   StringMap tags;
   VariantMap data;
   std::string sprite_id;
+  int skip_sprites{ };
   Size grid{ };
   Size grid_cells{ };
   Size grid_offset{ };

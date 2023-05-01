@@ -36,7 +36,8 @@ namespace {
             definition == Definition::output ||
             definition == Definition::glob ||
             definition == Definition::input ||
-            definition == Definition::sprite);
+            definition == Definition::sprite ||
+            definition == Definition::skip);
   }
 
   void validate_sprite(const Sprite& sprite) {
@@ -95,8 +96,6 @@ ImagePtr InputParser::get_source(const std::filesystem::path& path,
     }
     source = std::make_shared<Image>(std::move(image));
   }
-
-  m_current_input_sources.push_back(source);
   return source;
 }
 
@@ -163,13 +162,21 @@ void InputParser::sprite_ends(State& state) {
   sprite.align_pivot = state.align_pivot;
   sprite.tags = state.tags;
   sprite.data = state.data;
-  validate_sprite(sprite);
-  m_sprites.push_back(std::move(sprite));
 
+  if (state.skip_sprites == 0) {
+    validate_sprite(sprite);
+    m_current_input_sources.push_back(sprite.source);
+    m_sprites.push_back(std::move(sprite));
+  }
+  ++m_sprites_in_current_source;
   if (state.source_filenames.is_sequence())
     ++m_current_sequence_index;
-  ++m_sprites_in_current_source;
   m_current_grid_cell.x += state.span.x;
+}
+
+void InputParser::skip_sprites(State& state) {
+  for (; state.skip_sprites > 0; --state.skip_sprites)
+    sprite_ends(state);
 }
 
 bool InputParser::overlaps_sprite_rect(const Rect& rect) const {
@@ -294,6 +301,7 @@ void InputParser::deduce_grid_sprites(State& state) {
       sprite_ends(state);
     }
     m_current_grid_cell.x = 0;
+    m_current_grid_cell.y += state.span.y;
   }
 }
 
@@ -458,6 +466,8 @@ void InputParser::scope_ends(State& state) {
     case Definition::sprite:
       sprite_ends(state);
       break;
+    case Definition::skip:
+      skip_sprites(state);
     default:
       break;
   }

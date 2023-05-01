@@ -79,6 +79,22 @@ std::optional<bool> to_bool(std::string_view str) {
   return std::nullopt;
 }
 
+std::optional<int> to_int(std::string_view str) {
+#if !defined(__GNUC__) || __GNUC__ >= 11
+  auto result = int{ };
+  if (std::from_chars(str.data(), 
+        str.data() + str.size(), result).ec == std::errc())
+    return result;
+#else
+  try {
+    return std::stoi(std::string(str));
+  }
+  catch (...) {
+  }
+#endif
+  return { };
+}
+
 std::optional<real> to_real(std::string_view str) {
 #if !defined(__GNUC__) || __GNUC__ >= 11
   auto result = real{ };

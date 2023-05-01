@@ -93,6 +93,7 @@ bool is_punct(char c);
 char to_lower(char c);
 std::string to_lower(std::string string);
 std::optional<bool> to_bool(std::string_view str);
+std::optional<int> to_int(std::string_view string);
 std::optional<real> to_real(std::string_view string);
 std::string to_string(bool value);
 std::string to_string(real value);
