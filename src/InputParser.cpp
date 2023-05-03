@@ -180,9 +180,11 @@ void InputParser::skip_sprites(State& state) {
 }
 
 bool InputParser::overlaps_sprite_rect(const Rect& rect) const {
-  for (auto i = m_sprites_in_current_source - 1; i >= 0; --i)
-    if (overlapping(m_sprites[m_sprites.size() - i - 1].source_rect, rect))
+  for (auto i = m_sprites_in_current_source - 1; i >= 0; --i) {
+    const auto index = m_sprites.size() - static_cast<size_t>(i + 1);
+    if (overlapping(m_sprites[index].source_rect, rect))
       return true;
+  }
   return false;
 }
 

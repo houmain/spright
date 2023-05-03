@@ -202,7 +202,8 @@ namespace {
   }
 } // namespace
 
-void evaluate_expressions(const Settings& settings,
+void evaluate_expressions(
+    [[maybe_unused]] const Settings& settings,
     std::vector<Sprite>& sprites,
     std::vector<Texture>& textures,
     VariantMap& variables) {

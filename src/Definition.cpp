@@ -109,6 +109,7 @@ Definition get_affected_definition(Definition definition) {
     case Definition::MAX:
     case Definition::group:
     case Definition::set:
+    case Definition::glob:
     case Definition::input:
     case Definition::sprite:
     // allow sheets without sprites
