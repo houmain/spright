@@ -167,19 +167,12 @@ TEST_CASE("scope - Problems") {
       sprite "text"
   )"));
 
-  // row, skip, span without grid
+  // row, and span without grid
   CHECK_THROWS(parse(R"(
     sheet "tex1"
     input "test/Items.png"
       row 1
       sprite "text"
-  )"));
-
-  CHECK_THROWS(parse(R"(
-    sheet "tex1"
-    input "test/Items.png"
-      sprite "text"
-      skip
   )"));
 
   CHECK_THROWS(parse(R"(

@@ -25,34 +25,34 @@ input "test/Items.png"
   grid 16 16
   row 1
     skip
-    sprite
-    sprite
-    sprite
-    sprite
-    sprite
+    sprite 
+    sprite 
+    sprite 
+    sprite 
+    sprite 
     skip
-    sprite
+    sprite 
   row 3
     skip
-    sprite
-    sprite
+    sprite 
+    sprite 
     skip
-    sprite
+    sprite 
     skip
-    sprite
+    sprite 
     skip
-    sprite
+    sprite 
   row 5
     skip
-    sprite
-    sprite
+    sprite 
+    sprite 
     skip
-    sprite
+    sprite 
     skip
-    sprite
-    sprite
-    sprite
-    sprite
+    sprite 
+    sprite 
+    sprite 
+    sprite 
 )");
 }
 

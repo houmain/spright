@@ -8,7 +8,7 @@ namespace spright {
 
 class InputParser {
 public:
-  explicit InputParser(const Settings& settings);
+  explicit InputParser(Settings settings);
   void parse(std::istream& input, const std::filesystem::path& input_file = { });
   const std::vector<Sprite>& sprites() const & { return m_sprites; }
   std::vector<Input> inputs() && { return std::move(m_inputs); }
@@ -52,7 +52,7 @@ private:
   void check_not_applied_definitions();
   void handle_exception(std::function<void()> function);
 
-  const Settings& m_settings;
+  const Settings m_settings;
   std::stringstream m_autocomplete_output;
   std::stringstream m_warning_output;
   std::filesystem::path m_input_file;

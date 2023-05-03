@@ -475,8 +475,8 @@ void InputParser::scope_ends(State& state) {
   }
 }
 
-InputParser::InputParser(const Settings& settings)
-  : m_settings(settings) {
+InputParser::InputParser(Settings settings)
+  : m_settings(std::move(settings)) {
 }
 
 void InputParser::parse(std::istream& input, 
