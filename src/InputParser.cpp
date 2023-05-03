@@ -41,16 +41,16 @@ namespace {
   }
 
   void validate_sprite(const Sprite& sprite) {
-    if (sprite.source_rect != intersect(sprite.source->bounds(), sprite.source_rect)) {
+    const auto& rect = sprite.source_rect;
+    const auto& bounds = sprite.source->bounds();
+    if (rect != intersect(bounds, rect)) {
       auto message = std::stringstream();
-      message << "sprite";
-      if (!sprite.id.empty())
-        message << " '" << sprite.id << "' ";
-      message << "sprite outside bounds "<< " (" <<
-        sprite.source_rect.x << ", " <<
-        sprite.source_rect.y << ", " <<
-        sprite.source_rect.w << ", " <<
-        sprite.source_rect.h << ")";
+      message << "sprite outside bounds (";
+      if (rect.x0() < bounds.x0())      message << "x: " << rect.x0() << " < " << bounds.x0();
+      else if (rect.y0() < bounds.y0()) message << "y: " << rect.y0() << " < " << bounds.y0();
+      else if (rect.x1() > bounds.x1()) message << "x: " << rect.x1() << " > " << bounds.x1();
+      else if (rect.y1() > bounds.y1()) message << "y: " << rect.y1() << " > " << bounds.y1();
+      message << ")";
       error(message.str());
     }
   }
@@ -603,8 +603,9 @@ void InputParser::parse(std::istream& input,
     }
   }
 
+  pop_scope_stack(-1);
+
   handle_exception([&]() {
-    pop_scope_stack(-1);
     check_not_applied_definitions();
     m_not_applied_definitions.pop_back();
     assert(m_not_applied_definitions.empty());
