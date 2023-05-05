@@ -569,12 +569,9 @@ void InputParser::parse(std::istream& input,
       line = line.substr(0, hash);
 
     if (line.empty()) {
-      if (m_settings.mode == Mode::autocomplete) {
-        if (input.eof())
-          m_autocomplete_output << autocomplete_space.str();
-        else
+      if (m_settings.mode == Mode::autocomplete)
+        if (!input.eof())
           autocomplete_space << buffer << '\n';
-      }
       continue;
     }
 
@@ -627,6 +624,9 @@ void InputParser::parse(std::istream& input,
     m_not_applied_definitions.pop_back();
     assert(m_not_applied_definitions.empty());
   });
+
+  if (m_settings.mode == Mode::autocomplete)
+    m_autocomplete_output << autocomplete_space.str();
 }
 
 int InputParser::sprites_or_skips_in_current_sounce() const {
