@@ -195,11 +195,16 @@ void apply_definition(Definition definition,
       "filename must not contain wildcard");
     return utf8_to_path(string);
   };
-  const auto check_uint = [&]() {
+  const auto check_int = [&]() {
     auto result = 0;
     const auto str = check_string();
     const auto [p, ec] = std::from_chars(str.data(), str.data() + str.size(), result);
-    check(ec == std::errc() && result >= 0, "invalid number");
+    check(ec == std::errc(), "invalid number");
+    return result;
+  };
+  const auto check_uint = [&]() {
+    auto result = check_int();
+    check(result >= 0, "invalid number");
     return result;
   };
   const auto check_bool = [&](bool default_to_true) {
@@ -442,7 +447,13 @@ void apply_definition(Definition definition,
       break;
 
     case Definition::grid_offset:
-      state.grid_offset = check_size(true);
+      state.grid_offset.x = check_int();
+      state.grid_offset.y = (arguments_left() ? 
+        check_int() : state.grid_offset.x);
+      state.grid_offset_bottom_right.x = (arguments_left() ? 
+        check_int() : 0);
+      state.grid_offset_bottom_right.y = (arguments_left() ? 
+        check_int() : state.grid_offset_bottom_right.x);
       break;
 
     case Definition::grid_spacing:

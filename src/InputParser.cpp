@@ -43,8 +43,9 @@ namespace {
   void validate_sprite(const Sprite& sprite) {
     const auto& rect = sprite.source_rect;
     const auto& bounds = sprite.source->bounds();
-    if (rect != intersect(bounds, rect)) {
-      auto message = std::stringstream();
+    const auto intersected = intersect(bounds, rect);
+    if (rect != intersected) {
+      auto message = std::ostringstream();
       message << "sprite outside bounds (";
       if (rect.x0() < bounds.x0())      message << "x: " << rect.x0() << " < " << bounds.x0();
       else if (rect.y0() < bounds.y0()) message << "y: " << rect.y0() << " < " << bounds.y0();
@@ -64,6 +65,11 @@ namespace {
         std::tie(b->path(), b->filename()); 
       });
     return sources;
+  }
+
+  Rect intersect_overlapping(const Rect& rect, const Rect& bounds) {
+    const auto intersected = intersect(rect, bounds);
+    return (empty(intersected) ? rect : intersected);
   }
 } // namespace
 
@@ -100,7 +106,6 @@ ImagePtr InputParser::get_source(const std::filesystem::path& path,
 }
 
 ImagePtr InputParser::get_source(const State& state, int index) {
-  check(index < state.source_filenames.count(), "too many sprites in sequence");
   return get_source(state.path,
     utf8_to_path(state.source_filenames.get_nth_filename(index)),
     state.colorkey);
@@ -136,6 +141,20 @@ void InputParser::sprite_ends(State& state) {
   check(!state.source_filenames.empty(), "sprite not on input");
   update_applied_definitions(Definition::sprite);
 
+  const auto advance = [&]() {
+    check(m_current_sequence_index < state.source_filenames.count(), 
+      "too many sprites in sequence");
+    m_current_grid_cell.x += state.span.x;
+    if (state.source_filenames.is_sequence())
+      ++m_current_sequence_index;
+  };
+
+  if (state.skip_sprites > 0) {
+    ++m_skips_in_current_source;
+    advance();
+    return;
+  }
+
   auto sprite = Sprite{ };
   sprite.index = to_int(m_sprites.size());
   sprite.input_sprite_index = m_sprites_in_current_source;
@@ -145,7 +164,8 @@ void InputParser::sprite_ends(State& state) {
   sprite.maps = get_maps(state, sprite.source);
   sprite.source_rect = 
     (!empty(state.rect) ? state.rect : 
-     has_grid(state) ? deduce_rect_from_grid(state) :
+     has_grid(state) ? intersect_overlapping(
+       deduce_rect_from_grid(state), sprite.source->bounds()) :
      sprite.source->bounds());
   sprite.pivot = state.pivot;
   sprite.trim = state.trim;
@@ -162,16 +182,12 @@ void InputParser::sprite_ends(State& state) {
   sprite.align_pivot = state.align_pivot;
   sprite.tags = state.tags;
   sprite.data = state.data;
+  advance();
 
-  if (state.skip_sprites == 0) {
-    validate_sprite(sprite);
-    m_current_input_sources.push_back(sprite.source);
-    m_sprites.push_back(std::move(sprite));
-  }
+  validate_sprite(sprite);
+  m_current_input_sources.push_back(sprite.source);
+  m_sprites.push_back(std::move(sprite));
   ++m_sprites_in_current_source;
-  if (state.source_filenames.is_sequence())
-    ++m_current_sequence_index;
-  m_current_grid_cell.x += state.span.x;
 }
 
 void InputParser::skip_sprites(State& state) {
@@ -189,7 +205,7 @@ bool InputParser::overlaps_sprite_rect(const Rect& rect) const {
 }
 
 void InputParser::deduce_sequence_sprites(State& state) {
-  auto skip_already_added = m_sprites_in_current_source;
+  auto skip_already_added = sprites_or_skips_in_current_sounce();
   for (auto i = 0; i < state.source_filenames.count(); ++i) {
     if (skip_already_added) {
       --skip_already_added;
@@ -217,9 +233,11 @@ void InputParser::deduce_grid_size(State& state) {
 
   const auto source = get_source(state);
   const auto sx = (state.grid_cells.x > 0 ? 
-    div_ceil(source->width() - state.grid_offset.x, state.grid_cells.x) : 0);
+    div_ceil(source->width() - state.grid_offset.x -
+      state.grid_offset_bottom_right.x, state.grid_cells.x) : 0);
   const auto sy = (state.grid_cells.y > 0 ? 
-    div_ceil(source->height() - state.grid_offset.y, state.grid_cells.y) : 0);
+    div_ceil(source->height() - state.grid_offset.y -
+       state.grid_offset_bottom_right.y, state.grid_cells.y) : 0);
   state.grid.x = (sx ? sx : sy);
   state.grid.y = (sy ? sy : sx);
   check(state.grid.x > 0 && state.grid.y > 0, "invalid grid");
@@ -244,37 +262,34 @@ void InputParser::deduce_grid_sprites(State& state) {
   stride.x += state.grid_spacing.x;
   stride.y += state.grid_spacing.y;
 
-  auto bounds = source->bounds();
-  bounds.x += state.grid_offset.x;
-  bounds.w -= state.grid_offset.x;
-  bounds.y += state.grid_offset.y;
-  bounds.h -= state.grid_offset.y;
-
   auto cells_x = state.grid_cells.x;
   auto cells_y = state.grid_cells.y;
-  if (!cells_x)
-    cells_x = ceil(bounds.w, stride.x) / stride.x;
-  if (!cells_y)
-    cells_y = ceil(bounds.h, stride.y) / stride.y;
+  if (!cells_x || !cells_y) {
+    auto bounds = source->bounds();
+    bounds.x += state.grid_offset.x;
+    bounds.y += state.grid_offset.y;
+    bounds.w -= state.grid_offset.x + state.grid_offset_bottom_right.x;
+    bounds.h -= state.grid_offset.y + state.grid_offset_bottom_right.y;
+    if (!cells_x)  
+      cells_x = ceil(bounds.w, stride.x) / stride.x;
+    if (!cells_y)
+      cells_y = ceil(bounds.h, stride.y) / stride.y;
+  }
 
-  const auto is_update = (m_sprites_in_current_source != 0);
-  for (auto y = m_current_grid_cell.y; y < cells_y; ++y) {
-    auto output_offset = (m_current_grid_cell.x != 0);
+  auto& x = m_current_grid_cell.x;
+  auto& y = m_current_grid_cell.y;
+
+  const auto is_update = (sprites_or_skips_in_current_sounce() != 0);
+  for (; y < cells_y; y += state.span.y) {
+    auto output_offset = (x != 0);
     auto skipped = 0;
-    for (auto x = m_current_grid_cell.x; x < cells_x; ++x) {
+    for (; x < cells_x; x += state.span.x) {      
+      const auto rect = intersect(deduce_rect_from_grid(state), source->bounds());
 
-      const auto rect = intersect({
-        bounds.x + x * stride.x,
-        bounds.y + y * stride.y,
-        state.grid.x, state.grid.y
-      }, bounds);
-
-      if (empty(rect))
-        continue;
-
-      if (state.trim_gray_levels ?
-          is_fully_black(*source, state.trim_threshold, rect) :
-          is_fully_transparent(*source, state.trim_threshold, rect)) {
+      if (empty(rect) ||
+          (state.trim_gray_levels ?
+           is_fully_black(*source, state.trim_threshold, rect) :
+           is_fully_transparent(*source, state.trim_threshold, rect))) {
         ++skipped;
         continue;
       }
@@ -301,15 +316,17 @@ void InputParser::deduce_grid_sprites(State& state) {
       }
 
       sprite_ends(state);
+      
+      // do not advance twice (could be improved)
+      x -= state.span.x;
     }
-    m_current_grid_cell.x = 0;
-    m_current_grid_cell.y += state.span.y;
+    x = 0;
   }
 }
 
 void InputParser::deduce_atlas_sprites(State& state) {
   const auto source = get_source(state);
-  const auto is_update = (m_sprites_in_current_source != 0);
+  const auto is_update = (sprites_or_skips_in_current_sounce() != 0);
   for (const auto& rect : find_islands(*source,
       state.atlas_merge_distance, state.trim_gray_levels)) {
     if (is_update && overlaps_sprite_rect(rect))
@@ -330,7 +347,7 @@ void InputParser::deduce_atlas_sprites(State& state) {
 }
 
 void InputParser::deduce_single_sprite(State& state) {
-  if (m_sprites_in_current_source > 0)
+  if (sprites_or_skips_in_current_sounce())
     return;
 
   if (m_settings.mode == Mode::autocomplete)
@@ -419,7 +436,7 @@ void InputParser::input_ends(State& state) {
   update_applied_definitions(Definition::input);
   update_applied_definitions(Definition::sprite);
   
-  if (!m_sprites_in_current_source ||
+  if (!sprites_or_skips_in_current_sounce() ||
        should_autocomplete(state.source_filenames.sequence_filename())) {
     auto sprite_indent = state.indent + m_detected_indentation;
     std::swap(state.indent, sprite_indent);
@@ -610,6 +627,10 @@ void InputParser::parse(std::istream& input,
     m_not_applied_definitions.pop_back();
     assert(m_not_applied_definitions.empty());
   });
+}
+
+int InputParser::sprites_or_skips_in_current_sounce() const {
+  return m_sprites_in_current_source + m_skips_in_current_source;
 }
 
 void InputParser::update_applied_definitions(Definition definition) {

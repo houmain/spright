@@ -101,6 +101,7 @@ struct State {
   Size grid{ };
   Size grid_cells{ };
   Size grid_offset{ };
+  Size grid_offset_bottom_right{ };
   Size grid_spacing{ };
   Size span{ 1, 1 };
   int atlas_merge_distance{ -1 };
