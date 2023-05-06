@@ -71,6 +71,13 @@ namespace {
     const auto intersected = intersect(rect, bounds);
     return (empty(intersected) ? rect : intersected);
   }
+
+  template<typename C, typename F>
+  bool last_n_contain(const C& container, int n, F&& function) {
+    assert(n <= to_int(container.size()));
+    return std::find_if(std::next(container.begin(), to_int(container.size()) - n),
+      container.end(), function) != container.end();
+  }
 } // namespace
 
 std::shared_ptr<Sheet> InputParser::get_sheet(const std::string& sheet_id) {
@@ -196,12 +203,10 @@ void InputParser::skip_sprites(State& state) {
 }
 
 bool InputParser::overlaps_sprite_rect(const Rect& rect) const {
-  for (auto i = m_sprites_in_current_source - 1; i >= 0; --i) {
-    const auto index = m_sprites.size() - static_cast<size_t>(i + 1);
-    if (overlapping(m_sprites[index].source_rect, rect))
-      return true;
-  }
-  return false;
+  return last_n_contain(m_sprites, m_sprites_in_current_source,
+    [&](const Sprite& sprite) {
+      return overlapping(sprite.source_rect, rect);
+    });
 }
 
 void InputParser::deduce_sequence_sprites(State& state) {
@@ -408,11 +413,10 @@ void InputParser::deduce_globbed_inputs(State& state) {
       sequence.set_infinite();
 
     // add only not yet encountered inputs
-    const auto& sequence_filename = sequence.sequence_filename();
-    if (std::find_if(m_inputs.begin(), m_inputs.end(), 
-        [&](const Input& input) { 
-          return input.source_filenames == sequence_filename; 
-        }) != m_inputs.end())
+    if (last_n_contain(m_inputs, m_inputs_in_current_glob,
+        [&](const Input& input) {
+          return input.source_filenames == sequence.sequence_filename();
+        }))
       continue;
 
     if (m_settings.mode == Mode::autocomplete)
@@ -424,12 +428,14 @@ void InputParser::deduce_globbed_inputs(State& state) {
   }
 }
 
+void InputParser::glob_begins([[maybe_unused]] State& state) {
+  m_inputs_in_current_glob = { };
+}
+
 void InputParser::glob_ends(State& state) {
   if (!m_inputs_in_current_glob ||
        should_autocomplete(state.glob_pattern))
     deduce_globbed_inputs(state);
-
-  m_inputs_in_current_glob = { };
 }
 
 void InputParser::input_ends(State& state) {
@@ -514,17 +520,12 @@ void InputParser::parse(std::istream& input,
     for (auto last = scope_stack.rbegin(); ; ++last) {
       if (has_implicit_scope(last->definition) && level <= last->level) {
         handle_exception([&]() {
-          // except for glob call end of scope handler before
+          // call end of scope handler before
           // unwinding (just apply actual definition and indent)
-          if (last->definition != Definition::glob) {
-            auto& state = scope_stack.back();
-            state.definition = last->definition;
-            state.indent = last->indent;
-            scope_ends(state);
-          }
-          else {
-            scope_ends(*last);
-          }
+          auto& state = scope_stack.back();
+          state.definition = last->definition;
+          state.indent = last->indent;
+          scope_ends(state);
         });
       }
       else if (level >= last->level) {
@@ -605,6 +606,9 @@ void InputParser::parse(std::istream& input,
       apply_definition(definition, arguments,
           state, m_current_grid_cell, m_variables);
       update_not_applied_definitions(definition, line_number);
+
+      if (definition == Definition::glob)
+        glob_begins(state);
 
       // set definition when it was successfully applied
       // to disable scope_ends() on "errors as warnings"

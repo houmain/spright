@@ -45,6 +45,7 @@ private:
   void scope_ends(State& state);
   void sheet_ends(State& state);
   void output_ends(State& state);
+  void glob_begins(State& state);
   void glob_ends(State& state);
   void input_ends(State& state);
   void update_applied_definitions(Definition definition);
