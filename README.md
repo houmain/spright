@@ -102,7 +102,7 @@ input "misc_scenery.png"
 
 When spright is called without [command line](#command-line-arguments) arguments, the [input definition](#input-definition-reference) is read from `spright.conf` and it writes a `spright.json` file containing the [output description](#output-description).
 
-Passing the argument **-a** or **--autocomplete** activates the auto-completion, which extends `spright.conf` with automatically deduced information:
+Passing the argument **-m complete** activates the auto-completion, which extends `spright.conf` with automatically deduced information:
 
 ```perl
 input "Decorations (32x32).png"
