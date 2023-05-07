@@ -2,25 +2,55 @@
 	"inputs": [
 		{
 			"filename": "Decorations (32x32).png",
-			"sourceIndices": [0]
+			"sources": [
+				{
+					"index": 0,
+					"spriteIndices": [0,1,2,3,4,5,6,7,8,9,10,11,12,13]
+				}
+			]
 		},
 		{
 			"filename": "Old enemies 2.png",
-			"sourceIndices": [1]
+			"sources": [
+				{
+					"index": 1,
+					"spriteIndices": [14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42]
+				}
+			]
 		},
 		{
-			"filename": "Orc Attack/Frame*.png",
-			"sourceIndices": [2,3,4,5]
+			"filename": "Orc Attack/Frame{01-}.png",
+			"sources": [
+				{
+					"index": 2,
+					"spriteIndices": [43]
+				},
+				{
+					"index": 3,
+					"spriteIndices": [44]
+				},
+				{
+					"index": 4,
+					"spriteIndices": [45]
+				},
+				{
+					"index": 5,
+					"spriteIndices": [46]
+				}
+			]
 		},
 		{
 			"filename": "misc_scenery.png",
-			"sourceIndices": [6]
+			"sources": [
+				{
+					"index": 6,
+					"spriteIndices": [47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88]
+				}
+			]
 		}
 	],
 	"slices": [
 		{
-			"index": 0,
-			"inputFilename": "spright.conf",
 			"spriteIndices": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88]
 		}
 	],
@@ -28,57 +58,43 @@
 		{
 			"filename": "Decorations (32x32).png",
 			"height": 128,
-			"index": 0,
 			"path": "",
-			"spriteIndices": [0,1,2,3,4,5,6,7,8,9,10,11,12,13],
 			"width": 160
 		},
 		{
 			"filename": "Old enemies 2.png",
 			"height": 96,
-			"index": 1,
 			"path": "",
-			"spriteIndices": [14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42],
 			"width": 96
 		},
 		{
 			"filename": "Orc Attack/Frame01.png",
 			"height": 15,
-			"index": 2,
 			"path": "",
-			"spriteIndices": [43],
 			"width": 15
 		},
 		{
 			"filename": "Orc Attack/Frame02.png",
 			"height": 15,
-			"index": 3,
 			"path": "",
-			"spriteIndices": [44],
 			"width": 15
 		},
 		{
 			"filename": "Orc Attack/Frame03.png",
 			"height": 15,
-			"index": 4,
 			"path": "",
-			"spriteIndices": [45],
 			"width": 15
 		},
 		{
 			"filename": "Orc Attack/Frame04.png",
 			"height": 15,
-			"index": 5,
 			"path": "",
-			"spriteIndices": [46],
 			"width": 15
 		},
 		{
 			"filename": "misc_scenery.png",
 			"height": 162,
-			"index": 6,
 			"path": "",
-			"spriteIndices": [47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88],
 			"width": 163
 		}
 	],
@@ -87,6 +103,7 @@
 			"data": {},
 			"id": "banner_top",
 			"index": 0,
+			"inputIndex": 0,
 			"inputSpriteIndex": 0,
 			"pivot": {
 				"x": 13.0,
@@ -127,6 +144,7 @@
 			"data": {},
 			"id": "platform_1_left",
 			"index": 1,
+			"inputIndex": 0,
 			"inputSpriteIndex": 1,
 			"pivot": {
 				"x": 16.0,
@@ -167,6 +185,7 @@
 			"data": {},
 			"id": "platform_1_middle",
 			"index": 2,
+			"inputIndex": 0,
 			"inputSpriteIndex": 2,
 			"pivot": {
 				"x": 16.0,
@@ -207,6 +226,7 @@
 			"data": {},
 			"id": "platform_1_right",
 			"index": 3,
+			"inputIndex": 0,
 			"inputSpriteIndex": 3,
 			"pivot": {
 				"x": 16.0,
@@ -247,6 +267,7 @@
 			"data": {},
 			"id": "platform_1_sole",
 			"index": 4,
+			"inputIndex": 0,
 			"inputSpriteIndex": 4,
 			"pivot": {
 				"x": 16.0,
@@ -287,6 +308,7 @@
 			"data": {},
 			"id": "banner_middle",
 			"index": 5,
+			"inputIndex": 0,
 			"inputSpriteIndex": 5,
 			"pivot": {
 				"x": 13.0,
@@ -327,6 +349,7 @@
 			"data": {},
 			"id": "platform_2_left",
 			"index": 6,
+			"inputIndex": 0,
 			"inputSpriteIndex": 6,
 			"pivot": {
 				"x": 16.0,
@@ -367,6 +390,7 @@
 			"data": {},
 			"id": "platform_2_middle",
 			"index": 7,
+			"inputIndex": 0,
 			"inputSpriteIndex": 7,
 			"pivot": {
 				"x": 16.0,
@@ -407,6 +431,7 @@
 			"data": {},
 			"id": "platform_2_right",
 			"index": 8,
+			"inputIndex": 0,
 			"inputSpriteIndex": 8,
 			"pivot": {
 				"x": 16.0,
@@ -447,6 +472,7 @@
 			"data": {},
 			"id": "platform_2_sole",
 			"index": 9,
+			"inputIndex": 0,
 			"inputSpriteIndex": 9,
 			"pivot": {
 				"x": 16.0,
@@ -487,6 +513,7 @@
 			"data": {},
 			"id": "banner_bottom_1",
 			"index": 10,
+			"inputIndex": 0,
 			"inputSpriteIndex": 10,
 			"pivot": {
 				"x": 13.0,
@@ -527,6 +554,7 @@
 			"data": {},
 			"id": "window_1",
 			"index": 11,
+			"inputIndex": 0,
 			"inputSpriteIndex": 11,
 			"pivot": {
 				"x": 27.5,
@@ -567,6 +595,7 @@
 			"data": {},
 			"id": "window_2",
 			"index": 12,
+			"inputIndex": 0,
 			"inputSpriteIndex": 12,
 			"pivot": {
 				"x": 27.5,
@@ -607,6 +636,7 @@
 			"data": {},
 			"id": "banner_bottom_2",
 			"index": 13,
+			"inputIndex": 0,
 			"inputSpriteIndex": 13,
 			"pivot": {
 				"x": 13.0,
@@ -647,6 +677,7 @@
 			"data": {},
 			"id": "sprite_14",
 			"index": 14,
+			"inputIndex": 1,
 			"inputSpriteIndex": 0,
 			"pivot": {
 				"x": 6.0,
@@ -689,6 +720,7 @@
 			"data": {},
 			"id": "sprite_15",
 			"index": 15,
+			"inputIndex": 1,
 			"inputSpriteIndex": 1,
 			"pivot": {
 				"x": 6.0,
@@ -731,6 +763,7 @@
 			"data": {},
 			"id": "sprite_16",
 			"index": 16,
+			"inputIndex": 1,
 			"inputSpriteIndex": 2,
 			"pivot": {
 				"x": 6.0,
@@ -773,6 +806,7 @@
 			"data": {},
 			"id": "sprite_17",
 			"index": 17,
+			"inputIndex": 1,
 			"inputSpriteIndex": 3,
 			"pivot": {
 				"x": 7.0,
@@ -815,6 +849,7 @@
 			"data": {},
 			"id": "sprite_18",
 			"index": 18,
+			"inputIndex": 1,
 			"inputSpriteIndex": 4,
 			"pivot": {
 				"x": 6.0,
@@ -857,6 +892,7 @@
 			"data": {},
 			"id": "sprite_19",
 			"index": 19,
+			"inputIndex": 1,
 			"inputSpriteIndex": 5,
 			"pivot": {
 				"x": 6.5,
@@ -899,6 +935,7 @@
 			"data": {},
 			"id": "sprite_20",
 			"index": 20,
+			"inputIndex": 1,
 			"inputSpriteIndex": 6,
 			"pivot": {
 				"x": 6.0,
@@ -941,6 +978,7 @@
 			"data": {},
 			"id": "sprite_21",
 			"index": 21,
+			"inputIndex": 1,
 			"inputSpriteIndex": 7,
 			"pivot": {
 				"x": 6.0,
@@ -983,6 +1021,7 @@
 			"data": {},
 			"id": "sprite_22",
 			"index": 22,
+			"inputIndex": 1,
 			"inputSpriteIndex": 8,
 			"pivot": {
 				"x": 6.0,
@@ -1025,6 +1064,7 @@
 			"data": {},
 			"id": "sprite_23",
 			"index": 23,
+			"inputIndex": 1,
 			"inputSpriteIndex": 9,
 			"pivot": {
 				"x": 6.0,
@@ -1067,6 +1107,7 @@
 			"data": {},
 			"id": "sprite_24",
 			"index": 24,
+			"inputIndex": 1,
 			"inputSpriteIndex": 10,
 			"pivot": {
 				"x": 6.0,
@@ -1109,6 +1150,7 @@
 			"data": {},
 			"id": "sprite_25",
 			"index": 25,
+			"inputIndex": 1,
 			"inputSpriteIndex": 11,
 			"pivot": {
 				"x": 6.0,
@@ -1151,6 +1193,7 @@
 			"data": {},
 			"id": "sprite_26",
 			"index": 26,
+			"inputIndex": 1,
 			"inputSpriteIndex": 12,
 			"pivot": {
 				"x": 6.0,
@@ -1193,6 +1236,7 @@
 			"data": {},
 			"id": "sprite_27",
 			"index": 27,
+			"inputIndex": 1,
 			"inputSpriteIndex": 13,
 			"pivot": {
 				"x": 7.0,
@@ -1235,6 +1279,7 @@
 			"data": {},
 			"id": "sprite_28",
 			"index": 28,
+			"inputIndex": 1,
 			"inputSpriteIndex": 14,
 			"pivot": {
 				"x": 6.0,
@@ -1277,6 +1322,7 @@
 			"data": {},
 			"id": "sprite_29",
 			"index": 29,
+			"inputIndex": 1,
 			"inputSpriteIndex": 15,
 			"pivot": {
 				"x": 6.5,
@@ -1319,6 +1365,7 @@
 			"data": {},
 			"id": "sprite_30",
 			"index": 30,
+			"inputIndex": 1,
 			"inputSpriteIndex": 16,
 			"pivot": {
 				"x": 6.0,
@@ -1361,6 +1408,7 @@
 			"data": {},
 			"id": "sprite_31",
 			"index": 31,
+			"inputIndex": 1,
 			"inputSpriteIndex": 17,
 			"pivot": {
 				"x": 6.0,
@@ -1403,6 +1451,7 @@
 			"data": {},
 			"id": "sprite_32",
 			"index": 32,
+			"inputIndex": 1,
 			"inputSpriteIndex": 18,
 			"pivot": {
 				"x": 6.0,
@@ -1445,6 +1494,7 @@
 			"data": {},
 			"id": "sprite_33",
 			"index": 33,
+			"inputIndex": 1,
 			"inputSpriteIndex": 19,
 			"pivot": {
 				"x": 8.0,
@@ -1487,6 +1537,7 @@
 			"data": {},
 			"id": "sprite_34",
 			"index": 34,
+			"inputIndex": 1,
 			"inputSpriteIndex": 20,
 			"pivot": {
 				"x": 8.0,
@@ -1529,6 +1580,7 @@
 			"data": {},
 			"id": "sprite_35",
 			"index": 35,
+			"inputIndex": 1,
 			"inputSpriteIndex": 21,
 			"pivot": {
 				"x": 8.0,
@@ -1571,6 +1623,7 @@
 			"data": {},
 			"id": "sprite_36",
 			"index": 36,
+			"inputIndex": 1,
 			"inputSpriteIndex": 22,
 			"pivot": {
 				"x": 8.0,
@@ -1613,6 +1666,7 @@
 			"data": {},
 			"id": "sprite_37",
 			"index": 37,
+			"inputIndex": 1,
 			"inputSpriteIndex": 23,
 			"pivot": {
 				"x": 8.0,
@@ -1655,6 +1709,7 @@
 			"data": {},
 			"id": "sprite_38",
 			"index": 38,
+			"inputIndex": 1,
 			"inputSpriteIndex": 24,
 			"pivot": {
 				"x": 7.0,
@@ -1697,6 +1752,7 @@
 			"data": {},
 			"id": "sprite_39",
 			"index": 39,
+			"inputIndex": 1,
 			"inputSpriteIndex": 25,
 			"pivot": {
 				"x": 7.0,
@@ -1739,6 +1795,7 @@
 			"data": {},
 			"id": "sprite_40",
 			"index": 40,
+			"inputIndex": 1,
 			"inputSpriteIndex": 26,
 			"pivot": {
 				"x": 8.0,
@@ -1781,6 +1838,7 @@
 			"data": {},
 			"id": "sprite_41",
 			"index": 41,
+			"inputIndex": 1,
 			"inputSpriteIndex": 27,
 			"pivot": {
 				"x": 8.0,
@@ -1823,6 +1881,7 @@
 			"data": {},
 			"id": "sprite_42",
 			"index": 42,
+			"inputIndex": 1,
 			"inputSpriteIndex": 28,
 			"pivot": {
 				"x": 8.0,
@@ -1865,6 +1924,7 @@
 			"data": {},
 			"id": "orc_attack_0",
 			"index": 43,
+			"inputIndex": 2,
 			"inputSpriteIndex": 0,
 			"pivot": {
 				"x": 4.0,
@@ -1905,6 +1965,7 @@
 			"data": {},
 			"id": "orc_attack_1",
 			"index": 44,
+			"inputIndex": 2,
 			"inputSpriteIndex": 1,
 			"pivot": {
 				"x": 6.0,
@@ -1945,6 +2006,7 @@
 			"data": {},
 			"id": "orc_attack_2",
 			"index": 45,
+			"inputIndex": 2,
 			"inputSpriteIndex": 2,
 			"pivot": {
 				"x": 6.0,
@@ -1985,6 +2047,7 @@
 			"data": {},
 			"id": "orc_attack_3",
 			"index": 46,
+			"inputIndex": 2,
 			"inputSpriteIndex": 3,
 			"pivot": {
 				"x": 4.0,
@@ -2025,6 +2088,7 @@
 			"data": {},
 			"id": "sprite_47",
 			"index": 47,
+			"inputIndex": 3,
 			"inputSpriteIndex": 0,
 			"pivot": {
 				"x": 3.0,
@@ -2065,6 +2129,7 @@
 			"data": {},
 			"id": "sprite_48",
 			"index": 48,
+			"inputIndex": 3,
 			"inputSpriteIndex": 1,
 			"pivot": {
 				"x": 2.0,
@@ -2105,6 +2170,7 @@
 			"data": {},
 			"id": "sprite_49",
 			"index": 49,
+			"inputIndex": 3,
 			"inputSpriteIndex": 2,
 			"pivot": {
 				"x": 3.0,
@@ -2145,6 +2211,7 @@
 			"data": {},
 			"id": "sprite_50",
 			"index": 50,
+			"inputIndex": 3,
 			"inputSpriteIndex": 3,
 			"pivot": {
 				"x": 3.5,
@@ -2185,6 +2252,7 @@
 			"data": {},
 			"id": "sprite_51",
 			"index": 51,
+			"inputIndex": 3,
 			"inputSpriteIndex": 4,
 			"pivot": {
 				"x": 8.5,
@@ -2225,6 +2293,7 @@
 			"data": {},
 			"id": "sprite_52",
 			"index": 52,
+			"inputIndex": 3,
 			"inputSpriteIndex": 5,
 			"pivot": {
 				"x": 8.5,
@@ -2265,6 +2334,7 @@
 			"data": {},
 			"id": "sprite_53",
 			"index": 53,
+			"inputIndex": 3,
 			"inputSpriteIndex": 6,
 			"pivot": {
 				"x": 16.0,
@@ -2305,6 +2375,7 @@
 			"data": {},
 			"id": "sprite_54",
 			"index": 54,
+			"inputIndex": 3,
 			"inputSpriteIndex": 7,
 			"pivot": {
 				"x": 2.5,
@@ -2345,6 +2416,7 @@
 			"data": {},
 			"id": "sprite_55",
 			"index": 55,
+			"inputIndex": 3,
 			"inputSpriteIndex": 8,
 			"pivot": {
 				"x": 2.5,
@@ -2385,6 +2457,7 @@
 			"data": {},
 			"id": "sprite_56",
 			"index": 56,
+			"inputIndex": 3,
 			"inputSpriteIndex": 9,
 			"pivot": {
 				"x": 5.5,
@@ -2425,6 +2498,7 @@
 			"data": {},
 			"id": "sprite_57",
 			"index": 57,
+			"inputIndex": 3,
 			"inputSpriteIndex": 10,
 			"pivot": {
 				"x": 3.0,
@@ -2465,6 +2539,7 @@
 			"data": {},
 			"id": "sprite_58",
 			"index": 58,
+			"inputIndex": 3,
 			"inputSpriteIndex": 11,
 			"pivot": {
 				"x": 3.0,
@@ -2505,6 +2580,7 @@
 			"data": {},
 			"id": "sprite_59",
 			"index": 59,
+			"inputIndex": 3,
 			"inputSpriteIndex": 12,
 			"pivot": {
 				"x": 3.0,
@@ -2545,6 +2621,7 @@
 			"data": {},
 			"id": "sprite_60",
 			"index": 60,
+			"inputIndex": 3,
 			"inputSpriteIndex": 13,
 			"pivot": {
 				"x": 3.0,
@@ -2585,6 +2662,7 @@
 			"data": {},
 			"id": "sprite_61",
 			"index": 61,
+			"inputIndex": 3,
 			"inputSpriteIndex": 14,
 			"pivot": {
 				"x": 3.0,
@@ -2625,6 +2703,7 @@
 			"data": {},
 			"id": "sprite_62",
 			"index": 62,
+			"inputIndex": 3,
 			"inputSpriteIndex": 15,
 			"pivot": {
 				"x": 2.0,
@@ -2665,6 +2744,7 @@
 			"data": {},
 			"id": "sprite_63",
 			"index": 63,
+			"inputIndex": 3,
 			"inputSpriteIndex": 16,
 			"pivot": {
 				"x": 3.0,
@@ -2705,6 +2785,7 @@
 			"data": {},
 			"id": "sprite_64",
 			"index": 64,
+			"inputIndex": 3,
 			"inputSpriteIndex": 17,
 			"pivot": {
 				"x": 3.0,
@@ -2745,6 +2826,7 @@
 			"data": {},
 			"id": "sprite_65",
 			"index": 65,
+			"inputIndex": 3,
 			"inputSpriteIndex": 18,
 			"pivot": {
 				"x": 10.5,
@@ -2785,6 +2867,7 @@
 			"data": {},
 			"id": "sprite_66",
 			"index": 66,
+			"inputIndex": 3,
 			"inputSpriteIndex": 19,
 			"pivot": {
 				"x": 0.5,
@@ -2825,6 +2908,7 @@
 			"data": {},
 			"id": "sprite_67",
 			"index": 67,
+			"inputIndex": 3,
 			"inputSpriteIndex": 20,
 			"pivot": {
 				"x": 7.5,
@@ -2865,6 +2949,7 @@
 			"data": {},
 			"id": "sprite_68",
 			"index": 68,
+			"inputIndex": 3,
 			"inputSpriteIndex": 21,
 			"pivot": {
 				"x": 7.5,
@@ -2905,6 +2990,7 @@
 			"data": {},
 			"id": "sprite_69",
 			"index": 69,
+			"inputIndex": 3,
 			"inputSpriteIndex": 22,
 			"pivot": {
 				"x": 6.5,
@@ -2945,6 +3031,7 @@
 			"data": {},
 			"id": "sprite_70",
 			"index": 70,
+			"inputIndex": 3,
 			"inputSpriteIndex": 23,
 			"pivot": {
 				"x": 5.0,
@@ -2985,6 +3072,7 @@
 			"data": {},
 			"id": "sprite_71",
 			"index": 71,
+			"inputIndex": 3,
 			"inputSpriteIndex": 24,
 			"pivot": {
 				"x": 5.0,
@@ -3025,6 +3113,7 @@
 			"data": {},
 			"id": "sprite_72",
 			"index": 72,
+			"inputIndex": 3,
 			"inputSpriteIndex": 25,
 			"pivot": {
 				"x": 5.0,
@@ -3065,6 +3154,7 @@
 			"data": {},
 			"id": "sprite_73",
 			"index": 73,
+			"inputIndex": 3,
 			"inputSpriteIndex": 26,
 			"pivot": {
 				"x": 5.0,
@@ -3105,6 +3195,7 @@
 			"data": {},
 			"id": "sprite_74",
 			"index": 74,
+			"inputIndex": 3,
 			"inputSpriteIndex": 27,
 			"pivot": {
 				"x": 19.5,
@@ -3145,6 +3236,7 @@
 			"data": {},
 			"id": "sprite_75",
 			"index": 75,
+			"inputIndex": 3,
 			"inputSpriteIndex": 28,
 			"pivot": {
 				"x": 6.5,
@@ -3185,6 +3277,7 @@
 			"data": {},
 			"id": "sprite_76",
 			"index": 76,
+			"inputIndex": 3,
 			"inputSpriteIndex": 29,
 			"pivot": {
 				"x": 13.5,
@@ -3225,6 +3318,7 @@
 			"data": {},
 			"id": "sprite_77",
 			"index": 77,
+			"inputIndex": 3,
 			"inputSpriteIndex": 30,
 			"pivot": {
 				"x": 7.5,
@@ -3265,6 +3359,7 @@
 			"data": {},
 			"id": "sprite_78",
 			"index": 78,
+			"inputIndex": 3,
 			"inputSpriteIndex": 31,
 			"pivot": {
 				"x": 7.0,
@@ -3305,6 +3400,7 @@
 			"data": {},
 			"id": "sprite_79",
 			"index": 79,
+			"inputIndex": 3,
 			"inputSpriteIndex": 32,
 			"pivot": {
 				"x": 6.5,
@@ -3345,6 +3441,7 @@
 			"data": {},
 			"id": "sprite_80",
 			"index": 80,
+			"inputIndex": 3,
 			"inputSpriteIndex": 33,
 			"pivot": {
 				"x": 4.5,
@@ -3385,6 +3482,7 @@
 			"data": {},
 			"id": "sprite_81",
 			"index": 81,
+			"inputIndex": 3,
 			"inputSpriteIndex": 34,
 			"pivot": {
 				"x": 5.5,
@@ -3425,6 +3523,7 @@
 			"data": {},
 			"id": "sprite_82",
 			"index": 82,
+			"inputIndex": 3,
 			"inputSpriteIndex": 35,
 			"pivot": {
 				"x": 19.5,
@@ -3465,6 +3564,7 @@
 			"data": {},
 			"id": "sprite_83",
 			"index": 83,
+			"inputIndex": 3,
 			"inputSpriteIndex": 36,
 			"pivot": {
 				"x": 5.5,
@@ -3505,6 +3605,7 @@
 			"data": {},
 			"id": "sprite_84",
 			"index": 84,
+			"inputIndex": 3,
 			"inputSpriteIndex": 37,
 			"pivot": {
 				"x": 5.5,
@@ -3545,6 +3646,7 @@
 			"data": {},
 			"id": "sprite_85",
 			"index": 85,
+			"inputIndex": 3,
 			"inputSpriteIndex": 38,
 			"pivot": {
 				"x": 3.5,
@@ -3585,6 +3687,7 @@
 			"data": {},
 			"id": "sprite_86",
 			"index": 86,
+			"inputIndex": 3,
 			"inputSpriteIndex": 39,
 			"pivot": {
 				"x": 3.5,
@@ -3625,6 +3728,7 @@
 			"data": {},
 			"id": "sprite_87",
 			"index": 87,
+			"inputIndex": 3,
 			"inputSpriteIndex": 40,
 			"pivot": {
 				"x": 13.5,
@@ -3665,6 +3769,7 @@
 			"data": {},
 			"id": "sprite_88",
 			"index": 88,
+			"inputIndex": 3,
 			"inputSpriteIndex": 41,
 			"pivot": {
 				"x": 8.5,
@@ -3722,7 +3827,6 @@
 		{
 			"filename": "spright-0.png",
 			"height": 195,
-			"index": 0,
 			"map": "",
 			"scale": 1.0,
 			"sliceIndex": 0,
