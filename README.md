@@ -164,7 +164,6 @@ input "Decorations (32x32).png"
 ...
 ```
 
-Auto-completion can be executed anytime, but it currently only touches _inputs_ without any defined _sprites_.\
 You can also tag sprites to define animations or other game specific properties and leave sprites you do not want to directly address without ID:
 
 ```perl
