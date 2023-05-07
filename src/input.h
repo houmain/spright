@@ -42,6 +42,7 @@ struct Extrude {
 };
 
 struct Input {
+  int index;
   std::string source_filenames;
   std::vector<ImagePtr> sources;
 };
@@ -78,6 +79,7 @@ struct Sheet {
 
 struct Sprite {
   int index{ };
+  int input_index{ };
   int input_sprite_index{ };
   std::string id;
   SheetPtr sheet;

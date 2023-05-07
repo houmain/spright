@@ -49,15 +49,16 @@ namespace {
 
     using TagKey = std::string;
     using TagValue = std::string;
+    using InputIndex = int;
     using SpriteIndex = int;
     using SliceIndex = int;
     using SourceIndex = int;
     auto tags = std::map<TagKey, std::map<TagValue, std::vector<SpriteIndex>>>();
     auto source_indices = std::map<ImagePtr, SourceIndex>();
     auto slice_sprites = std::map<SliceIndex, std::vector<SpriteIndex>>();
-    auto source_sprites = std::map<SourceIndex, std::vector<SpriteIndex>>();
     auto sprite_on_slice = std::map<SpriteIndex, SliceIndex>();
     auto sprites_by_index = std::map<SpriteIndex, const Sprite*>();
+    auto input_source_sprites = std::map<std::pair<InputIndex, SourceIndex>, std::vector<SpriteIndex>>();
     for (const auto& sprite : sprites)
       sprites_by_index[sprite.index] = &sprite;
     for (const auto& slice : slices)
@@ -79,15 +80,16 @@ namespace {
         sprite->source, to_int(source_indices.size())).first->second;
 
       json_sprite["id"] = sprite->id;
+      json_sprite["inputIndex"] = sprite->input_index;
       json_sprite["inputSpriteIndex"] = sprite->input_sprite_index;
       json_sprite["sourceIndex"] = source_index;
       json_sprite["sourceRect"] = json_rect(sprite->source_rect);
       json_sprite["tags"] = sprite->tags;
       json_sprite["data"] = json_variant_map(sprite->data);
+      input_source_sprites[{ sprite->input_index, source_index }].push_back(sprite_index);
 
       for (const auto& [key, value] : sprite->tags)
         tags[key][value].push_back(sprite_index);
-      source_sprites[source_index].push_back(sprite_index);
 
       // only available when packing was executed
       if (const auto it = sprite_on_slice.find(sprite_index); it != sprite_on_slice.end()) {
@@ -116,8 +118,6 @@ namespace {
     json_slices = nlohmann::json::array();
     for (const auto& slice : slices) {
       auto& json_slice = json_slices.emplace_back();
-      json_slice["index"] = slice.index;
-      json_slice["inputFilename"] = path_to_utf8(slice.sheet->input_file);
       json_slice["spriteIndices"] = slice_sprites[slice.index];
     }
 
@@ -128,12 +128,10 @@ namespace {
       sources_by_index[index] = source;
     for (const auto& [index, source] : sources_by_index) {
       auto& json_source = json_sources.emplace_back();
-      json_source["index"] = index;
       json_source["path"] = path_to_utf8(source->path());
       json_source["filename"] = path_to_utf8(source->filename());
       json_source["width"] = source->width();
       json_source["height"] = source->height();
-      json_source["spriteIndices"] = source_sprites[index];
     }
 
     auto& json_inputs = json["inputs"];
@@ -141,13 +139,16 @@ namespace {
     for (const auto& input : inputs) {
       auto& json_input = json_inputs.emplace_back();
       json_input["filename"] = input.source_filenames;
-      auto json_source_indices = nlohmann::json::array();
-      for (const auto& source : input.sources)
-        json_source_indices.push_back(source_indices[source]);
-      json_input["sourceIndices"] = std::move(json_source_indices);
+      auto json_sources = nlohmann::json::array();
+      for (const auto& source : input.sources) {
+        auto& json_source = json_sources.emplace_back();
+        const auto source_index = source_indices[source];
+        json_source["index"] = source_index;
+        json_source["spriteIndices"] = input_source_sprites[{ input.index, source_index }];
+      }
+      json_input["sources"] = std::move(json_sources);
     }
 
-    auto texture_index = size_t{ };
     auto& json_textures = json["textures"];
     json_textures = nlohmann::json::array();
     for (const auto& texture : textures) {
@@ -157,7 +158,6 @@ namespace {
       auto& json_texture = json_textures.emplace_back();
       const auto& slice = *texture.slice;
       const auto& output = *texture.output;
-      json_texture["index"] = texture_index++;
       json_texture["sliceIndex"] = texture.slice->index;
       json_texture["spriteIndices"] = slice_sprites[slice.index];
       json_texture["filename"] = texture.filename;
@@ -219,6 +219,8 @@ void evaluate_expressions(
     replace_variables(expression, [&](std::string_view variable) {
       if (variable == "index")
         return std::to_string(sprite.index);
+      if (variable == "inputIndex")
+        return std::to_string(sprite.input_index);
       if (variable == "inputSpriteIndex")
         return std::to_string(sprite.input_sprite_index);
       if (variable == "sheet.id")

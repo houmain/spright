@@ -52,7 +52,7 @@ private:
   void update_not_applied_definitions(Definition definition, int line_number);
   void check_not_applied_definitions();
   void handle_exception(std::function<void()> function);
-  int sprites_or_skips_in_current_sounce() const;
+  int sprites_or_skips_in_current_input() const;
 
   const Settings m_settings;
   std::stringstream m_autocomplete_output;
@@ -67,8 +67,8 @@ private:
   std::vector<Sprite> m_sprites;
   VariantMap m_variables;
   int m_inputs_in_current_glob{ };
-  int m_sprites_in_current_source{ };
-  int m_skips_in_current_source{ };
+  int m_sprites_in_current_input{ };
+  int m_skips_in_current_input{ };
   Point m_current_grid_cell{ };
   int m_current_sequence_index{ };
   std::vector<ImagePtr> m_current_input_sources;

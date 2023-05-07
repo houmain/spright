@@ -157,14 +157,15 @@ void InputParser::sprite_ends(State& state) {
   };
 
   if (state.skip_sprites > 0) {
-    ++m_skips_in_current_source;
+    ++m_skips_in_current_input;
     advance();
     return;
   }
 
   auto sprite = Sprite{ };
   sprite.index = to_int(m_sprites.size());
-  sprite.input_sprite_index = m_sprites_in_current_source;
+  sprite.input_index = to_int(m_inputs.size());
+  sprite.input_sprite_index = m_sprites_in_current_input;
   sprite.id = state.sprite_id;
   sprite.sheet = get_sheet(state.sheet_id);
   sprite.source = get_source(state);
@@ -194,7 +195,7 @@ void InputParser::sprite_ends(State& state) {
   validate_sprite(sprite);
   m_current_input_sources.push_back(sprite.source);
   m_sprites.push_back(std::move(sprite));
-  ++m_sprites_in_current_source;
+  ++m_sprites_in_current_input;
 }
 
 void InputParser::skip_sprites(State& state) {
@@ -203,14 +204,14 @@ void InputParser::skip_sprites(State& state) {
 }
 
 bool InputParser::overlaps_sprite_rect(const Rect& rect) const {
-  return last_n_contain(m_sprites, m_sprites_in_current_source,
+  return last_n_contain(m_sprites, m_sprites_in_current_input,
     [&](const Sprite& sprite) {
       return overlapping(sprite.source_rect, rect);
     });
 }
 
 void InputParser::deduce_sequence_sprites(State& state) {
-  auto skip_already_added = sprites_or_skips_in_current_sounce();
+  auto skip_already_added = sprites_or_skips_in_current_input();
   for (auto i = 0; i < state.source_filenames.count(); ++i) {
     if (skip_already_added) {
       --skip_already_added;
@@ -284,7 +285,7 @@ void InputParser::deduce_grid_sprites(State& state) {
   auto& x = m_current_grid_cell.x;
   auto& y = m_current_grid_cell.y;
 
-  const auto is_update = (sprites_or_skips_in_current_sounce() != 0);
+  const auto is_update = (sprites_or_skips_in_current_input() != 0);
   for (; y < cells_y; y += state.span.y) {
     auto output_offset = (x != 0);
     auto skipped = 0;
@@ -331,7 +332,7 @@ void InputParser::deduce_grid_sprites(State& state) {
 
 void InputParser::deduce_atlas_sprites(State& state) {
   const auto source = get_source(state);
-  const auto is_update = (sprites_or_skips_in_current_sounce() != 0);
+  const auto is_update = (sprites_or_skips_in_current_input() != 0);
   for (const auto& rect : find_islands(*source,
       state.atlas_merge_distance, state.trim_gray_levels)) {
     if (is_update && overlaps_sprite_rect(rect))
@@ -352,7 +353,7 @@ void InputParser::deduce_atlas_sprites(State& state) {
 }
 
 void InputParser::deduce_single_sprite(State& state) {
-  if (sprites_or_skips_in_current_sounce())
+  if (sprites_or_skips_in_current_input())
     return;
 
   if (m_settings.mode == Mode::autocomplete)
@@ -442,7 +443,7 @@ void InputParser::input_ends(State& state) {
   update_applied_definitions(Definition::input);
   update_applied_definitions(Definition::sprite);
   
-  if (!sprites_or_skips_in_current_sounce() ||
+  if (!sprites_or_skips_in_current_input() ||
        should_autocomplete(state.source_filenames.sequence_filename())) {
     auto sprite_indent = state.indent + m_detected_indentation;
     std::swap(state.indent, sprite_indent);
@@ -451,10 +452,12 @@ void InputParser::input_ends(State& state) {
   }
 
   m_inputs.push_back({
+    to_int(m_inputs.size()),
     state.source_filenames.sequence_filename(),
     make_unique_sort(std::move(m_current_input_sources))
   });
-  m_sprites_in_current_source = { };
+  m_sprites_in_current_input = { };
+  m_skips_in_current_input = { };
   m_current_sequence_index = { };
   ++m_inputs_in_current_glob;
 }
@@ -633,8 +636,8 @@ void InputParser::parse(std::istream& input,
     m_autocomplete_output << autocomplete_space.str();
 }
 
-int InputParser::sprites_or_skips_in_current_sounce() const {
-  return m_sprites_in_current_source + m_skips_in_current_source;
+int InputParser::sprites_or_skips_in_current_input() const {
+  return m_sprites_in_current_input + m_skips_in_current_input;
 }
 
 void InputParser::update_applied_definitions(Definition definition) {

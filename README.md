@@ -285,6 +285,7 @@ By default a [JSON](https://www.json.org) file containing all the information ab
     {
       "id": "sprite_0",
       "index": 0,
+      "inputIndex": 0,
       "inputSpriteIndex": 0,
       "pivot": { "x": 8.0, "y": 8.0 },
       "rect": { "x": 0, "y": 0, "w": 16, "h": 16 },
@@ -302,25 +303,26 @@ By default a [JSON](https://www.json.org) file containing all the information ab
   ],
   "slices": [
     {
-      "index": 0,
-      "inputFilename": "spright.conf",
       "spriteIndices": [0]
     }
   ],
   "sources": [
     {
-      "index": 0,
       "filename": "source.png",
       "path": "path",
       "width": 256,
       "height": 256,
-      "spriteIndices": [0]
     }
   ],
   "inputs": [
     {
       "filename": "source.png",
-      "sourceIndices": [0]
+      "sources": [
+        {
+          "index": 0,
+          "spriteIndices": [0]
+        }
+      ]
     }
   ],
   "tags": {
@@ -330,7 +332,6 @@ By default a [JSON](https://www.json.org) file containing all the information ab
   },
   "textures": [
     {
-      "index": 0,
       "sliceIndex": 0,
       "spriteIndices": [0],
       "filename": "path/spright-0.png",
