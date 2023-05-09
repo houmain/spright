@@ -34,8 +34,10 @@ int main(int argc, const char* argv[]) try {
     time_points.emplace_back(Clock::now(), "packing");    
 
     if (settings.mode != Mode::describe) {
-      if (settings.mode != Mode::rebuild)
+      if (settings.mode != Mode::rebuild &&
+          settings.input_file != "stdin")
         update_last_source_written_times(slices);
+
       output_textures(textures);
       time_points.emplace_back(Clock::now(), "output textures");
     }
