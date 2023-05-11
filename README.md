@@ -43,11 +43,10 @@ Also have a look at the [spright test suite](https://github.com/houmain/spright-
 To pack your sprites into one or more sheets, a simple input definition like the following example is enough:
 
 ```perl
-sheet "sprites"
-  max-width 1024
-  max-height 1024
-  power-of-two true
-  output "sheet{0-}.png"
+max-width 1024
+max-height 1024
+power-of-two true
+output "sheet{0-}.png"
 
 colorkey
 glob "characters/**/*.png"
@@ -224,7 +223,7 @@ The following table contains a list of all definitions, with the item each affec
 
 | Definition | Affects | Arguments | Description |
 | ---------- | ------- | --------- | ----------- |
-| **sheet** | sprite | id | Sets the sheet on which the sprites should be packed. |
+| **sheet** | sprite | id | Sets the sheet on which the sprites should be packed (default: `"spright"`). |
 | pack | sheet | pack-method | Sets the method, which is used for placing the sprites on the sheet:<br/>- _binpack_ : Tries to reduce the texture size, while keeping the sprites' trimmed rectangle apart (default).<br/>- _compact_ : Tries to reduce the texture size, while keeping the sprites' convex outlines apart.<br/>- _rows_ : Layout sprites in simple rows.<br/>- _columns_ : Layout sprites in simple columns.<br/>- _single_ : Put each sprite on its own texture.<br/>- _layers_ : Put each sprite on its own layer (only for .gif output).<br/>- _keep_ : Keep sprite at same position as in source (ignores most constraints). |
 | width | sheet | width | Sets a fixed sheet width. |
 | height | sheet | height | Sets a fixed sheet height. |

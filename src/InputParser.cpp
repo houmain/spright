@@ -9,6 +9,7 @@
 namespace spright {
 
 namespace {
+  const auto default_sheet_id = "spright";
   const auto default_sprite_id = "sprite_{{ index }}";
 
   ImagePtr try_get_map(const ImagePtr& source, 
@@ -514,9 +515,16 @@ void InputParser::parse(std::istream& input,
   auto indentation_detected = false;
   auto scope_stack = std::vector<State>();
   auto top = &scope_stack.emplace_back();
-  top->level = -1;
-  top->sprite_id = default_sprite_id;
+  top->level = -2;
   m_not_applied_definitions.emplace_back();
+
+  // add default sheet
+  top = &scope_stack.emplace_back();
+  top->level = -1;
+  top->definition = Definition::sheet;
+  top->sheet_id = default_sheet_id;
+  top->sprite_id = default_sprite_id;
+  m_not_applied_definitions.emplace_back()[top->definition];
 
   auto autocomplete_space = std::stringstream();
   const auto pop_scope_stack = [&](int level) {
@@ -624,7 +632,7 @@ void InputParser::parse(std::istream& input,
     }
   }
 
-  pop_scope_stack(-1);
+  pop_scope_stack(-2);
 
   handle_exception([&]() {
     check_not_applied_definitions();

@@ -366,7 +366,8 @@ TEST_CASE("packing - Multiple sheets") {
   slices = pack("");
   CHECK(slices.size() == 0);
 
-  CHECK_THROWS(pack("padding 1"));
+  CHECK_NOTHROW(pack("padding 1"));
+  CHECK_THROWS(pack("colorkey"));
 
   CHECK_NOTHROW(slices = pack(R"(
     sheet "sprites"

@@ -249,9 +249,9 @@ TEST_CASE("scope - Problems") {
       sprite "text"
   )"));
 
-  CHECK_THROWS(parse(R"(
+  // there is a default sheet
+  CHECK_NOTHROW(parse(R"(
     input "test/Items.png"
       sprite "text"
-    sheet "tex1"
   )"));
 }
