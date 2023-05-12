@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Definition.h"
-#include <sstream>
 #include <map>
 
 namespace spright {
@@ -15,7 +14,6 @@ public:
   std::vector<Sprite> sprites() && { return std::move(m_sprites); }
   VariantMap variables() && { return std::move(m_variables); }
   std::string autocomplete_output() const { return std::move(m_autocomplete_output).str(); }
-  std::string warning_output() const { return std::move(m_warning_output).str(); }
 
 private:
   struct NotAppliedDefinition {
@@ -51,14 +49,13 @@ private:
   void update_applied_definitions(Definition definition);
   void update_not_applied_definitions(Definition definition, int line_number);
   void check_not_applied_definitions();
-  void handle_exception(std::function<void()> function);
+  void handle_exception(std::function<void()>&& function);
   int sprites_or_skips_in_current_input() const;
 
   const Settings m_settings;
-  std::stringstream m_autocomplete_output;
-  std::stringstream m_warning_output;
+  std::ostringstream m_autocomplete_output;
   std::filesystem::path m_input_file;
-  int m_error_line_number{ };
+  int m_warning_line_number{ };
   std::vector<Input> m_inputs;
   std::map<std::string, std::shared_ptr<Sheet>> m_sheets;
   std::map<std::filesystem::path, std::shared_ptr<Output>> m_outputs;

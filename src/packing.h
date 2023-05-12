@@ -49,6 +49,4 @@ void pack_lines(bool horizontal, const SheetPtr& sheet,
 void pack_layers(const SheetPtr& sheet, SpriteSpan sprites,
   std::vector<Slice>& slices);
 
-[[noreturn]] void throw_not_all_sprites_packed();
-
 } // namespace

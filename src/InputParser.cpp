@@ -164,6 +164,7 @@ void InputParser::sprite_ends(State& state) {
   }
 
   auto sprite = Sprite{ };
+  sprite.warning_line_number = m_warning_line_number;
   sprite.index = to_int(m_sprites.size());
   sprite.input_index = to_int(m_inputs.size());
   sprite.input_sprite_index = m_sprites_in_current_input;
@@ -526,7 +527,7 @@ void InputParser::parse(std::istream& input,
   top->sprite_id = default_sprite_id;
   m_not_applied_definitions.emplace_back()[top->definition];
 
-  auto autocomplete_space = std::stringstream();
+  auto autocomplete_space = std::ostringstream();
   const auto pop_scope_stack = [&](int level) {
     for (auto last = scope_stack.rbegin(); ; ++last) {
       if (has_implicit_scope(last->definition) && level <= last->level) {
@@ -590,7 +591,7 @@ void InputParser::parse(std::istream& input,
     pop_scope_stack(level);
 
     handle_exception([&]() {
-      m_error_line_number = line_number;
+      m_warning_line_number = line_number;
 
       split_arguments(line, &arguments);
       const auto definition = get_definition(arguments[0]);
@@ -666,30 +667,18 @@ void InputParser::update_not_applied_definitions(Definition definition, int line
 void InputParser::check_not_applied_definitions() {
   assert(!m_not_applied_definitions.empty());
   for (const auto& [affected, not_applied] : m_not_applied_definitions.back()) {
-    m_error_line_number = not_applied.line_number;
+    m_warning_line_number = not_applied.line_number;
     error("no ", get_definition_name(affected), " is affected by ", 
       get_definition_name(not_applied.definition));
   }
 }
 
-void InputParser::handle_exception(std::function<void()> function) {
+void InputParser::handle_exception(std::function<void()>&& function) {
   try {
     function();
   }
   catch (const std::exception& ex) {
-    auto ss = std::stringstream();
-    if (!m_input_file.empty() && 
-        !m_settings.errors_as_warnings)
-      ss << "'" << path_to_utf8(m_input_file) << "' ";
-    ss << ex.what();
-    if (m_error_line_number > 0)
-      ss << " in line " << m_error_line_number;
-    if (m_settings.errors_as_warnings) {
-      m_warning_output << ss.str() << "\n";
-    }
-    else {
-      throw std::runtime_error(ss.str());
-    }
+    warning(ex.what(), m_warning_line_number);
   }
 }
 

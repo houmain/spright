@@ -78,6 +78,7 @@ struct Sheet {
 };
 
 struct Sprite {
+  int warning_line_number{ };
   int index{ };
   int input_index{ };
   int input_sprite_index{ };
@@ -106,7 +107,7 @@ struct Sprite {
   StringMap tags;
   VariantMap data;
 
-  int slice_index{ };
+  int slice_index{ -1 };
   // the logical rect on the output
   Rect rect{ };
   // the actual pixels on the output. same size as the trimmed source

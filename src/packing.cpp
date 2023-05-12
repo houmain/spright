@@ -247,6 +247,11 @@ std::vector<Slice> pack_sprites(std::vector<Sprite>& sprites) {
     recompute_slice_size(slice);
     slice.index = to_int(i);
   }
+
+  for (const auto& sprite : sprites)
+    if (sprite.slice_index < 0)
+      warning("packing sprite failed", sprite.warning_line_number);
+
   return slices;
 }
 
@@ -266,11 +271,13 @@ void create_slices_from_indices(const SheetPtr& sheet_ptr,
   for (auto it = begin;; ++it)
     if (it == end || 
         it->slice_index != begin->slice_index) {
-      slices.push_back({ 
-        sheet_ptr,
-        begin->slice_index,
-        SpriteSpan(begin, it),
-      });
+
+      if (begin->slice_index >= 0)
+        slices.push_back({
+          sheet_ptr,
+          begin->slice_index,
+          SpriteSpan(begin, it),
+        });
 
       begin = it;
       if (it == end)
@@ -301,10 +308,6 @@ void recompute_slice_size(Slice& slice) {
   }
   if (sheet.square)
     slice.width = slice.height = std::max(slice.width, slice.height);
-}
-
-[[noreturn]] void throw_not_all_sprites_packed() {
-  throw std::runtime_error("not all sprites could be packed");
 }
 
 void update_last_source_written_times(std::vector<Slice>& slices) {

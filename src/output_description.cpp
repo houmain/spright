@@ -254,7 +254,7 @@ void evaluate_expressions(
 std::string get_description(const std::string& template_source,
     const std::vector<Sprite>& sprites, 
     const std::vector<Slice>& slices) {
-  auto ss = std::stringstream();
+  auto ss = std::ostringstream();
   const auto json = get_json_description({ }, sprites, slices, { }, { });
   auto env = setup_inja_environment(&json);
   env.render_to(ss, env.parse(template_source), json);
@@ -267,7 +267,7 @@ bool output_description(const Settings& settings,
     const std::vector<Slice>& slices,
     const std::vector<Texture>& textures,
     const VariantMap& variables) try {
-  auto ss = std::stringstream();
+  auto ss = std::ostringstream();
   auto& os = (settings.output_file.string() == "stdout" ? std::cout : ss);
 
   const auto json = get_json_description(

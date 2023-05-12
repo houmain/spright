@@ -22,7 +22,6 @@ struct Settings {
   std::filesystem::path output_file;
   std::filesystem::path template_file;
   std::string autocomplete_pattern;
-  bool errors_as_warnings{ };
   bool verbose{ };
 };
 

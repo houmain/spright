@@ -28,10 +28,6 @@ InputDefinition parse_definition(const Settings& settings) {
       update_textfile(settings.output_file, parser.autocomplete_output());
   }
 
-  if (settings.errors_as_warnings) {
-    std::cerr << parser.warning_output();
-  }
-
   return {
     std::move(parser).inputs(),
     std::move(parser).sprites(),

@@ -31,7 +31,7 @@ int main(int argc, const char* argv[]) try {
     slices = pack_sprites(sprites);
     textures = get_textures(settings, slices);
     evaluate_expressions(settings, sprites, textures, variables);
-    time_points.emplace_back(Clock::now(), "packing");    
+    time_points.emplace_back(Clock::now(), "packing");
 
     if (settings.mode != Mode::describe) {
       if (settings.mode != Mode::rebuild &&
@@ -59,9 +59,9 @@ int main(int argc, const char* argv[]) try {
           time_points[i].first - time_points[i - 1].first).count() << "ms";
     std::cout << std::endl;
   }
-  return 0;
+  return (has_warnings() ? 1 : 0);
 }
 catch (const std::exception& ex) {
-  std::cerr << "spright: " << ex.what() << std::endl;
-  return 1;
+  std::cerr << "ERROR: " << ex.what() << std::endl;
+  return 2;
 }

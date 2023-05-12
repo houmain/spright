@@ -389,7 +389,6 @@ Usage: spright [-options]
                      autocompleted input definition (defaults to --input).
   -t, --template <file>   template for the output description.
   -p, --path <path>       path to prepend to all output files.
-  -w, --warnings          output errors as warnings.
   -v, --verbose           enable verbose messages.
   -h, --help              print this help.
 ```

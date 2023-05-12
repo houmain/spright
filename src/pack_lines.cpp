@@ -58,9 +58,6 @@ void pack_lines(bool horizontal, const SheetPtr& sheet,
     pos_d += size_d + sheet->shape_padding;
     line_size = std::max(line_size, size_p + sheet->shape_padding);
   }
-  if (it != sprites.end())
-    throw_not_all_sprites_packed();
-
   add_slice({ first_sprite, it });
 }
 

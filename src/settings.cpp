@@ -50,9 +50,6 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
         return false;
       settings.output_path = std::filesystem::u8path(unquote(argv[i]));
     }
-    else if (argument == "-w" || argument == "--warnings") {
-      settings.errors_as_warnings = true;
-    }
     else if (argument == "-v" || argument == "--verbose") {
       settings.verbose = true;
     }
@@ -108,7 +105,6 @@ void print_help_message(const char* argv0) {
     "                     autocompleted input definition (defaults to --input).\n"
     "  -t, --template <file>   template for the output description.\n"
     "  -p, --path <path>       path to prepend to all output files.\n"
-    "  -w, --warnings          output errors as warnings.\n"
     "  -v, --verbose           enable verbose messages.\n"
     "  -h, --help              print this help.\n"
     "\n"

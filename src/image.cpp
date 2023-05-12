@@ -875,7 +875,7 @@ Image resize_image(const Image& image, real scale, ResizeFilter filter) {
         STBIR_TYPE_UINT8, 4, 3, flags, edge_mode, edge_mode, 
         static_cast<stbir_filter>(filter), static_cast<stbir_filter>(filter), 
         color_space, nullptr))
-    throw std::runtime_error("resizing image failed");
+    throw std::bad_alloc();
   return output;
 }
 

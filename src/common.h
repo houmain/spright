@@ -42,7 +42,7 @@ inline bool operator!=(const RGBA& a, const RGBA& b) { return (a.rgba != b.rgba)
 
 template<typename... T>
 [[noreturn]] void error(T&&... args) {
-  auto ss = std::stringstream();
+  auto ss = std::ostringstream();
   (ss << ... << std::forward<T&&>(args));
   throw std::runtime_error(ss.str());
 }
@@ -52,6 +52,9 @@ void check(bool condition, T&&... args) {
   if (!condition)
     error(std::forward<T>(args)...);
 }
+
+void warning(const char* message, int line_number);
+bool has_warnings();
 
 template<typename T> 
 int to_int(const T& v) { 

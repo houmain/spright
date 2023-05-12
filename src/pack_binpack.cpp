@@ -50,10 +50,6 @@ void pack_binpack(const SheetPtr& sheet_ptr, SpriteSpan sprites,
     }
     ++slice_index;
   }
-
-  if (packed_sprites < sprites.size())
-    throw_not_all_sprites_packed();
-
   create_slices_from_indices(sheet_ptr, sprites, slices);
 }
 
