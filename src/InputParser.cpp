@@ -139,10 +139,16 @@ MapVectorPtr InputParser::get_maps(const State& state, const ImagePtr& source) {
   return it->second;
 }
 
-bool InputParser::should_autocomplete(const std::string& filename) const {
-  return m_settings.mode == Mode::autocomplete && 
-    (m_settings.autocomplete_pattern.empty() ||
-     match(m_settings.autocomplete_pattern, filename));
+bool InputParser::should_autocomplete(const std::string& filename, bool is_update) const {
+  if (m_settings.mode == Mode::autocomplete) {
+    // complete everything matching pattern
+    return (m_settings.autocomplete_pattern.empty() ||
+      match(m_settings.autocomplete_pattern, filename));
+  }
+  else {
+    // automatically deduce definitions when there are none yet
+    return !is_update;
+  }
 }
 
 void InputParser::sprite_ends(State& state) {
@@ -436,8 +442,7 @@ void InputParser::glob_begins([[maybe_unused]] State& state) {
 }
 
 void InputParser::glob_ends(State& state) {
-  if (!m_inputs_in_current_glob ||
-       should_autocomplete(state.glob_pattern))
+  if (should_autocomplete(state.glob_pattern, m_inputs_in_current_glob > 0))
     deduce_globbed_inputs(state);
 }
 
@@ -445,8 +450,8 @@ void InputParser::input_ends(State& state) {
   update_applied_definitions(Definition::input);
   update_applied_definitions(Definition::sprite);
   
-  if (!sprites_or_skips_in_current_input() ||
-       should_autocomplete(state.source_filenames.sequence_filename())) {
+  if (should_autocomplete(state.source_filenames.sequence_filename(),
+        sprites_or_skips_in_current_input() > 0)) {
     auto sprite_indent = state.indent + m_detected_indentation;
     std::swap(state.indent, sprite_indent);
     deduce_input_sprites(state);
