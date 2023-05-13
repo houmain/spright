@@ -249,7 +249,7 @@ std::vector<Slice> pack_sprites(std::vector<Sprite>& sprites) {
   }
 
   for (const auto& sprite : sprites)
-    if (sprite.slice_index < 0)
+    if (sprite.sheet && sprite.slice_index < 0)
       warning("packing sprite failed", sprite.warning_line_number);
 
   return slices;

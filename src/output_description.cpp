@@ -92,8 +92,10 @@ namespace {
         tags[key][value].push_back(sprite_index);
 
       // only available when packing was executed
-      if (const auto it = sprite_on_slice.find(sprite_index); it != sprite_on_slice.end()) {
-        const auto slice_index = it->second;
+      if (sprite->slice_index >= 0) {
+        auto slice_index = sprite->slice_index;
+        if (const auto it = sprite_on_slice.find(sprite_index); it != sprite_on_slice.end())
+          slice_index = it->second;
         json_sprite["sliceIndex"] = slice_index;
         json_sprite["sliceSpriteIndex"] = slice_sprites[slice_index].size();
         json_sprite["rect"] = json_rect(sprite->rect);

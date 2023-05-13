@@ -8,6 +8,9 @@ void pack_lines(bool horizontal, const SheetPtr& sheet,
 
   auto slice_sheet_index = 0;
   const auto add_slice = [&](SpriteSpan sprites) {
+    for (auto& sprite : sprites)
+      sprite.slice_index = to_int(slices.size());
+
     slices.push_back({
       sheet,
       slice_sheet_index++,
