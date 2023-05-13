@@ -155,6 +155,13 @@ void InputParser::sprite_ends(State& state) {
   check(!state.source_filenames.empty(), "sprite not on input");
   update_applied_definitions(Definition::sprite);
 
+  const auto source = get_source(state);
+  const auto rect =
+    (!empty(state.rect) ? state.rect :
+     has_grid(state) ? intersect_overlapping(
+       deduce_rect_from_grid(state), source->bounds()) :
+     source->bounds());
+
   const auto advance = [&]() {
     check(m_current_sequence_index < state.source_filenames.count(), 
       "too many sprites in sequence");
@@ -164,7 +171,7 @@ void InputParser::sprite_ends(State& state) {
   };
 
   if (state.skip_sprites > 0) {
-    ++m_skips_in_current_input;
+    m_skipped_in_current_input.push_back(rect);
     advance();
     return;
   }
@@ -176,13 +183,9 @@ void InputParser::sprite_ends(State& state) {
   sprite.input_sprite_index = m_sprites_in_current_input;
   sprite.id = state.sprite_id;
   sprite.sheet = get_sheet(state.sheet_id);
-  sprite.source = get_source(state);
+  sprite.source = source;
   sprite.maps = get_maps(state, sprite.source);
-  sprite.source_rect = 
-    (!empty(state.rect) ? state.rect : 
-     has_grid(state) ? intersect_overlapping(
-       deduce_rect_from_grid(state), sprite.source->bounds()) :
-     sprite.source->bounds());
+  sprite.source_rect = rect;
   sprite.pivot = state.pivot;
   sprite.trim = state.trim;
   sprite.trim_margin = state.trim_margin;
@@ -211,11 +214,18 @@ void InputParser::skip_sprites(State& state) {
     sprite_ends(state);
 }
 
-bool InputParser::overlaps_sprite_rect(const Rect& rect) const {
-  return last_n_contain(m_sprites, m_sprites_in_current_input,
-    [&](const Sprite& sprite) {
-      return overlapping(sprite.source_rect, rect);
-    });
+bool InputParser::overlaps_sprite_or_skipped_rect(const Rect& rect) const {
+  if (last_n_contain(m_sprites, m_sprites_in_current_input,
+        [&](const Sprite& sprite) {
+          return overlapping(sprite.source_rect, rect);
+        }))
+    return true;
+
+  return std::find_if(m_skipped_in_current_input.begin(),
+            m_skipped_in_current_input.end(),
+            [&](const Rect& skipped) {
+              return overlapping(skipped, rect);
+            }) != m_skipped_in_current_input.end();
 }
 
 void InputParser::deduce_sequence_sprites(State& state) {
@@ -308,7 +318,7 @@ void InputParser::deduce_grid_sprites(State& state) {
         continue;
       }
 
-      if (is_update && overlaps_sprite_rect(rect))
+      if (is_update && overlaps_sprite_or_skipped_rect(rect))
         continue;
 
       if (m_settings.mode == Mode::autocomplete) {
@@ -343,7 +353,7 @@ void InputParser::deduce_atlas_sprites(State& state) {
   const auto is_update = (sprites_or_skips_in_current_input() != 0);
   for (const auto& rect : find_islands(*source,
       state.atlas_merge_distance, state.trim_gray_levels)) {
-    if (is_update && overlaps_sprite_rect(rect))
+    if (is_update && overlaps_sprite_or_skipped_rect(rect))
       continue;
 
     if (m_settings.mode == Mode::autocomplete) {
@@ -464,7 +474,7 @@ void InputParser::input_ends(State& state) {
     make_unique_sort(std::move(m_current_input_sources))
   });
   m_sprites_in_current_input = { };
-  m_skips_in_current_input = { };
+  m_skipped_in_current_input.clear();
   m_current_sequence_index = { };
   ++m_inputs_in_current_glob;
 }
@@ -651,7 +661,7 @@ void InputParser::parse(std::istream& input,
 }
 
 int InputParser::sprites_or_skips_in_current_input() const {
-  return m_sprites_in_current_input + m_skips_in_current_input;
+  return m_sprites_in_current_input + to_int(m_skipped_in_current_input.size());
 }
 
 void InputParser::update_applied_definitions(Definition definition) {

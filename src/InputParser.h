@@ -29,7 +29,7 @@ private:
     const std::filesystem::path& filename, RGBA colorkey);
   MapVectorPtr get_maps(const State& state, const ImagePtr& source);
   bool should_autocomplete(const std::string& filename, bool is_update) const;
-  bool overlaps_sprite_rect(const Rect& rect) const;
+  bool overlaps_sprite_or_skipped_rect(const Rect& rect) const;
   void sprite_ends(State& state);
   void skip_sprites(State& state);
   void deduce_grid_size(State& state);
@@ -65,7 +65,7 @@ private:
   VariantMap m_variables;
   int m_inputs_in_current_glob{ };
   int m_sprites_in_current_input{ };
-  int m_skips_in_current_input{ };
+  std::vector<Rect> m_skipped_in_current_input;
   Point m_current_grid_cell{ };
   int m_current_sequence_index{ };
   std::vector<ImagePtr> m_current_input_sources;
