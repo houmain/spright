@@ -14,9 +14,10 @@ enum class Mode {
 };
 
 struct Settings {
+  static constexpr const char* default_input_file{ "spright.conf" };
+  static constexpr const char* default_output_file{ "spright.json" };
+
   Mode mode{ Mode::update };
-  const char* default_input_file{ "spright.conf" };
-  const char* default_output_file{ "spright.json" };
   std::filesystem::path input_file;
   std::filesystem::path output_path;
   std::filesystem::path output_file;

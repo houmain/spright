@@ -8,6 +8,8 @@
 int main(int argc, const char* argv[]) try {
   using namespace spright;
 
+  std::ios::sync_with_stdio(false);
+
   auto settings = Settings{ };
   if (!interpret_commandline(settings, argc, argv)) {
     print_help_message(argv[0]);
@@ -59,9 +61,9 @@ int main(int argc, const char* argv[]) try {
           time_points[i].first - time_points[i - 1].first).count() << "ms";
     std::cout << std::endl;
   }
-  return (has_warnings() ? 1 : 0);
+  return (has_warnings() ? 2 : 0);
 }
 catch (const std::exception& ex) {
   std::cerr << "ERROR: " << ex.what() << std::endl;
-  return 2;
+  return 1;
 }

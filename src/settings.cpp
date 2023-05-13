@@ -2,7 +2,7 @@
 #include "settings.h"
 #include "common.h"
 #include <algorithm>
-#include <sstream>
+#include <iostream>
 #include <iterator>
 
 namespace spright {
@@ -74,7 +74,7 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
 }
 
 void print_help_message(const char* argv0) {
-  auto program = std::string(argv0);
+  auto program = std::string_view(argv0);
   if (auto i = program.rfind('/'); i != std::string::npos)
     program = program.substr(i + 1);
   if (auto i = program.rfind('.'); i != std::string::npos)
@@ -88,20 +88,19 @@ void print_help_message(const char* argv0) {
   "";
 #endif
 
-  const auto defaults = Settings{ };
-  printf(
-    "spright %s(c) 2020-2023 by Albert Kalchmair\n"
+  std::cout <<
+    "spright " << version << "(c) 2020-2023 by Albert Kalchmair\n"
     "\n"
-    "Usage: %s [-options]\n"
+    "Usage: " << program << " [-options]\n"
     "  -m, --mode <mode>       sets the run mode:\n"
     "     'update'             the default run mode.\n"
     "     'rebuild'            regenerate output even when input did not change.\n"
     "     'describe'           only output description, no texture files. \n"
     "     'describe-input'     only output description of input, do not pack. \n"
     "     'complete' [pattern] autocomplete inputs (matching optional pattern).\n"
-    "  -i, --input <file>      input definition file (default: %s).\n"
+    "  -i, --input <file>      input definition file (default: " << Settings::default_input_file << ").\n"
     "  -o, --output <file>     output file containing either the output\n"
-    "                     description (default: %s) or the\n"
+    "                     description (default: " << Settings::default_output_file << ") or the\n"
     "                     autocompleted input definition (defaults to --input).\n"
     "  -t, --template <file>   template for the output description.\n"
     "  -p, --path <path>       path to prepend to all output files.\n"
@@ -111,9 +110,7 @@ void print_help_message(const char* argv0) {
     "All Rights Reserved.\n"
     "This program comes with absolutely no warranty.\n"
     "See the GNU General Public License, version 3 for details.\n"
-    "\n", version, program.c_str(),
-    defaults.default_input_file,
-    defaults.default_output_file);
+    "\n";
 }
 
 } // namespace
