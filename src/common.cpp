@@ -15,7 +15,7 @@ namespace {
   int g_warning_count = 0;
 
   class WarningDeduplicator {
-    const char* m_message{ };
+    std::string m_message;
     int m_line_number{ };
     int m_count{ };
 
@@ -25,6 +25,9 @@ namespace {
         if (m_count > 1)
           std::cerr << " (" << m_count << "x)";
         std::cerr << " in line " << m_line_number << "\n";
+        m_message.clear();
+        m_line_number = 0;
+        m_count = 0;
       }
     }
 
@@ -33,7 +36,7 @@ namespace {
       flush();
     }
 
-    bool add(const char* message, int line_number) {
+    bool add(std::string_view message, int line_number) {
       if (message == m_message && line_number == m_line_number) {
         ++m_count;
         return false;
@@ -47,8 +50,8 @@ namespace {
   };
 } // namespace
 
-void warning(const char* message, int line_number) {
-  static WarningDeduplicator s_warning_deduplicator;
+void warning(std::string_view message, int line_number) {
+  static auto s_warning_deduplicator = WarningDeduplicator();
   if (g_warning_count < max_warnings)
     if (s_warning_deduplicator.add(message, line_number))
       ++g_warning_count;

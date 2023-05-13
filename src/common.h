@@ -53,7 +53,7 @@ void check(bool condition, T&&... args) {
     error(std::forward<T>(args)...);
 }
 
-void warning(const char* message, int line_number);
+void warning(std::string_view message, int line_number);
 bool has_warnings();
 
 template<typename T> 
