@@ -15,11 +15,31 @@ namespace {
   int g_warning_count = 0;
 
   class WarningDeduplicator {
-    std::string m_message;
-    int m_line_number{ };
-    int m_count{ };
+  public:
+    ~WarningDeduplicator() {
+      do_flush();
+    }
+
+    bool add(std::string_view message, int line_number) {
+      auto lock = std::lock_guard(m_mutex);
+      if (message == m_message && line_number == m_line_number) {
+        ++m_count;
+        return false;
+      }
+      do_flush();
+      m_message = message;
+      m_line_number = line_number;
+      m_count = 1;
+      return true;
+    }
 
     void flush() {
+      auto lock = std::lock_guard(m_mutex);
+      do_flush();
+    }
+
+  private:
+    void do_flush() {
       if (m_count) {
         std::cerr << m_message;
         if (m_count > 1)
@@ -31,34 +51,24 @@ namespace {
       }
     }
 
-  public:
-    ~WarningDeduplicator() {
-      flush();
-    }
-
-    bool add(std::string_view message, int line_number) {
-      if (message == m_message && line_number == m_line_number) {
-        ++m_count;
-        return false;
-      }
-      flush();
-      m_message = message;
-      m_line_number = line_number;
-      m_count = 1;
-      return true;
-    }
+    std::mutex m_mutex;
+    std::string m_message;
+    int m_line_number{ };
+    int m_count{ };
   };
+
+  WarningDeduplicator g_warning_deduplicator;
 } // namespace
 
 void warning(std::string_view message, int line_number) {
-  static auto s_warning_deduplicator = WarningDeduplicator();
   if (g_warning_count < max_warnings)
-    if (s_warning_deduplicator.add(message, line_number))
+    if (g_warning_deduplicator.add(message, line_number))
       ++g_warning_count;
 }
 
 bool has_warnings() {
-  return g_warning_count > 0;
+  g_warning_deduplicator.flush();
+  return std::exchange(g_warning_count, 0) > 0;
 }
 
 std::filesystem::path utf8_to_path(std::string_view utf8_string) {

@@ -57,6 +57,8 @@ TEST_CASE("pivot") {
   CHECK(sprites[5].pivot.x == 1);
   CHECK(sprites[5].pivot.anchor_y == AnchorY::top);
 
+  CHECK(!has_warnings());
+
   // not allowed combination (use: top + 2 left)
   input = std::stringstream(R"(
     sheet "sprites"
@@ -65,7 +67,8 @@ TEST_CASE("pivot") {
       sprite ynum_xword
         pivot 2 left
   )");
-  CHECK_THROWS(parser.parse(input));
+  CHECK_NOTHROW(parser.parse(input));
+  CHECK(has_warnings());
 
   // duplicate coordinates
   input = std::stringstream(R"(
@@ -75,7 +78,8 @@ TEST_CASE("pivot") {
       sprite yword_yword
         pivot middle top
   )");
-  CHECK_THROWS(parser.parse(input));
+  CHECK_NOTHROW(parser.parse(input));
+  CHECK(has_warnings());
 }
 
 TEST_CASE("pivot - expressions") {
@@ -121,6 +125,8 @@ TEST_CASE("pivot - expressions") {
   CHECK(sprites[3].pivot.anchor_y == AnchorY::middle);
   CHECK(sprites[3].pivot.y == -4.2 + 2.5);
 
+  CHECK(!has_warnings());
+
   // not allowed combination (use: middle left - 3)
   input = std::stringstream(R"(
     sheet "sprites"
@@ -129,5 +135,6 @@ TEST_CASE("pivot - expressions") {
       sprite
         pivot middle -3
   )");
-  CHECK_THROWS(parser.parse(input));
+  CHECK_NOTHROW(parser.parse(input));
+  CHECK(has_warnings());
 }

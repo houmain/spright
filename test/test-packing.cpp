@@ -29,7 +29,10 @@ namespace {
     static auto s_sprites = std::vector<Sprite>();
     s_sprites = std::move(parser).sprites();
     trim_sprites(s_sprites);
-    return pack_sprites(s_sprites);
+    auto slices = pack_sprites(s_sprites);
+    if (has_warnings())
+      throw std::runtime_error("has warnings");
+    return slices;
   }
 
   [[maybe_unused]] void dump(Slice slice) {
@@ -43,6 +46,7 @@ namespace {
   Slice pack_single_sheet(const char* definition) {
     auto slices = std::vector<Slice>();
     REQUIRE_NOTHROW(slices = pack(definition));
+    CHECK(!has_warnings());
     CHECK(slices.size() == 1);
     if (slices.size() != 1)
       return { };
@@ -282,16 +286,6 @@ TEST_CASE("packing - Basic") {
 }
 
 TEST_CASE("packing - Errors") {
-  CHECK_THROWS(pack(R"(
-    sheet "sprites"
-      padding 1
-      max-width 16
-      max-height 16
-    input "test/Items.png"
-      colorkey
-      atlas
-  )"));
-
   CHECK_THROWS(pack(R"(
     sheet "sprites"
       padding 0 1

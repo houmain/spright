@@ -10,6 +10,8 @@ namespace {
     auto parser = InputParser(Settings{ });
     auto input = std::stringstream(config);
     parser.parse(input);
+    if (has_warnings())
+      throw std::runtime_error("has warnings");
     return parser;
   }
 } // namespace

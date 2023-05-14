@@ -540,7 +540,7 @@ void InputParser::parse(std::istream& input,
   top->definition = Definition::sheet;
   top->sheet_id = default_sheet_id;
   top->sprite_id = default_sprite_id;
-  m_not_applied_definitions.emplace_back()[top->definition];
+  m_not_applied_definitions.emplace_back();
 
   auto autocomplete_space = std::ostringstream();
   const auto pop_scope_stack = [&](int level) {
