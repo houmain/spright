@@ -244,7 +244,7 @@ The following table contains a list of all definitions, with the item each affec
 | **input** | - | path | Adds a new input file at _path_. It can define a single file or an un-/bounded sequence of files (e.g. `"frames{0-}.png", "frames{0001-0013}.png"`). |
 | path | input | path | A _path_ which should be prepended to the input's path. |
 | colorkey | input | [color] | Specifies that the input has a color, which should be considered transparent (in hex notation e.g. `FF00FF`). |
-| grid | input | x, [y] | Specifies that the input contains multiple sprites, arranged in a grid of a certain cell size. In this mode the _rect_ of each _sprite_ is deduced from the grid. Each _sprite_ automatically advances the current cell horizontally. |
+| grid | input | x, y | Specifies that the input contains multiple sprites, arranged in a grid of a certain cell size. In this mode the _rect_ of each _sprite_ is deduced from the grid. Each _sprite_ automatically advances the current cell horizontally. |
 | grid-cells | input | x, y | As _grid_, but specifies the number of cells instead of their size. When the cells are squares, one dimension is allowed to be _0_, so it is automatically deduced. |
 | grid-offset | input | x, [y],<br/>[r-x], [b-y] | Offsets the grid from the top-left corner by a number of pixels. Optionally the grid's offset from the bottom-right corner can also be specified, which is used when deducing the cell-size using _grid-cells_. |
 | grid-spacing | input | x, [y] | Sets a spacing between the grid cells. |

@@ -435,7 +435,7 @@ void apply_definition(Definition definition,
       break;
     }
     case Definition::grid:
-      state.grid = check_size(true);
+      state.grid = check_size(false);
       check(state.grid.x > 0 && state.grid.y > 0, "invalid grid");
       break;
 
