@@ -152,7 +152,6 @@ bool InputParser::should_autocomplete(const std::string& filename, bool is_updat
 }
 
 void InputParser::sprite_ends(State& state) {
-  check(!state.source_filenames.empty(), "sprite not on input");
   update_applied_definitions(Definition::sprite);
 
   const auto source = get_source(state);

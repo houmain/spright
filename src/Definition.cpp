@@ -411,10 +411,12 @@ void apply_definition(Definition definition,
       break;
 
     case Definition::glob:
+      check(state.source_filenames.empty(), "inputs cannot be nested");
       state.glob_pattern = check_string();
       break;
 
     case Definition::input:
+      check(state.source_filenames.empty(), "inputs cannot be nested");
       state.source_filenames = FilenameSequence(path_to_utf8(check_path()));
       current_grid_cell = { };
       break;
@@ -498,6 +500,7 @@ void apply_definition(Definition definition,
       break;
 
     case Definition::sprite:
+      check(!state.source_filenames.empty(), "sprite not on input");
       if (arguments_left())
         state.sprite_id = check_string();
       break;

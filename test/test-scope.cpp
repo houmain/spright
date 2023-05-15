@@ -147,6 +147,28 @@ TEST_CASE("scope - Problems") {
     sprite "text"
   )"));
 
+  // nested input
+  CHECK_NOTHROW(parse(R"(
+    sheet "tex1"
+    input "test/Items.png"
+      sprite "text"
+    input "test/Items.png"
+  )"));
+
+  CHECK_THROWS(parse(R"(
+    sheet "tex1"
+    input "test/Items.png"
+      sprite "text"
+      input "test/Items.png"
+  )"));
+
+  CHECK_THROWS(parse(R"(
+    sheet "tex1"
+    input "test/Items.png"
+      sprite "text"
+      glob "none"
+  )"));
+
   // definition without effect
   CHECK_NOTHROW(parse(R"(
     sheet "tex1"
