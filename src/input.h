@@ -48,6 +48,7 @@ struct Input {
 };
 
 struct Output {
+  int warning_line_number{ };
   FilenameSequence filename;
   std::string default_map_suffix;
   std::vector<std::string> map_suffixes;

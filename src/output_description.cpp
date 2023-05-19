@@ -247,10 +247,20 @@ void evaluate_expressions(
   };
 
   for (auto& sprite : sprites)
-    evaluate_sprite_expression(sprite, sprite.id);
+    try {
+      evaluate_sprite_expression(sprite, sprite.id);
+    }
+    catch (const std::exception& ex) {
+      warning(ex.what(), sprite.warning_line_number);
+    }
 
   for (auto& texture : textures)
-    evaluate_slice_expression(*texture.slice, texture.filename);
+    try {
+      evaluate_slice_expression(*texture.slice, texture.filename);
+    }
+    catch (const std::exception& ex) {
+      warning(ex.what(), texture.output->warning_line_number);
+    }
 }
 
 std::string get_description(const std::string& template_source,

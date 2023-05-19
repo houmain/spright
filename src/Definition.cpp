@@ -469,6 +469,7 @@ void apply_definition(Definition definition,
       break;
 
     case Definition::skip:
+      check(!state.source_filenames.empty(), "sprite not on input");
       state.skip_sprites = 1;
       if (arguments_left()) {
         const auto string = check_string();

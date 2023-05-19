@@ -92,8 +92,10 @@ std::shared_ptr<Sheet> InputParser::get_sheet(const std::string& sheet_id) {
 std::shared_ptr<Output> InputParser::get_output(
     const std::filesystem::path& filename) {
   auto& output = m_outputs[std::filesystem::weakly_canonical(filename)];
-  if (!output)
+  if (!output) {
     output = std::make_shared<Output>();
+    output->warning_line_number = m_warning_line_number;
+  }
   return output;
 }
 
