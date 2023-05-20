@@ -79,7 +79,7 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 option(ENABLE_TEST "Enable tests")
-#if(ENABLE_TEST)
+if(ENABLE_TEST)
     set(TEST_SOURCES ${SOURCES}
         test/catch.cpp
         test/test-main.cpp
@@ -96,7 +96,7 @@ option(ENABLE_TEST "Enable tests")
     set(CMAKE_CXX_STANDARD 20)
     add_executable(spright-tests ${TEST_SOURCES})
     add_compile_definitions(EMBED_TEST_FILES)
-#endif()
+endif()
 
 # install
 set(DOC_FILES LICENSE README.md CHANGELOG.md THIRD-PARTY.md)
