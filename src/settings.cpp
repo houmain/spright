@@ -70,8 +70,6 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
 
   if (settings.output_file == "stdout")
     settings.verbose = false;
-  else
-    settings.output_file = settings.output_path / settings.output_file;
 
   return true;
 }

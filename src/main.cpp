@@ -49,21 +49,11 @@ int main(int argc, const char* argv[]) try {
   }
 
   if (settings.mode != Mode::autocomplete) {
-    // ignore description in definition
-    if (settings.mode == Mode::describe ||
-        settings.mode == Mode::describe_input)
-      descriptions.clear();
-
-    // use description filename/template from settings
-    if (descriptions.empty() ||
-        (settings.output_file_set || !settings.template_file.empty())) {
-      auto& description = descriptions.emplace_back();
-      description.filename = settings.output_file;
-      description.template_filename = settings.template_file;
-    }
+    complete_description_definitions(settings, descriptions);
 
     output_descriptions(descriptions, 
       inputs, sprites, slices, textures, variables);
+
     time_points.emplace_back(Clock::now(), "output description");
   }
 

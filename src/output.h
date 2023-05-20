@@ -12,23 +12,28 @@ struct Texture {
 };
 
 std::vector<Texture> get_textures(const Settings& settings,
-    const std::vector<Slice>& slices);
+  const std::vector<Slice>& slices);
+
 void evaluate_expressions(const Settings& settings,
-    std::vector<Sprite>& sprites, 
-    std::vector<Texture>& textures, 
-    VariantMap& variables);
+  std::vector<Sprite>& sprites,
+  std::vector<Texture>& textures,
+  VariantMap& variables);
+
+void complete_description_definitions(
+  const Settings& settings,
+  std::vector<Description>& descriptions);
 
 std::string get_description(
   const std::string& template_source,
-  const std::vector<Sprite>& sprites, 
+  const std::vector<Sprite>& sprites,
   const std::vector<Slice>& slices);
 
 bool output_descriptions(
-  const std::vector<Description>& descriptions, 
-  const std::vector<Input>& inputs, 
-  const std::vector<Sprite>& sprites, 
+  const std::vector<Description>& descriptions,
+  const std::vector<Input>& inputs,
+  const std::vector<Sprite>& sprites,
   const std::vector<Slice>& slices,
-  const std::vector<Texture>& textures, 
+  const std::vector<Texture>& textures,
   const VariantMap& variables);
 
 Image get_slice_image(const Slice& slice, int map_index = -1);

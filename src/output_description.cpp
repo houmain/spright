@@ -263,6 +263,28 @@ void evaluate_expressions(
     }
 }
 
+void complete_description_definitions(const Settings& settings, 
+    std::vector<Description>& descriptions) {
+  // ignore description in definition
+  if (settings.mode == Mode::describe ||
+      settings.mode == Mode::describe_input)
+    descriptions.clear();
+
+  // use description filename/template from settings
+  if (descriptions.empty() ||
+      (settings.output_file_set || !settings.template_file.empty())) {
+    auto& description = descriptions.emplace_back();
+    description.filename = settings.output_file;
+    description.template_filename = settings.template_file;
+  }
+  
+  // prepend output path
+  if (!settings.output_path.empty())
+    for (auto& description : descriptions)
+      if (description.filename.string() != "stdout")
+        description.filename = settings.output_path / description.filename;
+}
+
 std::string get_description(const std::string& template_source,
     const std::vector<Sprite>& sprites, 
     const std::vector<Slice>& slices) {
