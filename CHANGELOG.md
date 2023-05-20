@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Version 3.1.0] - 2023-05-20
+
+### Added
+
+- Added default sheet.
+- Added description and template definitions.
+
+### Changed
+
+- Reporting unpackable sprites as warnings.
+- y-parameter of grid is no longer optional.
+- Atlas completion does not add skipped.
+
 ## [Version 3.0.0] - 2023-05-07
 
 ### Changed
@@ -179,6 +192,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fixed -- commandline arguments.
 - Fixed sample cpp.template.
 
+[version 3.1.0]: https://github.com/houmain/spright/compare/3.0.0...3.1.0
 [version 3.0.0]: https://github.com/houmain/spright/compare/2.3.0...3.0.0
 [version 2.3.0]: https://github.com/houmain/spright/compare/2.2.0...2.3.0
 [version 2.2.0]: https://github.com/houmain/spright/compare/2.1.0...2.2.0

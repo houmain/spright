@@ -20,7 +20,7 @@
 - It should be possible to give each sprite an ID, group them (e.g. for animations) or further annotate them for game specific purposes.
 - The tool should be able to deduce obvious information from the input images and assist with completing the required information.
 
-No graphical user interface is required, a text editor is enough. A program like [GIMP](https://www.gimp.org), which can [overlay a grid](https://docs.gimp.org/2.10/en/gimp-concepts-image-grid-and-guides.html) over the input sheets one wants to annotate, may be useful though.
+While any text editor can be used for writing the configuration, the [Visual Studio Code Extension](https://github.com/houmain/spright-vscode) can greatly simplify the process.
 
 Also have a look at the [spright test suite](https://github.com/houmain/spright-test-suite) to get an impression of the functionality.
 
