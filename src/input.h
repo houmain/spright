@@ -120,9 +120,15 @@ struct Sprite {
   int duplicate_of_index{ -1 };
 };
 
+struct Description {
+  std::filesystem::path filename;
+  std::filesystem::path template_filename;
+};
+
 struct InputDefinition {
   std::vector<Input> inputs;
   std::vector<Sprite> sprites;
+  std::vector<Description> descriptions;
   VariantMap variables;
 };
 

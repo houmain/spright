@@ -18,10 +18,13 @@ void evaluate_expressions(const Settings& settings,
     std::vector<Texture>& textures, 
     VariantMap& variables);
 
-std::string get_description(const std::string& template_source,
+std::string get_description(
+  const std::string& template_source,
   const std::vector<Sprite>& sprites, 
   const std::vector<Slice>& slices);
-bool output_description(const Settings& settings,
+
+bool output_descriptions(
+  const std::vector<Description>& descriptions, 
   const std::vector<Input>& inputs, 
   const std::vector<Sprite>& sprites, 
   const std::vector<Slice>& slices,

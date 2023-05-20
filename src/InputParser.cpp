@@ -37,6 +37,7 @@ namespace {
             definition == Definition::output ||
             definition == Definition::glob ||
             definition == Definition::input ||
+            definition == Definition::description ||
             definition == Definition::sprite ||
             definition == Definition::skip);
   }
@@ -495,6 +496,13 @@ void InputParser::deduce_input_sprites(State& state) {
   }
 }
 
+void InputParser::description_ends(State& state) {
+  update_applied_definitions(Definition::description);
+  auto& description = m_descriptions.emplace_back();
+  description.filename = state.description_filename;
+  description.template_filename = state.template_filename;
+}
+
 void InputParser::scope_ends(State& state) {
   switch (state.definition) {
     case Definition::sheet:
@@ -514,6 +522,10 @@ void InputParser::scope_ends(State& state) {
       break;
     case Definition::skip:
       skip_sprites(state);
+      break;
+    case Definition::description:
+      description_ends(state);
+      break;
     default:
       break;
   }

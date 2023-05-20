@@ -273,34 +273,33 @@ std::string get_description(const std::string& template_source,
   return ss.str();
 }
 
-bool output_description(const Settings& settings,
+bool output_descriptions(
+    const std::vector<Description>& descriptions, 
     const std::vector<Input>& inputs, 
     const std::vector<Sprite>& sprites, 
     const std::vector<Slice>& slices,
     const std::vector<Texture>& textures,
-    const VariantMap& variables) try {
-  auto ss = std::ostringstream();
-  auto& os = (settings.output_file.string() == "stdout" ? std::cout : ss);
+    const VariantMap& variables) {
 
   const auto json = get_json_description(
     inputs, sprites, slices, textures, variables);
-  if (!settings.template_file.empty()) {
-    auto env = setup_inja_environment(&json);
-    env.render_to(os, env.parse_template(path_to_utf8(settings.template_file)), json);
-  }
-  else {
-    os << json.dump(1, '\t');
-  }
-  if (settings.output_file.string() != "stdout")
-    if (!update_textfile(settings.output_path / settings.output_file, ss.str()))
-      return false;
 
+  for (const auto& description : descriptions) {
+    auto ss = std::ostringstream();
+    auto& os = (description.filename.string() == "stdout" ? std::cout : ss);
+    if (!description.template_filename.empty()) {
+      auto env = setup_inja_environment(&json);
+      env.render_to(os, env.parse_template(
+        path_to_utf8(description.template_filename)), json);
+    }
+    else {
+      os << json.dump(1, '\t');
+    }
+    if (description.filename.string() != "stdout")
+      if (!update_textfile(description.filename, ss.str()))
+        return false;
+  }
   return true;
-}
-catch (const std::exception& ex) {
-  throw std::runtime_error(
-    (settings.template_file.empty() ? "" :
-     "'" + path_to_utf8(settings.template_file) + "'") + ex.what());
 }
 
 } // namespace

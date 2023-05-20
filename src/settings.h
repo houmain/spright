@@ -21,6 +21,7 @@ struct Settings {
   std::filesystem::path input_file;
   std::filesystem::path output_path;
   std::filesystem::path output_file;
+  bool output_file_set{ };
   std::filesystem::path template_file;
   std::string autocomplete_pattern;
   bool verbose{ };

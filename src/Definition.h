@@ -60,6 +60,9 @@ enum class Definition {
   align,
   align_pivot,
 
+  description,
+  template_,
+
   MAX
 };
 
@@ -119,6 +122,9 @@ struct State {
   std::string common_bounds;
   Anchor align{ { 0, 0 }, AnchorX::center, AnchorY::middle };
   std::string align_pivot;
+
+  std::filesystem::path description_filename;
+  std::filesystem::path template_filename;
 };
 
 Definition get_definition(std::string_view command);

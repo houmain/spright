@@ -20,7 +20,7 @@ int main(int argc, const char* argv[]) try {
   auto time_points = std::vector<std::pair<Clock::time_point, const char*>>();
   time_points.emplace_back(Clock::now(), "begin");
 
-  auto [inputs, sprites, variables] = parse_definition(settings);  
+  auto [inputs, sprites, descriptions, variables] = parse_definition(settings);  
   time_points.emplace_back(Clock::now(), "input");
 
   auto slices = std::vector<Slice>();
@@ -49,8 +49,21 @@ int main(int argc, const char* argv[]) try {
   }
 
   if (settings.mode != Mode::autocomplete) {
-    output_description(settings, inputs, sprites, 
-      slices, textures, variables);
+    // ignore description in definition
+    if (settings.mode == Mode::describe ||
+        settings.mode == Mode::describe_input)
+      descriptions.clear();
+
+    // use description filename/template from settings
+    if (descriptions.empty() ||
+        (settings.output_file_set || !settings.template_file.empty())) {
+      auto& description = descriptions.emplace_back();
+      description.filename = settings.output_file;
+      description.template_filename = settings.template_file;
+    }
+
+    output_descriptions(descriptions, 
+      inputs, sprites, slices, textures, variables);
     time_points.emplace_back(Clock::now(), "output description");
   }
 

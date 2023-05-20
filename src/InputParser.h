@@ -12,6 +12,7 @@ public:
   const std::vector<Sprite>& sprites() const & { return m_sprites; }
   std::vector<Input> inputs() && { return std::move(m_inputs); }
   std::vector<Sprite> sprites() && { return std::move(m_sprites); }
+  std::vector<Description> descriptions() && { return std::move(m_descriptions); }
   VariantMap variables() && { return std::move(m_variables); }
   std::string autocomplete_output() const { return std::move(m_autocomplete_output).str(); }
 
@@ -51,6 +52,7 @@ private:
   void check_not_applied_definitions();
   void handle_exception(std::function<void()>&& function);
   int sprites_or_skips_in_current_input() const;
+  void description_ends(State& state);
 
   const Settings m_settings;
   std::ostringstream m_autocomplete_output;
@@ -70,6 +72,7 @@ private:
   int m_current_sequence_index{ };
   std::vector<ImagePtr> m_current_input_sources;
   std::string m_detected_indentation;
+  std::vector<Description> m_descriptions;
   std::vector<std::map<Definition, NotAppliedDefinition>> m_not_applied_definitions;
 };
 

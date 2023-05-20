@@ -99,6 +99,8 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::common_bounds: return "common-bounds";
     case Definition::align: return "align";
     case Definition::align_pivot: return "align-pivot";
+    case Definition::description: return "description";
+    case Definition::template_: return "template";
   }
   return "-";
 }
@@ -111,6 +113,7 @@ Definition get_affected_definition(Definition definition) {
     case Definition::set:
     case Definition::glob:
     case Definition::input:
+    case Definition::description:
     case Definition::sprite:
     // allow sheets without sprites
     case Definition::sheet:
@@ -168,6 +171,9 @@ Definition get_affected_definition(Definition definition) {
     case Definition::align_pivot:
     case Definition::span:
       return Definition::sprite;
+
+    case Definition::template_:
+      return Definition::description;
   }
   return Definition::none;
 }
@@ -591,6 +597,14 @@ void apply_definition(Definition definition,
 
     case Definition::align_pivot:
       state.align_pivot = (arguments_left() ? check_string() : "ALL");
+      break;
+
+    case Definition::description:
+      state.description_filename = check_path();
+      break;
+
+    case Definition::template_:
+      state.template_filename = check_path();
       break;
 
     case Definition::MAX:
