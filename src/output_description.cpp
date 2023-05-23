@@ -295,7 +295,7 @@ std::string get_description(const std::string& template_source,
   return ss.str();
 }
 
-bool output_descriptions(
+void output_descriptions(
     const std::vector<Description>& descriptions, 
     const std::vector<Input>& inputs, 
     const std::vector<Sprite>& sprites, 
@@ -318,10 +318,8 @@ bool output_descriptions(
       os << json.dump(1, '\t');
     }
     if (description.filename.string() != "stdout")
-      if (!update_textfile(description.filename, ss.str()))
-        return false;
+      update_textfile(description.filename, ss.str());
   }
-  return true;
 }
 
 } // namespace

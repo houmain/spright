@@ -28,7 +28,7 @@ std::string get_description(
   const std::vector<Sprite>& sprites,
   const std::vector<Slice>& slices);
 
-bool output_descriptions(
+void output_descriptions(
   const std::vector<Description>& descriptions,
   const std::vector<Input>& inputs,
   const std::vector<Sprite>& sprites,
