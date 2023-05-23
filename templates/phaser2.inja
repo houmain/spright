@@ -1,34 +1,34 @@
 {
-	"meta": {
-		"app": "https://github.com/houmain/spright"
-	},
-	"frames": [
+  "meta": {
+    "app": "https://github.com/houmain/spright"
+  },
+  "frames": [
 ## for sprite in sprites
-	  {
-			"filename": "{{ sprite.id }}",
-			"rotated": {{ sprite.rotated }},
-			"trimmed": {% if sprite.rect.w == sprite.trimmedRect.w and sprite.rect.h == sprite.trimmedRect.h %}false{% else %}true{% endif %},
-			"sourceSize": {
-				"w": {{ sprite.sourceRect.w }},
-				"h": {{ sprite.sourceRect.h }}
-			},
-			"spriteSourceSize": {
-				"x": {{ sprite.trimmedSourceRect.x }},
-				"y": {{ sprite.trimmedSourceRect.y }},
-				"w": {{ sprite.trimmedSourceRect.w }},
-				"h": {{ sprite.trimmedSourceRect.h }}
-			},
-			"frame": {
-				"x": {{ sprite.trimmedRect.x }},
-				"y": {{ sprite.trimmedRect.y }},
-				"w": {{ sprite.trimmedRect.w }},
-				"h": {{ sprite.trimmedRect.h }}
-			},
-			"anchor": {
-				"x": {{ sprite.pivot.x / sprite.rect.w }},
-				"y": {{ sprite.pivot.y / sprite.rect.h }}
-			}
-		}{% if sprite != last(sprites) %},{% endif %}
+    {
+      "filename": "{{ sprite.id }}",
+      "rotated": {{ sprite.rotated }},
+      "trimmed": {% if sprite.rect.w == sprite.trimmedRect.w and sprite.rect.h == sprite.trimmedRect.h %}false{% else %}true{% endif %},
+      "sourceSize": {
+        "w": {{ sprite.sourceRect.w }},
+        "h": {{ sprite.sourceRect.h }}
+      },
+      "spriteSourceSize": {
+        "x": {{ sprite.trimmedSourceRect.x }},
+        "y": {{ sprite.trimmedSourceRect.y }},
+        "w": {{ sprite.trimmedSourceRect.w }},
+        "h": {{ sprite.trimmedSourceRect.h }}
+      },
+      "frame": {
+        "x": {{ sprite.trimmedRect.x }},
+        "y": {{ sprite.trimmedRect.y }},
+        "w": {{ sprite.trimmedRect.w }},
+        "h": {{ sprite.trimmedRect.h }}
+      },
+      "anchor": {
+        "x": {{ sprite.pivot.x / sprite.rect.w }},
+        "y": {{ sprite.pivot.y / sprite.rect.h }}
+      }
+    }{% if sprite != last(sprites) %},{% endif %}
 ## endfor
-	]
+  ]
 }

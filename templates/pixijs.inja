@@ -2,13 +2,13 @@
 ## for sprite in sprites
 "{{ sprite.id }}":
 {
-	"rotated": {{ sprite.rotated }},
-	"trimmed": {% if sprite.rect.w == sprite.trimmedRect.w and sprite.rect.h == sprite.trimmedRect.h %}false{% else %}true{% endif %},
+  "rotated": {{ sprite.rotated }},
+  "trimmed": {% if sprite.rect.w == sprite.trimmedRect.w and sprite.rect.h == sprite.trimmedRect.h %}false{% else %}true{% endif %},
   "sourceSize": {
     "w": {{ sprite.sourceRect.w }},
     "h": {{ sprite.sourceRect.h }}
   },
-	"spriteSourceSize": {
+  "spriteSourceSize": {
     "x": {{ sprite.trimmedSourceRect.x }},
     "y": {{ sprite.trimmedSourceRect.y }},
     "w": {{ sprite.trimmedSourceRect.w }},
@@ -20,7 +20,7 @@
     "w": {{ sprite.trimmedRect.w }},
     "h": {{ sprite.trimmedRect.h }}
   },
-	"anchor": {
+  "anchor": {
     "x": {{ sprite.pivot.x / sprite.rect.w }},
     "y": {{ sprite.pivot.y / sprite.rect.h }}
   }
@@ -33,11 +33,11 @@
 ## endfor
 },
 "meta": {
-	"app": "https://github.com/houmain/spright",
-	"format": "RGBA8888",
+  "app": "https://github.com/houmain/spright",
+  "format": "RGBA8888",
 ## for texture in textures
-	"image": "{{ texture.filename }}",
-	"size": { "w": {{ texture.width }}, "h": {{ texture.height }} }
+  "image": "{{ texture.filename }}",
+  "size": { "w": {{ texture.width }}, "h": {{ texture.height }} }
 ## endfor
 }
 }
