@@ -229,6 +229,8 @@ void evaluate_expressions(
         return sprite.sheet->id;
       if (variable == "source.filename")
         return path_to_utf8(sprite.source->filename());
+      if (variable == "source.dirname")
+        return path_to_utf8(sprite.source->filename().parent_path());
       return replace_variable(variable);
     });
   };
@@ -249,6 +251,8 @@ void evaluate_expressions(
   for (auto& sprite : sprites)
     try {
       evaluate_sprite_expression(sprite, sprite.id);
+      for (auto& [key, value] : sprite.tags)
+        evaluate_sprite_expression(sprite, value);
     }
     catch (const std::exception& ex) {
       warning(ex.what(), sprite.warning_line_number);
