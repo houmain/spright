@@ -3,8 +3,8 @@
 		"app": "https://github.com/houmain/spright"
 	},
 	"frames": [
-{% for sprite in sprites %}
-		{
+## for sprite in sprites
+	  {
 			"filename": "{{ sprite.id }}",
 			"rotated": {{ sprite.rotated }},
 			"trimmed": {% if sprite.rect.w == sprite.trimmedRect.w and sprite.rect.h == sprite.trimmedRect.h %}false{% else %}true{% endif %},
@@ -29,6 +29,6 @@
 				"y": {{ sprite.pivot.y / sprite.rect.h }}
 			}
 		}{% if sprite != last(sprites) %},{% endif %}
-{% endfor %}
+## endfor
 	]
 }

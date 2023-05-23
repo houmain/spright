@@ -53,10 +53,10 @@ glob "characters/**/*.png"
 glob "scenery/**/*.png"
 ```
 
-Unless specified on the [command line](#command-line-arguments) spright reads the input definition from `spright.conf` in the current directory. To pack the sheets and generate an output description consumable by e.g. [Phaser](https://github.com/photonstorm/phaser) using the [phaser.template](templates/phaser.template), call:
+Unless specified on the [command line](#command-line-arguments) spright reads the input definition from `spright.conf` in the current directory. To pack the sheets and generate an output description consumable by e.g. [Phaser](https://github.com/photonstorm/phaser) using the [phaser.inja](templates/phaser.inja), call:
 
 ```
-spright -t phaser.template
+spright -t phaser.inja
 ```
 
 See the [input definition](#input-definition-reference) section for a description of the available options. \
@@ -66,8 +66,8 @@ See the [output template engine](#output-template-engine) section on how to gene
 
 Say you got some [nice](https://itch.io/game-assets/tag-sprites) [sprites](https://opengameart.org/art-search-advanced?field_art_type_tid[]=9&sort_by=count) you would like to use in your next game:
 
-|              "Decorations (32x32).png"               |         "Old enemies 2.png"         |              "misc_scenery.png"               |                                                                            "OrcAttack/Frame01.png" to <br/> "OrcAttack/Frame04.png"                                                                             |
-| :--------------------------------------------------: | :---------------------------------: | :-------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| "Decorations (32x32).png" | "Old enemies 2.png" | "misc_scenery.png" | "OrcAttack/Frame01.png" to <br/> "OrcAttack/Frame04.png" |
+| :--: | :--: | :--: | :--: |
 | <kbd><img src="docs/Decorations (32x32).png"/></kbd> | <img src="docs/Old enemies 2.png"/> | <kbd><img src="docs/misc_scenery.png"/></kbd> | <kbd><img src="docs/Orc Attack/Frame01.png"/></kbd> <kbd><img src="docs/Orc Attack/Frame02.png"/></kbd> <kbd><img src="docs/Orc Attack/Frame03.png"/></kbd> <kbd><img src="docs/Orc Attack/Frame04.png"/></kbd> |
 
 And your game engine supports efficiently packed sprite sheets like this:
@@ -352,7 +352,7 @@ With the power of the [inja](https://github.com/pantor/inja/) template engine it
 A template is selected with the **-t** or **--template** and the output filename with the **-o** or **--output** parameter:
 
 ```
-spright -t cpp.template -o spright.h
+spright -t cpp.inja -o spright.h
 ```
 
 This is what a simple template, that transforms the IDs of the output description's sprites into a JavaScript array initialization, looks like:
@@ -369,11 +369,12 @@ For information about the functionality of the template engine, please see the [
 
 | Target                                            | Template                                       |
 | ------------------------------------------------- | ---------------------------------------------- |
-| C++                                               | [cpp.template](templates/cpp.template)         |
-| [Phaser 3](https://github.com/photonstorm/phaser) | [phaser.template](templates/phaser.template)   |
-| [Phaser 2](https://github.com/photonstorm/phaser) | [phaser2.template](templates/phaser2.template) |
+| C++                                               | [cpp.inja](templates/cpp.inja)         |
+| [Phaser 3](https://github.com/photonstorm/phaser) | [phaser.inja](templates/phaser.inja)   |
+| [Phaser 2](https://github.com/photonstorm/phaser) | [phaser2.inja](templates/phaser2.inja) |
+| [PixiJS](https://pixijs.com/)                     | [pixijs.inja](templates/pixijs.inja) |
 
-The C++ template is just an example for how the sprite description can be directly embedded in code. This [spright.h](docs/spright.h) was generated from the [sample](#advanced-usage-example), using the [cpp.template](templates/cpp.template) template.
+The C++ template is just an example for how the sprite description can be directly embedded in code. This [spright.h](docs/spright.h) was generated from the [sample](#advanced-usage-example), using the [cpp.inja](templates/cpp.inja) template.
 
 ## Command line arguments
 

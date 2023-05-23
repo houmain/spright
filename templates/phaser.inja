@@ -3,7 +3,7 @@
 		"app": "https://github.com/houmain/spright"
 	},
 	"textures": [
-{% for texture in textures %}
+## for texture in textures
 		{
 			"image": "{{ texture.filename }}",
 			"format": "RGBA8888",
@@ -13,8 +13,8 @@
 			},
 			"scale": 1,
 			"frames": [
-{% for index in texture.spriteIndices %}{% set sprite=at(sprites, index) %}
-				{
+## for index in texture.spriteIndices
+				{ {% set sprite=at(sprites, index) %}
 					"filename": "{{ sprite.id }}",
 					"rotated": {{ sprite.rotated }},
 					"trimmed": {% if sprite.rect.w == sprite.trimmedRect.w and sprite.rect.h == sprite.trimmedRect.h %}false{% else %}true{% endif %},
@@ -39,9 +39,9 @@
 						"y": {{ sprite.pivot.y / sprite.rect.h }}
 					}
 				}{% if sprite != last(sprites) %},{% endif %}
-{% endfor %}
+## endfor
 			]
 		}
-{% endfor %}
+## endfor
 	]
 }

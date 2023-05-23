@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Version 3.2.0] - 2023-05-23
+
+### Added
+
+- Added PixiJS template.
+- Replacing variables in tag values.
+
+### Changed
+
+- Renamed template files to .inja.
+
+### Fixed
+
+- Fixed output path for descriptions.
+- Fixed redundancy check when outputting multiple descriptions.
+
 ## [Version 3.1.0] - 2023-05-20
 
 ### Added
@@ -192,6 +208,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fixed -- commandline arguments.
 - Fixed sample cpp.template.
 
+[version 3.2.0]: https://github.com/houmain/spright/compare/3.1.0...3.2.0
 [version 3.1.0]: https://github.com/houmain/spright/compare/3.0.0...3.1.0
 [version 3.0.0]: https://github.com/houmain/spright/compare/2.3.0...3.0.0
 [version 2.3.0]: https://github.com/houmain/spright/compare/2.2.0...2.3.0
