@@ -35,9 +35,7 @@
 "meta": {
   "app": "https://github.com/houmain/spright",
   "format": "RGBA8888",
-## for texture in textures
-  "image": "{{ texture.filename }}",
-  "size": { "w": {{ texture.width }}, "h": {{ texture.height }} }
-## endfor
+  "image": "{{ first(textures).filename }}",
+  "size": { "w": {{ first(textures).width }}, "h": {{ first(textures).height }} }
 }
 }

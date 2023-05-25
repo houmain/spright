@@ -311,6 +311,9 @@ void output_descriptions(
     inputs, sprites, slices, textures, variables);
 
   for (const auto& description : descriptions) {
+    if (description.filename.empty())
+      continue;
+
     auto ss = std::ostringstream();
     auto& os = (description.filename.string() == "stdout" ? std::cout : ss);
     if (!description.template_filename.empty()) {

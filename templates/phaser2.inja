@@ -1,6 +1,8 @@
 {
   "meta": {
-    "app": "https://github.com/houmain/spright"
+    "app": "https://github.com/houmain/spright",
+    "image": "{{ first(textures).filename }}",
+    "size": { "w": {{ first(textures).width }}, "h": {{ first(textures).height }} }
   },
   "frames": [
 ## for sprite in sprites
