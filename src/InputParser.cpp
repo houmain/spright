@@ -209,7 +209,6 @@ void InputParser::sprite_ends(State& state) {
   sprite.common_bounds = state.common_bounds;
   sprite.align = state.align;
   sprite.align_pivot = state.align_pivot;
-  sprite.rotated = state.rotate;
   sprite.tags = state.tags;
   sprite.data = state.data;
   advance();

@@ -4,14 +4,14 @@
   },
   "textures": [
 ## for texture in textures
-    {
+    { {% set scale=texture.scale %}
       "image": "{{ texture.filename }}",
       "format": "RGBA8888",
       "size": {
         "w": {{ texture.width }},
         "h": {{ texture.height }}
       },
-      "scale": 1,
+      "scale": {{ scale }},
       "frames": [
 ## for index in texture.spriteIndices
         { {% set sprite=at(sprites, index) %}
@@ -19,26 +19,26 @@
           "rotated": {{ sprite.rotated }},
           "trimmed": {% if sprite.rect.w == sprite.trimmedRect.w and sprite.rect.h == sprite.trimmedRect.h %}false{% else %}true{% endif %},
           "sourceSize": {
-            "w": {{ sprite.sourceRect.w }},
-            "h": {{ sprite.sourceRect.h }}
+            "w": {{ round(sprite.sourceRect.w * scale, 0) }},
+            "h": {{ round(sprite.sourceRect.h * scale, 0) }}
           },
           "spriteSourceSize": {
-            "x": {{ sprite.trimmedSourceRect.x }},
-            "y": {{ sprite.trimmedSourceRect.y }},
-            "w": {{ sprite.trimmedSourceRect.w }},
-            "h": {{ sprite.trimmedSourceRect.h }}
+            "x": {{ round(sprite.trimmedSourceRect.x * scale, 0) }},
+            "y": {{ round(sprite.trimmedSourceRect.y * scale, 0) }},
+            "w": {{ round(sprite.trimmedSourceRect.w * scale, 0) }},
+            "h": {{ round(sprite.trimmedSourceRect.h * scale, 0) }}
           },
           "frame": {
-            "x": {{ sprite.trimmedRect.x }},
-            "y": {{ sprite.trimmedRect.y }},
-            "w": {{ sprite.trimmedRect.w }},
-            "h": {{ sprite.trimmedRect.h }}
+            "x": {{ round(sprite.trimmedRect.x * scale, 0) }},
+            "y": {{ round(sprite.trimmedRect.y * scale, 0) }},
+            "w": {{ round(sprite.trimmedRect.w * scale, 0) }},
+            "h": {{ round(sprite.trimmedRect.h * scale, 0) }}
           },
           "anchor": {
             "x": {{ sprite.pivot.x / sprite.rect.w }},
             "y": {{ sprite.pivot.y / sprite.rect.h }}
           }
-        }{% if sprite != last(sprites) %},{% endif %}
+        }{% if not loop.is_last %},{% endif %}
 ## endfor
       ]
     }
