@@ -48,7 +48,7 @@ namespace {
     const auto intersected = intersect(bounds, rect);
     if (rect != intersected) {
       auto message = std::ostringstream();
-      message << "sprite outside bounds (";
+      message << "sprite outside source (";
       if (rect.x0() < bounds.x0())      message << "x: " << rect.x0() << " < " << bounds.x0();
       else if (rect.y0() < bounds.y0()) message << "y: " << rect.y0() << " < " << bounds.y0();
       else if (rect.x1() > bounds.x1()) message << "x: " << rect.x1() << " > " << bounds.x1();
@@ -209,6 +209,7 @@ void InputParser::sprite_ends(State& state) {
   sprite.common_bounds = state.common_bounds;
   sprite.align = state.align;
   sprite.align_pivot = state.align_pivot;
+  sprite.rotated = state.rotate;
   sprite.tags = state.tags;
   sprite.data = state.data;
   advance();

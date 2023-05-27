@@ -41,6 +41,14 @@ namespace {
       case AnchorY::middle: s.align.y += margin.y / 2; break;
       case AnchorY::bottom: s.align.y += margin.y; break;
     }
+
+    // clamp to zero
+    s.align.x = std::max(s.align.x, 0);
+    s.align.y = std::max(s.align.y, 0);
+
+    // expand bounds by over-alignment
+    s.bounds.x = std::max(s.bounds.x, s.trimmed_source_rect.w + s.align.x);
+    s.bounds.y = std::max(s.bounds.y, s.trimmed_source_rect.h + s.align.y);
   }
 
   void update_aligned_pivot(std::vector<Sprite>& sprites) {
