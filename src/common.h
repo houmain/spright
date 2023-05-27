@@ -95,6 +95,7 @@ bool is_space(char c);
 bool is_punct(char c);
 char to_lower(char c);
 std::string to_lower(std::string string);
+int equal_case_insensitive(std::string_view a, std::string_view b);
 std::optional<bool> to_bool(std::string_view str);
 std::optional<int> to_int(std::string_view string);
 std::optional<real> to_real(std::string_view string);
@@ -113,6 +114,7 @@ void split_expression(std::string_view str, std::vector<std::string_view>* resul
 std::string read_textfile(const std::filesystem::path& filename);
 void write_textfile(const std::filesystem::path& filename, std::string_view text);
 bool update_textfile(const std::filesystem::path& filename, std::string_view text);
+std::string_view get_extension(LStringView filename);
 std::string remove_extension(std::string filename);
 void replace_variables(std::string& expression,
   const std::function<std::string(std::string_view)>& replace_function);

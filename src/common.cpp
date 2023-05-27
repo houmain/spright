@@ -131,6 +131,11 @@ std::string to_lower(std::string string) {
   return string;
 }
 
+int equal_case_insensitive(std::string_view a, std::string_view b) {
+  return std::equal(a.begin(), a.end(), b.begin(), b.end(),
+    [](char a, char b) { return to_lower(a) == to_lower(b); });
+}
+
 bool is_digit(char c) {
   return std::isdigit(static_cast<unsigned char>(c));
 }
@@ -344,6 +349,13 @@ bool update_textfile(const std::filesystem::path& filename, std::string_view tex
       return false;
   write_textfile(filename, text);
   return true;
+}
+
+std::string_view get_extension(LStringView filename) {
+ const auto dot = filename.rfind('.');
+  if (dot != std::string::npos)
+    return filename.substr(dot);
+  return "";
 }
 
 std::string remove_extension(std::string filename) {

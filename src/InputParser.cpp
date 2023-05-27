@@ -80,6 +80,14 @@ namespace {
     return std::find_if(std::next(container.begin(), to_int(container.size()) - n),
       container.end(), function) != container.end();
   }
+
+  bool has_supported_extension(std::string_view filename) {
+    const auto ext = get_extension(filename);
+    for (const auto supported : { ".png", ".gif", ".bmp", ".tga" })
+      if (equal_case_insensitive(ext, supported))
+        return true;
+    return false;
+  }
 } // namespace
 
 std::shared_ptr<Sheet> InputParser::get_sheet(const std::string& sheet_id) {
@@ -425,8 +433,15 @@ void InputParser::output_ends(State& state) {
 void InputParser::deduce_globbed_inputs(State& state) {
   state.indent += m_detected_indentation;
 
+  const auto check_supported_extension = ends_with(state.glob_pattern, ".*");
+
   auto sequences = glob_sequences(state.path, state.glob_pattern);
   for (auto& sequence : sequences) {
+
+    if (check_supported_extension &&
+        !has_supported_extension(sequence.sequence_filename()))
+      continue;
+
     if (has_map_suffix(sequence, state.map_suffixes))
       continue;
 
