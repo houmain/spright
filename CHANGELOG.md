@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Version 3.3.0] - 2023-05-28
+
+### Added
+
+- Added pack method origin.
+- Added PixiJS template.
+- Added alpha mode opaque.
+- Added color parameter to alpha mode clear.
+
+### Changed
+
+- Ignoring unsupported extension when globbing with '.\*'.
+- Skip output of descriptions without filename.
+- Renamed template files to .inja.
+- Replacing variables in tag values.
+
+### Fixed
+
+- Properly handling missing closing quote.
+- Expand sprite bounds by over-alignment.
+- Fixed redundancy check when outputting mutliple descriptions.
+- Fixed output path for descriptions.
+
 ## [Version 3.2.0] - 2023-05-23
 
 ### Added
@@ -94,6 +117,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Version 2.0.0] - 2023-02-22
 
 ### Changed
+
 - Split output in sheet and output.
 - Removed implicit output.
 - Renamed layers to maps.
@@ -101,6 +125,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Replaced scalings with scale.
 
 ### Added
+
 - Parallelized trimming.
 - Added texture to JSON output.
 
@@ -208,6 +233,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fixed -- commandline arguments.
 - Fixed sample cpp.template.
 
+[version 3.3.0]: https://github.com/houmain/spright/compare/3.2.0...3.3.0
 [version 3.2.0]: https://github.com/houmain/spright/compare/3.1.0...3.2.0
 [version 3.1.0]: https://github.com/houmain/spright/compare/3.0.0...3.1.0
 [version 3.0.0]: https://github.com/houmain/spright/compare/2.3.0...3.0.0
