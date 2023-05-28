@@ -30,7 +30,7 @@ using AnchorF = AnchorT<real>;
 
 enum class Trim { none, rect, convex };
 
-enum class Alpha { keep, clear, bleed, premultiply, colorkey };
+enum class Alpha { keep, opaque, clear, bleed, premultiply, colorkey };
 
 enum class Pack { binpack, rows, columns, compact, origin, single, layers, keep };
 
@@ -53,7 +53,7 @@ struct Output {
   std::string default_map_suffix;
   std::vector<std::string> map_suffixes;
   Alpha alpha{ };
-  RGBA colorkey{ };
+  RGBA alpha_color{ };
   real scale{ };
   ResizeFilter scale_filter{ };
   bool debug{ };

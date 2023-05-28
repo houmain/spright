@@ -82,8 +82,12 @@ namespace {
       case Alpha::keep:
         break;
 
+      case Alpha::opaque:
+        make_opaque(target);
+        break;
+
       case Alpha::clear:
-        clear_alpha(target);
+        clear_alpha(target, output.alpha_color);
         break;
 
       case Alpha::bleed:
@@ -95,7 +99,7 @@ namespace {
         break;
 
       case Alpha::colorkey:
-        make_opaque(target, output.colorkey);
+        make_opaque(target, output.alpha_color);
         break;
     }
   }
@@ -163,7 +167,7 @@ namespace {
       });
 
     if (texture.output->alpha == Alpha::colorkey)
-      animation.color_key = texture.output->colorkey;
+      animation.color_key = texture.output->alpha_color;
     save_animation(animation, texture.filename);
     return true;
   }

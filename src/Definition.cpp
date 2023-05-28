@@ -373,13 +373,18 @@ void apply_definition(Definition definition,
     case Definition::alpha: {
       const auto string = check_string();
       if (const auto index = index_of(string, 
-          { "keep", "clear", "bleed", "premultiply", "colorkey" }); index >= 0)
+          { "keep", "opaque", "clear", "bleed", "premultiply", "colorkey" }); index >= 0)
         state.alpha = static_cast<Alpha>(index);
       else
         error("invalid alpha value '", string, "'");
 
-      if (state.alpha == Alpha::colorkey)
-        state.alpha_colorkey = check_color();
+      if (state.alpha == Alpha::clear) {
+        state.alpha_color = (arguments_left() ? check_color() : RGBA{ });
+        state.alpha_color.a = 0;
+      }
+      else if (state.alpha == Alpha::colorkey) {
+        state.alpha_color = check_color();
+      }  
       break;
     }
 

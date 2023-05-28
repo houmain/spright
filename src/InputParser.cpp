@@ -424,7 +424,7 @@ void InputParser::output_ends(State& state) {
   output->default_map_suffix = state.default_map_suffix;
   output->map_suffixes = state.map_suffixes;
   output->alpha = state.alpha;
-  output->colorkey = state.alpha_colorkey;
+  output->alpha_color = state.alpha_color;
   output->scale = state.scale;
   output->scale_filter = state.scale_filter;
   output->debug = state.debug;

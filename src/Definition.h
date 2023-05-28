@@ -85,7 +85,7 @@ struct State {
   int shape_padding{ };
   Duplicates duplicates{ };
   Alpha alpha{ };
-  RGBA alpha_colorkey{ };
+  RGBA alpha_color{ };
   Pack pack{ };
   real scale{ 1.0 };
   ResizeFilter scale_filter{ };

@@ -796,11 +796,18 @@ std::vector<Rect> find_islands(const Image& image, int merge_distance,
   return islands;
 }
 
-void clear_alpha(Image& image) {
+void clear_alpha(Image& image, RGBA color) {
   std::for_each(image.rgba(), image.rgba() + image.width() * image.height(),
-    [](RGBA& rgba) {
+    [&](RGBA& rgba) {
       if (rgba.a == 0)
-        rgba = RGBA{ };
+        rgba = color;
+    });
+}
+
+void make_opaque(Image& image) {
+  std::for_each(image.rgba(), image.rgba() + image.width() * image.height(),
+    [&](RGBA& rgba) {
+      rgba.a = 255;
     });
 }
 
