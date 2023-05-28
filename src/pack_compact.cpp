@@ -73,7 +73,7 @@ namespace {
 void pack_compact(const SheetPtr& sheet, SpriteSpan sprites,
     std::vector<Slice>& slices) {
   const auto fast = (sheet->allow_rotate == false);
-  pack_binpack(sheet, sprites, fast, slices);
+  pack_binpack(sheet, sprites, slices, fast);
   for (auto& slice : slices) {
     recompute_slice_size(slice);
     compact_sprites(slice, sheet->border_padding, sheet->shape_padding);

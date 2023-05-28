@@ -37,16 +37,16 @@ void update_last_source_written_times(std::vector<Slice>& slices);
 std::vector<Slice> pack_sprites(std::vector<Sprite>& sprites);
 
 void pack_binpack(const SheetPtr& sheet, SpriteSpan sprites,
-  bool fast, std::vector<Slice>& slices);
+  std::vector<Slice>& slices, bool fast);
 void pack_compact(const SheetPtr& sheet, SpriteSpan sprites,
   std::vector<Slice>& slices);
 void pack_single(const SheetPtr& sheet, SpriteSpan sprites,
   std::vector<Slice>& slices);
 void pack_keep(const SheetPtr& sheet, SpriteSpan sprites,
   std::vector<Slice>& slices);
-void pack_lines(bool horizontal, const SheetPtr& sheet,
-  SpriteSpan sprites, std::vector<Slice>& slices);
-void pack_layers(const SheetPtr& sheet, SpriteSpan sprites,
-  std::vector<Slice>& slices);
+void pack_lines(const SheetPtr& sheet, SpriteSpan sprites, 
+  std::vector<Slice>& slices, bool horizontal);
+void pack_origin(const SheetPtr& sheet,  SpriteSpan sprites, 
+  std::vector<Slice>& slices, bool layered);
 
 } // namespace

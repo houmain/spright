@@ -3,8 +3,8 @@
 
 namespace spright {
 
-void pack_lines(bool horizontal, const SheetPtr& sheet,
-    SpriteSpan sprites, std::vector<Slice>& slices) {
+void pack_lines(const SheetPtr& sheet, SpriteSpan sprites, 
+    std::vector<Slice>& slices, bool horizontal) {
 
   auto slice_sheet_index = 0;
   const auto add_slice = [&](SpriteSpan sprites) {

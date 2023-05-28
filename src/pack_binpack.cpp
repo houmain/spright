@@ -5,7 +5,7 @@
 namespace spright {
 
 void pack_binpack(const SheetPtr& sheet_ptr, SpriteSpan sprites,
-    bool fast, std::vector<Slice>& slices) {
+    std::vector<Slice>& slices, bool fast) {
   const auto& sheet = *sheet_ptr;
 
   // pack rects

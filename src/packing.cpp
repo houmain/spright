@@ -138,13 +138,14 @@ namespace {
     assert(!sprites.empty());
 
     switch (sheet->pack) {
-      case Pack::binpack: return pack_binpack(sheet, sprites, sprites.size() > 1000, slices);
+      case Pack::binpack: return pack_binpack(sheet, sprites, slices, sprites.size() > 1000);
       case Pack::compact: return pack_compact(sheet, sprites, slices);
       case Pack::single: return pack_single(sheet, sprites, slices);
       case Pack::keep: return pack_keep(sheet, sprites, slices);
-      case Pack::rows: return pack_lines(true, sheet, sprites, slices);
-      case Pack::columns: return pack_lines(false, sheet, sprites, slices);
-      case Pack::layers: return pack_layers(sheet, sprites, slices);
+      case Pack::rows: return pack_lines(sheet, sprites, slices, true);
+      case Pack::columns: return pack_lines(sheet, sprites, slices, false);
+      case Pack::origin: return pack_origin(sheet, sprites, slices, false);
+      case Pack::layers: return pack_origin(sheet, sprites, slices, true);
     }
   }
 

@@ -386,7 +386,8 @@ void apply_definition(Definition definition,
     case Definition::pack: {
       const auto string = check_string();
       if (const auto index = index_of(string, 
-          { "binpack", "rows", "columns", "compact", "single", "layers", "keep" }); index >= 0)
+          { "binpack", "rows", "columns", "compact", 
+            "origin", "single", "layers", "keep" }); index >= 0)
         state.pack = static_cast<Pack>(index);
       else
         error("invalid pack method '", string, "'");
