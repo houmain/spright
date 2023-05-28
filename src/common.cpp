@@ -247,7 +247,7 @@ void split_arguments(LStringView str, std::vector<std::string_view>* result) {
     if (str.front() == '"' || str.front() == '\'') {
       auto end = str.find(str.front(), 1);
       if (end == std::string::npos)
-        end = str.size();
+        throw std::runtime_error("closing quote missing");
       result->push_back(str.substr(1, end - 1));
       str = str.substr(end + 1);
     }

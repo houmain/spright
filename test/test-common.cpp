@@ -47,6 +47,17 @@ TEST_CASE("split_expression") {
   CHECK(arguments.size() == 1);
 }
 
+TEST_CASE("split_arguments") {
+  auto arguments = std::vector<std::string_view>{ };
+  split_arguments(" a  + b ", &arguments);
+  CHECK(arguments.size() == 3);
+
+  CHECK_THROWS(split_arguments(" \"a  + b ", &arguments));
+  CHECK_THROWS(split_arguments(" 'a  + b ", &arguments));
+  CHECK_THROWS(split_arguments(" a  + b \"", &arguments));
+  CHECK_THROWS(split_arguments(" a  + b '", &arguments));
+}
+
 TEST_CASE("split_arguments - optional comma") {
   auto arguments = std::vector<std::string_view>{ };
   split_arguments(" def a b ", &arguments);
