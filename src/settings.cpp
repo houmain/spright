@@ -33,23 +33,23 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
     else if (argument == "-i" || argument == "--input") {
       if (++i >= argc)
         return false;
-      settings.input_file = std::filesystem::u8path(unquote(argv[i]));
+      settings.input_file = utf8_to_path(unquote(argv[i]));
     }
     else if (argument == "-t" || argument == "--template") {
       if (++i >= argc)
         return false;
-      settings.template_file = std::filesystem::u8path(unquote(argv[i]));
+      settings.template_file = utf8_to_path(unquote(argv[i]));
     }
     else if (argument == "-o" || argument == "--output") {
       if (++i >= argc)
         return false;
-      settings.output_file = std::filesystem::u8path(unquote(argv[i]));
+      settings.output_file = utf8_to_path(unquote(argv[i]));
       settings.output_file_set = true;
     }
     else if (argument == "-p" || argument == "--path") {
       if (++i >= argc)
         return false;
-      settings.output_path = std::filesystem::u8path(unquote(argv[i]));
+      settings.output_path = utf8_to_path(unquote(argv[i]));
     }
     else if (argument == "-v" || argument == "--verbose") {
       settings.verbose = true;

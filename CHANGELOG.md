@@ -8,7 +8,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 
 - Added pack method origin.
-- Added PixiJS template.
 - Added alpha mode opaque.
 - Added color parameter to alpha mode clear.
 
@@ -16,15 +15,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Ignoring unsupported extension when globbing with '.\*'.
 - Skip output of descriptions without filename.
-- Renamed template files to .inja.
-- Replacing variables in tag values.
 
 ### Fixed
 
 - Properly handling missing closing quote.
 - Expand sprite bounds by over-alignment.
-- Fixed redundancy check when outputting mutliple descriptions.
-- Fixed output path for descriptions.
 
 ## [Version 3.2.0] - 2023-05-23
 
