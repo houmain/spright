@@ -40,27 +40,25 @@ Also have a look at the [spright test suite](https://github.com/houmain/spright-
 
 ## Simple sheet packing
 
-To pack your sprites into one or more sheets, a simple input definition like the following example is enough:
+To pack your sprites into one or more sheets, create an input definition file `spright.conf` like the following and run `spright`:
 
 ```perl
 max-width 1024
 max-height 1024
 power-of-two true
-output "sheet{0-}.png"
 
-colorkey
+output "out/sheet{0-}.png"
+description "out/sheet.json"
+  template "phaser.inja"
+
+id "{{source.filename}}"
 glob "characters/**/*.png"
 glob "scenery/**/*.png"
 ```
 
-Unless specified on the [command line](#command-line-arguments) spright reads the input definition from `spright.conf` in the current directory. To pack the sheets and generate an output description consumable by e.g. [Phaser](https://github.com/photonstorm/phaser) using the [phaser.inja](templates/phaser.inja), call:
+The sample creates an output description consumable by the [Phaser](https://github.com/photonstorm/phaser) game engine. Templates for different game engines are [provided](#templates) and additional templates for the [output template engine](#output-template-engine) can be easily written.
 
-```
-spright -t phaser.inja
-```
-
-See the [input definition](#input-definition-reference) section for a description of the available options. \
-See the [output template engine](#output-template-engine) section on how to generate a file consumable by your game engine.
+See the [input definition](#input-definition-reference) section for a description of the available options.
 
 ## Advanced usage example
 
@@ -235,7 +233,7 @@ The following table contains a list of all definitions, with the item each affec
 | allow-rotate | sheet | [boolean] | Allows to rotate sprites clockwise by 90 degrees for improved packing efficiency. |
 | padding | sheet | [pixels], [pixels] | Sets the space between two sprites / the space between a sprite and the texture's border. |
 | duplicates | sheet | dedupe-mode | Sets how identical sprites should be processed:<br/>- _keep_ : Disable duplicate detection (default).<br/>- _share_ : Identical sprites should share pixels on the sheet.<br/>- _drop_ : Duplicates should be dropped. |
-| **output** | sheet | path | Adds a new output file at _path_ to a sheet. It can define an un-/bounded sequence of files (e.g. `"sheet{0-}.png"`). |
+| **output** | sheet | path | Adds a new output file at _path_ to a sheet. It can define an un-/bounded sequence of files (e.g. `"sheet{0-}.png"`). See a list of available [variables](#variables). |
 | debug | output | [boolean] | Draw sprite boundaries and pivot points on output. |
 | scale | output | scale,<br/>[scale-filter] | Sets a factor the output should be scaled by, with an optional explicit scale-filter:<br/>- _box_ : A trapezoid with 1-pixel wide ramps.<br/>- _triangle_ : A triangle function (same as bilinear texture filtering).<br/>- _cubicspline_ : A cubic b-spline (gaussian-esque).<br/>- _catmullrom_ : An interpolating cubic spline.<br/>- _mitchell_ : Mitchell-Netrevalli filter with B=1/3, C=1/3. |
 | maps | output/input | suffix+ | Specifies the number of maps and their filename suffixes (e.g. "-diffuse", "-normals", ...). Only the first map is considered when packing, others get identical _rects_. |
@@ -252,7 +250,7 @@ The following table contains a list of all definitions, with the item each affec
 | skip | input | [count] | Skips one or more horizontal grid cells or indices in file sequences (a non-numeric parameter is treated as 1, to allow simple substitutions of _sprite_). |
 | atlas | input | [pixels] | Specifies that the input contains multiple unaligned sprites, separated by more than a specific number of transparent pixel rows. |
 | **sprite** | - | [id] | Adds a new sprite to an input and optionally sets its id. |
-| id | sprite | id | Sets the sprite's id (defaults to `"sprite_{{index}}"`). |
+| id | sprite | id | Sets the sprite's id (defaults to `"sprite_{{index}}"`). See list of available [variables](#variables). |
 | span | sprite | columns, rows | Sets the number of grid cells a sprite spans. |
 | rect | sprite | x, y, width, height | Sets a sprite's rectangle in the input sheet. |
 | pivot | sprite | pivot-x, pivot-y | Sets the coordinates of the sprite's pivot point. Optionally the horizontal (_left, center, right_) and vertical (_top, middle, bottom_) origin of the coordinates can be set (e.g. 10 20 / right - 5, top + 3 / bottom left). |
@@ -268,12 +266,21 @@ The following table contains a list of all definitions, with the item each affec
 | common-bounds | sprite | [key] | Makes all sprites with identical _keys_ expand to common bounds. |
 | align | sprite | align-x, align-y | Sets the alignment of the sprite within its bounds. The parametrization works as for _pivot_ points. |
 | align-pivot | sprite | [key] | Aligns all sprites with identical _keys_, so their pivot points have identical offsets within the sprites' bounds. |
-| tag | sprite | key, [value] | Adds a tag to a sprite (_value_ defaults to an empty string). |
+| tag | sprite | key, [value] | Adds a tag to a sprite (_value_ defaults to an empty string). See list of available [variables](#variables). |
 | data | sprite | key, value | Adds a user defined data entry to a sprite. |
 | **description** | - | filename | Adds an additional location where the output description should be written. |
 | template | description | filename | Sets the template which should be used for generating the output description. |
-| set | - | key, value | Sets a variable value, which can be accessed in different places using `{{key}}`. |
+| set | - | key, value | Sets a variable value, which can be accessed in different places using `{{key}}`. See a list of existing [variables](#variables). |
 | group | - | - | Can be used for opening a new scope, to limit for example the effect of a tag. |
+
+### Variables
+
+Beside variables defined by `set` the following variables can be accessed in string parameters using `{{variable}}`. They are evaluated before the description is output. \
+In `sprite` definitions:
+`index`, `inputIndex`, `inputSpriteIndex` (the sprite's index in the input), `sheet.id`
+`source.filename`, `source.dirname`. \
+In `output` definitions:
+`index`, `sheet.id`, `sprite.id` (the first sprite's id).
 
 ## Output description
 
@@ -344,7 +351,7 @@ By default a [JSON](https://www.json.org) file containing all the information ab
 }
 ```
 
-For example, [spright.json](docs/spright.json) was generated from the [sample](#advanced-usage-example) above. As you can see, it is very verbose and only intended as an intermediate file, which should be transformed using the [template engine](#output-template-engine).
+This [spright.json](docs/spright.json) was generated from the [sample](#advanced-usage-example) above. As you can see, it is very verbose and only intended as an intermediate file, which should be transformed using the [template engine](#output-template-engine).
 
 ## Output template engine
 
@@ -366,6 +373,10 @@ let sprite_ids = [
 ```
 
 For information about the functionality of the template engine, please see the [inja reference](https://pantor.github.io/inja/) and the provided templates:
+
+### Templates
+
+The following templates are already available:
 
 | Target                                            | Template                                       |
 | ------------------------------------------------- | ---------------------------------------------- |
