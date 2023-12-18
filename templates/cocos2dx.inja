@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>{% set texture=first(textures) %}
+	<key>metadata</key>
+	<dict>
+		<key>format</key>
+		<integer>3</integer>
+		<key>textureFileName</key>
+		<string>{{ texture.filename }}</string>
+		<key>size</key>
+		<string>{ {{ texture.width }}, {{ texture.height }} }</string>
+	</dict>
+	<key>frames</key>
+	<dict>
+## for index in texture.spriteIndices
+		{% set sprite=at(sprites, index) %}<key>{{ sprite.id }}</key>
+		<dict>
+      <key>spriteOffset</key>
+      <string>{ {{sprite.trimmedSourceRect.x}}, {{sprite.trimmedSourceRect.y}} }</string>
+      <key>spriteSize</key>
+      <string>{ {{sprite.trimmedRect.w}}, {{sprite.trimmedRect.h}} }</string>
+      <key>spriteSourceSize</key>
+      <string>{ {{sprite.trimmedSourceRect.w}}, {{sprite.trimmedSourceRect.h}} }</string>
+      <key>textureRect</key>
+      <string>{ { {{sprite.trimmedRect.x}}, {{sprite.trimmedRect.y}} }, { {{sprite.trimmedRect.w}}, {{sprite.trimmedRect.h}} } }</string>
+      <key>textureRotated</key>
+      <{{ sprite.rotated }}/>			
+		</dict>
+## endfor
+	</dict>
+</dict>
+</plist>
