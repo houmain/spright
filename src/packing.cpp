@@ -155,16 +155,19 @@ namespace {
 
     // sort duplicates to back
     auto unique_sprites = sprites;
-    for (auto i = size_t{ }; i < unique_sprites.size(); ++i) {
-      for (auto j = size_t{ }; j < i; ++j)
+    for (auto i = sprites.size()-1; ; --i) {
+      for (auto j = size_t{ }; j < i; ++j) {
         if (is_identical(*sprites[i].source, sprites[i].trimmed_source_rect,
                          *sprites[j].source, sprites[j].trimmed_source_rect)) {
           sprites[i].duplicate_of_index = sprites[j].index;
-          std::swap(sprites[i--], unique_sprites.back());
+          std::swap(sprites[i], unique_sprites.back());
           unique_sprites = unique_sprites.first(unique_sprites.size() - 1);
           break;
         }
-       }
+      }
+      if (i == 0)
+        break;
+    }
 
     // restore order of unique sprites before packing
     std::sort(unique_sprites.begin(), unique_sprites.end(),
