@@ -155,8 +155,8 @@ namespace {
 
     // sort duplicates to back
     auto unique_sprites = sprites;
-    for (auto i = to_int(sprites.size()) - 1; i >= 0; --i)
-      for (auto j = 0; j < i; ++j) {
+    for (auto i = sprites.size() - 1; ; --i) {
+      for (auto j = size_t{ }; j < i; ++j) {
         if (is_identical(*sprites[i].source, sprites[i].trimmed_source_rect,
                          *sprites[j].source, sprites[j].trimmed_source_rect)) {
           sprites[i].duplicate_of_index = sprites[j].index;
@@ -165,6 +165,9 @@ namespace {
           break;
         }
       }
+      if (i == 0)
+        break;
+    }
 
     // restore order of unique sprites before packing
     std::sort(unique_sprites.begin(), unique_sprites.end(),
