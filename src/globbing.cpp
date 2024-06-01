@@ -51,14 +51,21 @@ namespace {
   };
 
   template<typename F>
-  void for_each_file(const std::filesystem::path& path, F&& func) {
+  void for_each_file(const std::filesystem::path& path, bool recursive, F&& func) {
     const auto options =
       std::filesystem::directory_options::follow_directory_symlink |
       std::filesystem::directory_options::skip_permission_denied;
     auto error = std::error_code{ };
-    for (const auto& file : std::filesystem::recursive_directory_iterator(path, options, error))
-      if (std::filesystem::is_regular_file(file, error))
-        func(file);
+    if (recursive) {
+      for (const auto& file : std::filesystem::recursive_directory_iterator(path, options, error))
+        if (std::filesystem::is_regular_file(file, error))
+          func(file);
+    }
+    else {
+      for (const auto& file : std::filesystem::directory_iterator(path, options, error))
+        if (std::filesystem::is_regular_file(file, error))
+          func(file);
+    }
   }
 } // namespace
 
@@ -104,11 +111,12 @@ std::vector<std::string> glob(
   auto root = (path.empty() ? "." : path) / "";
   const auto path_size = path_to_utf8(root).size();
   const auto check_supported_extension = ends_with(pattern, ".*");
+  const auto recursive = (pattern.find("**") != std::string::npos);
   auto checked_files = size_t{ };
   for (const auto& part : utf8_to_path(pattern)) {
     if (path_to_utf8(part).find_first_of("*?") != std::string::npos) {
       auto files = std::vector<std::string>();
-      for_each_file(root, [&](const std::filesystem::path& file) {
+      for_each_file(root, recursive, [&](const std::filesystem::path& file) {
         auto file_string = path_to_utf8(file);
         file_string.erase(0, path_size);
         if (match(pattern, file_string))
