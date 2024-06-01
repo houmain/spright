@@ -365,6 +365,14 @@ std::string remove_extension(std::string filename) {
   return filename;
 }
 
+bool has_supported_extension(std::string_view filename) {
+  const auto ext = get_extension(filename);
+  for (const auto supported : { ".png", ".gif", ".bmp", ".tga" })
+    if (equal_case_insensitive(ext, supported))
+      return true;
+  return false;
+}
+
 void replace_variables(std::string& expression,
     const std::function<std::string(std::string_view)>& replace_function) {
   for (;;) {

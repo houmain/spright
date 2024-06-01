@@ -103,6 +103,8 @@ std::vector<std::string> glob(
     const std::filesystem::path& path, const std::string& pattern) {
   auto root = (path.empty() ? "." : path) / "";
   const auto path_size = path_to_utf8(root).size();
+  const auto check_supported_extension = ends_with(pattern, ".*");
+  auto checked_files = size_t{ };
   for (const auto& part : utf8_to_path(pattern)) {
     if (path_to_utf8(part).find_first_of("*?") != std::string::npos) {
       auto files = std::vector<std::string>();
@@ -110,7 +112,15 @@ std::vector<std::string> glob(
         auto file_string = path_to_utf8(file);
         file_string.erase(0, path_size);
         if (match(pattern, file_string))
-          files.emplace_back(std::move(file_string));
+          if (!check_supported_extension ||
+              has_supported_extension(file_string))
+            files.emplace_back(std::move(file_string));
+
+        // abort when globbing matches less than one percent of files
+        ++checked_files;
+        if (checked_files % 1000 == 0)
+          if (files.size() * 100 < checked_files)
+            throw std::runtime_error("pattern too coarse");
       });
       return files;
     }
