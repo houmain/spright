@@ -205,6 +205,10 @@ void InputParser::sprite_ends(State& state) {
   sprite.data = state.data;
   advance();
 
+  if (state.max_sprites > 0 && 
+      m_sprites_in_current_input >= state.max_sprites)
+    error("max-sprites exceeded (", state.max_sprites, ")");
+
   validate_sprite(sprite);
   m_current_input_sources.push_back(sprite.source);
   m_sprites.push_back(std::move(sprite));

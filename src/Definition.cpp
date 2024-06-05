@@ -81,6 +81,7 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::span: return "span";
     case Definition::atlas: return "atlas";
     case Definition::maps: return "maps";
+    case Definition::max_sprites: return "max-sprites";
     case Definition::sprite: return "sprite";
     case Definition::id: return "id";
     case Definition::rect: return "rect";
@@ -150,6 +151,7 @@ Definition get_affected_definition(Definition definition) {
     case Definition::grid_offset:
     case Definition::grid_spacing:
     case Definition::atlas:
+    case Definition::max_sprites:
       return Definition::input;
 
     case Definition::id:
@@ -510,6 +512,10 @@ void apply_definition(Definition definition,
       state.map_suffixes.clear();
       while (arguments_left())
         state.map_suffixes.emplace_back(check_string());
+      break;
+
+    case Definition::max_sprites:
+      state.max_sprites = check_uint();
       break;
 
     case Definition::sprite:
