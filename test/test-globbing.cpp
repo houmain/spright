@@ -10,6 +10,8 @@ TEST_CASE("globbing - Match") {
   CHECK(!match("a", "b"));
   CHECK(match("?", "b"));
   CHECK(match("?a", "ba"));
+  CHECK(!match("?a", "a"));
+  CHECK(!match("a", "a?"));
   CHECK(!match("?a", "bb"));
   CHECK(!match("?", ""));
   CHECK(match("*", ""));
@@ -33,6 +35,14 @@ TEST_CASE("globbing - Match") {
   CHECK(!match("a/**/b", "a/ccc/ddd/bbb"));
   CHECK(match("a/**/*b", "a/ccc/ddd/bbb"));
   CHECK(!match("a/**/b", "ab"));
+  CHECK(match("a*/b", "a/b"));
+  CHECK(match("a*a/b", "aa/b"));
+  CHECK(match("a*b/b", "acccb/b"));
+  CHECK(!match("a*b/b", "a/b"));
+  CHECK(match("a*b/b*", "acccb/b"));
+  CHECK(match("a*b/b*", "acccb/bccc"));
+  CHECK(match("a*b/b*a", "acccb/bccca"));
+  CHECK(!match("a*b/b*a", "b/bccca"));
 
   CHECK(replace_suffix("test-abc.png", "-abc", "-xyz") == "test-xyz.png");
   CHECK(replace_suffix("test-abc.png", "-efg", "-xyz") == "test-abc-xyz.png");

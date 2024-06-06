@@ -111,11 +111,13 @@ std::vector<std::string> glob(
   auto root = (path.empty() ? "." : path) / "";
   const auto path_size = path_to_utf8(root).size();
   const auto check_supported_extension = ends_with(pattern, ".*");
-  const auto recursive = (pattern.find("**") != std::string::npos);
   auto checked_files = size_t{ };
-  for (const auto& part : utf8_to_path(pattern)) {
+  const auto parts = utf8_to_path(pattern);
+  for (auto it = parts.begin(); it != parts.end(); ++it) {
+    const auto& part = *it;
     if (path_to_utf8(part).find_first_of("*?") != std::string::npos) {
       auto files = std::vector<std::string>();
+      const auto recursive = (std::next(it) != parts.end());
       for_each_file(root, recursive, [&](const std::filesystem::path& file) {
         auto file_string = path_to_utf8(file);
         file_string.erase(0, path_size);
