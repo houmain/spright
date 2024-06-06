@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Version 3.3.1] - 2024-06-06
+
+### Added
+
+- Added max-sprites definition.
+- Added Cocos2d-x template.
+
+### Changed
+
+- Abort globbing when pattern is too coarse.
+
+### Fixed
+
+- Ensure the lowest index duplicate sprite is the one that is kept.
+- globbing does not always search subdirectories.
+
 ## [Version 3.3.0] - 2023-05-28
 
 ### Added
@@ -228,6 +244,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fixed -- commandline arguments.
 - Fixed sample cpp.template.
 
+[version 3.3.1]: https://github.com/houmain/spright/compare/3.3.0...3.3.1
 [version 3.3.0]: https://github.com/houmain/spright/compare/3.2.0...3.3.0
 [version 3.2.0]: https://github.com/houmain/spright/compare/3.1.0...3.2.0
 [version 3.1.0]: https://github.com/houmain/spright/compare/3.0.0...3.1.0
