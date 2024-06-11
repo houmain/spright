@@ -7,7 +7,7 @@ namespace spright {
 struct Texture {
   const Slice* slice;
   const Output* output;
-  std::string filename;
+  std::filesystem::path filename;
   int map_index;
 };
 
@@ -24,11 +24,13 @@ void complete_description_definitions(
   std::vector<Description>& descriptions);
 
 std::string get_description(
+  const Settings& settings,
   const std::string& template_source,
   const std::vector<Sprite>& sprites,
   const std::vector<Slice>& slices);
 
 void output_descriptions(
+  const Settings& settings,
   const std::vector<Description>& descriptions,
   const std::vector<Input>& inputs,
   const std::vector<Sprite>& sprites,

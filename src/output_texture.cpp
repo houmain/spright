@@ -226,7 +226,7 @@ void output_textures(std::vector<Texture>& textures) {
   scheduler.for_each_parallel(textures,
     [&](Texture& texture) {
       if (!output_texture(texture))
-        texture.filename = { };
+        texture.filename.clear();
     });
 }
 

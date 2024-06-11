@@ -47,8 +47,8 @@ max-width 1024
 max-height 1024
 power-of-two true
 
-output "out/sheet{0-}.png"
-description "out/sheet.json"
+output "sheet{0-}.png"
+description "sheet.json"
   template "phaser.inja"
 
 id "{{source.filename}}"
@@ -342,7 +342,8 @@ By default a [JSON](https://www.json.org) file containing all the information ab
     {
       "sliceIndex": 0,
       "spriteIndices": [0],
-      "filename": "path/spright-0.png",
+      "path": "path",
+      "filename": "spright-0.png",
       "width": 256,
       "height": 256,
       "scale": 1.0,

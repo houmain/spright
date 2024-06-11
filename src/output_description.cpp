@@ -41,6 +41,7 @@ namespace {
   }
 
   nlohmann::json get_json_description(
+      const Settings& settings,
       const std::vector<Input>& inputs, 
       const std::vector<Sprite>& sprites,
       const std::vector<Slice>& slices,
@@ -162,7 +163,9 @@ namespace {
       const auto& output = *texture.output;
       json_texture["sliceIndex"] = texture.slice->index;
       json_texture["spriteIndices"] = slice_sprites[slice.index];
-      json_texture["filename"] = texture.filename;
+      json_texture["path"] = path_to_utf8(settings.output_path);
+      json_texture["filename"] = path_to_utf8(
+        std::filesystem::relative(texture.filename, settings.output_path));
       json_texture["scale"] = output.scale;
       json_texture["width"] = to_int(slice.width * output.scale);
       json_texture["height"] = to_int(slice.height * output.scale);
@@ -266,7 +269,9 @@ void evaluate_expressions(
 
   for (auto& texture : textures)
     try {
-      evaluate_slice_expression(*texture.slice, texture.filename);
+      auto filename = path_to_utf8(texture.filename);
+      evaluate_slice_expression(*texture.slice, filename);
+      texture.filename = utf8_to_path(filename);
     }
     catch (const std::exception& ex) {
       warning(ex.what(), texture.output->warning_line_number);
@@ -295,17 +300,20 @@ void complete_description_definitions(const Settings& settings,
         description.filename = settings.output_path / description.filename;
 }
 
-std::string get_description(const std::string& template_source,
+std::string get_description(
+    const Settings& settings,
+    const std::string& template_source,
     const std::vector<Sprite>& sprites, 
     const std::vector<Slice>& slices) {
   auto ss = std::ostringstream();
-  const auto json = get_json_description({ }, sprites, slices, { }, { });
+  const auto json = get_json_description(settings, { }, sprites, slices, { }, { });
   auto env = setup_inja_environment(&json);
   env.render_to(ss, env.parse(template_source), json);
   return ss.str();
 }
 
 void output_descriptions(
+    const Settings& settings,
     const std::vector<Description>& descriptions, 
     const std::vector<Input>& inputs, 
     const std::vector<Sprite>& sprites, 
@@ -313,7 +321,7 @@ void output_descriptions(
     const std::vector<Texture>& textures,
     const VariantMap& variables) {
 
-  const auto json = get_json_description(
+  const auto json = get_json_description(settings,
     inputs, sprites, slices, textures, variables);
 
   for (const auto& description : descriptions) {

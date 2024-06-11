@@ -28,7 +28,7 @@ TEST_CASE("templates - Empty") {
     sheet "sprites"
     input "test/Items.png"
   )");
-  const auto description = get_description(
+  const auto description = get_description({ },
 R"(
 )", sprites, slices);
   CHECK(description ==
@@ -36,14 +36,14 @@ R"(
 )");
 }
 
-TEST_CASE("templates - getIdOrFilename") {
+TEST_CASE("templates - filename variable") {
   const auto [sprites, slices] = pack(R"(
     sheet "sprites"
     id "{{ source.filename }}"
     input "test/Items.png"
   )");
 
-  const auto description = get_description(R"(
+  const auto description = get_description({ }, R"(
 let sprite_ids = [{% for sprite in sprites %}"{{ sprite.id }}",{% endfor %}];
 )", sprites, slices);
 
@@ -60,7 +60,7 @@ TEST_CASE("templates - removeExtension") {
     input "Items.png"
   )");
 
-  const auto description = get_description(R"(
+  const auto description = get_description({ }, R"(
 let sprite_ids = [{% for sprite in sprites %}"{{ removeExtension(sprite.id) }}",{% endfor %}];
 )", sprites, slices);
 

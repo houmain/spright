@@ -51,7 +51,7 @@ int main(int argc, const char* argv[]) try {
   if (settings.mode != Mode::autocomplete) {
     complete_description_definitions(settings, descriptions);
 
-    output_descriptions(descriptions, 
+    output_descriptions(settings, descriptions, 
       inputs, sprites, slices, textures, variables);
 
     time_points.emplace_back(Clock::now(), "output description");
