@@ -27,11 +27,13 @@
 }{% if not loop.is_last %},{% endif %}
 ## endfor
 },
+## if existsIn(tags, "anim")
 "animations": {
 ## for value, indices in tags.anim
   "{{ value }}": [{% for index in indices %}"{{ at(sprites, index).id }}"{% if not loop.is_last %}, {% endif %}{% endfor %}]{% if not loop.is_last %},{% endif %}
 ## endfor
 },
+## endif
 "meta": {
   "app": "https://github.com/houmain/spright",
   "format": "RGBA8888",
