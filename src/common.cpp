@@ -136,6 +136,10 @@ int equal_case_insensitive(std::string_view a, std::string_view b) {
     [](char a, char b) { return to_lower(a) == to_lower(b); });
 }
 
+bool is_alpha(char c) {
+  return std::isalpha(static_cast<unsigned char>(c));
+}
+
 bool is_digit(char c) {
   return std::isdigit(static_cast<unsigned char>(c));
 }
@@ -387,6 +391,32 @@ void replace_variables(std::string& expression,
         expression.data() + begin + 2, length - 2 });
     expression.replace(begin, length + 2, replace_function(variable));
   }
+}
+
+std::string make_identifier(std::string string) {
+  for (auto& c : string)
+    if (!is_alpha(c) && !is_digit(c))
+      c = '_';
+  
+  // remove duplicate underscores and also from front and back
+  auto after_underscore = true;
+  for (auto i = 0; i < string.size(); ) {
+    if (string[i] == '_') {
+      if (after_underscore) {
+        string.erase(i, 1);
+        continue;
+      }
+      after_underscore = true;
+    }
+    else {
+      after_underscore = false;
+    }
+    ++i;
+  }
+  if (string.size() > 1 && string.back() == '_')
+    string.pop_back();
+
+  return string;
 }
 
 } // namespace

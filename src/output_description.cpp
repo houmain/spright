@@ -194,6 +194,9 @@ namespace {
     env.add_callback("ceil", 1, [](inja::Arguments& args) -> inja::json {
       return static_cast<int>(std::ceil(args.at(0)->get<real>()));
     });
+    env.add_callback("makeId", 1, [](inja::Arguments& args) -> inja::json {
+      return make_identifier(args.at(0)->get<std::string>());
+    });
     return env;
   }
 

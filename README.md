@@ -376,6 +376,15 @@ let sprite_ids = [
 
 For information about the functionality of the template engine, please see the [inja reference](https://pantor.github.io/inja/) and the provided templates:
 
+#### Additional Functions
+
+Beside the functions [provided by inja](https://pantor.github.io/inja/) the following functions are available:
+
+- `ceil(number)`: Returns the lowest integer which is bigger or equal than the passed number.
+- `floor(number)`: Returns the biggest integer which is less or equal than the passed number.
+- `makeId(string)`: Returns the string with all special characters replaced by `_`.
+- `removeExtension(filename)`: Returns the filename without the extension.
+
 ### Templates
 
 The following templates are already available:

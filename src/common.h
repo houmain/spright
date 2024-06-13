@@ -90,6 +90,7 @@ std::filesystem::file_time_type get_last_write_time(
   const std::filesystem::path& path);
 std::optional<std::filesystem::file_time_type> try_get_last_write_time(
   const std::filesystem::path& path);
+bool is_alpha(char c);
 bool is_digit(char c);
 bool is_space(char c);
 bool is_punct(char c);
@@ -119,6 +120,7 @@ std::string remove_extension(std::string filename);
 bool has_supported_extension(std::string_view filename);
 void replace_variables(std::string& expression,
   const std::function<std::string(std::string_view)>& replace_function);
+std::string make_identifier(std::string string);
 
 inline int floor(int v, int q) { return (v / q) * q; };
 inline int ceil(int v, int q) { return ((v + q - 1) / q) * q; };

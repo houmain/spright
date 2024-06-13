@@ -130,3 +130,12 @@ TEST_CASE("replace_variables") {
   CHECK_THROWS(replace("test-{{ }}-test"));
   CHECK_THROWS(replace("test-{{ sprite2.id }}-test"));
 }
+
+TEST_CASE("make_identifier") {
+  CHECK(make_identifier("") == "");
+  CHECK(make_identifier("aB9") == "aB9");
+  CHECK(make_identifier("_a_") == "a");
+  CHECK(make_identifier("(a)") == "a");
+  CHECK(make_identifier("a (b)") == "a_b");
+  CHECK(make_identifier("C:\\Temp\\File (30x30).png") == "C_Temp_File_30x30_png");
+}
