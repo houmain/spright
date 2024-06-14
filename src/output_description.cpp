@@ -239,10 +239,29 @@ void evaluate_expressions(
         return std::to_string(sprite.input_sprite_index);
       if (variable == "sheet.id")
         return sprite.sheet->id;
+
+      // "dir/file 01.png"
       if (variable == "source.filename")
         return path_to_utf8(sprite.source->filename());
+
+      // "dir/file 01"
+      if (variable == "source.filenameBase")
+        return path_to_utf8(sprite.source->filename().filename());
+
+      // "file 01"
+      if (variable == "source.filenameStem")
+        return remove_extension(
+          path_to_utf8(sprite.source->filename().filename()));
+
+      // "dir_file_01"
+      if (variable == "source.filenameId")
+        return make_identifier(remove_extension(
+          path_to_utf8(sprite.source->filename())));
+
+      // "dir"
       if (variable == "source.dirname")
         return path_to_utf8(sprite.source->filename().parent_path());
+
       return replace_variable(variable);
     });
   };
