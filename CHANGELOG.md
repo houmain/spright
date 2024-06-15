@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Version 3.4.0] - 2024-06-15
+
+### Added
+
+- Added function `makeId`.
+- Added function `base64`.
+- Added variables `source.filenameBase`, `source.filenameStem`, and `source.filenameId`.
+
+### Changed
+
+- Separated `texture.path` from `texture.filename`.
+- Also lookup templates in "templates" subdirectory.
+- Also packaging templates.
+
+### Fixed
+
+- Improved pixijs.inja template.
+
 ## [Version 3.3.1] - 2024-06-06
 
 ### Added
@@ -244,6 +262,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fixed -- commandline arguments.
 - Fixed sample cpp.template.
 
+[version 3.4.0]: https://github.com/houmain/spright/compare/3.3.1...3.4.0
 [version 3.3.1]: https://github.com/houmain/spright/compare/3.3.0...3.3.1
 [version 3.3.0]: https://github.com/houmain/spright/compare/3.2.0...3.3.0
 [version 3.2.0]: https://github.com/houmain/spright/compare/3.1.0...3.2.0
