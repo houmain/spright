@@ -105,6 +105,7 @@ endif()
 set(DOC_FILES LICENSE README.md CHANGELOG.md THIRD-PARTY.md)
 install(TARGETS ${PROJECT_NAME} DESTINATION . COMPONENT Application)
 install(FILES ${DOC_FILES} DESTINATION . COMPONENT Application)
+install(DIRECTORY templates DESTINATION . COMPONENT Application)
 
 # package
 set(CPACK_PACKAGE_NAME "spright")
