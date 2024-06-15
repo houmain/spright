@@ -197,6 +197,9 @@ namespace {
     env.add_callback("makeId", 1, [](inja::Arguments& args) -> inja::json {
       return make_identifier(args.at(0)->get<std::string>());
     });
+    env.add_callback("base64", 1, [](inja::Arguments& args) -> inja::json {
+      return base64_encode_file(args.at(0)->get<std::string>());
+    });
     return env;
   }
 

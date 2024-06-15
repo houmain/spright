@@ -113,6 +113,7 @@ std::pair<std::string_view, int> split_name_number(LStringView str);
 void join_expressions(std::vector<std::string_view>* arguments);
 void split_expression(std::string_view str, std::vector<std::string_view>* result);
 std::string read_textfile(const std::filesystem::path& filename);
+std::string base64_encode_file(const std::filesystem::path& filename);
 void write_textfile(const std::filesystem::path& filename, std::string_view text);
 bool update_textfile(const std::filesystem::path& filename, std::string_view text);
 std::string_view get_extension(LStringView filename);

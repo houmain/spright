@@ -54,6 +54,7 @@ set(SOURCES ${SOURCES}
     libs/stb/stb_impl.cpp
     libs/miniz/miniz.c
     libs/gifenc/gifenc.c
+    libs/cpp-base64/base64.cpp
     ${CHIPMUNK_SOURCES}
 )
 

@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include "cpp-base64/base64.h"
 
 Scheduler scheduler;
 
@@ -335,6 +336,10 @@ std::string read_textfile(const std::filesystem::path& filename) {
   if (!file.good())
     throw std::runtime_error("reading file '" + path_to_utf8(filename) + "' failed");
   return std::string(std::istreambuf_iterator<char>{ file }, { });
+}
+
+std::string base64_encode_file(const std::filesystem::path& filename) {
+  return base64_encode(read_textfile(filename), false);
 }
 
 void write_textfile(const std::filesystem::path& filename, std::string_view text) {
