@@ -38,7 +38,6 @@ void pack_binpack(const SheetPtr& sheet_ptr, SpriteSpan sprites,
 
   // update sprite rects
   auto slice_index = 0;
-  auto packed_sprites = size_t{ };
   for (const auto& pack_sheet : pack_sheets) {
     for (const auto& pack_rect : pack_sheet.rects) {
       auto& sprite = sprites[to_unsigned(pack_rect.id)];
@@ -46,7 +45,6 @@ void pack_binpack(const SheetPtr& sheet_ptr, SpriteSpan sprites,
       sprite.slice_index = slice_index;
       sprite.trimmed_rect.x = pack_rect.x;
       sprite.trimmed_rect.y = pack_rect.y;
-      ++packed_sprites;
     }
     ++slice_index;
   }

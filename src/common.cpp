@@ -405,7 +405,7 @@ std::string make_identifier(std::string string) {
   
   // remove duplicate underscores and also from front and back
   auto after_underscore = true;
-  for (auto i = 0; i < string.size(); ) {
+  for (auto i = 0u; i < string.size(); ) {
     if (string[i] == '_') {
       if (after_underscore) {
         string.erase(i, 1);

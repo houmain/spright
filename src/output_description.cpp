@@ -165,7 +165,8 @@ namespace {
       json_texture["spriteIndices"] = slice_sprites[slice.index];
       json_texture["path"] = path_to_utf8(settings.output_path);
       json_texture["filename"] = path_to_utf8(
-        std::filesystem::relative(texture.filename, settings.output_path));
+        settings.output_path.empty() ? texture.filename :
+          std::filesystem::relative(texture.filename, settings.output_path));
       json_texture["scale"] = output.scale;
       json_texture["width"] = to_int(slice.width * output.scale);
       json_texture["height"] = to_int(slice.height * output.scale);
