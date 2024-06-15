@@ -320,6 +320,19 @@ void complete_description_definitions(const Settings& settings,
     for (auto& description : descriptions)
       if (description.filename.string() != "stdout")
         description.filename = settings.output_path / description.filename;
+
+  // also lookup templates in sub-directory
+  for (auto& description : descriptions) {
+    auto& template_filename = description.template_filename;
+    auto error = std::error_code();
+    if (!template_filename.empty() &&
+        template_filename.is_relative() && 
+        !std::filesystem::exists(template_filename, error)) {
+      const auto resolved = "templates" / template_filename;
+      if (std::filesystem::exists(resolved, error))
+        template_filename = resolved;
+    }
+  }
 }
 
 std::string get_description(
