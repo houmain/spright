@@ -257,20 +257,25 @@ void InputParser::deduce_sequence_sprites(State& state) {
 }
 
 void InputParser::deduce_grid_size(State& state) {
-  if (!empty(state.grid) ||
-      empty(state.grid_cells))
+  if (state.grid.x > 0 && state.grid.y > 0)
     return;
 
   const auto source = get_source(state);
-  const auto sx = (state.grid_cells.x > 0 ? 
-    div_ceil(source->width() - state.grid_offset.x -
-      state.grid_offset_bottom_right.x, state.grid_cells.x) : 0);
-  const auto sy = (state.grid_cells.y > 0 ? 
-    div_ceil(source->height() - state.grid_offset.y -
-       state.grid_offset_bottom_right.y, state.grid_cells.y) : 0);
-  state.grid.x = (sx ? sx : sy);
-  state.grid.y = (sy ? sy : sx);
-  check(state.grid.x > 0 && state.grid.y > 0, "invalid grid");
+  if (state.grid_cells.x > 0 || state.grid_cells.y > 0) {
+    const auto sx = (state.grid_cells.x > 0 ?
+      div_ceil(source->width() - state.grid_offset.x -
+        state.grid_offset_bottom_right.x, state.grid_cells.x) : 0);
+    const auto sy = (state.grid_cells.y > 0 ?
+      div_ceil(source->height() - state.grid_offset.y -
+         state.grid_offset_bottom_right.y, state.grid_cells.y) : 0);
+    state.grid.x = (sx ? sx : sy);
+    state.grid.y = (sy ? sy : sx);
+  }
+
+  if (state.grid.x == 0)
+    state.grid.x = source->width();
+  if (state.grid.y == 0)
+    state.grid.y = source->height();
 }
 
 Rect InputParser::deduce_rect_from_grid(State& state) {

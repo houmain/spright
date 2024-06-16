@@ -20,7 +20,10 @@ namespace {
 } // namespace
 
 bool has_grid(const State& state) {
-  return !empty(state.grid) || !empty(state.grid_cells);
+  return (state.grid.x ||
+          state.grid.y ||
+          state.grid_cells.x ||
+          state.grid_cells.y);
 }
 
 bool has_atlas(const State& state) {
@@ -451,8 +454,10 @@ void apply_definition(Definition definition,
       break;
     }
     case Definition::grid:
+      // allow cell size of one dimension to be zero
       state.grid = check_size(true);
-      check(state.grid.x > 0 && state.grid.y > 0, "invalid grid");
+      check((state.grid.x >= 0 && state.grid.y >= 0) &&
+            (state.grid.x > 0 || state.grid.y > 0), "invalid grid");
       break;
 
     case Definition::grid_cells:
