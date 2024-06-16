@@ -110,7 +110,7 @@ std::vector<std::string> glob(
     const std::filesystem::path& path, const std::string& pattern) {
   auto root = (path.empty() ? "." : path) / "";
   const auto path_size = path_to_utf8(root).size();
-  const auto check_supported_extension = ends_with(pattern, ".*");
+  const auto check_supported_extension = ends_with(pattern, "*");
   auto checked_files = size_t{ };
   const auto parts = utf8_to_path(pattern);
   for (auto it = parts.begin(); it != parts.end(); ++it) {

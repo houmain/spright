@@ -453,8 +453,9 @@ void InputParser::deduce_globbed_inputs(State& state) {
       m_autocomplete_output << "\n" << state.indent << "input \"" <<
         sequence.sequence_filename() << "\"\n";
 
-    state.source_filenames = sequence;
-    input_ends(state);
+    auto input_state = state;
+    input_state.source_filenames = sequence;
+    input_ends(input_state);
   }
 }
 
@@ -486,6 +487,7 @@ void InputParser::input_ends(State& state) {
   });
   m_sprites_in_current_input = { };
   m_skipped_in_current_input.clear();
+  m_current_grid_cell = { };
   m_current_sequence_index = { };
   ++m_inputs_in_current_glob;
 }
