@@ -235,6 +235,8 @@ input "characters.png"
 
 The following table contains a list of all definitions, with the item each affects, the expected arguments and a description. Optional arguments are enclosed in square brackets. Unless specified otherwise, optional booleans default to _true_, numbers default to _1_, and an additional value defaults to the first value.
 
+<a id="definition-reference-begin"></a>
+
 | Definition | Affects | Arguments | Description |
 | ---------- | ------- | --------- | ----------- |
 | **sheet** | sprite | id | Sets the sheet on which the sprites should be packed (default: `"spright"`). |
@@ -289,6 +291,8 @@ The following table contains a list of all definitions, with the item each affec
 | template | description | filename | Sets the template which should be used for generating the output description. |
 | set | - | key, value | Sets a variable value, which can be accessed in different places using `{{key}}`. See a list of existing [variables](#variables). |
 | group | - | - | Can be used for opening a new scope, to limit for example the effect of a tag. |
+
+<a id="definition-reference-end"></a>
 
 ### Variables
 
