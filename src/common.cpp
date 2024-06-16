@@ -374,6 +374,18 @@ std::string remove_extension(std::string filename) {
   return filename;
 }
 
+std::string remove_directory(std::string filename, int keep_n) {
+  auto dirs = std::string_view(filename);
+  for (auto i = 0; i <= keep_n; ++i) {
+    const auto pos = dirs.find_last_of("/\\");
+    if (pos == std::string::npos)
+      return filename;
+    dirs = dirs.substr(0, pos);
+  }
+  filename.erase(0, dirs.size() + 1);
+  return filename;
+}
+
 bool has_supported_extension(std::string_view filename) {
   const auto ext = get_extension(filename);
   for (const auto supported : { ".png", ".gif", ".bmp", ".tga" })

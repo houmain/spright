@@ -118,6 +118,7 @@ void write_textfile(const std::filesystem::path& filename, std::string_view text
 bool update_textfile(const std::filesystem::path& filename, std::string_view text);
 std::string_view get_extension(LStringView filename);
 std::string remove_extension(std::string filename);
+std::string remove_directory(std::string filename, int keep_n = 0);
 bool has_supported_extension(std::string_view filename);
 void replace_variables(std::string& expression,
   const std::function<std::string(std::string_view)>& replace_function);

@@ -139,3 +139,22 @@ TEST_CASE("make_identifier") {
   CHECK(make_identifier("a (b)") == "a_b");
   CHECK(make_identifier("C:\\Temp\\File (30x30).png") == "C_Temp_File_30x30_png");
 }
+
+TEST_CASE("remove_directory") {
+  CHECK(remove_directory("a/b/c.png") == "c.png");
+  CHECK(remove_directory("a/b/c.png", 1) == "b/c.png");
+  CHECK(remove_directory("a/b/c.png", 2) == "a/b/c.png");
+  CHECK(remove_directory("a/b/c.png", 3) == "a/b/c.png");
+
+  CHECK(remove_directory("/b/c.png") == "c.png");
+  CHECK(remove_directory("/b/c.png", 1) == "b/c.png");
+  CHECK(remove_directory("/b/c.png", 2) == "/b/c.png");
+  CHECK(remove_directory("/b/c.png", 3) == "/b/c.png");
+
+  CHECK(remove_directory("") == "");
+  CHECK(remove_directory("", 1) == "");
+
+  CHECK(remove_directory("/") == "");
+  CHECK(remove_directory("/", 1) == "/");
+  CHECK(remove_directory("/", 2) == "/");
+}

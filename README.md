@@ -314,7 +314,7 @@ Beside variables defined by `set` the following variables can be accessed in str
 - `sheet.id` - the _sheet`s_ id.
 - `sprite.id` - the first _sprite's_ id.
 
-The variables are substituted _before_ the description is output. 
+The variables are substituted _before_ the description is output.
 Custom transformations can be applied afterwards using the [template engine functions](#additional-functions).
 
 ## Output description
@@ -418,6 +418,8 @@ Beside the functions [provided by inja](https://pantor.github.io/inja/) the foll
 - `floor(number)`: Returns the biggest integer which is less or equal than the passed number.
 - `makeId(string)`: Returns the string with all special characters replaced by `_`.
 - `removeExtension(filename)`: Returns the filename without the extension.
+- `removeDirectory(filename, [keep])`: Returns the filename without the directories, with an optional number of directories to keep.
+- `joinPath(path...)`: Returns a filename by joining the passed paths with directory separators.
 - `base64(filename)`: Returns the [base64](https://en.wikipedia.org/wiki/Base64) encoded content of the file.
 
 ### Templates
