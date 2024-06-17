@@ -265,22 +265,21 @@ void InputParser::deduce_grid_size(State& state) {
   if (state.grid.x > 0 && state.grid.y > 0)
     return;
 
-  const auto source = get_source(state);
+  const auto bounds = get_grid_bounds(state);
   if (state.grid_cells.x > 0 || state.grid_cells.y > 0) {
     const auto sx = (state.grid_cells.x > 0 ?
-      div_ceil(source->width() - state.grid_offset.x -
-        state.grid_offset_bottom_right.x, state.grid_cells.x) : 0);
+      div_ceil(bounds.w + state.grid_spacing.x, 
+        state.grid_cells.x) - state.grid_spacing.x : 0);
     const auto sy = (state.grid_cells.y > 0 ?
-      div_ceil(source->height() - state.grid_offset.y -
-         state.grid_offset_bottom_right.y, state.grid_cells.y) : 0);
+      div_ceil(bounds.h + state.grid_spacing.y, 
+        state.grid_cells.y) - state.grid_spacing.y : 0);
     state.grid.x = (sx ? sx : sy);
     state.grid.y = (sy ? sy : sx);
   }
-
-  if (state.grid.x == 0)
-    state.grid.x = source->width();
-  if (state.grid.y == 0)
-    state.grid.y = source->height();
+  if (state.grid.x <= 0)
+    state.grid.x = bounds.w;
+  if (state.grid.y <= 0)
+    state.grid.y = bounds.h;
 }
 
 Rect InputParser::deduce_rect_from_grid(State& state) {
@@ -294,6 +293,16 @@ Rect InputParser::deduce_rect_from_grid(State& state) {
   };
 }
 
+Rect InputParser::get_grid_bounds(const State& state) {
+  const auto source = get_source(state);
+  auto bounds = source->bounds();
+  bounds.x += state.grid_offset.x;
+  bounds.y += state.grid_offset.y;
+  bounds.w -= state.grid_offset.x + state.grid_offset_bottom_right.x;
+  bounds.h -= state.grid_offset.y + state.grid_offset_bottom_right.y;
+  return bounds;
+}
+
 void InputParser::deduce_grid_sprites(State& state) {
   deduce_grid_size(state);
   const auto source = get_source(state);
@@ -305,11 +314,7 @@ void InputParser::deduce_grid_sprites(State& state) {
   auto cells_x = state.grid_cells.x;
   auto cells_y = state.grid_cells.y;
   if (!cells_x || !cells_y) {
-    auto bounds = source->bounds();
-    bounds.x += state.grid_offset.x;
-    bounds.y += state.grid_offset.y;
-    bounds.w -= state.grid_offset.x + state.grid_offset_bottom_right.x;
-    bounds.h -= state.grid_offset.y + state.grid_offset_bottom_right.y;
+    const auto bounds = get_grid_bounds(state);
     if (!cells_x)  
       cells_x = ceil(bounds.w, stride.x) / stride.x;
     if (!cells_y)

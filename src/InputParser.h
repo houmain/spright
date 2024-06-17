@@ -29,6 +29,7 @@ private:
   ImagePtr get_source(const std::filesystem::path& path,
     const std::filesystem::path& filename, RGBA colorkey);
   MapVectorPtr get_maps(const State& state, const ImagePtr& source);
+  Rect get_grid_bounds(const State& state);
   bool should_autocomplete(const std::string& filename, bool is_update) const;
   bool overlaps_sprite_or_skipped_rect(const Rect& rect) const;
   void sprite_ends(State& state);
