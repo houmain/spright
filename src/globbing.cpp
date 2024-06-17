@@ -146,11 +146,16 @@ bool is_globbing_pattern(std::string_view filename) {
   return (filename.find_first_of("*?") != std::string::npos);
 }
 
-std::vector<FilenameSequence> glob_sequences(
+std::vector<std::string> glob_filenames(
     const std::filesystem::path& path, const std::string& pattern) {
   auto paths = glob(path, pattern);
   std::sort(begin(paths), end(paths));
+  return paths;
+}
 
+std::vector<FilenameSequence> glob_sequences(
+    const std::filesystem::path& path, const std::string& pattern) {
+  const auto paths = glob_filenames(path, pattern);
   auto sequence_merger = SequenceMerger();
   auto sequences = std::vector<FilenameSequence>();
   for (const auto& filename : paths) {

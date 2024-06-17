@@ -439,13 +439,24 @@ void InputParser::output_ends(State& state) {
 void InputParser::deduce_globbed_inputs(State& state) {
   state.indent += m_detected_indentation;
 
-  auto sequences = glob_sequences(state.path, state.glob_pattern);
-  for (auto& sequence : sequences) {
+  const auto sequences = [&]() {
+    auto sequences = std::vector<FilenameSequence>();
+    if (has_grid(state) || has_atlas(state)) {
+      // do not merge sequences when grid or atlas is active
+      for (const auto& filename : glob_filenames(state.path, state.glob_pattern))
+        sequences.emplace_back(filename);
+    }
+    else {
+      sequences = glob_sequences(state.path, state.glob_pattern);
+      for (auto& sequence : sequences)
+        sequence.set_infinite();
+    }
+    return sequences;
+  }();
+
+  for (const auto& sequence : sequences) {
     if (has_map_suffix(sequence, state.map_suffixes))
       continue;
-
-    if (sequence.is_sequence())
-      sequence.set_infinite();
 
     // add only not yet encountered inputs
     if (last_n_contain(m_inputs, m_inputs_in_current_glob,
