@@ -5,6 +5,25 @@
 
 using namespace spright;
 
+TEST_CASE("trim") {
+  CHECK(trim_comment(R"()") == R"()");
+  CHECK(trim_comment(R"(a)") == R"(a)");
+  CHECK(trim_comment(R"(a )") == R"(a )");
+  CHECK(trim_comment(R"(# comment)") == R"()");
+  CHECK(trim_comment(R"(a# comment)") == R"(a)");
+  CHECK(trim_comment(R"(a # comment)") == R"(a )");
+  CHECK(trim_comment(R"(a "# comment)") == R"(a "# comment)");
+  CHECK(trim_comment(R"(a '# comment)") == R"(a '# comment)");
+  CHECK(trim_comment(R"(a "# comment")") == R"(a "# comment")");
+  CHECK(trim_comment(R"(a '# comment')") == R"(a '# comment')");
+  CHECK(trim_comment(R"(a ""# comment)") == R"(a "")");
+  CHECK(trim_comment(R"(a ''# comment)") == R"(a '')");
+  CHECK(trim_comment(R"(a "" # comment)") == R"(a "" )");
+  CHECK(trim_comment(R"(a '' # comment)") == R"(a '' )");
+  CHECK(trim_comment(R"(a "'" # comment)") == R"(a "'" )");
+  CHECK(trim_comment(R"(a '"' # comment)") == R"(a '"' )");
+}
+
 TEST_CASE("join_expressions") {
   auto arguments = std::vector<std::string_view>{ };
   split_arguments(" a  + b ", &arguments);

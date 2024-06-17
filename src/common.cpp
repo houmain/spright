@@ -237,6 +237,27 @@ std::string_view trim(LStringView str) {
   return rtrim(ltrim(str));
 }
 
+std::string_view trim_comment(LStringView str) {
+  auto in_string = char{ };
+  auto pos = std::string_view::size_type{ };
+  for (const auto c : str) {
+    if (c == '"' || c == '\'') {
+      if (in_string) {
+        if (c == in_string)
+          in_string = { };
+      }
+      else {
+        in_string = c;
+      }
+    }
+    else if (!in_string && c == '#') {
+      return str.substr(0, pos);
+    }
+    ++pos;
+  }
+  return str;
+}
+
 std::string_view unquote(LStringView str) {
   if (str.size() >= 2 && str.front() == str.back())
     if (str.front() == '"' || str.front() == '\'')

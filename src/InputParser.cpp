@@ -637,9 +637,8 @@ void InputParser::parse(std::istream& input,
 
     auto line = ltrim(buffer);
     const auto level = to_int(buffer.size() - line.size());
-
-    if (auto hash = line.find('#'); hash != std::string::npos)
-      line = line.substr(0, hash);
+    line = trim_comment(line);
+    line = rtrim(line);
 
     if (line.empty()) {
       if (m_settings.mode == Mode::autocomplete)
