@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Version 3.5.0] - 2024-06-17
+
+### Added
+
+- Allow `grid` cell size of one dimension to be 0 (to maximize).
+- Added function `removeDirectories`.
+- Added function `joinPaths`.
+
+### Changed
+
+- Not merging sequences in `glob` when `grid` or `atlas` is active.
+
+### Fixed
+
+- Fixed # in string literals.
+- Fixed `grid` when globbing.
+- Preventing `grid` and `atlas` in `input` file sequences.
+- `grid-cells` is considering `grid-spacing`.
+
 ## [Version 3.4.0] - 2024-06-15
 
 ### Added
@@ -262,6 +281,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fixed -- commandline arguments.
 - Fixed sample cpp.template.
 
+[version 3.5.0]: https://github.com/houmain/spright/compare/3.4.0...3.5.0
 [version 3.4.0]: https://github.com/houmain/spright/compare/3.3.1...3.4.0
 [version 3.3.1]: https://github.com/houmain/spright/compare/3.3.0...3.3.1
 [version 3.3.0]: https://github.com/houmain/spright/compare/3.2.0...3.3.0
