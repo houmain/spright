@@ -418,8 +418,8 @@ Beside the functions [provided by inja](https://pantor.github.io/inja/) the foll
 - `floor(number)`: Returns the biggest integer which is less or equal than the passed number.
 - `makeId(string)`: Returns the string with all special characters replaced by `_`.
 - `removeExtension(filename)`: Returns the filename without the extension.
-- `removeDirectory(filename, [keep])`: Returns the filename without the directories, with an optional number of directories to keep.
-- `joinPath(path...)`: Returns a filename by joining the passed paths with directory separators.
+- `removeDirectories(filename, [keep])`: Returns the filename without the directories, with an optional number of directories to keep.
+- `joinPaths(path, ...)`: Returns a filename by joining the passed paths with directory separators.
 - `base64(filename)`: Returns the [base64](https://en.wikipedia.org/wiki/Base64) encoded content of the file.
 
 ### Templates

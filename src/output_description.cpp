@@ -189,12 +189,12 @@ namespace {
     env.add_callback("removeExtension", 1, [](inja::Arguments& args) -> inja::json {
       return remove_extension(args.at(0)->get<std::string>());
     });
-    env.add_callback("removeDirectory", [](inja::Arguments& args) -> inja::json {
+    env.add_callback("removeDirectories", [](inja::Arguments& args) -> inja::json {
       return remove_directory(
         (args.size() > 0 ? args[0]->get<std::string>() : ""),
         (args.size() > 1 ? args[1]->get<int>() : 0));
     });
-    env.add_callback("joinPath", [](inja::Arguments& args) -> inja::json {
+    env.add_callback("joinPaths", [](inja::Arguments& args) -> inja::json {
       auto path = std::filesystem::path();
       for (auto i = 0u; i < args.size(); ++i)
         if (const auto dir = args[i]->get<std::string>(); !dir.empty())
