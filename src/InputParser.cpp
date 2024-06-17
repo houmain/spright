@@ -235,6 +235,11 @@ bool InputParser::overlaps_sprite_or_skipped_rect(const Rect& rect) const {
 }
 
 void InputParser::deduce_sequence_sprites(State& state) {
+  // prevent grid and atlas in sequences
+  state.grid = { };
+  state.grid_cells = { };
+  state.atlas_merge_distance = -1;
+
   auto skip_already_added = sprites_or_skips_in_current_input();
   for (auto i = 0; i < state.source_filenames.count(); ++i) {
     if (skip_already_added) {
