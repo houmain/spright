@@ -14,19 +14,17 @@
     <licenseUrl>https://raw.githubusercontent.com/houmain/spright/main/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <bugTrackerUrl>https://github.com/houmain/spright/issues</bugTrackerUrl>
-    <tags>spright productivity automation cross-platform accessibility keyboard-layout keyboard-shortcuts context-awareness</tags>
-    <summary>spright is more than a simple sprite sheet packer</summary>
+    <tags>spright atlas sprites sprite-sheet texture texture-atlas texture-packer</tags>
+    <summary>An advanced sprite sheet packer and sprite annotator.</summary>
     <description>
-An advanced sprite sheet packer and sprite annotator.
-
-Its key ideas are:
+**spright** is more than a simple sprite sheet packer, it can be [used as one](https://github.com/houmain/spright/blob/main/README.md#simple-sheet-packing) though. Its key ideas are:
 
 - Keep all the information about the sprites and tiles, required for being efficiently consumable by the game engine, in a plain text file.
 - Instead of forcing one to split each sprite in a separate file and later address them using the filename, it should be possible to keep them in whatever format they are most conveniently to handle.
 - It should be possible to give each sprite an ID, group them (e.g. for animations) or further annotate them for game specific purposes.
 - The tool should be able to deduce obvious information from the input images and assist with completing the required information.
 
-While any text editor can be used for writing the input definition, the [Visual Studio Code Extension](https://github.com/houmain/spright-vscode) can greatly simplify the process.
+While any text editor can be used for writing the input definition, the [Visual Studio Code Extension](https://marketplace.visualstudio.com/items?itemName=houmain.spright-vscode) can greatly simplify the process.
 
 Also have a look at the [spright test suite](https://github.com/houmain/spright-test-suite) to get an impression of the functionality.
 
