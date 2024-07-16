@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Do not remove this test for UTF-8: if “Ω” doesn’t appear as greek uppercase omega letter enclosed in quotation marks, you should use an editor that supports UTF-8, not this one. -->
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>spright</id>
+    <version>3.5.0</version>
+    <packageSourceUrl>https://github.com/houmain/spright/blob/main/extra/chocolatey</packageSourceUrl>
+    <owners>houmain</owners>
+
+    <title>Spright</title>
+    <authors>Albert Kalchmair</authors>
+    <projectUrl>https://github.com/houmain/spright</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/houmain/spright/main/extra/icon.png</iconUrl>
+    <licenseUrl>https://raw.githubusercontent.com/houmain/spright/main/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <bugTrackerUrl>https://github.com/houmain/spright/issues</bugTrackerUrl>
+    <tags>spright productivity automation cross-platform accessibility keyboard-layout keyboard-shortcuts context-awareness</tags>
+    <summary>spright is more than a simple sprite sheet packer</summary>
+    <description>
+An advanced sprite sheet packer and sprite annotator.
+
+Its key ideas are:
+
+- Keep all the information about the sprites and tiles, required for being efficiently consumable by the game engine, in a plain text file.
+- Instead of forcing one to split each sprite in a separate file and later address them using the filename, it should be possible to keep them in whatever format they are most conveniently to handle.
+- It should be possible to give each sprite an ID, group them (e.g. for animations) or further annotate them for game specific purposes.
+- The tool should be able to deduce obvious information from the input images and assist with completing the required information.
+
+While any text editor can be used for writing the input definition, the [Visual Studio Code Extension](https://github.com/houmain/spright-vscode) can greatly simplify the process.
+
+Also have a look at the [spright test suite](https://github.com/houmain/spright-test-suite) to get an impression of the functionality.
+
+    </description>
+    <releaseNotes>See https://github.com/houmain/spright/releases</releaseNotes>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
