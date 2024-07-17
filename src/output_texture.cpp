@@ -67,7 +67,7 @@ namespace {
     }
     return true;
   }
-  catch (const std::exception& ex) {
+  catch ([[maybe_unused]] const std::exception& ex) {
 #if defined(NDEBUG)
     throw;
 #else

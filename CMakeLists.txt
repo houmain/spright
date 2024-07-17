@@ -73,8 +73,10 @@ elseif(WIN32)
         libs/utf8_console/utf8_console.cpp
     )
 
-    add_compile_options(/GR- /W1 /permissive- /Zc:hiddenFriend-)
-    set(MSVC_SHARED_RUNTIME OFF)
+    add_compile_options(/GR- /GL /Os /MP /W3 /wd4100)
+    add_link_options($<$<CONFIG:RELEASE>:/LTCG>)
+    add_compile_options($<$<CONFIG:RELEASE>:/MT>)
+    add_compile_definitions(_CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_WARNINGS)
 endif()
 
 include_directories(.)
