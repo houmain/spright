@@ -403,10 +403,11 @@ void InputParser::deduce_single_sprite(State& state) {
 
 void InputParser::sheet_ends(State& state) {
   // sheet can be opened multiple times, copy state only the first time
-  auto& sheet = *get_sheet(state.sheet_id);
-  if (!sheet.id.empty())
+  auto sheet_ptr = get_sheet(state.sheet_id);
+  if (!sheet_ptr->id.empty())
     return;
 
+  auto& sheet = *sheet_ptr;
   update_applied_definitions(Definition::sheet);
   for (const auto& filename : state.output_filenames)
     sheet.outputs.push_back(get_output(filename));

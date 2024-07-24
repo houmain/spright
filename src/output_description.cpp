@@ -181,7 +181,7 @@ namespace {
     return json;
   }
 
-  inja::Environment setup_inja_environment([[maybe_unused]] const nlohmann::json* json) {
+  inja::Environment setup_inja_environment() {
     auto env = inja::Environment();
     env.set_trim_blocks(false);
     env.set_lstrip_blocks(false);
@@ -351,14 +351,13 @@ void complete_description_definitions(const Settings& settings,
   }
 }
 
-std::string get_description(
-    const Settings& settings,
+std::string dump_description(
     const std::string& template_source,
     const std::vector<Sprite>& sprites, 
     const std::vector<Slice>& slices) {
   auto ss = std::ostringstream();
-  const auto json = get_json_description(settings, { }, sprites, slices, { }, { });
-  auto env = setup_inja_environment(&json);
+  const auto json = get_json_description({ }, { }, sprites, slices, { }, { });
+  auto env = setup_inja_environment();
   env.render_to(ss, env.parse(template_source), json);
   return ss.str();
 }

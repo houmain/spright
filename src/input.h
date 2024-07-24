@@ -60,7 +60,7 @@ struct Output {
 };
 
 struct Sheet {
-  int index;
+  int index{ };
   std::string id;
   std::filesystem::path input_file;
   std::vector<OutputPtr> outputs;

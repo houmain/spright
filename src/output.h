@@ -23,8 +23,7 @@ void complete_description_definitions(
   const Settings& settings,
   std::vector<Description>& descriptions);
 
-std::string get_description(
-  const Settings& settings,
+std::string dump_description(
   const std::string& template_source,
   const std::vector<Sprite>& sprites,
   const std::vector<Slice>& slices);

@@ -14,7 +14,7 @@ public:
   std::vector<Sprite> sprites() && { return std::move(m_sprites); }
   std::vector<Description> descriptions() && { return std::move(m_descriptions); }
   VariantMap variables() && { return std::move(m_variables); }
-  std::string autocomplete_output() const { return std::move(m_autocomplete_output).str(); }
+  std::string autocomplete_output() const { return m_autocomplete_output.str(); }
 
 private:
   struct NotAppliedDefinition {
