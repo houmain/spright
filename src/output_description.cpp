@@ -230,6 +230,51 @@ namespace {
     }, variant);
     return string;
   }
+
+  void output_description(std::ostream& os,
+      const std::filesystem::path& template_filename,
+      const nlohmann::json& json) {
+    if (!template_filename.empty()) {
+      auto env = setup_inja_environment();
+      env.render_to(os, env.parse_template(
+        path_to_utf8(template_filename)), json);
+    }
+    else {
+      os << json.dump(1, '\t');
+    }
+  }
+
+  auto filter_by_slice(int slice_index,
+      const Slice& sole_slice,
+      const std::vector<Sprite>& sprites, 
+      const std::vector<Texture>& textures) ->
+      std::tuple<std::vector<Sprite>, std::vector<Texture>> {
+    
+    auto slice_sprites = std::vector<Sprite>();
+    std::copy_if(sprites.begin(), sprites.end(),
+      std::back_inserter(slice_sprites),
+      [&](const Sprite& sprite) {
+        return (sprite.slice_index == slice_index);
+      });
+
+    auto index = 0;
+    for (auto& sprite : slice_sprites) {
+      sprite.index = index++;
+      sprite.slice_index = 0;
+    }
+
+    auto slice_textures = std::vector<Texture>();    
+    std::copy_if(textures.begin(), textures.end(),
+      std::back_inserter(slice_textures),
+      [&](const Texture& texture) {
+        return (texture.slice->index == slice_index);
+      });
+
+    for (auto& texture : slice_textures)
+      texture.slice = &sole_slice;
+
+    return { slice_sprites, slice_textures };
+  }
 } // namespace
 
 void evaluate_expressions(
@@ -371,25 +416,46 @@ void output_descriptions(
     const std::vector<Texture>& textures,
     const VariantMap& variables) {
 
-  const auto json = get_json_description(settings,
-    inputs, sprites, slices, textures, variables);
+  auto json = std::optional<nlohmann::json>();
 
   for (const auto& description : descriptions) {
     if (description.filename.empty())
       continue;
 
-    auto ss = std::ostringstream();
-    auto& os = (description.filename.string() == "stdout" ? std::cout : ss);
-    if (!description.template_filename.empty()) {
-      auto env = setup_inja_environment(&json);
-      env.render_to(os, env.parse_template(
-        path_to_utf8(description.template_filename)), json);
+    const auto filenames = FilenameSequence(path_to_utf8(description.filename));
+    if (!filenames.is_sequence()) {
+      // output all slices in one output description
+      if (!json.has_value())
+        json = get_json_description(settings,
+          inputs, sprites, slices, textures, variables);
+
+      if (description.filename.string() != "stdout") {
+        auto ss = std::ostringstream();
+        output_description(ss, description.template_filename, *json);
+        update_textfile(description.filename, ss.str());
+      }
+      else {
+        output_description(std::cout, description.template_filename, *json);
+      }
     }
     else {
-      os << json.dump(1, '\t');
+      // output each slice in separate output description
+      for (const auto& slice : slices) {
+        auto sole_slice = slice;
+        sole_slice.index = 0;
+
+        const auto [slice_sprites, slice_textures] =
+          filter_by_slice(slice.index, sole_slice, sprites, textures);
+        
+        const auto slice_json = get_json_description(settings,
+          inputs, slice_sprites, { sole_slice }, slice_textures, variables);
+
+        const auto filename = filenames.get_nth_filename(slice.index);
+        auto ss = std::ostringstream();
+        output_description(ss, description.template_filename, slice_json);
+        update_textfile(filename, ss.str());
+      }
     }
-    if (description.filename.string() != "stdout")
-      update_textfile(description.filename, ss.str());
   }
 }
 
