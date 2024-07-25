@@ -12,10 +12,15 @@
 #include <utility>
 #include <optional>
 #include <cassert>
+#include <variant>
+#include <map>
 
 extern Scheduler scheduler;
 
 namespace spright {
+
+using Variant = std::variant<bool, real, std::string>;
+using VariantMap = std::map<std::string, Variant, std::less<>>;
 
 struct LStringView : std::string_view {
   LStringView(std::string_view s) : std::string_view(s) { }
@@ -123,6 +128,9 @@ std::string remove_directory(std::string filename, int keep_n = 0);
 bool has_supported_extension(std::string_view filename);
 void replace_variables(std::string& expression,
   const std::function<std::string(std::string_view)>& replace_function);
+void replace_variables(std::string& expression, const VariantMap& variables);
+void replace_variables(std::filesystem::path& path, const VariantMap& variables);
+std::string variant_to_string(const Variant& variant);
 std::string make_identifier(std::string string);
 
 inline int floor(int v, int q) { return (v / q) * q; };

@@ -4,8 +4,6 @@
 #include "settings.h"
 #include "FilenameSequence.h"
 #include <memory>
-#include <map>
-#include <variant>
 
 namespace spright {
 
@@ -14,8 +12,6 @@ using SheetPtr = std::shared_ptr<const struct Sheet>;
 using OutputPtr = std::shared_ptr<const struct Output>;
 using MapVectorPtr = std::shared_ptr<const std::vector<ImagePtr>>;
 using StringMap = std::map<std::string, std::string, std::less<>>;
-using Variant = std::variant<bool, real, std::string>;
-using VariantMap = std::map<std::string, Variant, std::less<>>;
 
 enum class AnchorX { left, center, right };
 enum class AnchorY { top, middle, bottom };

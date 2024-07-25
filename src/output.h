@@ -21,7 +21,8 @@ void evaluate_expressions(const Settings& settings,
 
 void complete_description_definitions(
   const Settings& settings,
-  std::vector<Description>& descriptions);
+  std::vector<Description>& descriptions,
+  const VariantMap& variables);
 
 std::string dump_description(
   const std::string& template_source,

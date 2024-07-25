@@ -431,6 +431,36 @@ void replace_variables(std::string& expression,
   }
 }
 
+void replace_variables(std::string& expression, const VariantMap& variables) {
+  const auto replace_variable = [&](std::string_view variable) {
+    if (auto it = variables.find(variable); it != variables.end())
+      return variant_to_string(it->second);
+    error("unknown id '", variable, "'");
+  };
+  return replace_variables(expression, replace_variable);
+}
+
+void replace_variables(std::filesystem::path& path, const VariantMap& variables) {
+  auto string = path_to_utf8(path);
+  replace_variables(string, variables);
+  path = utf8_to_path(string);
+}
+
+std::string variant_to_string(const Variant& variant) {
+  auto string = std::string();
+  std::visit([&](const auto& value) {
+    using T = std::decay_t<decltype(value)>;
+    if constexpr (std::is_same_v<T, std::string>) {
+      string = value;
+    }
+    else {
+      using namespace std;
+      string = to_string(value);
+    }
+  }, variant);
+  return string;
+}
+
 std::string make_identifier(std::string string) {
   for (auto& c : string)
     if (!is_alpha(c) && !is_digit(c))

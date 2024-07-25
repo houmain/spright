@@ -49,7 +49,7 @@ int main(int argc, const char* argv[]) try {
   }
 
   if (settings.mode != Mode::autocomplete) {
-    complete_description_definitions(settings, descriptions);
+    complete_description_definitions(settings, descriptions, variables);
 
     output_descriptions(settings, descriptions, 
       inputs, sprites, slices, textures, variables);

@@ -216,21 +216,6 @@ namespace {
     return env;
   }
 
-  std::string variant_to_string(const Variant& variant) {
-    auto string = std::string();
-    std::visit([&](const auto& value) {
-      using T = std::decay_t<decltype(value)>;
-      if constexpr (std::is_same_v<T, std::string>) {
-        string = value;
-      }
-      else {
-        using namespace std;
-        string = to_string(value);
-      }
-    }, variant);
-    return string;
-  }
-
   void output_description(std::ostream& os,
       const std::filesystem::path& template_filename,
       const nlohmann::json& json) {
@@ -361,8 +346,10 @@ void evaluate_expressions(
     }
 }
 
-void complete_description_definitions(const Settings& settings, 
-    std::vector<Description>& descriptions) {
+void complete_description_definitions(const Settings& settings,
+    std::vector<Description>& descriptions,
+    const VariantMap& variables) {
+
   // ignore description in definition
   if (settings.mode == Mode::describe ||
       settings.mode == Mode::describe_input)
@@ -381,6 +368,10 @@ void complete_description_definitions(const Settings& settings,
     for (auto& description : descriptions)
       if (description.filename.string() != "stdout")
         description.filename = settings.output_path / description.filename;
+
+  // replace variables
+  for (auto& description : descriptions)
+    replace_variables(description.template_filename, variables);
 
   // also lookup templates in sub-directory
   for (auto& description : descriptions) {

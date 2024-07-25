@@ -289,7 +289,7 @@ The following table contains a list of all definitions, with the item each affec
 | data | sprite | key, value | Adds a user defined data entry to a sprite. |
 | **description** | - | filename | Adds an additional location where the output description should be written. When the _filename_ is a sequence e.g. `"slice{0-}.plist"` then each _slice_ is output to a separate file. |
 | template | description | filename | Sets the template which should be used for generating the output description. |
-| set | - | key, value | Sets a variable value, which can be accessed in different places using `{{key}}`. See a list of existing [variables](#variables). |
+| set | - | key, value | Sets a variable value, which can be accessed in strings and templates using `{{key}}`. See a list of existing [variables](#variables). |
 | group | - | - | Can be used for opening a new scope, to limit for example the effect of a tag. |
 
 <a id="definition-reference-end"></a>
