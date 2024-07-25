@@ -262,7 +262,7 @@ void evaluate_expressions(
 
       // "dir/file 01"
       if (variable == "source.filenameBase")
-        return path_to_utf8(sprite.source->filename().filename());
+        return remove_extension(path_to_utf8(sprite.source->filename()));
 
       // "file 01"
       if (variable == "source.filenameStem")
