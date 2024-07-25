@@ -90,7 +90,7 @@ void print_help_message(const char* argv0) {
 #endif
 
   std::cout <<
-    "spright " << version << "(c) 2020-2023 by Albert Kalchmair\n"
+    "spright " << version << "(c) 2020-2024 by Albert Kalchmair\n"
     "\n"
     "Usage: " << program << " [-options]\n"
     "  -m, --mode <mode>       sets the run mode:\n"
