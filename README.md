@@ -8,8 +8,9 @@
 
 <a href="https://github.com/houmain/spright/releases/latest">Downloads</a> |
 <a href="#command-line-arguments">Command line arguments</a> |
+<a href="#installation">Installation</a> |
 <a href="#building">Building</a> |
-<a href="https://github.com/houmain/spright/blob/main/CHANGELOG.md">Changelog</a>
+<a href="https://github.com/houmain/spright/releases">Changelog</a>
 
 </p>
 
@@ -461,6 +462,34 @@ Usage: spright [-options]
 The special identifiers _stdin_ and _stdout_ can be passed to _--input_ and _--output_ to enable console redirection.
 
 ---
+
+Installation
+------------
+
+### Linux / MacOS
+
+Pre-built packages can be downloaded from the [latest release](https://github.com/houmain/spright/releases/latest) page. 
+
+A [Homebrew](https://brew.sh) formula is provided for building and installing spright:
+```
+brew tap houmain/tap
+brew install --HEAD spright
+```
+
+Arch Linux users can install an up to date build from the [AUR](https://aur.archlinux.org/packages/spright-git).
+
+### Windows
+
+Pre-built packages can be downloaded from the [latest release](https://github.com/houmain/spright/releases/latest) page. 
+
+Most conveniently but possibly not always the very latest version can be installed using a package manager:
+```
+# install using winget
+winget install spright
+
+# install using Chocolatey
+choco install spright
+```
 
 ## Building
 
