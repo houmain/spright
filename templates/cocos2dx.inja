@@ -26,6 +26,8 @@
 			<string>{ { {{sprite.trimmedRect.x}}, {{sprite.trimmedRect.y}} }, { {{sprite.trimmedRect.w}}, {{sprite.trimmedRect.h}} } }</string>
 			<key>textureRotated</key>
 			<{{ sprite.rotated }}/>
+			<key>anchor</key>
+			<string>{ {{ sprite.pivot.x / sprite.rect.w }}, {{ sprite.pivot.y / sprite.rect.h }} }</string>
 		</dict>
 ## endfor
 	</dict>
