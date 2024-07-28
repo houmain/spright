@@ -15,19 +15,19 @@ jobs:
         config:
           - os: windows-latest
             package: ZIP
-            configure_args: "-DPORTABLE"
+            configure_args: "-DPORTABLE=ON"
 
           - os: ubuntu-20.04
             package: ZIP
-            configure_args: "-DPORTABLE"
+            configure_args: "-DPORTABLE=ON"
 
           - os: macos-12
             package: ZIP
-            configure_args: "-DPORTABLE"
+            configure_args: "-DPORTABLE=ON"
 
           - os: macos-14
             package: ZIP
-            configure_args: "-DPORTABLE -DCPACK_SYSTEM_NAME=Darwin-arm64"
+            configure_args: "-DPORTABLE=ON -DCPACK_SYSTEM_NAME=Darwin-arm64"
 
           - os: ubuntu-20.04
             package: DEB
