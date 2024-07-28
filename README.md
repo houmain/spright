@@ -199,7 +199,7 @@ Since there are quite some terms, an explanation of what they represent in __spr
 - __sheet__: a collection of _sprites_ which should be arranged on one or more _slices_, while obeying the defined constraints. Each _sprite_ is part of a single sheet (there is a default sheet _"spright"_).
 - __slice__: a single layer of a _sheet_ where the _sprites_ are arranged.
 - __sprite__: a rectangle on a _slice_ with additional metadata.
-- __pivot point__: the coordinate of a point on a _sprite_ used for placing it in the game.
+- __pivot point__: the coordinate of a point on a _sprite_ used for placing it in the game (a.k.a _anchor_).
 - __input__: a filename or sequence referring to one or more input images.
 - __source__: a single image file of an _input_ containing the pixel data of one or more _sprites_.
 - __output__: a filename or sequence referring to one or more output images.
@@ -483,7 +483,7 @@ Arch Linux users can install an up to date build from the [AUR](https://aur.arch
 Pre-built packages can be downloaded from the [latest release](https://github.com/houmain/spright/releases/latest) page. 
 
 Most conveniently but possibly not always the very latest version can be installed using a package manager:
-```
+```bash
 # install using winget
 winget install spright
 
