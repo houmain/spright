@@ -15,16 +15,25 @@ jobs:
         config:
           - os: windows-latest
             package: ZIP
+            configure_args: "-DPORTABLE"
 
           - os: ubuntu-20.04
             package: ZIP
+            configure_args: "-DPORTABLE"
 
           - os: macos-12
             package: ZIP
+            configure_args: "-DPORTABLE"
 
           - os: macos-14
             package: ZIP
-            configure_args: "-DCPACK_SYSTEM_NAME=Darwin-arm64"
+            configure_args: "-DPORTABLE -DCPACK_SYSTEM_NAME=Darwin-arm64"
+
+          - os: ubuntu-20.04
+            package: DEB
+
+          - os: ubuntu-20.04
+            package: RPM            
 
     steps:
     - name: Setup Windows/MSVC
@@ -60,6 +69,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        file: "*.zip;*.tar.gz"
+        file: "*.zip;*.tar.gz;*.deb;*.rpm"
         tags: true
         draft: false
