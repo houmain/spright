@@ -460,7 +460,7 @@ void InputParser::deduce_globbed_inputs(State& state) {
     return sequences;
   }();
 
-  const auto inputs_in_sheet_before = m_inputs.size();
+  const auto inputs_in_sheet_before = static_cast<int>(m_inputs.size());
   for (const auto& sequence : sequences) {
     if (has_map_suffix(sequence, state.map_suffixes))
       continue;

@@ -109,7 +109,7 @@ endif()
 
 # install
 option(PORTABLE "Install files for a portable package")
-if(NOT PORTABLE AND CMAKE_SYSTEM_NAME MATCHES "Linux")
+if(NOT PORTABLE AND NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
     # normal installation
     install(TARGETS ${PROJECT_NAME} DESTINATION "bin" COMPONENT Application)
     install(DIRECTORY templates DESTINATION "share/spright" COMPONENT Application)
