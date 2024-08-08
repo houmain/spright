@@ -11,8 +11,8 @@ public:
   Image(int width, int height);
   Image(int width, int height, const RGBA& background);
   Image(std::filesystem::path path, std::filesystem::path filename);
-  Image(Image&& rhs);
-  Image& operator=(Image&& rhs);
+  Image(Image&& rhs) noexcept;
+  Image& operator=(Image&& rhs) noexcept;
   ~Image();
   Image clone(const Rect& rect = {}) const;
   explicit operator bool() const { return m_data != nullptr; }
@@ -42,8 +42,8 @@ public:
   MonoImage() = default;
   MonoImage(int width, int height);
   MonoImage(int width, int height, Value background);
-  MonoImage(MonoImage&& rhs);
-  MonoImage& operator=(MonoImage&& rhs);
+  MonoImage(MonoImage&& rhs) noexcept;
+  MonoImage& operator=(MonoImage&& rhs) noexcept;
   ~MonoImage();
   explicit operator bool() const { return m_data != nullptr; }
 

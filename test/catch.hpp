@@ -765,6 +765,7 @@ namespace Catch {
 #include <iosfwd>
 
 namespace Catch {
+    std::ostream& operator << (std::ostream& os, struct SourceLineInfo const& info);
 
     struct SourceLineInfo {
 

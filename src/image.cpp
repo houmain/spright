@@ -414,7 +414,7 @@ Image::Image(std::filesystem::path path, std::filesystem::path filename)
       path_to_utf8(full_path) + "' failed");
 }
 
-Image::Image(Image&& rhs)
+Image::Image(Image&& rhs) noexcept
   : m_path(std::exchange(rhs.m_path, { })),
     m_filename(std::exchange(rhs.m_filename, { })),
     m_data(std::exchange(rhs.m_data, nullptr)),
@@ -422,7 +422,7 @@ Image::Image(Image&& rhs)
     m_height(std::exchange(rhs.m_height, 0)) {
 }
 
-Image& Image::operator=(Image&& rhs) {
+Image& Image::operator=(Image&& rhs) noexcept {
   auto tmp = std::move(rhs);
   std::swap(m_path, tmp.m_path);
   std::swap(m_filename, tmp.m_filename);
@@ -454,13 +454,13 @@ MonoImage::MonoImage(int width, int height, Value background)
   std::fill(m_data, m_data + (m_width * m_height), background);
 }
 
-MonoImage::MonoImage(MonoImage&& rhs)
+MonoImage::MonoImage(MonoImage&& rhs) noexcept
   : m_data(std::exchange(rhs.m_data, nullptr)),
     m_width(std::exchange(rhs.m_width, 0)),
     m_height(std::exchange(rhs.m_height, 0)) {
 }
 
-MonoImage& MonoImage::operator=(MonoImage&& rhs) {
+MonoImage& MonoImage::operator=(MonoImage&& rhs) noexcept {
   auto tmp = std::move(rhs);
   std::swap(m_data, tmp.m_data);
   std::swap(m_width, tmp.m_width);
