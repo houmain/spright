@@ -10,6 +10,12 @@
 using namespace spright;
 
 namespace {
+  struct HasWarningsException : std::runtime_error {
+    HasWarningsException()
+      : std::runtime_error("Has warnings!") {
+    }
+  };
+
   template<typename T>
   bool le_size(const T& slice, int w, int h) {
     // here one can set a breakpoint to tighten the size constraints
@@ -31,7 +37,7 @@ namespace {
     trim_sprites(s_sprites);
     auto slices = pack_sprites(s_sprites);
     if (has_warnings())
-      throw std::runtime_error("has warnings");
+      throw HasWarningsException();
     return slices;
   }
 
@@ -46,7 +52,6 @@ namespace {
   Slice pack_single_sheet(const char* definition) {
     auto slices = std::vector<Slice>();
     REQUIRE_NOTHROW(slices = pack(definition));
-    CHECK(!has_warnings());
     CHECK(slices.size() == 1);
     if (slices.size() != 1)
       return { };
@@ -285,8 +290,9 @@ TEST_CASE("packing - Basic") {
   CHECK(le_size(slice, 478, 18));
 }
 
-TEST_CASE("packing - Errors") {
-  CHECK_THROWS(pack(R"(
+TEST_CASE("packing - Warnings") {
+  // width/height exceeded
+  CHECK_THROWS_AS(pack(R"(
     sheet "sprites"
       padding 0 1
       max-width 16
@@ -294,7 +300,31 @@ TEST_CASE("packing - Errors") {
     input "test/Items.png"
       colorkey
       atlas
-  )"));
+  )"), HasWarningsException);
+
+  // packing on single slice
+  CHECK_THROWS_AS(pack(R"(
+    sheet "sprites"
+      output "spright.png"
+      padding 0 1
+      max-width 18
+      max-height 18      
+    input "test/Items.png"
+      colorkey
+      atlas
+  )"), HasWarningsException);
+
+  // packing on insufficient slices
+  CHECK_THROWS_AS(pack(R"(
+    sheet "sprites"
+      output "spright{00-10}.png"
+      padding 0 1
+      max-width 18
+      max-height 18      
+    input "test/Items.png"
+      colorkey
+      atlas
+  )"), HasWarningsException);
 }
 
 TEST_CASE("packing - Multiple sheets") {

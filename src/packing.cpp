@@ -221,6 +221,23 @@ namespace {
       }
     return slices;
   }
+
+  std::string get_packing_failed_reason(const Sprite& sprite, size_t slice_count) {
+    const auto& sheet = *sprite.sheet;
+
+    const auto [max_width, max_height] = get_slice_max_size(sheet);
+    if (sprite.rect.w + sheet.border_padding > max_width)
+      return "max-width exceeded";
+    if (sprite.rect.h + sheet.border_padding > max_height)
+      return "max-height exceeded";
+
+    if (slice_count == get_max_slice_count(sheet)) {
+      if (slice_count == 1)
+        return "does not fit on single slice";
+      return "limited slice count exceeded";
+    }
+    return "unknown reason";
+  }
 } // namespace
 
 std::pair<int, int> get_slice_max_size(const Sheet& sheet) {
@@ -262,7 +279,9 @@ std::vector<Slice> pack_sprites(std::vector<Sprite>& sprites) {
 
   for (const auto& sprite : sprites)
     if (sprite.sheet && sprite.slice_index < 0)
-      warning("packing sprite failed", sprite.warning_line_number);
+      warning("packing sprite failed: " + 
+        get_packing_failed_reason(sprite, slices.size()), 
+        sprite.warning_line_number);
 
   return slices;
 }
