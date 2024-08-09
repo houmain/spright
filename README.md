@@ -21,7 +21,7 @@
 - It should be possible to give each sprite an ID, group them (e.g. for animations) or further annotate them for game specific purposes.
 - The tool should be able to deduce obvious information from the input images and assist with completing the required information.
 
-While any text editor can be used for writing the input definition, the [Visual Studio Code Extension](https://github.com/houmain/spright-vscode) can greatly simplify the process.
+While any text editor can be used for writing the input definition, the [Visual Studio Code Extension](https://marketplace.visualstudio.com/items?itemName=houmain.spright-vscode) can greatly simplify the process.
 
 Also have a look at the [spright test suite](https://github.com/houmain/spright-test-suite) to get an impression of the functionality.
 
@@ -198,7 +198,7 @@ Since there are quite some terms, an explanation of what they represent in __spr
 
 - __sheet__: a collection of _sprites_ which should be arranged on one or more _slices_, while obeying the defined constraints. Each _sprite_ is part of a single sheet (there is a default sheet _"spright"_).
 - __slice__: a single layer of a _sheet_ where the _sprites_ are arranged.
-- __sprite__: a rectangle on a _slice_ with additional metadata.
+- __sprite bounds__: the rectangular space a _sprite_ allocates on the _slice_.
 - __pivot point__: the coordinate of a point on a _sprite_ used for placing it in the game (a.k.a _anchor_).
 - __input__: a filename or sequence referring to one or more input images.
 - __source__: a single image file of an _input_ containing the pixel data of one or more _sprites_.
@@ -273,7 +273,7 @@ The following table contains a list of all definitions, with the item each affec
 | id | sprite | id | Sets the sprite's id (defaults to `"sprite_{{index}}"`). See list of available [variables](#variables). |
 | span | sprite | columns, rows | Sets the number of grid cells a sprite spans. |
 | rect | sprite | x, y, width, height | Sets a sprite's rectangle in the input sheet. |
-| pivot | sprite | pivot-x, pivot-y | Sets the coordinates of the sprite's pivot point. Optionally the horizontal (_left, center, right_) and vertical (_top, middle, bottom_) origin of the coordinates can be set (e.g. 10 20 / right - 5, top + 3 / bottom left). |
+| pivot | sprite | pivot-x, pivot-y | Sets the coordinates of the sprite's pivot point. Optionally the horizontal (_left, center, right_) and vertical (_top, middle, bottom_) origin of the coordinates can be set (e.g. `10, 20` / `right - 5, top + 3` / `bottom left`). |
 | trim | sprite | trim-mode | Sets a mode for trimming, which reduces the sprite to the non-transparent region:<br/>- _none_ : Do not trim.<br/>- _rect_ : Trim to rectangular region (default).<br/>- _convex_ : Trim to convex region (_vertices_ are set in output description). |
 | trim-channel | sprite | channel | Sets the channel which should be considered during trimming:<br/>- _alpha_ : The alpha channel of a pixel (default).<br/>- _gray_ : The gray level of the pixel. |
 | trim-threshold | sprite | value | Sets the value which should be considered non-transparent during trimming (1 - 255). |
