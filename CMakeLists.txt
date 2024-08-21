@@ -48,6 +48,8 @@ if(NOT MSVC)
 endif()
 
 file(GLOB CHIPMUNK_SOURCES libs/chipmunk/src/*.c)
+list(FILTER CHIPMUNK_SOURCES EXCLUDE REGEX ".*(Spring|Joint|Motor).c$")
+add_compile_definitions(CP_SPACE_DISABLE_DEBUG_API)
 
 set(SOURCES ${SOURCES}
     libs/rect_pack/stb_rect_pack.cpp
