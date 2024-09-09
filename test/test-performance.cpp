@@ -45,9 +45,9 @@ namespace {
       const auto c = [&]() {
         seed += 423;
         seed *= 123;
-        return static_cast<uint8_t>(seed);
+        return static_cast<Channel>(seed % 256);
       };
-      return RGBA{ { c(), c(), c(), 255u } };
+      return RGBA{ c(), c(), c(), 255 };
     };
     auto image = Image(sheet.width, sheet.height);
     for (const auto& rect : sheet.rects) {

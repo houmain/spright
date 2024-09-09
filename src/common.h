@@ -19,6 +19,7 @@ extern Scheduler scheduler;
 
 namespace spright {
 
+using Channel = uint8_t;
 using Variant = std::variant<bool, real, std::string>;
 using VariantMap = std::map<std::string, Variant, std::less<>>;
 
@@ -29,21 +30,24 @@ struct LStringView : std::string_view {
   LStringView(std::string&& s) = delete;
 };
 
-union RGBA {
-  struct {
-    uint8_t r, g, b, a;
-  };
-  uint32_t rgba;
+struct RGBA {
+  Channel r, g, b, a;
 
-  uint8_t& channel(int index) { return (&r)[index]; }
-  const uint8_t& channel(int index) const { return (&r)[index]; }
-  uint8_t gray() const {
-    return static_cast<uint8_t>((r * 77 + g * 151 + b * 28) >> 8);
+  Channel& channel(int index) { return (&r)[index]; }
+  const Channel& channel(int index) const { return (&r)[index]; }
+
+  friend bool operator==(const RGBA& lhs, const RGBA& rhs) {
+    return std::tie(lhs.r, lhs.g, lhs.b, lhs.a) == 
+           std::tie(rhs.r, rhs.g, rhs.b, rhs.a);
+  }
+  friend bool operator!=(const RGBA& lhs, const RGBA& rhs) {
+    return !(lhs == rhs);
+  }
+  friend bool operator<(const RGBA& lhs, const RGBA& rhs) {
+    return std::tie(lhs.r, lhs.g, lhs.b, lhs.a) < 
+           std::tie(rhs.r, rhs.g, rhs.b, rhs.a);
   }
 };
-
-inline bool operator==(const RGBA& a, const RGBA& b) { return (a.rgba == b.rgba); }
-inline bool operator!=(const RGBA& a, const RGBA& b) { return (a.rgba != b.rgba); }
 
 template<typename... T>
 [[noreturn]] void error(T&&... args) {
@@ -66,12 +70,6 @@ int to_int(const T& v) {
   static_assert(std::is_floating_point_v<T> || 
     std::is_enum_v<T> || std::is_unsigned_v<T>);
   return static_cast<int>(v);
-}
-
-template<typename T>
-uint8_t to_byte(const T& v) {
-  static_assert(std::is_integral_v<T>);
-  return static_cast<uint8_t>(v);
 }
 
 template<typename T>

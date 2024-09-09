@@ -66,7 +66,7 @@ void draw_debug_info(Image& target, const Sprite& sprite, real scale) {
     std::swap(trimmed_rect.w, trimmed_rect.h);
     pivot_point = rotate_cw(pivot_point, rect.w - 1);
   }
-  draw_rect(target, round(trimmed_rect), RGBA{ { 255, 255, 0, 128 } });
+  draw_rect(target, round(trimmed_rect), RGBA{ 255, 255, 0, 128 });
     
   // scale point coordinates, so bottom right is inside sprite
   // (similar to 1.0 for texture coordinates...)
@@ -90,13 +90,13 @@ void draw_debug_info(Image& target, const Sprite& sprite, real scale) {
       draw_line(target,
         round(origin + v0),
         round(origin + v1),
-        RGBA{ { 0, 255, 255, 128 } },
+        RGBA{ 0, 255, 255, 128 },
         true);
     }
   }
 
-  draw_rect_stipple(target, round(rect), RGBA{ { 255, 0, 0, 128 } }, 2);
-  draw_point(target, rect.xy() + pivot_point, RGBA{ { 255, 0, 0, 255 } });
+  draw_rect_stipple(target, round(rect), RGBA{ 255, 0, 0, 128 }, 2);
+  draw_point(target, rect.xy() + pivot_point, RGBA{ 255, 0, 0, 255 });
 }
 
 void draw_debug_info(Image& target, const Slice& slice, real scale) {

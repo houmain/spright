@@ -37,11 +37,9 @@ private:
 
 class MonoImage {
 public:
-  using Value = uint8_t;
-
   MonoImage() = default;
   MonoImage(int width, int height);
-  MonoImage(int width, int height, Value background);
+  MonoImage(int width, int height, Channel background);
   MonoImage(MonoImage&& rhs) noexcept;
   MonoImage& operator=(MonoImage&& rhs) noexcept;
   ~MonoImage();
@@ -50,13 +48,13 @@ public:
   int width() const { return m_width; }
   int height() const { return m_height; }
   Rect bounds() const { return { 0, 0, m_width, m_height }; }
-  const Value* data() const { return m_data; }
-  Value* data() { return m_data; }
-  Value& value_at(const Point& p) { return m_data[p.y * m_width + p.x]; }
-  const Value& value_at(const Point& p) const { return m_data[p.y * m_width + p.x]; }
+  const Channel* data() const { return m_data; }
+  Channel* data() { return m_data; }
+  Channel& value_at(const Point& p) { return m_data[p.y * m_width + p.x]; }
+  const Channel& value_at(const Point& p) const { return m_data[p.y * m_width + p.x]; }
 
 private:
-  Value* m_data{ };
+  Channel* m_data{ };
   int m_width{ };
   int m_height{ };
 };
@@ -88,6 +86,7 @@ struct Animation {
 
 using Palette = std::vector<RGBA>;
 
+RGBA uint32_to_rgba(uint32_t value);
 void save_image(const Image& image, const std::filesystem::path& filename);
 void save_animation(const Animation& animation, const std::filesystem::path& filename);
 Image resize_image(const Image& image, real scale, ResizeFilter filter);

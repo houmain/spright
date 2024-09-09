@@ -38,6 +38,16 @@ namespace {
     return image.rgba_at(p);
   }
 
+  template<typename T>
+  Channel to_channel(const T& v) {
+    static_assert(std::is_integral_v<T>);
+    return static_cast<Channel>(v);
+  }
+
+  inline Channel to_gray(const RGBA& rgba) {
+    return to_channel((rgba.r * 77 + rgba.g * 151 + rgba.b * 28) / 256);
+  }
+
   template <typename P>
   bool all_of(const Image& image, const Rect& rect, P&& predicate) {
     check_rect(image, rect);
@@ -61,9 +71,9 @@ namespace {
   void blend(Image& image, int x, int y, const RGBA& color) {
     auto& a = image.rgba_at({ x, y });
     const auto& b = color;
-    a.r = to_byte((a.r * (255 - b.a) + b.r * b.a) / 255);
-    a.g = to_byte((a.g * (255 - b.a) + b.g * b.a) / 255);
-    a.b = to_byte((a.b * (255 - b.a) + b.b * b.a) / 255);
+    a.r = to_channel((a.r * (255 - b.a) + b.r * b.a) / 255);
+    a.g = to_channel((a.g * (255 - b.a) + b.g * b.a) / 255);
+    a.b = to_channel((a.b * (255 - b.a) + b.b * b.a) / 255);
     a.a = std::max(a.a, b.a);
   }
 
@@ -199,7 +209,7 @@ namespace {
   // https://en.wikipedia.org/wiki/Median_cut
   std::vector<RGBA> median_cut_reduction(RGBASpan image, int max_colors) {
     struct Bucket {
-      uint8_t max_channel_range;
+      Channel max_channel_range;
       RGBASpan colors;
     };
   
@@ -207,11 +217,11 @@ namespace {
     const auto insert_bucket = [&](RGBASpan colors) {
       // compute channel with maximum range
       auto max_channel = 0;
-      auto max_channel_range = uint8_t{ };
+      auto max_channel_range = Channel{ };
       for (auto i = 0; i < 4; ++i) {
         const auto [min, max] = std::minmax_element(colors.begin(), colors.end(),
           [&](const RGBA& a, const RGBA& b) { return a.channel(i) < b.channel(i); });
-        const auto channel_range = to_byte(max->channel(i) - min->channel(i));
+        const auto channel_range = to_channel(max->channel(i) - min->channel(i));
         if (channel_range > max_channel_range) {
           max_channel_range = channel_range;
           max_channel = i;
@@ -255,7 +265,7 @@ namespace {
           sum[to_unsigned(i)] += color.channel(i);
       auto color = RGBA{ };
       for (auto i = 0; i < 4; ++i)
-        color.channel(i) = to_byte(sum[to_unsigned(i)] / bucket.colors.size());
+        color.channel(i) = to_channel(sum[to_unsigned(i)] / bucket.colors.size());
       palette.push_back(color);
     }
     return palette;
@@ -283,11 +293,11 @@ namespace {
 
   // https://en.wikipedia.org/wiki/Floyd%E2%80%93Steinberg_dithering
   Image floyd_steinberg_dithering(Image image, const Palette& palette) {
-    const auto diff = [](const uint8_t& a, const uint8_t& b) { 
+    const auto diff = [](const Channel& a, const Channel& b) { 
       return static_cast<int>(a) - static_cast<int>(b);
     };
     const auto saturate = [](int value) { 
-      return to_byte(std::clamp(value, 0, 255));
+      return to_channel(std::clamp(value, 0, 255));
     };
     const auto w = image.width();
     const auto h = image.height();
@@ -326,7 +336,7 @@ namespace {
     auto bits = 0;
     for (auto c = palette.size() - 1; c; c >>= 1)
       ++bits;
-    auto palette_rgb = std::make_unique<uint8_t[]>((1 << bits) * 3);
+    auto palette_rgb = std::make_unique<Channel[]>((1 << bits) * 3);
     auto pos = palette_rgb.get();
     for (const auto& color : palette) {
       *pos++ = color.r;
@@ -362,6 +372,15 @@ namespace {
     return true;
   }
 } // namespace
+
+RGBA uint32_to_rgba(uint32_t value) {
+  return RGBA{
+    to_channel((value >> 0)  & 0xFF),
+    to_channel((value >> 8)  & 0xFF),
+    to_channel((value >> 16) & 0xFF),
+    to_channel((value >> 24) & 0xFF)
+  };
+}
 
 Image::Image(int width, int height)
   : m_width(width),
@@ -443,13 +462,13 @@ MonoImage::MonoImage(int width, int height)
   if (!width || !height)
     throw std::runtime_error("invalid image size");
 
-  const auto size = to_unsigned(m_width * m_height) * sizeof(uint8_t);
-  m_data = static_cast<uint8_t*>(std::malloc(size));
+  const auto size = to_unsigned(m_width * m_height) * sizeof(Channel);
+  m_data = static_cast<Channel*>(std::malloc(size));
   if (!m_data)
     throw std::bad_alloc();
 }
 
-MonoImage::MonoImage(int width, int height, Value background)
+MonoImage::MonoImage(int width, int height, Channel background)
   : MonoImage(width, height) {
   std::fill(m_data, m_data + (m_width * m_height), background);
 }
@@ -675,7 +694,7 @@ bool is_fully_black(const Image& image, int threshold, const Rect& rect) {
   if (empty(rect))
     return is_fully_black(image, threshold, image.bounds());
 
-  return all_of(image, rect, [&](const RGBA& rgba) { return (rgba.gray() < threshold); });
+  return all_of(image, rect, [&](const RGBA& rgba) { return (to_gray(rgba) < threshold); });
 }
 
 bool is_identical(const Image& image_a, const Rect& rect_a, const Image& image_b, const Rect& rect_b) {
@@ -737,8 +756,7 @@ RGBA guess_colorkey(const Image& image) {
   auto colors = std::vector<RGBA>();
   for (const auto& corner : corners)
     colors.push_back(image.rgba_at(corner));
-  std::sort(begin(colors), end(colors),
-    [](const RGBA& a, const RGBA& b) { return a.rgba < b.rgba; });
+  std::sort(begin(colors), end(colors));
   return colors[1];
 }
 
@@ -754,7 +772,6 @@ std::vector<Rect> find_islands(const Image& image, int merge_distance,
     return find_islands(image, merge_distance, gray_levels,
       get_used_bounds(image, gray_levels));
 
-  using Value = MonoImage::Value;
   auto levels = (gray_levels ?
     get_gray_levels(image, rect) :
     get_alpha_levels(image, rect));
@@ -768,9 +785,9 @@ std::vector<Rect> find_islands(const Image& image, int merge_distance,
         auto max_x = x;
         auto max_y = y;
         flood_fill<8>(x, y, rect.w, rect.h,
-          Value{ },
-          [&](int x, int y) -> Value& { return levels.value_at({ x, y }); },
-          [&](const Value& pixel) { return (pixel != 0); },
+          Channel{ },
+          [&](int x, int y) -> Channel& { return levels.value_at({ x, y }); },
+          [&](const Channel& pixel) { return (pixel != 0); },
           [&](int x, int y) {
             min_x = std::min(x, min_x);
             min_y = std::min(y, min_y);
@@ -823,7 +840,7 @@ void make_opaque(Image& image, RGBA background) {
 
 void premultiply_alpha(Image& image) {
   const auto multiply = [](int channel, int alpha) {
-    return to_byte(channel * alpha / 256);
+    return to_channel(channel * alpha / 256);
   };
   const auto size = image.width() * image.height();
   auto rgba = image.rgba();
@@ -858,7 +875,7 @@ MonoImage get_gray_levels(const Image& image, const Rect& rect) {
 
   auto result = MonoImage(rect.w, rect.h);
   auto dest = result.data();
-  for_each_pixel(image, rect, [&](const RGBA& color) { *dest++ = color.gray(); });
+  for_each_pixel(image, rect, [&](const RGBA& color) { *dest++ = to_gray(color); });
   return result;
 }
 
@@ -914,14 +931,14 @@ MonoImage quantize_image(const Image& image, const Palette& palette, bool dither
   auto out = MonoImage(image.width(), image.height());
   for (auto y = 0; y < image.height(); ++y)
     for (auto x = 0; x < image.width(); ++x)
-      out.value_at({ x, y }) = to_byte(
+      out.value_at({ x, y }) = to_channel(
         index_of_closest_palette_color(palette, image.rgba_at({ x, y })));
   return out;
 }
 
 Image apply_palette(const MonoImage& image, const Palette& palette) {
   auto out = Image(image.width(), image.height());
-  const auto max = to_byte(palette.size() - 1);
+  const auto max = to_channel(palette.size() - 1);
   for (auto y = 0; y < image.height(); ++y)
     for (auto x = 0; x < image.width(); ++x)
       out.rgba_at({ x, y }) = palette[std::min(max, image.value_at({ x, y }))];

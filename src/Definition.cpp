@@ -250,13 +250,13 @@ void apply_definition(Definition definition,
   const auto check_color = [&]() {
     const auto string = check_string();
     auto ss = std::istringstream(std::string(string));
-    auto color = RGBA{ };
+    auto rgba = uint32_t{ };
     auto rest = char{ };
-    ss >> std::hex >> color.rgba >> rest;
+    ss >> std::hex >> rgba >> rest;
     check(!rest, "invalid hex value");
     if (string.length() <= 6)
-      color.a = 255;
-    return color;
+      rgba |= 0xFF000000;
+    return uint32_to_rgba(rgba);
   };
   const auto check_anchor = [&]() {
     // join expressions (e.g. middle - 7 top + 2)
@@ -439,7 +439,7 @@ void apply_definition(Definition definition,
       break;
 
     case Definition::colorkey: {
-      const auto guess = RGBA{ { 255, 255, 255, 0 } };
+      const auto guess = RGBA{ 255, 255, 255, 0 };
       state.colorkey = (arguments_left() ? check_color() : guess);
       break;
     }
