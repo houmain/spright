@@ -9,11 +9,11 @@ endif()
 find_package(Git)
 if(NOT VERSION AND GIT_FOUND)
     execute_process(COMMAND ${GIT_EXECUTABLE} describe --tags
-                  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                   OUTPUT_VARIABLE VERSION
                   OUTPUT_STRIP_TRAILING_WHITESPACE)
 endif()
-configure_file("src/version.h.in" "${CMAKE_SOURCE_DIR}/src/_version.h")
+configure_file("src/version.h.in" "${CMAKE_CURRENT_SOURCE_DIR}/src/_version.h")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
