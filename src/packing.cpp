@@ -222,7 +222,7 @@ namespace {
     return slices;
   }
 
-  std::string get_packing_failed_reason(const Sprite& sprite, size_t slice_count) {
+  std::string get_packing_failed_reason(const Sprite& sprite, int slice_count) {
     const auto& sheet = *sprite.sheet;
 
     const auto [max_width, max_height] = get_slice_max_size(sheet);
@@ -280,7 +280,7 @@ std::vector<Slice> pack_sprites(std::vector<Sprite>& sprites) {
   for (const auto& sprite : sprites)
     if (sprite.sheet && sprite.slice_index < 0)
       warning("packing sprite failed: " + 
-        get_packing_failed_reason(sprite, slices.size()), 
+        get_packing_failed_reason(sprite, to_int(slices.size())),
         sprite.warning_line_number);
 
   return slices;

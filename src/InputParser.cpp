@@ -460,13 +460,13 @@ void InputParser::deduce_globbed_inputs(State& state) {
     return sequences;
   }();
 
-  const auto inputs_in_sheet_before = static_cast<int>(m_inputs.size());
+  const auto inputs_in_sheet_before = m_inputs.size();
   for (const auto& sequence : sequences) {
     if (has_map_suffix(sequence, state.map_suffixes))
       continue;
 
     // only add inputs not encountered before
-    if (last_n_contain(m_inputs, inputs_in_sheet_before,
+    if (last_n_contain(m_inputs, static_cast<int>(m_inputs.size() - inputs_in_sheet_before),
         [&](const Input& input) {
           return input.source_filenames == sequence.sequence_filename();
         }))
