@@ -103,7 +103,7 @@ input "misc_scenery.png"
 
 When spright is called without [command line](#command-line-arguments) arguments, the [input definition](#input-definition) is read from `spright.conf` and it writes a `spright.json` file containing the [output description](#output-description).
 
-Passing the argument **-m complete** activates the auto-completion, which extends `spright.conf` with automatically deduced information:
+Passing the argument **-c** runs the completion, which extends `spright.conf` with automatically deduced information:
 
 ```perl
 input "Decorations (32x32).png"
@@ -448,11 +448,12 @@ Usage: spright [-options]
      'rebuild'            regenerate output even when input did not change.
      'describe'           only output description, no texture files.
      'describe-input'     only output description of input, do not pack.
-     'complete' [pattern] autocomplete inputs (matching optional pattern).
+     'complete' [pattern] complete inputs (matching optional pattern).
+  -c, --complete          shortcut for '--mode complete'.
   -i, --input <file>      input definition file (default: spright.conf).
   -o, --output <file>     output file containing either the output
                      description (default: spright.json) or the
-                     autocompleted input definition (defaults to --input).
+                     completed input definition (defaults to --input).
   -t, --template <file>   template for the output description.
   -p, --path <path>       path to prepend to all output files.
   -v, --verbose           enable verbose messages.

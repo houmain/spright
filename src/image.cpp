@@ -840,7 +840,7 @@ void make_opaque(Image& image, RGBA background) {
 
 void premultiply_alpha(Image& image) {
   const auto multiply = [](int channel, int alpha) {
-    return to_channel(channel * alpha / 256);
+    return to_channel(channel * alpha / 255);
   };
   const auto size = image.width() * image.height();
   auto rgba = image.rgba();
