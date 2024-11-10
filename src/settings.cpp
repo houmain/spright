@@ -30,6 +30,11 @@ bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
       else
         return false;
     }
+    else if (argument == "-c" || argument == "--complete") {
+      settings.mode = Mode::autocomplete;
+      if (i + 1 < argc && *argv[i + 1] != '-')
+        settings.autocomplete_pattern = unquote(argv[++i]);
+    }
     else if (argument == "-i" || argument == "--input") {
       if (++i >= argc)
         return false;
@@ -98,11 +103,12 @@ void print_help_message(const char* argv0) {
     "     'rebuild'            regenerate output even when input did not change.\n"
     "     'describe'           only output description, no texture files. \n"
     "     'describe-input'     only output description of input, do not pack. \n"
-    "     'complete' [pattern] autocomplete inputs (matching optional pattern).\n"
+    "     'complete' [pattern] complete inputs (matching optional pattern).\n"
+    "  -c, --complete          shortcut for '--mode complete'.\n"
     "  -i, --input <file>      input definition file (default: " << Settings::default_input_file << ").\n"
     "  -o, --output <file>     output file containing either the output\n"
     "                     description (default: " << Settings::default_output_file << ") or the\n"
-    "                     autocompleted input definition (defaults to --input).\n"
+    "                     completed input definition (defaults to --input).\n"
     "  -t, --template <file>   template for the output description.\n"
     "  -p, --path <path>       path to prepend to all output files.\n"
     "  -v, --verbose           enable verbose messages.\n"
