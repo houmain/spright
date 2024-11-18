@@ -14,13 +14,13 @@ public:
   Image(Image&& rhs) noexcept;
   Image& operator=(Image&& rhs) noexcept;
   ~Image();
-  Image clone(const Rect& rect = {}) const;
   explicit operator bool() const { return m_data != nullptr; }
 
   const std::filesystem::path& path() const { return m_path; }
   const std::filesystem::path& filename() const { return m_filename; }
   int width() const { return m_width; }
   int height() const { return m_height; }
+  Size size() const { return { m_width, m_height }; } 
   Rect bounds() const { return { 0, 0, m_width, m_height }; }
   const RGBA* rgba() const { return m_data; }
   RGBA* rgba() { return m_data; }
@@ -89,6 +89,7 @@ using Palette = std::vector<RGBA>;
 RGBA uint32_to_rgba(uint32_t value);
 void save_image(const Image& image, const std::filesystem::path& filename);
 void save_animation(const Animation& animation, const std::filesystem::path& filename);
+Image clone_image(const Image& image, const Rect& rect = { });
 Image resize_image(const Image& image, real scale, ResizeFilter filter);
 void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy);
 void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy);
