@@ -491,12 +491,12 @@ MonoImage::~MonoImage() {
   stbi_image_free(m_data);
 }
 
-Image Image::clone(const Rect& rect) const {
+Image clone_image(const Image& image, const Rect& rect) {
   if (empty(rect))
-    return clone(bounds());
-  check_rect(*this, rect);
+    return clone_image(image, image.bounds());
+  check_rect(image, rect);
   auto clone = Image(rect.w, rect.h);
-  copy_rect(*this, rect, clone, 0, 0);
+  copy_rect(image, rect, clone, 0, 0);
   return clone;
 }
 
@@ -883,7 +883,7 @@ Image resize_image(const Image& image, real scale, ResizeFilter filter) {
   const auto width = to_int(image.width() * scale + 0.5);
   const auto height = to_int(image.height() * scale + 0.5);
   if (width == image.width() && height == image.height())
-    return image.clone();
+    return clone_image(image);
 
   if (filter == ResizeFilter::undefined &&
       std::fmod(scale, 1.0f) == 0)
@@ -904,7 +904,7 @@ Image resize_image(const Image& image, real scale, ResizeFilter filter) {
 }
 
 Palette generate_palette(const Image& image_, int count) {
-  auto image = image_.clone();
+  auto image = clone_image(image_);
   const auto size = static_cast<size_t>(image.width() * image.height());
   return median_cut_reduction({ image.rgba(), size }, count);
 }
@@ -926,7 +926,7 @@ Palette generate_palette(const Animation& animation, int count) {
 MonoImage quantize_image(const Image& image, const Palette& palette, bool dither) {
   if (dither)
     return quantize_image(floyd_steinberg_dithering(
-      image.clone(), palette), palette, false);
+      clone_image(image), palette), palette, false);
 
   auto out = MonoImage(image.width(), image.height());
   for (auto y = 0; y < image.height(); ++y)
