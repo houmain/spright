@@ -24,6 +24,8 @@ public:
   Rect bounds() const { return { 0, 0, m_width, m_height }; }
   const RGBA* rgba() const { return m_data; }
   RGBA* rgba() { return m_data; }
+  RGBA* rgba_at(int x, int y) { return &m_data[y * m_width + x]; }
+  const RGBA* rgba_at(int x, int y) const { return &m_data[y * m_width + x]; }
   RGBA& rgba_at(const Point& p) { return m_data[p.y * m_width + p.x]; }
   const RGBA& rgba_at(const Point& p) const { return m_data[p.y * m_width + p.x]; }
 
