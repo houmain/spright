@@ -59,10 +59,16 @@ namespace {
     return true;
   }
 
-  template <typename F>
-  void for_each_pixel(const Image& image, Rect rect, F&& func) {
+  template <typename Image, typename F>
+  void for_each_pixel(Image& image, F&& func) {
+    std::for_each(image.rgba(), 
+      image.rgba() + image.width() * image.height(), std::forward<F>(func));
+  }
+
+  template <typename Image, typename F>
+  void for_each_pixel(Image& image, Rect rect, F&& func) {
     for (auto y = 0; y < rect.h; ++y) {
-      auto row = image.rgba() + image.width() * (rect.y + y) + rect.x;
+      auto row = image.rgba_at(rect.x, rect.y + y);
       for (auto x = 0; x < rect.w; ++x, ++row)
         func(*row);
     }
@@ -541,8 +547,8 @@ void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx
     check_rect(dest, dest_rect);
     for (auto y = 0; y < h; ++y)
       std::memcpy(
-        dest.rgba() + ((dy + y) * dest.width() + dx),
-        source.rgba() + ((sy + y) * source.width() + sx),
+        dest.rgba_at(dx, dy + y),
+        source.rgba_at(sx, sy + y),
         to_unsigned(w) * sizeof(RGBA));
   }
 }
@@ -554,8 +560,8 @@ void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& d
   for (auto y = 0; y < h; ++y)
     for (auto x = 0; x < w; ++x)
       std::memcpy(
-        dest.rgba() + ((dy + x) * dest.width() + (dx + h-1 - y)),
-        source.rgba() + ((sy + y) * source.width() + sx + x),
+        dest.rgba_at(dx + h-1 - y, dy + x),
+        source.rgba_at(sx + x, sy + y),
         sizeof(RGBA));
 }
 
@@ -705,8 +711,8 @@ bool is_identical(const Image& image_a, const Rect& rect_a, const Image& image_b
 
   for (auto y = 0; y < rect_a.h; ++y)
     if (std::memcmp(
-        image_a.rgba() + (rect_a.y + y) * image_a.width() + rect_a.x,
-        image_b.rgba() + (rect_b.y + y) * image_b.width() + rect_b.x,
+        image_a.rgba_at(rect_a.x, rect_a.y + y),
+        image_b.rgba_at(rect_b.x, rect_b.y + y),
         to_unsigned(rect_a.w) * sizeof(RGBA)))
       return false;
 
@@ -814,7 +820,7 @@ std::vector<Rect> find_islands(const Image& image, int merge_distance,
 }
 
 void clear_alpha(Image& image, RGBA color) {
-  std::for_each(image.rgba(), image.rgba() + image.width() * image.height(),
+  for_each_pixel(image,
     [&](RGBA& rgba) {
       if (rgba.a == 0)
         rgba = color;
@@ -822,14 +828,14 @@ void clear_alpha(Image& image, RGBA color) {
 }
 
 void make_opaque(Image& image) {
-  std::for_each(image.rgba(), image.rgba() + image.width() * image.height(),
+  for_each_pixel(image,
     [&](RGBA& rgba) {
       rgba.a = 255;
     });
 }
 
 void make_opaque(Image& image, RGBA background) {
-  std::for_each(image.rgba(), image.rgba() + image.width() * image.height(),
+  for_each_pixel(image,
     [&](RGBA& rgba) {
       if (rgba.a == 0)
         rgba = background;
