@@ -412,7 +412,7 @@ void apply_definition(Definition definition,
         const auto string = check_string();
         if (const auto index = index_of(string, 
             { "default", "box", "triangle", "cubicspline",
-                "catmullrom", "mitchell" }); index >= 0)
+                "catmullrom", "mitchell", "pointsample" }); index >= 0)
           state.scale_filter = static_cast<ResizeFilter>(index);
         else
           error("invalid scale filter '", string, "'");
