@@ -2,7 +2,7 @@
 #include "image.h"
 #include "stb/stb_image.h"
 #include "stb/stb_image_write.h"
-#include "stb/stb_image_resize.h"
+#include "stb/stb_image_resize2.h"
 #include "gifenc/gifenc.h"
 #include "nonstd/span.hpp"
 #include <array>
@@ -898,14 +898,14 @@ Image resize_image(const Image& image, real scale, ResizeFilter filter) {
   auto output = Image(width, height);
   const auto flags = 0;
   const auto edge_mode = STBIR_EDGE_CLAMP;
-  const auto color_space = STBIR_COLORSPACE_SRGB;
+  const auto pixel_layout = STBIR_RGBA;
+  const auto data_type = STBIR_TYPE_UINT8_SRGB;
   const auto bytes_per_pixel = int{ sizeof(RGBA) };
-  if (!stbir_resize(image.rgba(), image.width(), image.height(), image.width() * bytes_per_pixel,
+  if (!stbir_resize(image.rgba(), 
+        image.width(), image.height(), image.width() * bytes_per_pixel,
         output.rgba(), width, height, width * bytes_per_pixel,
-        STBIR_TYPE_UINT8, 4, 3, flags, edge_mode, edge_mode, 
-        static_cast<stbir_filter>(filter), static_cast<stbir_filter>(filter), 
-        color_space, nullptr))
-    throw std::bad_alloc();
+        pixel_layout, data_type, edge_mode, static_cast<stbir_filter>(filter)))
+    throw std::runtime_error("resizing image failed");
   return output;
 }
 

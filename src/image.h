@@ -71,7 +71,8 @@ enum class ResizeFilter {
   triangle,     // On upsampling, produces same results as bilinear texture filtering
   cubic_spline, // The cubic b-spline (aka Mitchell-Netrevalli with B=1,C=0), gaussian-esque
   catmull_rom,  // An interpolating cubic spline
-  mitchell      // Mitchell-Netrevalli filter with B=1/3, C=1/3
+  mitchell,     // Mitchell-Netrevalli filter with B=1/3, C=1/3
+  point_sample, // Simple point sampling
 };
 
 struct Animation {
