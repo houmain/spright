@@ -12,7 +12,7 @@ namespace {
   const auto default_sheet_id = "spright";
   const auto default_sprite_id = "sprite_{{ index }}";
 
-  ImagePtr try_get_map(const ImagePtr& source, 
+  ImageFilePtr try_get_map(const ImageFilePtr& source, 
       const std::string& default_map_suffix, 
       const std::string& map_suffix) {
 
@@ -20,7 +20,7 @@ namespace {
       default_map_suffix, map_suffix);
 
     if (std::filesystem::exists(map_filename))
-      return std::make_shared<Image>(source->path(), map_filename);
+      return std::make_shared<ImageFile>(source->path(), map_filename);
     return { };
   }
 
@@ -58,7 +58,7 @@ namespace {
     }
   }
 
-  std::vector<ImagePtr> make_unique_sort(std::vector<ImagePtr> sources) {
+  std::vector<ImageFilePtr> make_unique_sort(std::vector<ImageFilePtr> sources) {
     std::sort(begin(sources), end(sources));
     sources.erase(std::unique(begin(sources), end(sources)), end(sources));
     std::sort(begin(sources), end(sources),
@@ -100,39 +100,39 @@ std::shared_ptr<Output> InputParser::get_output(
   return output;
 }
 
-ImagePtr InputParser::get_source(const std::filesystem::path& path,
+ImageFilePtr InputParser::get_source(const std::filesystem::path& path,
     const std::filesystem::path& filename, RGBA colorkey) {
   auto& source = m_sources[std::filesystem::weakly_canonical(path / filename)];
   if (!source) {
-    auto image = Image(path, filename);
+    auto image = load_image(path / filename);
 
     if (colorkey != RGBA{ }) {
       if (!colorkey.a)
         colorkey = guess_colorkey(image);
       replace_color(image, colorkey, RGBA{ });
     }
-    source = std::make_shared<Image>(std::move(image));
+    source = std::make_shared<ImageFile>(std::move(image), path, filename);
   }
   return source;
 }
 
-ImagePtr InputParser::get_source(const State& state, int index) {
+ImageFilePtr InputParser::get_source(const State& state, int index) {
   return get_source(state.path,
     utf8_to_path(state.source_filenames.get_nth_filename(index)),
     state.colorkey);
 }
 
-ImagePtr InputParser::get_source(const State& state) {
+ImageFilePtr InputParser::get_source(const State& state) {
   return get_source(state, m_current_sequence_index);
 }
 
-MapVectorPtr InputParser::get_maps(const State& state, const ImagePtr& source) {
+MapVectorPtr InputParser::get_maps(const State& state, const ImageFilePtr& source) {
   if (state.map_suffixes.empty())
     return { };
 
   auto it = m_maps.find(source);
   if (it == m_maps.end()) {
-    auto maps = std::vector<ImagePtr>();
+    auto maps = std::vector<ImageFilePtr>();
     for (const auto& map_suffix : state.map_suffixes)
       maps.push_back(try_get_map(source, 
         state.default_map_suffix, map_suffix));

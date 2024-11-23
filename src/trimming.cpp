@@ -48,28 +48,30 @@ namespace {
     return merged;
   }
 
-  PolylinePtr get_polygon_outline(const MonoImage& image, int threshold) {
+  PolylinePtr get_polygon_outline(ImageView<const RGBA::Channel> image_mono, 
+      int threshold) {
     const auto sample = [](cpVect point, void *data) -> cpFloat {
-      const auto& image = *static_cast<const MonoImage*>(data);
+      const auto& image_mono = *static_cast<ImageView<const RGBA::Channel>*>(data);
       const auto x = to_int(point.x - 0.5);
       const auto y = to_int(point.y - 0.5);
-      if (x < 0 || x >= image.width() || y < 0 || y >= image.height())
+      if (x < 0 || x >= image_mono.width() || 
+          y < 0 || y >= image_mono.height())
         return 0;
-      return image.value_at({ x, y });
+      return image_mono.value_at({ x, y });
     };
 
     const auto outlines = cpPolylineSetNew();
     cpMarchHard(
-      { -1, -1, to_real(image.width() + 1), to_real(image.height() + 1) },
-      to_unsigned(image.width() + 3),
-      to_unsigned(image.height() + 3),
+      { -1, -1, to_real(image_mono.width() + 1), to_real(image_mono.height() + 1) },
+      to_unsigned(image_mono.width() + 3),
+      to_unsigned(image_mono.height() + 3),
       threshold - 1,
       reinterpret_cast<cpMarchSegmentFunc>(cpPolylineSetCollectSegment), outlines,
-      sample, const_cast<MonoImage*>(&image));
+      sample, &image_mono);
 
     assert(outlines->count > 0);
-    const auto right = cpFloat(image.width());
-    const auto bottom = cpFloat(image.height());
+    const auto right = cpFloat(image_mono.width());
+    const auto bottom = cpFloat(image_mono.height());
     for (auto i = 0; i < outlines->count; ++i) {
       auto& line = *outlines->lines[i];
       auto& verts = line.verts;
@@ -152,7 +154,8 @@ namespace {
         get_gray_levels(*sprite.source, sprite.trimmed_source_rect) :
         get_alpha_levels(*sprite.source, sprite.trimmed_source_rect));
 
-      auto outline = get_polygon_outline(levels, sprite.trim_threshold);
+      auto outline = get_polygon_outline(
+        levels.view<RGBA::Channel>(), sprite.trim_threshold);
       outline = to_convex_polygon(*outline, 0);
       outline = simplify_polygon(*outline, 3);
       expand_polygon(*outline, sprite.trim_margin);

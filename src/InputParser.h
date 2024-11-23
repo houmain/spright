@@ -24,11 +24,11 @@ private:
 
   std::shared_ptr<Sheet> get_sheet(const std::string& sheet_id);
   std::shared_ptr<Output> get_output(const std::filesystem::path& filename);
-  ImagePtr get_source(const State& state);
-  ImagePtr get_source(const State& state, int index);
-  ImagePtr get_source(const std::filesystem::path& path,
+  ImageFilePtr get_source(const State& state);
+  ImageFilePtr get_source(const State& state, int index);
+  ImageFilePtr get_source(const std::filesystem::path& path,
     const std::filesystem::path& filename, RGBA colorkey);
-  MapVectorPtr get_maps(const State& state, const ImagePtr& source);
+  MapVectorPtr get_maps(const State& state, const ImageFilePtr& source);
   Rect get_grid_bounds(const State& state);
   bool should_autocomplete(const std::string& filename, bool is_update) const;
   bool overlaps_sprite_or_skipped_rect(const Rect& rect) const;
@@ -62,8 +62,8 @@ private:
   std::vector<Input> m_inputs;
   std::map<std::string, std::shared_ptr<Sheet>> m_sheets;
   std::map<std::filesystem::path, std::shared_ptr<Output>> m_outputs;
-  std::map<std::filesystem::path, ImagePtr> m_sources;
-  std::map<ImagePtr, MapVectorPtr> m_maps;
+  std::map<std::filesystem::path, ImageFilePtr> m_sources;
+  std::map<ImageFilePtr, MapVectorPtr> m_maps;
   std::vector<Sprite> m_sprites;
   VariantMap m_variables;
   int m_inputs_in_current_glob{ };
@@ -71,7 +71,7 @@ private:
   std::vector<Rect> m_skipped_in_current_input;
   Point m_current_grid_cell{ };
   int m_current_sequence_index{ };
-  std::vector<ImagePtr> m_current_input_sources;
+  std::vector<ImageFilePtr> m_current_input_sources;
   std::string m_detected_indentation;
   std::vector<Description> m_descriptions;
   std::vector<std::map<Definition, NotAppliedDefinition>> m_not_applied_definitions;

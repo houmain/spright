@@ -2,19 +2,9 @@
 
 #include "input.h"
 
-#if __cplusplus > 201703L && __has_include(<span>)
-# include <span>
-#else
-# include "libs/nonstd/span.hpp"
-#endif
-
 namespace spright {
 
-#if !defined(NONSTD_SPAN_HPP_INCLUDED)
-using SpriteSpan = std::span<Sprite>;
-#else
-using SpriteSpan = nonstd::span<Sprite>;
-#endif
+using SpriteSpan = span<Sprite>;
 
 struct Slice {
   SheetPtr sheet;
