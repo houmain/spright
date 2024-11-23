@@ -7,10 +7,10 @@
 
 namespace spright {
 
-using ImagePtr = std::shared_ptr<const Image>;
+using ImageFilePtr = std::shared_ptr<const class ImageFile>;
 using SheetPtr = std::shared_ptr<const struct Sheet>;
 using OutputPtr = std::shared_ptr<const struct Output>;
-using MapVectorPtr = std::shared_ptr<const std::vector<ImagePtr>>;
+using MapVectorPtr = std::shared_ptr<const std::vector<ImageFilePtr>>;
 using StringMap = std::map<std::string, std::string, std::less<>>;
 
 enum class AnchorX { left, center, right };
@@ -37,10 +37,30 @@ struct Extrude {
   WrapMode mode;
 };
 
+class ImageFile : public Image {
+public:
+  ImageFile(Image image, std::filesystem::path path, std::filesystem::path filename) 
+    : Image(std::move(image)),
+      m_path(std::move(path)),
+      m_filename(std::move(filename)) {
+  }
+
+  ImageFile(std::filesystem::path path, std::filesystem::path filename) 
+    : ImageFile(load_image(path / filename), path, filename) {
+  }
+
+  const std::filesystem::path& path() const { return m_path; }
+  const std::filesystem::path& filename() const { return m_filename; }
+
+private:
+  std::filesystem::path m_path;
+  std::filesystem::path m_filename;
+};
+
 struct Input {
   int index;
   std::string source_filenames;
-  std::vector<ImagePtr> sources;
+  std::vector<ImageFilePtr> sources;
 };
 
 struct Output {
@@ -81,7 +101,7 @@ struct Sprite {
   int input_sprite_index{ };
   std::string id;
   SheetPtr sheet;
-  ImagePtr source;
+  ImageFilePtr source;
   MapVectorPtr maps;
   // the logical rect on the source
   Rect source_rect{ };

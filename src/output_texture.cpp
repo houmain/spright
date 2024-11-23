@@ -196,6 +196,8 @@ Animation get_slice_animation(const Slice& slice, int map_index) {
   for (const auto& sprite : slice.sprites)
     if (const auto source = get_source(sprite, map_index)) {
       auto& frame = animation.frames.emplace_back();
+      animation.width = std::max(animation.width, slice.width);
+      animation.height = std::max(animation.height, slice.height);
       frame.index = static_cast<int>(animation.frames.size() - 1);
       frame.image = Image(slice.width, slice.height, RGBA());
       copy_sprite(frame.image, sprite, map_index);

@@ -1,9 +1,38 @@
 
+#include <string>
+#include <cstdint>
+#include <new>
+
 #if defined(__GNUC__)
 # pragma GCC diagnostic ignored "-Wconversion"
 # pragma GCC diagnostic ignored "-Wsign-conversion"
 # pragma GCC diagnostic ignored "-Wunused-parameter"
 #endif
+
+static void* my_stbi_malloc(size_t size) {
+  return new std::byte[size];
+}
+
+static void* my_stbi_realloc_sized(void* pointer, size_t old_size, size_t new_size) {
+  auto old_data = static_cast<std::byte*>(pointer);
+  if (old_size >= new_size)
+    return old_data;
+
+  auto new_data = new (std::nothrow) std::byte[new_size];
+  if (new_data && old_data)
+    std::memcpy(new_data, old_data, old_size);
+  delete[] old_data;
+  return new_data;
+}
+
+static void my_stbi_free(void* pointer) {
+  auto data = static_cast<std::byte*>(pointer);
+  delete[] data;
+}
+
+#define STBI_MALLOC(sz)                   my_stbi_malloc(sz)
+#define STBI_REALLOC_SIZED(p,oldsz,newsz) my_stbi_realloc_sized(p,oldsz,newsz)
+#define STBI_FREE(p)                      my_stbi_free(p)
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_NO_FAILURE_STRINGS

@@ -15,11 +15,20 @@
 #include <variant>
 #include <map>
 
+#if __cplusplus > 201703L && __has_include(<span>)
+# include <span>
+template<typename T> using span = std::span<T>;
+#else
+# include "libs/nonstd/span.hpp"
+template<typename T> using span = nonstd::span<T>;
+#endif
+
 extern Scheduler scheduler;
 
 namespace spright {
 
-using Channel = uint8_t;
+constexpr auto pi = 3.14159265358979323846;
+
 using Variant = std::variant<bool, real, std::string>;
 using VariantMap = std::map<std::string, Variant, std::less<>>;
 
@@ -28,25 +37,6 @@ struct LStringView : std::string_view {
   LStringView(const char* s) : std::string_view(s) { }
   LStringView(const std::string& s) : std::string_view(s) { }
   LStringView(std::string&& s) = delete;
-};
-
-struct RGBA {
-  Channel r, g, b, a;
-
-  Channel& channel(int index) { return (&r)[index]; }
-  const Channel& channel(int index) const { return (&r)[index]; }
-
-  friend bool operator==(const RGBA& lhs, const RGBA& rhs) {
-    return std::tie(lhs.r, lhs.g, lhs.b, lhs.a) == 
-           std::tie(rhs.r, rhs.g, rhs.b, rhs.a);
-  }
-  friend bool operator!=(const RGBA& lhs, const RGBA& rhs) {
-    return !(lhs == rhs);
-  }
-  friend bool operator<(const RGBA& lhs, const RGBA& rhs) {
-    return std::tie(lhs.r, lhs.g, lhs.b, lhs.a) < 
-           std::tie(rhs.r, rhs.g, rhs.b, rhs.a);
-  }
 };
 
 template<typename... T>
@@ -131,10 +121,11 @@ void replace_variables(std::filesystem::path& path, const VariantMap& variables)
 std::string variant_to_string(const Variant& variant);
 std::string make_identifier(std::string string);
 
-inline int floor(int v, int q) { return (v / q) * q; };
-inline int ceil(int v, int q) { return ((v + q - 1) / q) * q; };
+constexpr real deg_to_rad(real deg) { return deg * (pi / 180.0); }
+constexpr int floor(int v, int q) { return (v / q) * q; };
+constexpr int ceil(int v, int q) { return ((v + q - 1) / q) * q; };
 inline int sqrt(int a) { return static_cast<int>(std::sqrt(a)); }
-inline int div_ceil(int a, int b) { return (b > 0 ? (a + b - 1) / b : -1); }
+constexpr int div_ceil(int a, int b) { return (b > 0 ? (a + b - 1) / b : -1); }
 
 constexpr int ceil_to_pot(int value) {
   for (auto pot = 1; ; pot <<= 1)

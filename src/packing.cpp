@@ -346,7 +346,7 @@ void update_last_source_written_times(std::vector<Slice>& slices) {
     [](Slice& slice) {
       auto last_write_time = get_last_write_time(slice.sheet->input_file);
 
-      auto sources = std::unordered_set<const Image*>();
+      auto sources = std::unordered_set<const ImageFile*>();
       for (const auto& sprite : slice.sprites)
         sources.insert(sprite.source.get());
       for (const auto& source : sources)

@@ -1,64 +1,112 @@
 #pragma once
 
-#include "common.h"
-#include <filesystem>
+#include "Color.h"
 
 namespace spright {
+
+template<typename T> class ImageView;
+
+enum class ImageType {
+  RGBA,
+  RGBAF,
+  Mono
+};
+
+template<typename T> ImageType get_image_type() = delete;
+template<> inline ImageType get_image_type<RGBA>() { return ImageType::RGBA; }
+template<> inline ImageType get_image_type<RGBAF>() { return ImageType::RGBAF; }
+template<> inline ImageType get_image_type<RGBA::Channel>() { return ImageType::Mono; }
+
+inline size_t get_pixel_size(ImageType type) {
+  switch (type) {
+    case ImageType::RGBA:  return 4 * sizeof(uint8_t);
+    case ImageType::RGBAF: return 4 * sizeof(float);
+    case ImageType::Mono:  return 1 * sizeof(uint8_t);
+  }
+  return 0;
+}
 
 class Image {
 public:
   Image() = default;
-  Image(int width, int height);
-  Image(int width, int height, const RGBA& background);
-  Image(std::filesystem::path path, std::filesystem::path filename);
-  Image(Image&& rhs) noexcept;
-  Image& operator=(Image&& rhs) noexcept;
-  ~Image();
-  explicit operator bool() const { return m_data != nullptr; }
+  
+  Image(ImageType type, int width, int height)
+    : m_type(type), m_width(width), m_height(height),
+      m_data(new std::byte[size_bytes()]) {
+  }
 
-  const std::filesystem::path& path() const { return m_path; }
-  const std::filesystem::path& filename() const { return m_filename; }
+  Image(ImageType type, int width, int height, std::byte* data)
+    : m_type(type), m_width(width), m_height(height), m_data(data) {
+  }
+
+  template<typename T>
+  Image(int width, int height, const T& color)
+    : Image(get_image_type<T>(), width, height) {
+    std::fill_n(reinterpret_cast<T*>(m_data.get()), m_width * m_height, color);
+  }
+
+  Image(Image&& rhs) noexcept 
+    : m_type(rhs.m_type),
+      m_width(std::exchange(rhs.m_width, 0)),
+      m_height(std::exchange(rhs.m_height, 0)),
+      m_data(std::exchange(rhs.m_data, nullptr)) {
+  }
+
+  Image& operator=(Image&& rhs) noexcept {
+    auto tmp = std::move(rhs);
+    std::swap(m_type, tmp.m_type);
+    std::swap(m_width, tmp.m_width);
+    std::swap(m_height, tmp.m_height);
+    std::swap(m_data, tmp.m_data);
+    return *this;
+  }
+
+  ~Image() = default;
+
+  explicit operator bool() const { return static_cast<bool>(m_data); }
+
+  ImageType type() const { return m_type; }
   int width() const { return m_width; }
   int height() const { return m_height; }
-  Size size() const { return { m_width, m_height }; } 
-  Rect bounds() const { return { 0, 0, m_width, m_height }; }
-  const RGBA* rgba() const { return m_data; }
-  RGBA* rgba() { return m_data; }
-  RGBA* rgba_at(int x, int y) { return &m_data[y * m_width + x]; }
-  const RGBA* rgba_at(int x, int y) const { return &m_data[y * m_width + x]; }
-  RGBA& rgba_at(const Point& p) { return m_data[p.y * m_width + p.x]; }
-  const RGBA& rgba_at(const Point& p) const { return m_data[p.y * m_width + p.x]; }
+  Rect bounds() const { return { 0, 0, width(), height() }; }
+  span<const std::byte> data() const { return { m_data.get(), size_bytes() }; }
+  span<std::byte> data() { return { m_data.get(), size_bytes() }; }
+  size_t size_bytes() const { return m_width * m_height * get_pixel_size(m_type); }
+  template<typename T> auto view() const { return ImageView<const T>(this); }
+  template<typename T> auto view() { return ImageView<T>(this); }
 
 private:
-  std::filesystem::path m_path;
-  std::filesystem::path m_filename;
-  RGBA* m_data{ };
+  ImageType m_type{ };
   int m_width{ };
   int m_height{ };
+  std::unique_ptr<std::byte[]> m_data;
 };
 
-class MonoImage {
+template<typename T>
+class ImageView {
 public:
-  MonoImage() = default;
-  MonoImage(int width, int height);
-  MonoImage(int width, int height, Channel background);
-  MonoImage(MonoImage&& rhs) noexcept;
-  MonoImage& operator=(MonoImage&& rhs) noexcept;
-  ~MonoImage();
-  explicit operator bool() const { return m_data != nullptr; }
+  using Value = T;
+  using ImagePtr = std::conditional_t<std::is_const_v<T>, const Image*, Image*>;
 
-  int width() const { return m_width; }
-  int height() const { return m_height; }
-  Rect bounds() const { return { 0, 0, m_width, m_height }; }
-  const Channel* data() const { return m_data; }
-  Channel* data() { return m_data; }
-  Channel& value_at(const Point& p) { return m_data[p.y * m_width + p.x]; }
-  const Channel& value_at(const Point& p) const { return m_data[p.y * m_width + p.x]; }
+  explicit ImageView(ImagePtr image)
+    : m_image(image) {
+    if (get_image_type<std::remove_const_t<T>>() != image->type())
+      throw std::logic_error("unexpected image type");
+  }
+
+  ImageType type() const { return m_image->type(); }
+  int width() const { return m_image->width(); }
+  int height() const { return m_image->height(); }
+  Rect bounds() const { return { 0, 0, width(), height() }; }
+  Value* values() const { 
+    return reinterpret_cast<Value*>(m_image->data().data()); }
+  Value* values_at(int x, int y) const { return values() + (y * width() + x); }
+  Value& value_at(const Point& p) const { return *values_at(p.x, p.y); }
+  int size() const { return width() * height(); }
+  size_t size_bytes() const { return m_image->size_bytes(); }
 
 private:
-  Channel* m_data{ };
-  int m_width{ };
-  int m_height{ };
+  ImagePtr m_image{ };
 };
 
 enum class WrapMode { 
@@ -81,17 +129,40 @@ struct Animation {
     Image image;
     real duration;
   };
+  int width;
+  int height;
   std::vector<Frame> frames;
-  int max_colors{ };
+  int max_colors;
   std::optional<RGBA> color_key;
   int loop_count;
 };
 
 using Palette = std::vector<RGBA>;
 
-RGBA uint32_to_rgba(uint32_t value);
+inline void check(bool inside) {
+  if (!inside)
+    throw std::logic_error("access outside image bounds");
+}
+
+template<typename ImageOrView>
+void check_rect(const ImageOrView& image, const Rect& rect) {
+  check(containing(image.bounds(), rect));
+}
+
+// io
+Image load_image(const std::filesystem::path& filename);
 void save_image(const Image& image, const std::filesystem::path& filename);
 void save_animation(const Animation& animation, const std::filesystem::path& filename);
+
+// draw
+void draw_rect(Image& image, const Rect& rect, const RGBA& color);
+void draw_line(Image& image, const Point& p0, const Point& p1, 
+  const RGBA& color, bool omit_last = false);
+void draw_line_stipple(Image& image, const Point& p0, const Point& p1, 
+  const RGBA& color, int stipple, bool omit_last = false);
+void draw_rect_stipple(Image& image, const Rect& rect, const RGBA& color, int stipple);
+void fill_rect(Image& image, const Rect& rect, const RGBA& color);
+
 Image clone_image(const Image& image, const Rect& rect = { });
 Image resize_image(const Image& image, real scale, ResizeFilter filter);
 void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy);
@@ -102,13 +173,6 @@ void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& d
   int dx, int dy, const std::vector<PointF>& mask_vertices);
 void extrude_rect(Image& image, const Rect& rect, int count, WrapMode mode, 
   bool left, bool top, bool right, bool bottom);
-void draw_rect(Image& image, const Rect& rect, const RGBA& color);
-void draw_line(Image& image, const Point& p0, const Point& p1, 
-  const RGBA& color, bool omit_last = false);
-void draw_line_stipple(Image& image, const Point& p0, const Point& p1, 
-  const RGBA& color, int stipple, bool omit_last = false);
-void draw_rect_stipple(Image& image, const Rect& rect, const RGBA& color, int stipple);
-void fill_rect(Image& image, const Rect& rect, const RGBA& color);
 bool is_opaque(const Image& image, const Rect& rect = { });
 bool is_fully_transparent(const Image& image, int threshold = 1, const Rect& rect = { });
 bool is_fully_black(const Image& image, int threshold = 1, const Rect& rect = { });
@@ -123,11 +187,7 @@ void make_opaque(Image& image);
 void make_opaque(Image& image, RGBA background);
 void premultiply_alpha(Image& image);
 void bleed_alpha(Image& image);
-MonoImage get_alpha_levels(const Image& image, const Rect& rect = { });
-MonoImage get_gray_levels(const Image& image, const Rect& rect = { });
-Palette generate_palette(const Image& image, int count);
-Palette generate_palette(const Animation& animation, int count);
-MonoImage quantize_image(const Image& image, const Palette& palette, bool dither);
-Image apply_palette(const MonoImage& image, const Palette& palette);
+Image get_alpha_levels(const Image& image, const Rect& rect = { });
+Image get_gray_levels(const Image& image, const Rect& rect = { });
 
 } // namespace
