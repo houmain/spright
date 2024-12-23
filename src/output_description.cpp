@@ -346,6 +346,18 @@ void evaluate_expressions(
     }
 }
 
+void resolve_template_filename(std::filesystem::path& template_filename) {
+  auto error_code = std::error_code{ };
+  for (const auto& prefix : { ".", "./templates", "../share/spright/templates" }) {
+    const auto resolved = prefix / template_filename;
+    if (std::filesystem::exists(resolved, error_code)) {
+      template_filename = resolved;
+      return;
+    }
+  }
+  error("template '", path_to_utf8(template_filename), "' not found");
+}
+
 void complete_description_definitions(const Settings& settings,
     std::vector<Description>& descriptions,
     const VariantMap& variables) {
@@ -369,21 +381,10 @@ void complete_description_definitions(const Settings& settings,
       if (description.filename.string() != "stdout")
         description.filename = settings.output_path / description.filename;
 
-  // replace variables
-  for (auto& description : descriptions)
-    replace_variables(description.template_filename, variables);
-
-  // also lookup templates in sub-directory
+  // replace variables and resolve template filename
   for (auto& description : descriptions) {
-    auto& template_filename = description.template_filename;
-    auto error = std::error_code();
-    if (!template_filename.empty() &&
-        template_filename.is_relative() && 
-        !std::filesystem::exists(template_filename, error)) {
-      const auto resolved = "templates" / template_filename;
-      if (std::filesystem::exists(resolved, error))
-        template_filename = resolved;
-    }
+    replace_variables(description.template_filename, variables);
+    resolve_template_filename(description.template_filename);
   }
 }
 
