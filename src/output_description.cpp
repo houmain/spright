@@ -347,10 +347,12 @@ void evaluate_expressions(
 }
 
 void resolve_template_filename(std::filesystem::path& template_filename) {
+  if (template_filename.empty())
+    return;
   auto error_code = std::error_code{ };
   for (const auto& prefix : { ".", "./templates", "../share/spright/templates" }) {
     const auto resolved = prefix / template_filename;
-    if (std::filesystem::exists(resolved, error_code)) {
+    if (std::filesystem::is_regular_file(resolved, error_code)) {
       template_filename = resolved;
       return;
     }
