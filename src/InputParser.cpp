@@ -38,6 +38,7 @@ namespace {
             definition == Definition::glob ||
             definition == Definition::input ||
             definition == Definition::description ||
+            definition == Definition::transform ||
             definition == Definition::sprite ||
             definition == Definition::skip);
   }
@@ -88,6 +89,18 @@ std::shared_ptr<Sheet> InputParser::get_sheet(const std::string& sheet_id) {
   if (!sheet)
     sheet = std::make_shared<Sheet>();
   return sheet;
+}
+
+void InputParser::set_transform(const std::string& transform_id, 
+    TransformPtr transform) {
+  assert(!transform_id.empty());
+  const auto inserted = m_transforms.emplace(transform_id, std::move(transform)).second;
+  check(inserted, "transform ", transform_id, " already defined");
+}
+
+TransformPtr InputParser::get_transform(const std::string& transform_id) {
+  const auto it = m_transforms.find(transform_id);
+  return (it != m_transforms.end() ? it->second : nullptr);
 }
 
 std::shared_ptr<Output> InputParser::get_output(
@@ -201,6 +214,7 @@ void InputParser::sprite_ends(State& state) {
   sprite.common_bounds = state.common_bounds;
   sprite.align = state.align;
   sprite.align_pivot = state.align_pivot;
+  sprite.transforms = state.transforms;
   sprite.tags = state.tags;
   sprite.data = state.data;
   advance();
@@ -537,6 +551,32 @@ void InputParser::description_ends(State& state) {
   description.template_filename = state.template_filename;
 }
 
+void InputParser::transform_begins(State& state, State& parent_state) {
+  // transforms open a scope and affect parent scope
+  if (const auto transform = get_transform(state.transform_id)) {
+    // add existing transform
+    state.transforms.push_back(transform);
+    parent_state.transforms.push_back(transform);
+  }
+  else {
+    m_current_transform = std::make_shared<Transform>();
+    if (state.transform_id.empty()) {
+      // add a new inline transform
+      state.transforms.push_back(m_current_transform);
+      parent_state.transforms.push_back(m_current_transform);
+    }
+    else {
+      // define a new transform
+      set_transform(state.transform_id, m_current_transform);
+    }
+  }
+}
+
+void InputParser::transform_ends(State& state) {
+  update_applied_definitions(Definition::transform);
+  m_current_transform.reset();
+}
+
 void InputParser::scope_ends(State& state) {
   switch (state.definition) {
     case Definition::sheet:
@@ -559,6 +599,9 @@ void InputParser::scope_ends(State& state) {
       break;
     case Definition::description:
       description_ends(state);
+      break;
+    case Definition::transform:
+      transform_ends(state);
       break;
     default:
       break;
@@ -677,11 +720,17 @@ void InputParser::parse(std::istream& input,
       arguments.erase(arguments.begin());
 
       apply_definition(definition, arguments,
-          state, m_current_grid_cell, m_variables);
+          state, m_current_grid_cell, m_variables,
+          m_current_transform.get());
       update_not_applied_definitions(definition, line_number);
 
-      if (definition == Definition::glob)
+      if (definition == Definition::glob) {
         glob_begins(state);
+      }
+      else if (definition == Definition::transform) {
+        auto& parent_state = *std::prev(scope_stack.end(), 2);
+        transform_begins(state, parent_state);
+      }
 
       // set definition when it was successfully applied
       // to disable scope_ends() on "errors as warnings"

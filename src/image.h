@@ -123,6 +123,12 @@ enum class ResizeFilter {
   point_sample, // Simple point sampling
 };
 
+enum class RotateMethod {
+  undefined,
+  nearest,
+  linear,
+};
+
 struct Animation {
   struct Frame {
     int index;
@@ -189,5 +195,8 @@ void premultiply_alpha(Image& image);
 void bleed_alpha(Image& image);
 Image get_alpha_levels(const Image& image, const Rect& rect = { });
 Image get_gray_levels(const Image& image, const Rect& rect = { });
+Image convert_to_linear(const Image& image, const Rect& rect = { });
+Image convert_to_srgb(const Image& image, const Rect& rect = { });
+Image rotate_image(const Image& source, real angle, RGBA background, RotateMethod method);
 
 } // namespace

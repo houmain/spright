@@ -27,6 +27,7 @@ set(SOURCES
     src/input.cpp
     src/InputParser.cpp
     src/Definition.cpp
+    src/transforming.cpp
     src/trimming.cpp
     src/packing.cpp
     src/pack_binpack.cpp

@@ -278,4 +278,68 @@ TEST_CASE("scope - Problems") {
     input "test/Items.png"
       sprite "text"
   )"));
+
+  // empty transform definition is allowed
+  CHECK_NOTHROW(parse(R"(
+    transform "t1"
+      # resize 1
+  )"));
+
+  // transform without sprites is allowed
+  CHECK_NOTHROW(parse(R"(
+    transform "t1"
+      resize 2
+
+    input "test/Items.png"
+      sprite "test"
+  )"));
+
+  // nested transforms are not allowed
+  CHECK_THROWS(parse(R"(
+    transform "t1"
+      resize 2
+
+    transform "t2"
+      transform "t1"
+  )"));
+
+  // duplicate transform definition
+  CHECK_THROWS(parse(R"(
+    transform "t1"
+      resize 2
+
+    transform "t1"
+      resize 2
+  )"));
+}
+
+TEST_CASE("scope - Transform") {
+  auto parser = parse(R"(
+    transform t1
+      resize 1
+
+    transform t2
+      resize 2
+      resize 3
+
+    input "test/Items.png"
+      grid 16 16
+      sprite           # [0]: none
+      transform t1
+      sprite           # [1]: t1
+      sprite           # [2]: t1, t2
+        transform t2
+      sprite           # [3]: t1, inline, t2, inline
+        transform
+          resize 4
+        transform t2
+        transform
+          resize 5
+  )");
+  const auto& sprites = parser.sprites();
+  REQUIRE(sprites.size() == 4);
+  CHECK(sprites[0].transforms.size() == 0);
+  CHECK(sprites[1].transforms.size() == 1);
+  CHECK(sprites[2].transforms.size() == 2);
+  CHECK(sprites[3].transforms.size() == 4);
 }

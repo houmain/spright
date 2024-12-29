@@ -39,6 +39,9 @@ struct LStringView : std::string_view {
   LStringView(std::string&& s) = delete;
 };
 
+template<class... T> struct overloaded : T... { using T::operator()...; };
+template<class... T> overloaded(T...) -> overloaded<T...>;
+
 template<typename... T>
 [[noreturn]] void error(T&&... args) {
   auto ss = std::ostringstream();

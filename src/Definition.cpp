@@ -103,6 +103,9 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::common_bounds: return "common-bounds";
     case Definition::align: return "align";
     case Definition::align_pivot: return "align-pivot";
+    case Definition::transform: return "transform";
+    case Definition::resize: return "resize";
+    case Definition::rotate: return "rotate";
     case Definition::description: return "description";
     case Definition::template_: return "template";
   }
@@ -126,6 +129,8 @@ Definition get_affected_definition(Definition definition) {
     // directly change state
     case Definition::row:
     case Definition::skip:
+    // allow transforms without sprites
+    case Definition::transform:
       return Definition::none;
 
     case Definition::output:
@@ -177,6 +182,10 @@ Definition get_affected_definition(Definition definition) {
     case Definition::span:
       return Definition::sprite;
 
+    case Definition::resize:
+    case Definition::rotate:
+      return Definition::transform;
+
     case Definition::template_:
       return Definition::description;
   }
@@ -186,7 +195,8 @@ Definition get_affected_definition(Definition definition) {
 void apply_definition(Definition definition,
     std::vector<std::string_view>& arguments,
     State& state, Point& current_grid_cell,
-    VariantMap& variables) {
+    VariantMap& variables,
+    Transform* current_transform) {
 
   auto argument_index = 0u;
   const auto arguments_left = [&]() {
@@ -307,6 +317,23 @@ void apply_definition(Definition definition,
     }
     return anchor;
   };
+  const auto check_resize_filter = [&]() -> ResizeFilter {
+    const auto string = check_string();
+    if (const auto index = index_of(string, 
+        { "default", "box", "triangle", "cubicspline",
+            "catmullrom", "mitchell", "pointsample" }); index >= 0)
+      return static_cast<ResizeFilter>(index);
+    error("invalid resize filter '", string, "'");
+    return { };
+  };
+  const auto check_rotate_method = [&]() -> RotateMethod {
+    const auto string = check_string();
+    if (const auto index = index_of(string, 
+        { "default", "nearest", "linear" }); index >= 0)
+      return static_cast<RotateMethod>(index);
+    error("invalid rotate method '", string, "'");
+    return { };
+  };
 
   switch (definition) {
     case Definition::set: {
@@ -407,16 +434,8 @@ void apply_definition(Definition definition,
     case Definition::scale:
       state.scale = check_real();
       check(state.scale >= 0.01 && state.scale < 100, "invalid scale");
-      state.scale_filter = ResizeFilter::undefined;
-      if (arguments_left()) {
-        const auto string = check_string();
-        if (const auto index = index_of(string, 
-            { "default", "box", "triangle", "cubicspline",
-                "catmullrom", "mitchell", "pointsample" }); index >= 0)
-          state.scale_filter = static_cast<ResizeFilter>(index);
-        else
-          error("invalid scale filter '", string, "'");
-      }
+      state.scale_filter = (arguments_left() ? 
+        check_resize_filter() : ResizeFilter::undefined);
       break;
 
     case Definition::debug:
@@ -615,6 +634,32 @@ void apply_definition(Definition definition,
     case Definition::align_pivot:
       state.align_pivot = (arguments_left() ? check_string() : "ALL");
       break;
+
+    case Definition::transform: {
+      check(!current_transform, "cannot nest transforms");
+      state.transform_id = (arguments_left() ? check_string() : "");
+      break;
+    }
+
+    case Definition::resize: {
+      check(current_transform, "not in transform");
+
+      const auto size = check_real();
+      check(state.scale >= 0.01 && state.scale < 100, "invalid size");
+      const auto resize_filter = (arguments_left() ? 
+        check_resize_filter() : ResizeFilter::undefined);
+      current_transform->emplace_back(TransformResize{ size, resize_filter });
+      break;
+    }
+    
+    case Definition::rotate: {
+      check(current_transform, "not in transform");
+      const auto angle = check_real();
+      const auto rotate_method = (arguments_left() ? 
+        check_rotate_method() : RotateMethod::undefined);
+      current_transform->emplace_back(TransformRotate{ angle, rotate_method });
+      break;
+    }
 
     case Definition::description:
       state.description_filename = check_path();

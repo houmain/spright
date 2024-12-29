@@ -61,6 +61,10 @@ enum class Definition {
   align,
   align_pivot,
 
+  transform,
+  resize,
+  rotate,
+
   description,
   template_,
 
@@ -125,6 +129,9 @@ struct State {
   Anchor align{ { 0, 0 }, AnchorX::center, AnchorY::middle };
   std::string align_pivot;
 
+  std::string transform_id;
+  std::vector<TransformPtr> transforms;
+
   std::filesystem::path description_filename;
   std::filesystem::path template_filename;
 };
@@ -137,7 +144,8 @@ void apply_definition(Definition definition,
     std::vector<std::string_view>& arguments,
     State& state,
     Point& current_grid_cell,
-    VariantMap& variables);
+    VariantMap& variables,
+    Transform* current_transform);
 
 bool has_grid(const State& state);
 bool has_atlas(const State& state);

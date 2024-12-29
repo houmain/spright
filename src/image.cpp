@@ -148,6 +148,93 @@ namespace {
     }
     return c;
   }
+
+  RGBAF blend(const RGBAF& a, const RGBAF& b, float mix) {
+    const auto blend = [](auto a, auto b, auto mix) {
+      return a + (b - a) * mix;
+    };
+    // TODO: also weight by alpha
+    return {
+      blend(a.r, b.r, mix),
+      blend(a.g, b.g, mix),
+      blend(a.b, b.b, mix),
+      blend(a.a, b.a, mix),
+    };
+  }
+
+  RGBAF sample_linear(ImageView<const RGBAF> image, const PointF& point, 
+      const RGBAF& background) {
+    const auto sample = [&](const Point& p) {
+      return (containing(image.bounds(), p) ? image.value_at(p) : background);
+    };
+    const auto int_remainder = [](real value) {
+      const auto i = std::floor(value);
+      return std::pair(to_int(i), static_cast<float>(value - i));
+    };
+    const auto [ix, rx] = int_remainder(point.x);
+    const auto [iy, ry] = int_remainder(point.y);
+    const auto c0 = sample(Point(ix, iy));
+    const auto c1 = sample(Point(ix + 1, iy));
+    const auto c2 = sample(Point(ix, iy + 1));
+    const auto c3 = sample(Point(ix + 1, iy + 1));
+    return blend(blend(c0, c1, rx), blend(c2, c3, rx), ry);
+  }
+
+  template<typename T, typename Sample>
+  Image rotate_image_sample(ImageView<const T> source, 
+      real angle, const Sample&& sample) {
+    const auto cos = std::cos(angle);
+    const auto sin = std::sin(angle);
+    const auto transform = [&](real x, real y) -> PointF {
+      return { x * cos + y * sin, y * cos - x * sin };
+    };
+
+    const auto w2 = source.width() / 2.0;
+    const auto h2 = source.height() / 2.0;
+    const auto p0 = transform(-w2, -h2);
+    const auto p1 = transform( w2, -h2);
+    const auto p2 = transform(-w2,  h2);
+    const auto p3 = transform( w2,  h2);
+    const auto mx = std::max(std::max(std::max(p0.x, p1.x), p2.x), p3.x);
+    const auto my = std::max(std::max(std::max(p0.y, p1.y), p2.y), p3.y);
+
+    // make destination size even/odd like source
+    const auto dx = to_int(mx * 2.0 + 0.5);
+    const auto dy = to_int(my * 2.0 + 0.5);
+    auto dest = Image(source.type(),
+      dx + (source.width() % 2 != dx % 2 ? 1 : 0), 
+      dy + (source.height() % 2 != dy % 2 ? 1 : 0));
+    const auto dest_view = dest.view<T>();
+
+    const auto source_center = PointF(
+      to_real(source.width()) / 2.0, 
+      to_real(source.height()) / 2.0);
+    const auto dest_center = PointF(
+      to_real(dest.width()) / 2.0, 
+      to_real(dest.height()) / 2.0);
+    for (auto y = 0; y < dest.height(); ++y)
+      for (auto x = 0; x < dest.width(); ++x)
+        dest_view.value_at(Point(x, y)) = sample(
+          transform(x - dest_center.x, y - dest_center.y) + source_center);
+
+    return dest;
+  }
+
+  Image rotate_image_linear(ImageView<const RGBAF> image_rgbaf, real angle, const RGBAF& background_rgbaf) {
+    return rotate_image_sample(image_rgbaf, angle, 
+      [&](const PointF& pos) {
+        return sample_linear(image_rgbaf, pos, background_rgbaf);
+      });
+  }
+
+  Image rotate_image_nearest(ImageView<const RGBAF> image_rgbaf, real angle, const RGBAF& background_rgbaf) {
+    return rotate_image_sample(image_rgbaf, angle, 
+      [&](const PointF& pos) {
+        const auto point = Point(to_int(pos.x + 0.5), to_int(pos.y + 0.5));
+        return (containing(image_rgbaf.bounds(), point) ? 
+          image_rgbaf.value_at(point) : background_rgbaf);
+      });
+  }
 } // namespace
 
 Image clone_image(const Image& image, const Rect& rect) {
@@ -495,20 +582,79 @@ Image resize_image(const Image& image, real scale, ResizeFilter filter) {
       std::fmod(scale, 1.0f) == 0)
     filter = ResizeFilter::box;
 
-  const auto image_rgba = image.view<RGBA>();
-  auto output = Image(ImageType::RGBA, width, height);
-  const auto out_rgba = output.view<RGBA>();
+  auto output = Image(image.type(), width, height);
+  auto data_type = stbir_datatype{ };
+  auto pixel_layout = stbir_pixel_layout{ };
+  switch (image.type()) {
+    case ImageType::RGBA:
+      pixel_layout = STBIR_RGBA;
+      data_type = STBIR_TYPE_UINT8_SRGB;
+      break;
+    case ImageType::RGBAF:
+      pixel_layout = STBIR_RGBA;
+      data_type = STBIR_TYPE_FLOAT;
+      break;
+    case ImageType::Mono:
+      pixel_layout = STBIR_1CHANNEL;
+      data_type = STBIR_TYPE_UINT8;
+      break;
+  }
   const auto flags = 0;
   const auto edge_mode = STBIR_EDGE_CLAMP;
-  const auto pixel_layout = STBIR_RGBA;
-  const auto data_type = STBIR_TYPE_UINT8_SRGB;
-  const auto bytes_per_pixel = to_int(sizeof(RGBA));
-  if (!stbir_resize(image_rgba.values(),
+  const auto bytes_per_pixel = static_cast<int>(get_pixel_size(image.type()));
+  if (!stbir_resize(image.data().data(),
         image.width(), image.height(), image.width() * bytes_per_pixel,
-        out_rgba.values(), width, height, width * bytes_per_pixel,
+        output.data().data(), width, height, width * bytes_per_pixel,
         pixel_layout, data_type, edge_mode, static_cast<stbir_filter>(filter)))
     throw std::runtime_error("resizing image failed");
   return output;
+}
+
+Image convert_to_linear(const Image& image, const Rect& rect) {
+  if (empty(rect))
+    return convert_to_linear(image, image.bounds());
+  check_rect(image, rect);
+
+  auto result = Image(ImageType::RGBAF, rect.w, rect.h);
+  auto dest = result.view<RGBAF>().values();
+  for_each_pixel(image.view<RGBA>(), rect, 
+    [&](const RGBA& c) { *dest++ = srgb_to_linear(c); });
+  return result;
+}
+
+Image convert_to_srgb(const Image& image, const Rect& rect) {
+  if (empty(rect))
+    return convert_to_srgb(image, image.bounds());
+  check_rect(image, rect);
+
+  auto result = Image(ImageType::RGBA, rect.w, rect.h);
+  auto dest = result.view<RGBA>().values();
+  for_each_pixel(image.view<RGBAF>(), rect,
+    [&](const RGBAF& c) { *dest++ = linear_to_srgb(c); });
+  return result;
+}
+
+Image rotate_image(const Image& image, real angle, RGBA background, RotateMethod method) {
+  angle = std::fmod(std::fmod(angle, 360) + 360, 360);
+
+  if (method == RotateMethod::undefined) {
+    method = RotateMethod::linear;  
+    if (std::abs(std::fmod(angle, 90)) < 0.0001)
+      method = RotateMethod::nearest;
+  }
+  angle = deg_to_rad(angle);
+
+  const auto image_rgbaf = image.view<const RGBAF>();
+  const auto background_rgbaf = srgb_to_linear(background);
+  switch (method) {
+    case RotateMethod::undefined:
+    case RotateMethod::nearest:
+      return rotate_image_nearest(image_rgbaf, angle, background_rgbaf);
+
+    case RotateMethod::linear:
+      return rotate_image_linear(image_rgbaf, angle, background_rgbaf);
+  }
+  return { };
 }
 
 } // namespace
