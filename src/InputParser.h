@@ -29,6 +29,8 @@ private:
   ImageFilePtr get_source(const std::filesystem::path& path,
     const std::filesystem::path& filename, RGBA colorkey);
   MapVectorPtr get_maps(const State& state, const ImageFilePtr& source);
+  void set_transform(const std::string& transform_id, TransformPtr transform);
+  TransformPtr get_transform(const std::string& transform_id);
   Rect get_grid_bounds(const State& state);
   bool should_autocomplete(const std::string& filename, bool is_update) const;
   bool overlaps_sprite_or_skipped_rect(const Rect& rect) const;
@@ -54,6 +56,8 @@ private:
   void handle_exception(std::function<void()>&& function);
   int sprites_or_skips_in_current_input() const;
   void description_ends(State& state);
+  void transform_begins(State& state, State& parent_state);
+  void transform_ends(State& state);
 
   const Settings m_settings;
   std::ostringstream m_autocomplete_output;
@@ -64,6 +68,7 @@ private:
   std::map<std::filesystem::path, std::shared_ptr<Output>> m_outputs;
   std::map<std::filesystem::path, ImageFilePtr> m_sources;
   std::map<ImageFilePtr, MapVectorPtr> m_maps;
+  std::map<std::string, TransformPtr> m_transforms;
   std::vector<Sprite> m_sprites;
   VariantMap m_variables;
   int m_inputs_in_current_glob{ };
@@ -75,6 +80,7 @@ private:
   std::string m_detected_indentation;
   std::vector<Description> m_descriptions;
   std::vector<std::map<Definition, NotAppliedDefinition>> m_not_applied_definitions;
+  std::shared_ptr<Transform> m_current_transform;
 };
 
 } // namespace

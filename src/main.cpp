@@ -1,4 +1,5 @@
 
+#include "transforming.h"
 #include "trimming.h"
 #include "packing.h"
 #include "output.h"
@@ -27,6 +28,9 @@ int main(int argc, const char* argv[]) try {
   auto textures = std::vector<Texture>();
   if (settings.mode != Mode::autocomplete &&
       settings.mode != Mode::describe_input) {
+    transform_sprites(sprites);
+    time_points.emplace_back(Clock::now(), "transforming");
+
     trim_sprites(sprites);
     time_points.emplace_back(Clock::now(), "trimming");
 
@@ -43,6 +47,8 @@ int main(int argc, const char* argv[]) try {
       output_textures(textures);
       time_points.emplace_back(Clock::now(), "output textures");
     }
+
+    restore_untransformed_sources(sprites);
   }
   else {
     evaluate_expressions(settings, sprites, textures, variables);

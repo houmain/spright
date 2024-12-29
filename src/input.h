@@ -57,6 +57,20 @@ private:
   std::filesystem::path m_filename;
 };
 
+struct TransformResize {
+  real size;
+  ResizeFilter resize_filter;
+};
+
+struct TransformRotate {
+  real angle;
+  RotateMethod rotate_method;
+};
+
+using TransformStep = std::variant<TransformResize, TransformRotate>;
+using Transform = std::vector<TransformStep>;
+using TransformPtr = std::shared_ptr<const Transform>;
+
 struct Input {
   int index;
   std::string source_filenames;
@@ -123,6 +137,10 @@ struct Sprite {
   std::string align_pivot;
   StringMap tags;
   VariantMap data;
+
+  std::vector<TransformPtr> transforms;
+  ImageFilePtr untransformed_source;
+  Rect untransformed_source_rect{ };
 
   int slice_index{ -1 };
   // the logical rect on the output
