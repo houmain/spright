@@ -124,7 +124,7 @@ else()
 endif()
 
 # package
-set(CPACK_PACKAGE_NAME "Spright")
+set(CPACK_PACKAGE_NAME "spright")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "An advanced sprite sheet packer and sprite annotator")
 set(CPACK_PACKAGE_VENDOR "Albert Kalchmair")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "spright")
