@@ -7,6 +7,11 @@
 
 namespace spright {
 
+constexpr const char* current_year() {
+  const auto date = __DATE__;
+  return &date[7];
+}
+
 bool interpret_commandline(Settings& settings, int argc, const char* argv[]) {
   for (auto i = 1; i < argc; i++) {
     const auto argument = std::string_view(argv[i]);
@@ -95,7 +100,7 @@ void print_help_message(const char* argv0) {
 #endif
 
   std::cout <<
-    "spright " << version << "(c) 2020-2024 by Albert Kalchmair\n"
+    "spright " << version << "(c) 2020-" << current_year() << " by Albert Kalchmair\n"
     "\n"
     "Usage: " << program << " [-options]\n"
     "  -m, --mode <mode>       sets the run mode:\n"
