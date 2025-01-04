@@ -599,7 +599,6 @@ Image resize_image(const Image& image, real scale, ResizeFilter filter) {
       data_type = STBIR_TYPE_UINT8;
       break;
   }
-  const auto flags = 0;
   const auto edge_mode = STBIR_EDGE_CLAMP;
   const auto bytes_per_pixel = static_cast<int>(get_pixel_size(image.type()));
   if (!stbir_resize(image.data().data(),

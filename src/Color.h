@@ -8,8 +8,8 @@ struct ColorT {
 
   Channel r, g, b, a;
 
-  template<typename T>
-  static constexpr Channel to_channel(T value) { return static_cast<Channel>(value); }
+  template<typename S>
+  static constexpr Channel to_channel(S value) { return static_cast<Channel>(value); }
 
   constexpr Channel& channel(int index) { return (&r)[index]; }
   constexpr const Channel& channel(int index) const { return (&r)[index]; }

@@ -71,7 +71,9 @@ public:
   Rect bounds() const { return { 0, 0, width(), height() }; }
   span<const std::byte> data() const { return { m_data.get(), size_bytes() }; }
   span<std::byte> data() { return { m_data.get(), size_bytes() }; }
-  size_t size_bytes() const { return m_width * m_height * get_pixel_size(m_type); }
+  size_t size_bytes() const {
+    return static_cast<size_t>(m_width * m_height) * get_pixel_size(m_type);
+  }
   template<typename T> auto view() const { return ImageView<const T>(this); }
   template<typename T> auto view() { return ImageView<T>(this); }
 

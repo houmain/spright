@@ -132,7 +132,7 @@ namespace {
       }
   }
 
-  Palette generate_palette(const Image& image, int max_colors) {
+  [[maybe_unused]] Palette generate_palette(const Image& image, int max_colors) {
     auto clone = clone_image(image);
     const auto clone_rgba = clone.view<RGBA>();
     return median_cut_reduction(

@@ -1,6 +1,7 @@
 
 #include <string>
 #include <cstdint>
+#include <cstring>
 #include <new>
 
 #if defined(__GNUC__)

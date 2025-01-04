@@ -572,7 +572,7 @@ void InputParser::transform_begins(State& state, State& parent_state) {
   }
 }
 
-void InputParser::transform_ends(State& state) {
+void InputParser::transform_ends([[maybe_unused]] State& state) {
   update_applied_definitions(Definition::transform);
   m_current_transform.reset();
 }
