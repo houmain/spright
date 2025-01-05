@@ -208,7 +208,6 @@ void InputParser::sprite_ends(State& state) {
   sprite.trim_gray_levels = state.trim_gray_levels;
   sprite.crop = state.crop;
   sprite.crop_pivot = state.crop_pivot;
-  sprite.extrude = state.extrude;
   sprite.min_bounds = state.min_bounds;
   sprite.divisible_bounds = state.divisible_bounds;
   sprite.common_bounds = state.common_bounds;

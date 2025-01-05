@@ -97,7 +97,6 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::trim_channel: return "trim-channel";
     case Definition::crop: return "crop";
     case Definition::crop_pivot: return "crop-pivot";
-    case Definition::extrude: return "extrude";
     case Definition::min_bounds: return "min-bounds";
     case Definition::divisible_bounds: return "divisible-bounds";
     case Definition::common_bounds: return "common-bounds";
@@ -106,6 +105,7 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::transform: return "transform";
     case Definition::resize: return "resize";
     case Definition::rotate: return "rotate";
+    case Definition::extrude: return "extrude";
     case Definition::description: return "description";
     case Definition::template_: return "template";
   }
@@ -173,7 +173,6 @@ Definition get_affected_definition(Definition definition) {
     case Definition::trim_channel:
     case Definition::crop:
     case Definition::crop_pivot:
-    case Definition::extrude:
     case Definition::min_bounds:
     case Definition::divisible_bounds:
     case Definition::common_bounds:
@@ -184,6 +183,7 @@ Definition get_affected_definition(Definition definition) {
 
     case Definition::resize:
     case Definition::rotate:
+    case Definition::extrude:
       return Definition::transform;
 
     case Definition::template_:
@@ -332,6 +332,14 @@ void apply_definition(Definition definition,
         { "default", "nearest", "linear" }); index >= 0)
       return static_cast<RotateMethod>(index);
     error("invalid rotate method '", string, "'");
+    return { };
+  };
+  const auto check_wrap_mode = [&]() -> WrapMode {
+    const auto string = check_string();
+    if (const auto index = index_of(string, 
+        { "clamp", "mirror", "repeat" }); index >= 0)
+      return static_cast<WrapMode>(index);
+    error("invalid extrude mode '", string, "'");
     return { };
   };
 
@@ -594,19 +602,6 @@ void apply_definition(Definition definition,
       state.crop_pivot = check_bool(true);
       break;
 
-    case Definition::extrude:
-      state.extrude = {};
-      state.extrude.count = (arguments_left() ? check_uint() : 1);
-      if (arguments_left()) {
-        const auto string = check_string();
-        if (const auto index = index_of(string, 
-            { "clamp", "mirror", "repeat" }); index >= 0)
-          state.extrude.mode = static_cast<WrapMode>(index);
-        else
-          error("invalid extrude mode '", string, "'");
-      }
-      break;
-
     case Definition::min_bounds:
       state.min_bounds = check_size(true);
       break;
@@ -658,6 +653,15 @@ void apply_definition(Definition definition,
       const auto rotate_method = (arguments_left() ? 
         check_rotate_method() : RotateMethod::undefined);
       current_transform->emplace_back(TransformRotate{ angle, rotate_method });
+      break;
+    }
+
+    case Definition::extrude: {
+      check(current_transform, "not in transform");
+      const auto count = (arguments_left() ? check_uint() : 1);
+      const auto wrap_mode = (arguments_left() ? 
+        check_wrap_mode() : WrapMode::clamp);
+      current_transform->emplace_back(TransformExtrude{ count, wrap_mode });
       break;
     }
 

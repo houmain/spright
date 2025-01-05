@@ -1,6 +1,7 @@
 
 #include "catch.hpp"
 #include "src/InputParser.h"
+#include "src/transforming.h"
 #include "src/trimming.h"
 #include "src/packing.h"
 #include "src/output.h"
@@ -34,10 +35,12 @@ namespace {
     parser.parse(input);
     static auto s_sprites = std::vector<Sprite>();
     s_sprites = std::move(parser).sprites();
+    transform_sprites(s_sprites);
     trim_sprites(s_sprites);
     auto slices = pack_sprites(s_sprites);
     if (has_warnings())
       throw HasWarningsException();
+    restore_untransformed_sources(s_sprites);
     return slices;
   }
 
@@ -240,7 +243,8 @@ TEST_CASE("packing - Basic") {
       colorkey
       atlas
       divisible-bounds 24
-      extrude 1
+      transform
+        extrude 1
   )");
   CHECK(slice.height <= 30);
   CHECK(le_size(slice, 806, 26));

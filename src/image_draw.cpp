@@ -15,7 +15,6 @@ namespace {
     a.a = std::max(a.a, b.a);
   }
 
-
   // https://en.wikipedia.org/wiki/Bresenham's_line_algorithm
   template<typename F>
   void bresenham_line(int x0, int y0, int x1, int y1, F&& func, bool omit_last) {

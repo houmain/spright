@@ -35,6 +35,15 @@ namespace {
     return true;
   }
 
+  template <typename Image, typename F>
+  void with_view(Image& image, F&& func) {
+    switch (image.type()) {
+      case ImageType::RGBA: return func(image.view<RGBA>());
+      case ImageType::RGBAF: return func(image.view<RGBAF>());
+      case ImageType::Mono: return func(image.view<RGBA::Channel>());
+    }
+  }
+
   template <typename ImageView, typename F>
   void for_each_pixel(ImageView image_view, F&& func) {
     std::for_each(image_view.values(), 
@@ -237,35 +246,39 @@ namespace {
   }
 } // namespace
 
-Image clone_image(const Image& image, const Rect& rect) {
+Image clone_image(const Image& image, const Rect& rect, int padding) {
   if (empty(rect))
-    return clone_image(image, image.bounds());
+    return clone_image(image, image.bounds(), padding);
   check_rect(image, rect);
-  auto clone = Image(image.type(), rect.w, rect.h);
-  copy_rect(image, rect, clone, 0, 0);
+  auto clone = Image(image.type(), rect.w + padding * 2, rect.h + padding * 2);
+  if (padding)
+    std::memset(clone.data().data(), 0x00, clone.data().size_bytes());
+  copy_rect(image, rect, clone, padding, padding);
   return clone;
 }
 
 void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy) {
-  const auto source_rgba = source.view<RGBA>();
-  const auto dest_rgba = dest.view<RGBA>();
-  const auto [sx, sy, w, h] = source_rect;
-  const auto dest_rect = Rect{ dx, dy, w, h };
-  if (source_rect == source.bounds() &&
-      dest_rect == dest.bounds() &&
-      source_rect == dest_rect) {
-    std::memcpy(dest_rgba.values(), source_rgba.values(),
-      to_unsigned(w * h) * sizeof(RGBA));
-  }
-  else {
-    check_rect(source, source_rect);
-    check_rect(dest, dest_rect);
-    for (auto y = 0; y < h; ++y)
-      std::memcpy(
-        dest_rgba.values_at(dx, dy + y),
-        source_rgba.values_at(sx, sy + y),
-        to_unsigned(w) * sizeof(RGBA));
-  }
+  with_view(source, [&](auto source_view) {
+    using Value = std::remove_const_t<decltype(source_view)::Value>;
+    const auto dest_view = dest.view<Value>();
+    const auto [sx, sy, w, h] = source_rect;
+    const auto dest_rect = Rect{ dx, dy, w, h };
+    if (source_rect == source.bounds() &&
+        dest_rect == dest.bounds() &&
+        source_rect == dest_rect) {
+      std::memcpy(dest_view.values(), source_view.values(),
+        to_unsigned(w * h) * sizeof(Value));
+    }
+    else {
+      check_rect(source, source_rect);
+      check_rect(dest, dest_rect);
+      for (auto y = 0; y < h; ++y)
+        std::memcpy(
+          dest_view.values_at(dx, dy + y),
+          source_view.values_at(sx, sy + y),
+          to_unsigned(w) * sizeof(Value));
+    }
+  });
 }
 
 void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy) {
@@ -306,10 +319,9 @@ void copy_rect_rotated_cw(const Image& source, const Rect& source_rect,
           checked_rgba_at(source_rgba, { sx + x, sy + y });
 }
 
-void extrude_rect(Image& image, const Rect& rect, int count, WrapMode mode,
-    bool left, bool top, bool right, bool bottom) {
-  check_rect(image, expand(rect, count));
-  const auto image_rgba = image.view<RGBA>();
+Image extrude_image(const Image& image, int count, WrapMode mode) {
+  auto output = clone_image(image, image.bounds(), count);
+  const auto rect = expand(output.bounds(), -count);
 
   for (auto i = 1; i <= count; ++i) {
     const auto d = expand(rect, i);
@@ -335,22 +347,23 @@ void extrude_rect(Image& image, const Rect& rect, int count, WrapMode mode,
     const auto sx1 = rect.x1() - 1 - wx;
     const auto sy1 = rect.y1() - 1 - wy;
 
-    if (top)
-      std::memcpy(&image_rgba.value_at({ dx0 + 1, dy0 }), 
-                  &image_rgba.value_at({ dx0 + 1, sy0 }),
-                  to_unsigned(dx1 - dx0 - 1) * sizeof(RGBA));
-    if (bottom)
-      std::memcpy(&image_rgba.value_at({ dx0 + 1, dy1 }), 
-                  &image_rgba.value_at({ dx0 + 1, sy1 }), 
-                  to_unsigned(dx1 - dx0 - 1) * sizeof(RGBA));
-    if (left)
-      for (auto y = dy0; y <= dy1; ++y)
-        image_rgba.value_at({ dx0, y }) = image_rgba.value_at({ sx0, y });
+    with_view(output, [&](auto image_view) {
+      std::memcpy(&image_view.value_at({ dx0 + 1, dy0 }), 
+                  &image_view.value_at({ dx0 + 1, sy0 }),
+                  to_unsigned(dx1 - dx0 - 1) * image_view.pixel_size());
 
-    if (right)
+      std::memcpy(&image_view.value_at({ dx0 + 1, dy1 }), 
+                  &image_view.value_at({ dx0 + 1, sy1 }), 
+                  to_unsigned(dx1 - dx0 - 1) * image_view.pixel_size());
+
       for (auto y = dy0; y <= dy1; ++y)
-        image_rgba.value_at({ dx1, y }) = image_rgba.value_at({ sx1, y });
+        image_view.value_at({ dx0, y }) = image_view.value_at({ sx0, y });
+
+      for (auto y = dy0; y <= dy1; ++y)
+        image_view.value_at({ dx1, y }) = image_view.value_at({ sx1, y });
+    });
   }
+  return output;
 }
 
 bool is_opaque(const Image& image, const Rect& rect) {

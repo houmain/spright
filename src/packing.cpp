@@ -24,9 +24,9 @@ namespace {
   void update_sprite_bounds(Sprite& s) {
     const auto size = s.trimmed_source_rect.size();
     s.bounds.x = std::max(s.min_bounds.x,
-      ceil(size.x + 2 * s.extrude.count, s.divisible_bounds.x));
+      ceil(size.x, s.divisible_bounds.x));
     s.bounds.y = std::max(s.min_bounds.y,
-      ceil(size.y + 2 * s.extrude.count, s.divisible_bounds.y));
+      ceil(size.y, s.divisible_bounds.y));
   }
 
   void update_sprite_alignment(Sprite& s) {

@@ -71,9 +71,8 @@ public:
   Rect bounds() const { return { 0, 0, width(), height() }; }
   span<const std::byte> data() const { return { m_data.get(), size_bytes() }; }
   span<std::byte> data() { return { m_data.get(), size_bytes() }; }
-  size_t size_bytes() const {
-    return static_cast<size_t>(m_width * m_height) * get_pixel_size(m_type);
-  }
+  size_t size_bytes() const { return static_cast<size_t>(m_width * m_height) * pixel_size(); }
+  size_t pixel_size() const { return get_pixel_size(m_type); }
   template<typename T> auto view() const { return ImageView<const T>(this); }
   template<typename T> auto view() { return ImageView<T>(this); }
 
@@ -106,6 +105,7 @@ public:
   Value& value_at(const Point& p) const { return *values_at(p.x, p.y); }
   int size() const { return width() * height(); }
   size_t size_bytes() const { return m_image->size_bytes(); }
+  size_t pixel_size() const { return m_image->pixel_size(); }
 
 private:
   ImagePtr m_image{ };
@@ -171,7 +171,7 @@ void draw_line_stipple(Image& image, const Point& p0, const Point& p1,
 void draw_rect_stipple(Image& image, const Rect& rect, const RGBA& color, int stipple);
 void fill_rect(Image& image, const Rect& rect, const RGBA& color);
 
-Image clone_image(const Image& image, const Rect& rect = { });
+Image clone_image(const Image& image, const Rect& rect = { }, int padding = 0);
 Image resize_image(const Image& image, real scale, ResizeFilter filter);
 void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy);
 void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy);
@@ -179,8 +179,7 @@ void copy_rect(const Image& source, const Rect& source_rect, Image& dest,
   int dx, int dy, const std::vector<PointF>& mask_vertices);
 void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& dest, 
   int dx, int dy, const std::vector<PointF>& mask_vertices);
-void extrude_rect(Image& image, const Rect& rect, int count, WrapMode mode, 
-  bool left, bool top, bool right, bool bottom);
+Image extrude_image(const Image& image, int count, WrapMode mode);
 bool is_opaque(const Image& image, const Rect& rect = { });
 bool is_fully_transparent(const Image& image, int threshold = 1, const Rect& rect = { });
 bool is_fully_black(const Image& image, int threshold = 1, const Rect& rect = { });

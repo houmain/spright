@@ -3,6 +3,23 @@
 
 namespace spright {
 
+namespace {
+  void transform_image(const TransformStep& step, Image& image, const Image& source) {
+    std::visit(overloaded{
+      [&](const TransformResize& resize) {
+        image = resize_image(image, resize.size, resize.resize_filter);
+      },
+      [&](const TransformRotate& rotate) {
+        const auto background = guess_colorkey(source);
+        image = rotate_image(image, rotate.angle, background, rotate.rotate_method);
+      },
+      [&](const TransformExtrude& extrude) {
+        image = extrude_image(image, extrude.count, extrude.mode);
+      }
+    }, step);
+  }
+} // namespace
+
 void transform_sprites(std::vector<Sprite>& sprites) {
   for (auto& sprite : sprites)
     if (!sprite.transforms.empty()) {
@@ -13,20 +30,11 @@ void transform_sprites(std::vector<Sprite>& sprites) {
 
       for (const auto& transform : sprite.transforms)
         for (const auto& step : *transform)
-          std::visit(overloaded{
-            [&](const TransformResize& resize) {
-              image = resize_image(image, resize.size, resize.resize_filter);
-            },
-            [&](const TransformRotate& rotate) {
-              const auto background = guess_colorkey(*sprite.source);
-              image = rotate_image(image, rotate.angle, background, rotate.rotate_method);
-            }
-          }, step);
+          transform_image(step, image, *sprite.source);
 
       sprite.source = std::make_shared<ImageFile>(
-        convert_to_srgb(image),
-        sprite.source->path(), sprite.source->filename());
-      sprite.source_rect = sprite.source->bounds();
+        convert_to_srgb(image), sprite.source->path(), sprite.source->filename());
+      sprite.source_rect = image.bounds();
     }
 }
 

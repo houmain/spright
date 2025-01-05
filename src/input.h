@@ -32,10 +32,6 @@ enum class Pack { binpack, rows, columns, compact, origin, single, layers, keep 
 
 enum class Duplicates { keep, share, drop };
 
-struct Extrude {
-  int count;
-  WrapMode mode;
-};
 
 class ImageFile : public Image {
 public:
@@ -67,7 +63,15 @@ struct TransformRotate {
   RotateMethod rotate_method;
 };
 
-using TransformStep = std::variant<TransformResize, TransformRotate>;
+struct TransformExtrude {
+  int count;
+  WrapMode mode;
+};
+
+using TransformStep = std::variant<
+  TransformResize, 
+  TransformRotate, 
+  TransformExtrude>;
 using Transform = std::vector<TransformStep>;
 using TransformPtr = std::shared_ptr<const Transform>;
 
@@ -108,6 +112,9 @@ struct Sheet {
   Pack pack{ };
 };
 
+struct Untransformed {
+};
+
 struct Sprite {
   int warning_line_number{ };
   int index{ };
@@ -128,7 +135,6 @@ struct Sprite {
   bool trim_gray_levels{ };
   bool crop{ };
   bool crop_pivot{ };
-  Extrude extrude{ };
   Size min_bounds{ };
   Size divisible_bounds{ };
   std::string common_bounds;
@@ -139,6 +145,7 @@ struct Sprite {
   VariantMap data;
 
   std::vector<TransformPtr> transforms;
+  Untransformed untransformed;
   ImageFilePtr untransformed_source;
   Rect untransformed_source_rect{ };
 
