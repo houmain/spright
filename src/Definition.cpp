@@ -342,6 +342,14 @@ void apply_definition(Definition definition,
     error("invalid extrude mode '", string, "'");
     return { };
   };
+  const auto add_transform_step = [&](auto&& step) {
+    if (!current_transform) {
+      auto transform = std::make_shared<Transform>();
+      current_transform = transform.get();
+      state.transforms.emplace_back(std::move(transform));
+    }
+    current_transform->emplace_back(std::move(step));
+  };
 
   switch (definition) {
     case Definition::set: {
@@ -631,37 +639,33 @@ void apply_definition(Definition definition,
       break;
 
     case Definition::transform: {
-      check(!current_transform, "cannot nest transforms");
-      state.transform_id = (arguments_left() ? check_string() : "");
+      check(state.transform_id.empty(), "cannot nest transforms");
+      state.transform_id = check_string();
       break;
     }
 
     case Definition::resize: {
-      check(current_transform, "not in transform");
-
       const auto size = check_real();
       check(state.scale >= 0.01 && state.scale < 100, "invalid size");
       const auto resize_filter = (arguments_left() ? 
         check_resize_filter() : ResizeFilter::undefined);
-      current_transform->emplace_back(TransformResize{ size, resize_filter });
+      add_transform_step(TransformResize{ size, resize_filter });
       break;
     }
     
     case Definition::rotate: {
-      check(current_transform, "not in transform");
       const auto angle = check_real();
       const auto rotate_method = (arguments_left() ? 
         check_rotate_method() : RotateMethod::undefined);
-      current_transform->emplace_back(TransformRotate{ angle, rotate_method });
+      add_transform_step(TransformRotate{ angle, rotate_method });
       break;
     }
 
     case Definition::extrude: {
-      check(current_transform, "not in transform");
       const auto count = (arguments_left() ? check_uint() : 1);
       const auto wrap_mode = (arguments_left() ? 
         check_wrap_mode() : WrapMode::clamp);
-      current_transform->emplace_back(TransformExtrude{ count, wrap_mode });
+      add_transform_step(TransformExtrude{ count, wrap_mode });
       break;
     }
 

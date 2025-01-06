@@ -329,17 +329,24 @@ TEST_CASE("scope - Transform") {
       sprite           # [1]: t1
       sprite           # [2]: t1, t2
         transform t2
-      sprite           # [3]: t1, inline, t2, inline
-        transform
-          resize 4
+      sprite           # [3]: t1, r4, r5, t2, r6
+        resize 4
+        resize 5
         transform t2
-        transform
-          resize 5
+        resize 6
   )");
   const auto& sprites = parser.sprites();
   REQUIRE(sprites.size() == 4);
   CHECK(sprites[0].transforms.size() == 0);
-  CHECK(sprites[1].transforms.size() == 1);
-  CHECK(sprites[2].transforms.size() == 2);
-  CHECK(sprites[3].transforms.size() == 4);
+  REQUIRE(sprites[1].transforms.size() == 1);
+  CHECK(sprites[1].transforms[0]->size() == 1);
+  REQUIRE(sprites[2].transforms.size() == 2);
+  CHECK(sprites[2].transforms[0]->size() == 1);
+  CHECK(sprites[2].transforms[1]->size() == 2);
+  REQUIRE(sprites[3].transforms.size() == 5);
+  CHECK(sprites[3].transforms[0]->size() == 1);
+  CHECK(sprites[3].transforms[1]->size() == 1);
+  CHECK(sprites[3].transforms[2]->size() == 1);
+  CHECK(sprites[3].transforms[3]->size() == 2);
+  CHECK(sprites[3].transforms[4]->size() == 1);
 }

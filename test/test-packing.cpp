@@ -243,8 +243,7 @@ TEST_CASE("packing - Basic") {
       colorkey
       atlas
       divisible-bounds 24
-      transform
-        extrude 1
+      extrude 1
   )");
   CHECK(slice.height <= 30);
   CHECK(le_size(slice, 806, 26));

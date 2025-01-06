@@ -99,6 +99,7 @@ void InputParser::set_transform(const std::string& transform_id,
 }
 
 TransformPtr InputParser::get_transform(const std::string& transform_id) {
+  assert(!transform_id.empty());
   const auto it = m_transforms.find(transform_id);
   return (it != m_transforms.end() ? it->second : nullptr);
 }
@@ -169,6 +170,8 @@ bool InputParser::should_autocomplete(const std::string& filename, bool is_updat
 
 void InputParser::sprite_ends(State& state) {
   update_applied_definitions(Definition::sprite);
+  if (!state.transforms.empty())
+    update_applied_definitions(Definition::transform);
 
   const auto source = get_source(state);
   const auto rect =
@@ -553,25 +556,21 @@ void InputParser::description_ends(State& state) {
 void InputParser::transform_begins(State& state, State& parent_state) {
   // transforms open a scope and affect parent scope
   if (const auto transform = get_transform(state.transform_id)) {
-    // add existing transform
+    // apply existing transform
     state.transforms.push_back(transform);
     parent_state.transforms.push_back(transform);
   }
   else {
+    // define a new transform
     m_current_transform = std::make_shared<Transform>();
-    if (state.transform_id.empty()) {
-      // add a new inline transform
-      state.transforms.push_back(m_current_transform);
-      parent_state.transforms.push_back(m_current_transform);
-    }
-    else {
-      // define a new transform
-      set_transform(state.transform_id, m_current_transform);
-    }
+    set_transform(state.transform_id, m_current_transform);
   }
 }
 
 void InputParser::transform_ends([[maybe_unused]] State& state) {
+  check(m_current_transform ||
+    state.transforms.back() == get_transform(state.transform_id),
+    "duplicate transform definition");
   update_applied_definitions(Definition::transform);
   m_current_transform.reset();
 }
