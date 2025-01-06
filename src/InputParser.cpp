@@ -40,6 +40,7 @@ namespace {
             definition == Definition::description ||
             definition == Definition::transform ||
             definition == Definition::sprite ||
+            definition == Definition::duplicate ||
             definition == Definition::skip);
   }
 
@@ -229,6 +230,31 @@ void InputParser::sprite_ends(State& state) {
   m_current_input_sources.push_back(sprite.source);
   m_sprites.push_back(std::move(sprite));
   ++m_sprites_in_current_input;
+}
+
+void InputParser::duplicate_ends(State& state) {
+  if (!state.transforms.empty())
+    update_applied_definitions(Definition::transform);
+
+  const auto& original_sprite = [&]() {
+    if (!state.duplicate_id.empty()) {
+      auto it = std::prev(m_sprites.end());
+      for (auto i = 0; i < m_sprites_in_current_input; ++i, --it)
+        if (it->id == state.duplicate_id)
+          return *it;
+      error("sprite to duplicate '", state.duplicate_id, "' not found");
+    }
+    if (!m_sprites_in_current_input)
+      error("no sprite to duplicate");
+    return m_sprites.back();
+  }();
+  
+  auto sprite = original_sprite;
+  sprite.id = state.sprite_id;
+  sprite.transforms = state.transforms;
+  sprite.tags = state.tags;
+  sprite.data = state.data;
+  m_sprites.push_back(std::move(sprite));
 }
 
 void InputParser::skip_sprites(State& state) {
@@ -591,6 +617,9 @@ void InputParser::scope_ends(State& state) {
       break;
     case Definition::sprite:
       sprite_ends(state);
+      break;
+    case Definition::duplicate:
+      duplicate_ends(state);
       break;
     case Definition::skip:
       skip_sprites(state);

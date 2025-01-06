@@ -86,6 +86,7 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::maps: return "maps";
     case Definition::max_sprites: return "max-sprites";
     case Definition::sprite: return "sprite";
+    case Definition::duplicate: return "duplicate";
     case Definition::id: return "id";
     case Definition::rect: return "rect";
     case Definition::pivot: return "pivot";
@@ -562,6 +563,14 @@ void apply_definition(Definition definition,
       check(!state.source_filenames.empty(), "sprite not on input");
       if (arguments_left())
         state.sprite_id = check_string();
+      break;
+
+    case Definition::duplicate:
+      if (arguments_left()) {
+        state.sprite_id = check_string();
+        if (arguments_left())
+          state.duplicate_id = check_string();
+      }
       break;
 
     case Definition::id:

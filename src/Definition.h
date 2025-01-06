@@ -43,6 +43,7 @@ enum class Definition {
   max_sprites,
 
   sprite,
+  duplicate,
   id,
   rect,
   pivot,
@@ -105,6 +106,7 @@ struct State {
   StringMap tags;
   VariantMap data;
   std::string sprite_id;
+  std::string duplicate_id;
   int skip_sprites{ };
   Size grid{ };
   Size grid_cells{ };

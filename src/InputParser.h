@@ -35,6 +35,7 @@ private:
   bool should_autocomplete(const std::string& filename, bool is_update) const;
   bool overlaps_sprite_or_skipped_rect(const Rect& rect) const;
   void sprite_ends(State& state);
+  void duplicate_ends(State& state);
   void skip_sprites(State& state);
   void deduce_grid_size(State& state);
   Rect deduce_rect_from_grid(State& state);
