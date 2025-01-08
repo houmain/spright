@@ -55,6 +55,7 @@ enum class Definition {
   trim_channel,
   crop,
   crop_pivot,
+  extrude,
   min_bounds,
   divisible_bounds,
   common_bounds,
@@ -64,7 +65,6 @@ enum class Definition {
   transform,
   resize,
   rotate,
-  extrude,
 
   description,
   template_,
@@ -124,6 +124,7 @@ struct State {
   bool trim_gray_levels{ };
   bool crop{ };
   bool crop_pivot{ };
+  Extrude extrude{ };
   Size min_bounds{ };
   Size divisible_bounds{ 1, 1 };
   std::string common_bounds;

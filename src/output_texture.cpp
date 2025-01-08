@@ -50,6 +50,21 @@ namespace {
           target, sprite.trimmed_rect.x, sprite.trimmed_rect.y, sprite.vertices);
       }
     }
+
+    if (sprite.extrude.count) {
+      const auto left = (sprite.source_rect.x0() == sprite.trimmed_source_rect.x0());
+      const auto top = (sprite.source_rect.y0() == sprite.trimmed_source_rect.y0());
+      const auto right = (sprite.source_rect.x1() == sprite.trimmed_source_rect.x1());
+      const auto bottom = (sprite.source_rect.y1() == sprite.trimmed_source_rect.y1());
+      if (left || top || right || bottom) {
+        auto rect = sprite.trimmed_rect;
+        if (sprite.rotated)
+          std::swap(rect.w, rect.h);
+        extrude_rect(target, rect, 
+          sprite.extrude.count, sprite.extrude.mode, 
+          left, top, right, bottom);
+      }
+    }
     return true;
   }
   catch ([[maybe_unused]] const std::exception& ex) {

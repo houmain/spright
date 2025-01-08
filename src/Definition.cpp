@@ -98,6 +98,7 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::trim_channel: return "trim-channel";
     case Definition::crop: return "crop";
     case Definition::crop_pivot: return "crop-pivot";
+    case Definition::extrude: return "extrude";
     case Definition::min_bounds: return "min-bounds";
     case Definition::divisible_bounds: return "divisible-bounds";
     case Definition::common_bounds: return "common-bounds";
@@ -106,7 +107,6 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::transform: return "transform";
     case Definition::resize: return "resize";
     case Definition::rotate: return "rotate";
-    case Definition::extrude: return "extrude";
     case Definition::description: return "description";
     case Definition::template_: return "template";
   }
@@ -175,6 +175,7 @@ Definition get_affected_definition(Definition definition) {
     case Definition::trim_channel:
     case Definition::crop:
     case Definition::crop_pivot:
+    case Definition::extrude:
     case Definition::min_bounds:
     case Definition::divisible_bounds:
     case Definition::common_bounds:
@@ -185,7 +186,6 @@ Definition get_affected_definition(Definition definition) {
 
     case Definition::resize:
     case Definition::rotate:
-    case Definition::extrude:
       return Definition::transform;
 
     case Definition::template_:
@@ -620,6 +620,12 @@ void apply_definition(Definition definition,
       state.crop_pivot = check_bool(true);
       break;
 
+    case Definition::extrude:
+      state.extrude = {};
+      state.extrude.count = (arguments_left() ? check_uint() : 1);
+      state.extrude.mode = (arguments_left() ? check_wrap_mode() : WrapMode::clamp);
+      break;
+
     case Definition::min_bounds:
       state.min_bounds = check_size(true);
       break;
@@ -668,14 +674,6 @@ void apply_definition(Definition definition,
       const auto rotate_method = (arguments_left() ? 
         check_rotate_method() : RotateMethod::undefined);
       add_transform_step(TransformRotate{ angle, rotate_method });
-      break;
-    }
-
-    case Definition::extrude: {
-      const auto count = (arguments_left() ? check_uint() : 1);
-      const auto wrap_mode = (arguments_left() ? 
-        check_wrap_mode() : WrapMode::clamp);
-      add_transform_step(TransformExtrude{ count, wrap_mode });
       break;
     }
 

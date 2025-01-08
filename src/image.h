@@ -199,7 +199,8 @@ void copy_rect(const Image& source, const Rect& source_rect, Image& dest,
   int dx, int dy, const std::vector<PointF>& mask_vertices);
 void copy_rect_rotated_cw(const Image& source, const Rect& source_rect, Image& dest, 
   int dx, int dy, const std::vector<PointF>& mask_vertices);
-Image extrude_image(const Image& image, int count, WrapMode mode);
+void extrude_rect(Image& image, const Rect& rect, int count, WrapMode mode, 
+  bool left, bool top, bool right, bool bottom);
 bool is_opaque(const Image& image, const Rect& rect = { });
 bool is_fully_transparent(const Image& image, int threshold = 1, const Rect& rect = { });
 bool is_fully_black(const Image& image, int threshold = 1, const Rect& rect = { });

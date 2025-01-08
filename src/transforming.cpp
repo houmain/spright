@@ -12,9 +12,6 @@ namespace {
       [&](const TransformRotate& rotate) {
         const auto background = guess_colorkey(source);
         image = rotate_image(image, rotate.angle, background, rotate.rotate_method);
-      },
-      [&](const TransformExtrude& extrude) {
-        image = extrude_image(image, extrude.count, extrude.mode);
       }
     }, step);
   }

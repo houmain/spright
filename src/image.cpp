@@ -310,9 +310,10 @@ void copy_rect_rotated_cw(const Image& source, const Rect& source_rect,
           checked_rgba_at(source_rgba, { sx + x, sy + y });
 }
 
-Image extrude_image(const Image& image, int count, WrapMode mode) {
-  auto output = clone_image(image, image.bounds(), count);
-  const auto rect = expand(output.bounds(), -count);
+void extrude_rect(Image& image, const Rect& rect, int count, WrapMode mode,
+    bool left, bool top, bool right, bool bottom) {
+  check_rect(image, expand(rect, count));
+  const auto image_rgba = image.view<RGBA>();
 
   for (auto i = 1; i <= count; ++i) {
     const auto d = expand(rect, i);
@@ -338,23 +339,22 @@ Image extrude_image(const Image& image, int count, WrapMode mode) {
     const auto sx1 = rect.x1() - 1 - wx;
     const auto sy1 = rect.y1() - 1 - wy;
 
-    output.view([&](auto image_view) {
-      std::memcpy(&image_view.value_at({ dx0 + 1, dy0 }), 
-                  &image_view.value_at({ dx0 + 1, sy0 }),
-                  to_unsigned(dx1 - dx0 - 1) * image_view.pixel_size());
-
-      std::memcpy(&image_view.value_at({ dx0 + 1, dy1 }), 
-                  &image_view.value_at({ dx0 + 1, sy1 }), 
-                  to_unsigned(dx1 - dx0 - 1) * image_view.pixel_size());
-
+    if (top)
+      std::memcpy(&image_rgba.value_at({ dx0 + 1, dy0 }),
+                  &image_rgba.value_at({ dx0 + 1, sy0 }),
+                  to_unsigned(dx1 - dx0 - 1) * sizeof(RGBA));
+    if (bottom)
+      std::memcpy(&image_rgba.value_at({ dx0 + 1, dy1 }),
+                  &image_rgba.value_at({ dx0 + 1, sy1 }),
+                  to_unsigned(dx1 - dx0 - 1) * sizeof(RGBA));
+    if (left)
       for (auto y = dy0; y <= dy1; ++y)
-        image_view.value_at({ dx0, y }) = image_view.value_at({ sx0, y });
+        image_rgba.value_at({ dx0, y }) = image_rgba.value_at({ sx0, y });
 
+    if (right)
       for (auto y = dy0; y <= dy1; ++y)
-        image_view.value_at({ dx1, y }) = image_view.value_at({ sx1, y });
-    });
+        image_rgba.value_at({ dx1, y }) = image_rgba.value_at({ sx1, y });
   }
-  return output;
 }
 
 bool is_opaque(const Image& image, const Rect& rect) {
