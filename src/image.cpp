@@ -35,15 +35,6 @@ namespace {
     return true;
   }
 
-  template <typename Image, typename F>
-  void with_view(Image& image, F&& func) {
-    switch (image.type()) {
-      case ImageType::RGBA: return func(image.view<RGBA>());
-      case ImageType::RGBAF: return func(image.view<RGBAF>());
-      case ImageType::Mono: return func(image.view<RGBA::Channel>());
-    }
-  }
-
   template <typename ImageView, typename F>
   void for_each_pixel(ImageView image_view, F&& func) {
     std::for_each(image_view.values(), 
@@ -258,8 +249,8 @@ Image clone_image(const Image& image, const Rect& rect, int padding) {
 }
 
 void copy_rect(const Image& source, const Rect& source_rect, Image& dest, int dx, int dy) {
-  with_view(source, [&](auto source_view) {
-    using Value = std::remove_const_t<decltype(source_view)::Value>;
+  source.view([&](auto source_view) {
+    using Value = std::remove_const_t<typename decltype(source_view)::Value>;
     const auto dest_view = dest.view<Value>();
     const auto [sx, sy, w, h] = source_rect;
     const auto dest_rect = Rect{ dx, dy, w, h };
@@ -347,7 +338,7 @@ Image extrude_image(const Image& image, int count, WrapMode mode) {
     const auto sx1 = rect.x1() - 1 - wx;
     const auto sy1 = rect.y1() - 1 - wy;
 
-    with_view(output, [&](auto image_view) {
+    output.view([&](auto image_view) {
       std::memcpy(&image_view.value_at({ dx0 + 1, dy0 }), 
                   &image_view.value_at({ dx0 + 1, sy0 }),
                   to_unsigned(dx1 - dx0 - 1) * image_view.pixel_size());

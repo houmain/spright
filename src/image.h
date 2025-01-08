@@ -75,6 +75,8 @@ public:
   size_t pixel_size() const { return get_pixel_size(m_type); }
   template<typename T> auto view() const { return ImageView<const T>(this); }
   template<typename T> auto view() { return ImageView<T>(this); }
+  template<typename F> void view(F&& func) const;
+  template<typename F> void view(F&& func);
 
 private:
   ImageType m_type{ };
@@ -146,6 +148,24 @@ struct Animation {
 };
 
 using Palette = std::vector<RGBA>;
+
+template<typename F>
+void Image::view(F&& func) const {
+  switch (type()) {
+    case ImageType::RGBA: return func(view<RGBA>());
+    case ImageType::RGBAF: return func(view<RGBAF>());
+    case ImageType::Mono: return func(view<RGBA::Channel>());
+  }
+}
+
+template<typename F>
+void Image::view(F&& func) {
+  switch (type()) {
+    case ImageType::RGBA: return func(view<RGBA>());
+    case ImageType::RGBAF: return func(view<RGBAF>());
+    case ImageType::Mono: return func(view<RGBA::Channel>());
+  }
+}
 
 inline void check(bool inside) {
   if (!inside)

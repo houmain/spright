@@ -123,6 +123,7 @@ Definition get_affected_definition(Definition definition) {
     case Definition::input:
     case Definition::description:
     case Definition::sprite:
+    case Definition::duplicate:
     // allow sheets without sprites
     case Definition::sheet:
     // affect input and output

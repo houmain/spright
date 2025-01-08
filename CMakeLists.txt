@@ -113,13 +113,14 @@ endif()
 
 # install
 option(PORTABLE "Install files for a portable package")
+set(DOC_FILES LICENSE README.md CHANGELOG.md THIRD-PARTY.md)
 if(NOT PORTABLE AND NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
     # normal installation
     install(TARGETS ${PROJECT_NAME} DESTINATION "bin" COMPONENT Application)
+    install(FILES ${DOC_FILES} DESTINATION "share/spright" COMPONENT Application)
     install(DIRECTORY templates DESTINATION "share/spright" COMPONENT Application)
 else()
     # portable package (.ZIP)
-    set(DOC_FILES LICENSE README.md CHANGELOG.md THIRD-PARTY.md)
     install(TARGETS ${PROJECT_NAME} DESTINATION . COMPONENT Application)
     install(FILES ${DOC_FILES} DESTINATION . COMPONENT Application)
     install(DIRECTORY templates DESTINATION . COMPONENT Application)
