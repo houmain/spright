@@ -2,9 +2,9 @@
 name: Build
 
 on:
-  release:
-    types:
-      - published
+  push:
+    tags:
+      - '*.*.*'
 
 jobs:
   build:
@@ -41,13 +41,6 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: amd64_x86
-
-    - name: Setup Linux/gcc-8
-      if: runner.os == 'Linux'
-      run: |
-        sudo apt-get install g++-8
-        echo 'CC=gcc-8' >> $GITHUB_ENV
-        echo 'CXX=g++-8' >> $GITHUB_ENV
 
     - name: Checkout
       uses: actions/checkout@v2
