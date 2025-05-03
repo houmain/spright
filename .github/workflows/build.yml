@@ -17,7 +17,7 @@ jobs:
             package: ZIP
             configure_args: "-DPORTABLE=ON"
 
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             package: ZIP
             configure_args: "-DPORTABLE=ON"
 
@@ -29,10 +29,10 @@ jobs:
             package: ZIP
             configure_args: "-DPORTABLE=ON -DCPACK_SYSTEM_NAME=Darwin-arm64"
 
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             package: DEB
 
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             package: RPM            
 
     steps:
