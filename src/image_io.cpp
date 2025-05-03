@@ -189,12 +189,18 @@ namespace {
       transparent_index = index_of_closest_palette_color(
         palette, *animation.color_key);
 
-    if (animation.width > 0xFFFF || animation.height > 0xFFFF)
+    auto width = 0;
+    auto height = 0;
+    for (const auto& frame : animation.frames) {
+      width = std::max(width, frame.image.width());
+      height = std::max(height, frame.image.height());
+    }
+    if (width > 0xFFFF || height > 0xFFFF)
       return false;
 
     auto gif = ge_new_gif(filename.c_str(),
-      static_cast<uint16_t>(animation.width),
-      static_cast<uint16_t>(animation.height),
+      static_cast<uint16_t>(width),
+      static_cast<uint16_t>(height),
       palette_rgb.get(), bits, transparent_index, animation.loop_count);
     if (!gif)
       return false;
@@ -258,8 +264,6 @@ void save_image(const Image& image, const std::filesystem::path& path) {
     const auto extension = to_lower(path_to_utf8(path.extension()));
     if (extension == ".gif") {
       auto animation = Animation{ };
-      animation.width = image.width();
-      animation.height = image.height();
       animation.frames.push_back({ 0, clone_image(image), 0.0 });
       return write_gif(filename, animation);
     }

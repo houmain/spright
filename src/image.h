@@ -139,8 +139,6 @@ struct Animation {
     Image image;
     real duration;
   };
-  int width;
-  int height;
   std::vector<Frame> frames;
   int max_colors;
   std::optional<RGBA> color_key;
