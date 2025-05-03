@@ -255,7 +255,7 @@ The following table contains a list of all definitions, with the item each affec
 | **output** | sheet | path | Adds a new output file at _path_ to a sheet. It can define a single file or a sequence of files (e.g. `"sheet{0-}.png"`). See a list of available [variables](#variables). The file format is deduced from the extension (supported are PNG, GIF, TGA, BMP). |
 | debug | output | [boolean] | Draw sprite boundaries and pivot points on output. |
 | scale | output | scale,<br/>[scale-filter] | Sets a factor the output should be scaled by, with an optional explicit scale-filter:<br/>- _box_ : A trapezoid with 1-pixel wide ramps.<br/>- _triangle_ : A triangle function (same as bilinear texture filtering).<br/>- _cubicspline_ : A cubic b-spline (gaussian-esque).<br/>- _catmullrom_ : An interpolating cubic spline.<br/>- _mitchell_ : Mitchell-Netrevalli filter with B=1/3, C=1/3.<br/>- _pointsample_ : Simple point sampling. |
-| maps | output/input | suffix+ | Specifies the number of maps and their filename suffixes (e.g. "-diffuse", "-normals", ...). Only the first map is considered when packing, others get identical _rects_. |
+| maps | input,<br/>output | suffix+ | Specifies the number of maps and their filename suffixes (e.g. "-diffuse", "-normals", ...). Only the first map is considered when packing, others get identical _rects_. |
 | alpha | output | alpha-mode,<br/>[color] | Sets an operation depending on the pixels' alpha values:<br/>- _keep_ : Keep source color and alpha.<br/>- _opaque_ : Makes all pixels opaque.<br/>- _clear_ : Replace fully transparent pixels with the specified _color_ (defaults to black).<br/>- _bleed_ : Set color of fully transparent pixels to their nearest non-fully transparent pixel's color.<br/>- _premultiply_ : Premultiply colors with alpha values.<br/>- _colorkey_ : Replace fully transparent pixels with the specified _color_ and make all others opaque. |
 | **glob** | - | pattern | Adds all files matching the _pattern_ as inputs (e.g. `"sprites/**/*.png"`). |
 | **input** | - | path | Adds a new input file at _path_. It can define a single file or an un-/bounded sequence of files (e.g. `"frames{0-}.png", "frames{0001-0013}.png"`). |
@@ -271,6 +271,7 @@ The following table contains a list of all definitions, with the item each affec
 | max-sprites | input | count | Limits the number of sprites to prevent editors from becoming unresponsive on invalid input (default is 1000). |
 | **sprite** | - | [id] | Adds a new sprite to an input and optionally sets its id. |
 | id | sprite | id | Sets the sprite's id (defaults to `"sprite_{{index}}"`). See list of available [variables](#variables). |
+| duplicate | sprite | [id],<br/>[duplicate-id] | Adds a new sprite which is a duplicate on af existing sprite and optionally set its id. Unless the sprite to duplicate is specified with the second parameter, the last added sprite is duplicated. |
 | span | sprite | columns, rows | Sets the number of grid cells a sprite spans. |
 | rect | sprite | x, y, width, height | Sets a sprite's rectangle in the input sheet. |
 | pivot | sprite | pivot-x, pivot-y | Sets the coordinates of the sprite's pivot point. Optionally the horizontal (_left, center, right_) and vertical (_top, middle, bottom_) origin of the coordinates can be set (e.g. `10, 20` / `right - 5, top + 3` / `bottom left`). |
@@ -288,6 +289,9 @@ The following table contains a list of all definitions, with the item each affec
 | align-pivot | sprite | [key] | Aligns all sprites with identical _keys_, so their pivot points have identical offsets within the sprites' bounds. |
 | tag | sprite | key, [value] | Adds a tag to a sprite (_value_ defaults to an empty string). See list of available [variables](#variables). |
 | data | sprite | key, value | Adds a user defined data entry to a sprite. |
+| **transform** | sprite | id | Defines a transformation that should be applied to the sprite(s). |
+| resize | sprite,<br/>transform | scale,<br/>[scale-filter] | Sets a factor the sprite should be resized by, with an optional explicit scale-filter (same filter modes as for scale).
+| rotate | sprite,<br/>transform | angle,<br/>[sample-mode] | Sets the degrees the sprite should be rotated clockwise, with an optional explicit sample-mode:<br/>- _nearest_ : Sample the nearest pixel.<br/>- _bilinear_ : Mix four adjacent pixels. |
 | **description** | - | filename | Adds an additional location where the output description should be written. When the _filename_ is a sequence e.g. `"slice{0-}.plist"` then each _slice_ is output to a separate file. |
 | template | description | filename | Sets the template which should be used for generating the output description. |
 | set | - | key, value | Sets a variable value, which can be accessed in strings and templates using `{{key}}`. See a list of existing [variables](#variables). |

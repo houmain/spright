@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cstring>
 #include <utility>
+#include <iterator>
 
 namespace spright {
 
@@ -81,6 +82,16 @@ namespace {
     assert(n <= to_int(container.size()));
     return std::find_if(std::next(container.begin(), to_int(container.size()) - n),
       container.end(), function) != container.end();
+  }
+
+  template<typename T>
+  void insert_back(T& a, const T& b) {
+    std::copy(b.begin(), b.end(), std::back_inserter(a));
+  }
+
+  template<typename T>
+  void insert(T& a, const T& b) {
+    std::copy(b.begin(), b.end(), std::inserter(a, a.end()));
   }
 } // namespace
 
@@ -252,10 +263,11 @@ void InputParser::duplicate_ends(State& state) {
   
   auto sprite = original_sprite;
   sprite.id = state.sprite_id;
-  sprite.transforms = state.transforms;
-  sprite.tags = state.tags;
-  sprite.data = state.data;
+  insert_back(sprite.transforms, state.transforms);
+  insert(sprite.tags, state.tags);
+  insert(sprite.data, state.data);
   m_sprites.push_back(std::move(sprite));
+  ++m_sprites_in_current_input;
 }
 
 void InputParser::skip_sprites(State& state) {

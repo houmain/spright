@@ -331,7 +331,7 @@ void apply_definition(Definition definition,
   const auto check_rotate_method = [&]() -> RotateMethod {
     const auto string = check_string();
     if (const auto index = index_of(string, 
-        { "default", "nearest", "linear" }); index >= 0)
+        { "default", "nearest", "bilinear" }); index >= 0)
       return static_cast<RotateMethod>(index);
     error("invalid rotate method '", string, "'");
     return { };

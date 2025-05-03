@@ -130,7 +130,7 @@ enum class ResizeFilter {
 enum class RotateMethod {
   undefined,
   nearest,
-  linear,
+  bilinear,
 };
 
 struct Animation {

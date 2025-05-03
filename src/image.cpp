@@ -162,7 +162,7 @@ namespace {
     };
   }
 
-  RGBAF sample_linear(ImageView<const RGBAF> image, const PointF& point, 
+  RGBAF sample_bilinear(ImageView<const RGBAF> image, const PointF& point,
       const RGBAF& background) {
     const auto sample = [&](const Point& p) {
       return (containing(image.bounds(), p) ? image.value_at(p) : background);
@@ -220,10 +220,10 @@ namespace {
     return dest;
   }
 
-  Image rotate_image_linear(ImageView<const RGBAF> image_rgbaf, real angle, const RGBAF& background_rgbaf) {
+  Image rotate_image_bilinear(ImageView<const RGBAF> image_rgbaf, real angle, const RGBAF& background_rgbaf) {
     return rotate_image_sample(image_rgbaf, angle, 
       [&](const PointF& pos) {
-        return sample_linear(image_rgbaf, pos, background_rgbaf);
+        return sample_bilinear(image_rgbaf, pos, background_rgbaf);
       });
   }
 
@@ -641,7 +641,7 @@ Image rotate_image(const Image& image, real angle, RGBA background, RotateMethod
   angle = std::fmod(std::fmod(angle, 360) + 360, 360);
 
   if (method == RotateMethod::undefined) {
-    method = RotateMethod::linear;  
+    method = RotateMethod::bilinear;
     if (std::abs(std::fmod(angle, 90)) < 0.0001)
       method = RotateMethod::nearest;
   }
@@ -654,8 +654,8 @@ Image rotate_image(const Image& image, real angle, RGBA background, RotateMethod
     case RotateMethod::nearest:
       return rotate_image_nearest(image_rgbaf, angle, background_rgbaf);
 
-    case RotateMethod::linear:
-      return rotate_image_linear(image_rgbaf, angle, background_rgbaf);
+    case RotateMethod::bilinear:
+      return rotate_image_bilinear(image_rgbaf, angle, background_rgbaf);
   }
   return { };
 }

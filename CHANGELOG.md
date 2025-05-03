@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Version 3.6.0] - 2025-05-03
+
+### Added
+
+- Added `resize` definition.
+- Added `rotate` definition.
+- Added `transform` definition.
+- Added `duplicate` definition.
+- Added shortcut argument -c for '--mode complete'.
+
+## [Version 3.5.4] - 2025-01-04
+
+### Addded
+
+- Looking for templates also in share/spright directory (#18).
+
+### Fixed
+
+- Fixed case of package name causing problems with spright-vscode installation on Linux (houmain/spright-vscode#3).
+
 ## [Version 3.5.3] - 2024-07-28
 
 ### Added
@@ -312,6 +332,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fixed -- commandline arguments.
 - Fixed sample cpp.template.
 
+[version 3.6.0]: https://github.com/houmain/spright/compare/3.5.4...3.6.0
+[version 3.5.4]: https://github.com/houmain/spright/compare/3.5.3...3.5.4
 [version 3.5.3]: https://github.com/houmain/spright/compare/3.5.2...3.5.3
 [version 3.5.2]: https://github.com/houmain/spright/compare/3.5.1...3.5.2
 [version 3.5.1]: https://github.com/houmain/spright/compare/3.5.0...3.5.1
