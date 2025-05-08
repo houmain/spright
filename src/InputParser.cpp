@@ -85,11 +85,6 @@ namespace {
   }
 
   template<typename T>
-  void insert_back(T& a, const T& b) {
-    std::copy(b.begin(), b.end(), std::back_inserter(a));
-  }
-
-  template<typename T>
   void insert(T& a, const T& b) {
     std::copy(b.begin(), b.end(), std::inserter(a, a.end()));
   }
@@ -263,7 +258,7 @@ void InputParser::duplicate_ends(State& state) {
   
   auto sprite = original_sprite;
   sprite.id = state.sprite_id;
-  insert_back(sprite.transforms, state.transforms);
+  sprite.transforms = state.transforms;
   insert(sprite.tags, state.tags);
   insert(sprite.data, state.data);
   m_sprites.push_back(std::move(sprite));
