@@ -167,9 +167,11 @@ namespace {
       json_texture["filename"] = path_to_utf8(
         settings.output_path.empty() ? texture.filename :
           std::filesystem::relative(texture.filename, settings.output_path));
-      json_texture["scale"] = output.scale;
-      json_texture["width"] = to_int(slice.width * output.scale);
-      json_texture["height"] = to_int(slice.height * output.scale);
+      if (output.scale > 0) {
+        json_texture["scale"] = output.scale;
+        json_texture["width"] = to_int(slice.width * output.scale);
+        json_texture["height"] = to_int(slice.height * output.scale);
+      }
       json_texture["map"] = (texture.map_index < 0 ?
         texture.output->default_map_suffix :
         texture.output->map_suffixes.at(to_unsigned(texture.map_index)));

@@ -58,7 +58,7 @@ private:
 };
 
 struct TransformResize {
-  real size;
+  real scale;
   ResizeFilter resize_filter;
 };
 
@@ -84,9 +84,11 @@ struct Output {
   std::vector<std::string> map_suffixes;
   Alpha alpha{ };
   RGBA alpha_color{ };
-  real scale{ };
-  ResizeFilter scale_filter{ };
+  std::vector<TransformPtr> transforms;
   bool debug{ };
+
+  // the scale after transformation, 0 when rotated
+  real scale{ };
 };
 
 struct Sheet {

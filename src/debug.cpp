@@ -43,6 +43,9 @@ namespace {
 } // namespace
 
 void draw_debug_info(Image& target, const Sprite& sprite, real scale) {
+  if (scale <= 0)
+    return;
+
   const auto scale_rect = [&](const auto& rect) {
     return RectF{ 
       rect.x * scale,

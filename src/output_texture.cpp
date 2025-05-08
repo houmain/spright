@@ -1,6 +1,7 @@
 
 #include "output.h"
 #include "globbing.h"
+#include "transforming.h"
 #include "debug.h"
 
 namespace spright {
@@ -118,9 +119,7 @@ namespace {
   void process_texture_image(const Texture& texture, Image& image) {
     const auto& output = *texture.output;
     process_alpha(image, output);
-
-    if (output.scale != 1.0)
-      image = resize_image(image, output.scale, output.scale_filter);
+    image = transform_output(std::move(image), output.transforms);
   }
 
   bool output_image(const Texture& texture) {

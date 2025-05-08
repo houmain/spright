@@ -69,7 +69,6 @@ std::string_view get_definition_name(Definition definition) {
     case Definition::duplicates: return "duplicates";
     case Definition::alpha: return "alpha";
     case Definition::pack: return "pack";
-    case Definition::scale: return "scale";
     case Definition::debug: return "debug";
     case Definition::path: return "path";
     case Definition::glob: return "glob";
@@ -131,7 +130,7 @@ Definition get_affected_definition(Definition definition) {
     // directly change state
     case Definition::row:
     case Definition::skip:
-    // allow transforms without sprites
+    // allow transforms without sprites/outputs
     case Definition::transform:
       return Definition::none;
 
@@ -150,7 +149,6 @@ Definition get_affected_definition(Definition definition) {
       return Definition::sheet;
 
     case Definition::alpha:
-    case Definition::scale:
     case Definition::debug:
       return Definition::output;
 
@@ -449,13 +447,6 @@ void apply_definition(Definition definition,
       break;
     }
 
-    case Definition::scale:
-      state.scale = check_real();
-      check(state.scale >= 0.01 && state.scale < 100, "invalid scale");
-      state.scale_filter = (arguments_left() ? 
-        check_resize_filter() : ResizeFilter::undefined);
-      break;
-
     case Definition::debug:
       state.debug = check_bool(true);
       break;
@@ -661,11 +652,11 @@ void apply_definition(Definition definition,
     }
 
     case Definition::resize: {
-      const auto size = check_real();
-      check(state.scale >= 0.01 && state.scale < 100, "invalid size");
+      const auto scale = check_real();
+      check(scale >= 0.01 && scale < 100, "invalid scale");
       const auto resize_filter = (arguments_left() ? 
         check_resize_filter() : ResizeFilter::undefined);
-      add_transform_step(TransformResize{ size, resize_filter });
+      add_transform_step(TransformResize{ scale, resize_filter });
       break;
     }
     

@@ -355,3 +355,26 @@ TEST_CASE("scope - Transform") {
   CHECK(sprites[4].transforms[0]->size() == 1);
   CHECK(sprites[4].transforms[1]->size() == 1);
 }
+
+TEST_CASE("scope - Transform Output") {
+  auto parser = parse(R"(
+    transform t1
+      resize 2
+    transform t2
+      rotate 90
+    sheet "tex1"
+      transform t1
+      output "output1.png"
+      output "output2.png"
+        transform t2
+    input "test/Items.png"
+      grid 16 16
+      sprite
+      sprite
+  )");
+  const auto& sprites = parser.sprites();
+  REQUIRE(sprites.size() == 2);
+  REQUIRE(sprites[0].sheet->outputs.size() == 2);
+  CHECK(sprites[0].sheet->outputs[0]->transforms.size() == 1);
+  CHECK(sprites[0].sheet->outputs[1]->transforms.size() == 2);
+}
