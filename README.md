@@ -271,7 +271,7 @@ The following table contains a list of all definitions, with the item each affec
 | max-sprites | input | count | Limits the number of sprites to prevent editors from becoming unresponsive on invalid input (default is 1000). |
 | **sprite** | - | [id] | Adds a new sprite to an input and optionally sets its id. |
 | id | sprite | id | Sets the sprite's id (defaults to `"sprite_{{index}}"`). See list of available [variables](#variables). |
-| duplicate | sprite | [id],<br/>[duplicate-id] | Adds a new sprite which is a duplicate on af existing sprite and optionally set its id. Unless the sprite to duplicate is specified with the second parameter, the last added sprite is duplicated. |
+| duplicate | sprite | [id],<br/>[duplicate-id] | Adds a new sprite which is a duplicate of an existing sprite and optionally set its id. Unless the sprite to duplicate is specified with the second parameter, the last added sprite is duplicated. |
 | span | sprite | columns, rows | Sets the number of grid cells a sprite spans. |
 | rect | sprite | x, y, width, height | Sets a sprite's rectangle in the input sheet. |
 | pivot | sprite | pivot-x, pivot-y | Sets the coordinates of the sprite's pivot point. Optionally the horizontal (_left, center, right_) and vertical (_top, middle, bottom_) origin of the coordinates can be set (e.g. `10, 20` / `right - 5, top + 3` / `bottom left`). |

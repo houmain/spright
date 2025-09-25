@@ -210,7 +210,7 @@ void InputParser::sprite_ends(State& state) {
   sprite.warning_line_number = m_warning_line_number;
   sprite.index = to_int(m_sprites.size());
   sprite.input_index = to_int(m_inputs.size());
-  sprite.input_sprite_index = m_sprites_in_current_input;
+  sprite.input_sprite_index = m_sprites_in_current_input - m_duplicated_in_current_input;
   sprite.id = state.sprite_id;
   sprite.sheet = get_sheet(state.sheet_id);
   sprite.source = source;
@@ -263,11 +263,13 @@ void InputParser::duplicate_ends(State& state) {
   
   auto sprite = original_sprite;
   sprite.id = state.sprite_id;
+  sprite.index = to_int(m_sprites.size());
   insert_back(sprite.transforms, state.transforms);
   insert(sprite.tags, state.tags);
   insert(sprite.data, state.data);
   m_sprites.push_back(std::move(sprite));
   ++m_sprites_in_current_input;
+  ++m_duplicated_in_current_input;
 }
 
 void InputParser::skip_sprites(State& state) {
@@ -564,6 +566,7 @@ void InputParser::input_ends(State& state) {
     make_unique_sort(std::move(m_current_input_sources))
   });
   m_sprites_in_current_input = { };
+  m_duplicated_in_current_input = { };
   m_skipped_in_current_input.clear();
   m_current_grid_cell = { };
   m_current_sequence_index = { };

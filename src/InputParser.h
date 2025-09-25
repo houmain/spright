@@ -74,6 +74,7 @@ private:
   VariantMap m_variables;
   int m_inputs_in_current_glob{ };
   int m_sprites_in_current_input{ };
+  int m_duplicated_in_current_input{ };
   std::vector<Rect> m_skipped_in_current_input;
   Point m_current_grid_cell{ };
   int m_current_sequence_index{ };
