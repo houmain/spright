@@ -90,8 +90,8 @@ namespace {
   }
 
   template<typename T>
-  void insert(T& a, const T& b) {
-    std::copy(b.begin(), b.end(), std::inserter(a, a.end()));
+  void insert_or_assign(T& a, const T& b) {
+    std::for_each(b.begin(), b.end(), [&](const auto& kv) { a[kv.first] = kv.second; });
   }
 } // namespace
 
@@ -265,8 +265,8 @@ void InputParser::duplicate_ends(State& state) {
   sprite.id = state.sprite_id;
   sprite.index = to_int(m_sprites.size());
   insert_back(sprite.transforms, state.transforms);
-  insert(sprite.tags, state.tags);
-  insert(sprite.data, state.data);
+  insert_or_assign(sprite.tags, state.tags);
+  insert_or_assign(sprite.data, state.data);
   m_sprites.push_back(std::move(sprite));
   ++m_sprites_in_current_input;
   ++m_duplicated_in_current_input;
